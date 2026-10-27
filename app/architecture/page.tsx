@@ -19,6 +19,28 @@ export const metadata: Metadata = {
   title: "How It Works — Inside the Safety Layers | ELEVEN v3",
   description:
     "A clear visual guide to how ELEVEN is built: four separate rooms so nothing freezes, five safety checkpoints, and private encrypted memory on your computer.",
+  alternates: {
+    canonical: "/architecture",
+  },
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://eleven-website-self.vercel.app/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Architecture",
+      item: "https://eleven-website-self.vercel.app/architecture",
+    },
+  ],
 };
 
 const FOUR_ROOMS = [
@@ -118,6 +140,12 @@ export default function ArchitecturePage() {
       <Nav />
 
       <main>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         {/* ── HERO + COMPACT 3D MODEL ── */}
         <Section className="pt-12 pb-20">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">

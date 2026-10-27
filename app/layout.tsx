@@ -7,7 +7,10 @@ import { PortalTransitionProvider } from "@/components/ui/PortalTransition";
 import { ClarityProvider } from "@/components/motion/PremiumMotion";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gishh.ai"),
+  metadataBase: new URL("https://eleven-website-self.vercel.app"),
+  alternates: {
+    canonical: "./",
+  },
   title: "ELEVEN v3 — Personal AI You Can Trust | GISHH Labs",
   description:
     "ELEVEN is the personal AI system that listens naturally, thinks deeply in the background, keeps your memory private on your own computer, and always asks before taking important actions.",
@@ -15,6 +18,7 @@ export const metadata: Metadata = {
     title: "ELEVEN v3 — Brilliant AI. Always Under Your Control.",
     description:
       "Natural voice conversation, background deep thinking, private local memory, and five automatic safety checkpoints before any real-world action.",
+    url: "https://eleven-website-self.vercel.app",
     images: [
       {
         url: "/gishh-logo.png",
@@ -36,6 +40,7 @@ export const metadata: Metadata = {
   keywords: [
     "ELEVEN v3",
     "Personal AI",
+    "Autonomous Desktop Agent",
     "AI Control Plane",
     "Safe AI Assistant",
     "Private Local AI",
@@ -48,6 +53,32 @@ export const metadata: Metadata = {
   },
 };
 
+const rootJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://eleven-website-self.vercel.app/#organization",
+      "name": "GISHH Labs",
+      "url": "https://eleven-website-self.vercel.app",
+      "logo": "https://eleven-website-self.vercel.app/gishh-logo.png",
+      "description":
+        "Research and engineering team building ELEVEN, an autonomous local-first desktop personal AI system.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://eleven-website-self.vercel.app/#website",
+      "url": "https://eleven-website-self.vercel.app",
+      "name": "ELEVEN v3",
+      "description":
+        "Personal AI system with private local memory and deterministic safety controls.",
+      "publisher": {
+        "@id": "https://eleven-website-self.vercel.app/#organization",
+      },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -56,6 +87,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full antialiased selection:bg-el-accent-soft relative">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(rootJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         <ClarityProvider>
           <PortalTransitionProvider>
             <ScrollProgressBar />

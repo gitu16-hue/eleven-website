@@ -18,6 +18,28 @@ export const metadata: Metadata = {
   title: "Safety & Control — You Stay the Boss | ELEVEN v3",
   description:
     "See how ELEVEN keeps you in charge: four simple trust levels, honest 30-second approval receipts, automatic password protection, and a 0.05-second Emergency Stop.",
+  alternates: {
+    canonical: "/autonomy",
+  },
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://eleven-website-self.vercel.app/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Safety & Control",
+      item: "https://eleven-website-self.vercel.app/autonomy",
+    },
+  ],
 };
 
 const FOUR_SHIELDS = [
@@ -65,6 +87,12 @@ export default function AutonomyPage() {
       <Nav />
 
       <main>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         {/* ── HERO ── */}
         <Section className="pt-12 pb-20">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">

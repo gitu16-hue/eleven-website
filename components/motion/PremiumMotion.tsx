@@ -8,7 +8,6 @@ import React, {
   useState,
 } from "react";
 import {
-  AnimatePresence,
   motion,
   useInView,
   useMotionValue,
@@ -101,6 +100,8 @@ export function ClarityTogglePill({ className = "" }: { className?: string }) {
 
 /**
  * Renders Beginner-friendly text by default and crossfades to Engineering text when toggled.
+ * Both perspectives are preserved within a single authoritative semantic structure in SSR HTML,
+ * preventing crawler blindspots while avoiding conflicting duplicate paragraphs.
  */
 export function DualCopy({
   plain,
@@ -116,19 +117,28 @@ export function DualCopy({
   const { mode } = useClarityMode();
   const Tag = motion[as] as typeof motion.div;
 
+  if (!technical || plain === technical) {
+    return <Tag className={className}>{plain}</Tag>;
+  }
+
+  const activeClass = as === "span" ? "inline" : "block";
+
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Tag
-        key={mode}
-        initial={{ opacity: 0, y: 4 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -4 }}
-        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className={className}
+    <Tag className={className}>
+      <span
+        className={mode === "plain" ? activeClass : "hidden"}
+        data-clarity="plain"
       >
-        {mode === "plain" ? plain : technical}
-      </Tag>
-    </AnimatePresence>
+        {plain}
+      </span>
+      <span
+        className={mode === "technical" ? activeClass : "hidden"}
+        data-clarity="technical"
+        title={typeof technical === "string" ? technical : undefined}
+      >
+        {technical}
+      </span>
+    </Tag>
   );
 }
 
@@ -341,11 +351,10 @@ export function AnimatedMetric({
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.4 });
   const reduced = useReducedMotion();
-  const [display, setDisplay] = useState<string>(
-    reduced ? value.toFixed(decimals) : (0).toFixed(decimals)
-  );
+  const formattedTarget = value.toFixed(decimals);
+  const [display, setDisplay] = useState<string>(formattedTarget);
 
-  const motionVal = useMotionValue(0);
+  const motionVal = useMotionValue(reduced ? value : 0);
   const springVal = useSpring(motionVal, {
     stiffness: 90,
     damping: 22,
@@ -353,21 +362,19 @@ export function AnimatedMetric({
   });
 
   useEffect(() => {
-    if (reduced) {
-      setDisplay(value.toFixed(decimals));
-      return;
-    }
+    if (reduced) return;
     if (inView) {
       motionVal.set(value);
     }
-  }, [inView, value, decimals, motionVal, reduced]);
+  }, [inView, value, motionVal, reduced]);
 
   useEffect(() => {
+    if (reduced) return;
     const unsub = springVal.on("change", (latest) => {
       setDisplay(latest.toFixed(decimals));
     });
     return () => unsub();
-  }, [springVal, decimals]);
+  }, [springVal, decimals, reduced]);
 
   return (
     <div ref={ref} className="group">

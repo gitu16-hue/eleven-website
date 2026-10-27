@@ -17,6 +17,28 @@ export const metadata: Metadata = {
   title: "Our Promises & Research — 15 Safety Rules | ELEVEN v3",
   description:
     "How GISHH Labs tests ELEVEN before shipping: four research breakthroughs, 15 unbreakable safety rules, and honest promises without AI hype.",
+  alternates: {
+    canonical: "/research",
+  },
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://eleven-website-self.vercel.app/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Research & Safety",
+      item: "https://eleven-website-self.vercel.app/research",
+    },
+  ],
 };
 
 const RESEARCH_PILLARS = [
@@ -110,6 +132,12 @@ export default function ResearchPage() {
       <Nav />
 
       <main>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         {/* ── HERO ── */}
         <Section className="pt-12 pb-20">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">

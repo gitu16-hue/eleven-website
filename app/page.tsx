@@ -22,6 +22,26 @@ export const metadata: Metadata = {
   title: "ELEVEN v3 — Brilliant AI. Always Under Your Control.",
   description:
     "Talk naturally, get deep work done in the background, keep your memories private on your own computer, and approve important actions before they happen.",
+  alternates: {
+    canonical: "./",
+  },
+};
+
+const softwareJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": "https://eleven-website-self.vercel.app/#software",
+  name: "ELEVEN v3",
+  applicationCategory: "DesktopApplication",
+  operatingSystem: "Windows 11, macOS, Linux",
+  description:
+    "Autonomous local-first desktop personal AI system featuring private memory, dual-mind processing, and deterministic human-in-the-loop safety checkpoints.",
+  disambiguatingDescription:
+    "Autonomous desktop personal AI agent and control plane developed by GISHH Labs. Not affiliated with or related to ElevenLabs voice synthesis APIs.",
+  publisher: {
+    "@id": "https://eleven-website-self.vercel.app/#organization",
+  },
+  url: "https://eleven-website-self.vercel.app",
 };
 
 const MEMORY_DRAWERS = [
@@ -73,6 +93,12 @@ export default function HomePage() {
       <Nav />
 
       <main>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(softwareJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         {/* ── 01. HERO + INTERACTIVE 3D MODEL ── */}
         <Section className="pt-10 pb-20 lg:pt-16 lg:pb-28">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-10">

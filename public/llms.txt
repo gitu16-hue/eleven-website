@@ -1,0 +1,23 @@
+# ELEVEN v3
+
+> ELEVEN (by GISHH Labs) is an autonomous, local-first desktop personal AI system engineered to execute computer workflows safely on the user's machine.
+
+## Entity Disambiguation
+ELEVEN is a desktop operating-system assistant and local cognitive agent developed by GISHH Labs. It is not affiliated with, developed by, or related to ElevenLabs (the audio and speech synthesis research company), nor does it provide cloud-hosted text-to-speech API generation services.
+
+## System Architecture & Purpose
+ELEVEN acts as a protected control plane between the user, frontier language models, local storage, and real-world system actions. It runs on the user's computer with private local memory and enforces human oversight before high-consequence operations.
+
+### Core Capabilities
+- **Local-First Sovereign Memory:** Keeps working notes, project timelines, and approved skills encrypted locally on the user's computer using loopback data stores (Redis working memory, Neo4j episodic graph, Qdrant hybrid vector search).
+- **Dual-Mind Coordination:** Combines a responsive voice conversational interface for rapid spoken interaction with a background deep-planning engine for multi-step reasoning.
+- **Deterministic Policy Gating:** Interposes five deterministic checkpoints between untrusted model outputs and operating-system execution, requiring explicit human approval for state-changing actions.
+- **Fail-Closed Isolation:** Separates audio capture, reasoning, supervision, and UI display into four independent process domains with hardware interrupt support (<0.05s emergency stop).
+
+## Verified Canonical Documentation
+- Overview & Comparative Architecture: https://eleven-website-self.vercel.app/
+- Cognitive Loop & Two-Mind Processing: https://eleven-website-self.vercel.app/eleven
+- System Architecture & Fault Domains: https://eleven-website-self.vercel.app/architecture
+- Autonomy Tiers & Human Approval Controls: https://eleven-website-self.vercel.app/autonomy
+- Research Methodology & Safety Principles: https://eleven-website-self.vercel.app/research
+- Computational Control HUD: https://eleven-website-self.vercel.app/enter
