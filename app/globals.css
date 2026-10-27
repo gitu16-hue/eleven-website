@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/* ============================================================
+   ELEVEN Design System — "Quiet Authority" & Apple-Grade Craft
+   ============================================================ */
+
+/* ── Self‑hosted font faces ───────────────────────────────── */
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: local("Geist"), url("/fonts/GeistVF.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Share Tech Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Share Tech Mono"), url("/fonts/share-tech-mono-v15-latin-regular.woff2") format("woff2");
+}
+
+/* ============================================================ */
+
+:root {
+  /* Institutional mode — default (Calm, luminous, high-contrast clarity) */
+  --el-bg: #faf9f6;
+  --el-bg-raised: #ffffff;
+  --el-fg: #11110e;
+  --el-fg-muted: #5c5b54;
+  --el-fg-faint: #8f8e84;
+  --el-border: #e6e4dc;
+  --el-border-strong: #d1cfc4;
+  --el-accent: #2b4d47;       /* restrained deep teal-graphite */
+  --el-accent-soft: #e8ede9;
+
+  /* Semantic verification & governance status tokens */
+  --el-status-nominal: #2b4d47;
+  --el-status-warn: #8a5a19;
+  --el-status-warn-soft: #f5efe4;
+  --el-status-danger: #8c2d2d;
+  --el-status-danger-soft: #f6ebeb;
+
+  /* Font stacks */
+  --font-geist: "Geist", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, sans-serif;
+  --font-technical: "Share Tech Mono", "SF Mono", "JetBrains Mono", "Consolas", ui-monospace, monospace;
+
+  /* Computational mode palette */
+  --el-dark-bg: #080a0f;
+  --el-dark-bg-raised: #0e121a;
+  --el-dark-fg: #f2f3ee;
+  --el-dark-fg-muted: #8b929e;
+  --el-dark-border: #202633;
+  --el-dark-cyan: #5fd0cf;
+  --el-dark-violet: #8b7fd6;
+
+  /* Refined Apple-grade Typography Scale (Fluid clamp values for responsive balance) */
+  --el-text-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);      /* 12-13px */
+  --el-text-sm: clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem);     /* 14-15px */
+  --el-text-base: clamp(1rem, 0.96rem + 0.22vw, 1.125rem);        /* 16-18px — body */
+  --el-text-lg: clamp(1.1875rem, 1.12rem + 0.35vw, 1.375rem);     /* 19-22px */
+  --el-text-xl: clamp(1.375rem, 1.28rem + 0.5vw, 1.75rem);        /* 22-28px */
+  --el-text-2xl: clamp(1.75rem, 1.6rem + 0.8vw, 2.25rem);         /* 28-36px */
+  --el-text-3xl: clamp(2.25rem, 2rem + 1.2vw, 3rem);              /* 36-48px */
+  --el-text-4xl: clamp(2.75rem, 2.3rem + 2.2vw, 4.25rem);         /* 44-68px */
+  --el-text-5xl: clamp(3.5rem, 2.8rem + 3.5vw, 5.75rem);          /* 56-92px */
+
+  /* Section Spacing — Apple-like generous breathing rhythm */
+  --el-space-section: clamp(6rem, 5rem + 4vw, 10rem);
+  --el-space-section-sm: clamp(3.5rem, 3rem + 2.5vw, 5.5rem);
+
+  /* Subtle Optical Shadows */
+  --el-shadow-sm: 0 1px 2px rgba(17, 17, 14, 0.03), 0 2px 4px rgba(17, 17, 14, 0.02);
+  --el-shadow-md: 0 4px 16px rgba(17, 17, 14, 0.04), 0 2px 6px rgba(17, 17, 14, 0.02);
+  --el-shadow-lg: 0 16px 48px rgba(17, 17, 14, 0.06), 0 4px 14px rgba(17, 17, 14, 0.03);
+
+  /* Micro-Motion Timings */
+  --el-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --el-duration-fast: 160ms;
+  --el-duration-base: 280ms;
+  --el-duration-slow: 650ms;
+}
+
+/* Computational Mode */
+.mode-dark {
+  --el-bg: var(--el-dark-bg);
+  --el-bg-raised: var(--el-dark-bg-raised);
+  --el-fg: var(--el-dark-fg);
+  --el-fg-muted: var(--el-dark-fg-muted);
+  --el-fg-faint: #565d6c;
+  --el-border: var(--el-dark-border);
+  --el-border-strong: #2e3747;
+  --el-accent: var(--el-dark-cyan);
+  --el-accent-soft: #112024;
+
+  --el-status-nominal: #10b981;
+  --el-status-warn: #f59e0b;
+  --el-status-warn-soft: #271e0d;
+  --el-status-danger: #ef4444;
+  --el-status-danger-soft: #291315;
+
+  --el-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --el-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
+  --el-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.45), 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+@theme inline {
+  --color-el-bg: var(--el-bg);
+  --color-el-bg-raised: var(--el-bg-raised);
+  --color-el-fg: var(--el-fg);
+  --color-el-fg-muted: var(--el-fg-muted);
+  --color-el-fg-faint: var(--el-fg-faint);
+  --color-el-border: var(--el-border);
+  --color-el-border-strong: var(--el-border-strong);
+  --color-el-accent: var(--el-accent);
+  --color-el-accent-soft: var(--el-accent-soft);
+  --color-el-violet: var(--el-dark-violet);
+
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-technical);
+
+  --text-el-xs: var(--el-text-xs);
+  --text-el-sm: var(--el-text-sm);
+  --text-el-base: var(--el-text-base);
+  --text-el-lg: var(--el-text-lg);
+  --text-el-xl: var(--el-text-xl);
+  --text-el-2xl: var(--el-text-2xl);
+  --text-el-3xl: var(--el-text-3xl);
+  --text-el-4xl: var(--el-text-4xl);
+  --text-el-5xl: var(--el-text-5xl);
+
+  --shadow-el-sm: var(--el-shadow-sm);
+  --shadow-el-md: var(--el-shadow-md);
+  --shadow-el-lg: var(--el-shadow-lg);
+}
+
+* {
+  border-color: var(--el-border);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background: var(--el-bg);
+  color: var(--el-fg);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.011em;
+  transition: background-color var(--el-duration-slow) var(--el-ease),
+              color var(--el-duration-slow) var(--el-ease);
+}
+
+/* Universal reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Accessible focus rings */
+:focus-visible {
+  outline: 2px solid var(--el-accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--el-accent-soft);
+  color: var(--el-fg);
+}
+
+/* Sleek WebKit scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--el-border-strong);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--el-fg-faint);
+}
+
+/* Keyframes */
+@keyframes slideDown {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(250%); }
+}
+
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.4); opacity: 0; }
+}
+
+@keyframes scroll-hint {
+  0% { transform: translateY(0); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(12px); opacity: 0; }
+}
