@@ -7,12 +7,14 @@ import { ScrollReveal, RevealItem } from "@/components/ui/ScrollReveal";
 import { DualMindSynchronizer } from "@/components/v3/DualMindSynchronizer";
 import { PortalActionButton } from "@/components/v3/PortalActionButton";
 import {
+  CipherText,
   ClarityTogglePill,
   DualCopy,
   SignalBeamDivider,
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "How It Thinks — Two Brains & Natural Voice | ELEVEN v3",
@@ -131,7 +133,7 @@ export default function ElevenIntelligencePage() {
     <>
       <Nav />
 
-      <main>
+      <main id="main-content">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -139,32 +141,92 @@ export default function ElevenIntelligencePage() {
           }}
         />
         {/* ── HERO ── */}
-        <Section className="pt-12 pb-20">
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div className="max-w-[780px]">
-              <p className="font-mono text-el-xs uppercase tracking-[0.12em] text-el-accent">
-                HOW ELEVEN THINKS &amp; LISTENS
-              </p>
-              <WordReveal
-                as="h1"
-                text="Talks at the speed of conversation."
-                mutedText="Thinks deeply without freezing."
-                className="mt-4 text-el-4xl font-medium leading-[1.06] tracking-[-0.03em] text-el-fg"
+        <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60"
+          />
+          <div className="relative">
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
+              <Breadcrumbs
+                items={[
+                  { label: "How It Thinks", href: "/eleven" },
+                ]}
               />
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
+                  TERMINOLOGY DEPTH:
+                </span>
+                <ClarityTogglePill />
+              </div>
+            </div>
+
+            <div className="mt-10 max-w-4xl space-y-6">
+              <div className="el-badge shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
+                <CipherText text="DUAL-MIND COGNITION // REAL-TIME CONVERSATION & ASYNC REASONING" />
+              </div>
+
+              <h1 className="el-h1">
+                <WordReveal text="Talks at the speed of conversation. Thinks deeply without freezing." />
+              </h1>
+
               <DualCopy
-                className="mt-6 max-w-[650px] text-el-lg leading-[1.6] text-el-fg-muted"
+                className="el-lead max-w-3xl"
                 plain="Imagine talking to a friend while they cook dinner: they can answer you right away without burning the food. ELEVEN works the exact same way by splitting conversation and heavy work into two separate brains."
                 technical="ELEVEN v3 bifurcates runtime cognition into two OS processes—System 1 (eleven_voice) and System 2 (eleven_deep)—synchronized across a non-blocking Async Mind Event Bus."
               />
+
+              <ScrollReveal
+                stagger={0.08}
+                className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]"
+              >
+                <RevealItem>
+                  <span className="inline-block rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
+                    ✓ DUAL-MIND ARCHITECTURE (INV-01)
+                  </span>
+                </RevealItem>
+                <RevealItem>
+                  <span className="inline-block rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
+                    ✓ SUB-50MS BARGE-IN TARGET
+                  </span>
+                </RevealItem>
+                <RevealItem>
+                  <span className="inline-block rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                    ✓ ZERO MODEL VENDOR LOCK-IN
+                  </span>
+                </RevealItem>
+              </ScrollReveal>
+
+              <div className="flex flex-wrap items-center gap-4 pt-4">
+                <Button href="/benchmarks/voice-latency" variant="primary" arrow>
+                  View &lt;50ms Barge-In Benchmark
+                </Button>
+                <Button href="/architecture" variant="secondary">
+                  Explore System Architecture →
+                </Button>
+              </div>
             </div>
-            <ClarityTogglePill />
           </div>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── TWO MINDS SIDE BY SIDE ── */}
-        <Section>
+        <Section className="py-16 lg:py-24">
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <CipherText text="// 01 DUAL-MIND ARCHITECTURE" />
+            </div>
+            <h2 className="el-h2">
+              <WordReveal text="Two minds side by side: Instant speech meets thorough planning." />
+            </h2>
+            <DualCopy
+              className="el-body"
+              plain="ELEVEN splits conversation and heavy problem solving so your voice interactions never lag or lock up."
+              technical="Dual OS-level fault domains decouple real-time 16kHz audio sampling loops from deep DAG execution trees."
+            />
+          </div>
           <ScrollReveal
             stagger={0.12}
             className="grid grid-cols-1 gap-6 lg:grid-cols-2"
@@ -182,9 +244,9 @@ export default function ElevenIntelligencePage() {
                       </span>
                     </div>
 
-                    <h2 className="mt-5 text-el-2xl font-medium tracking-[-0.02em] text-el-fg">
+                    <h3 className="mt-5 text-el-2xl font-semibold text-el-fg">
                       Your Friendly Front-Desk Partner
-                    </h2>
+                    </h3>
                     <DualCopy
                       className="mt-3 text-el-sm leading-[1.65] text-el-fg-muted"
                       plain="Focuses 100% on listening to you, replying warmly in about half a second, and letting you interrupt whenever you change your mind. It never gets bogged down doing heavy paperwork."
@@ -207,8 +269,11 @@ export default function ElevenIntelligencePage() {
                     </ul>
                   </div>
 
-                  <div className="mt-7 border-t border-el-border pt-4 font-mono text-[11px] text-el-fg-faint">
-                    ROLE: INSTANT LISTENING &amp; NATURAL SPEECH
+                  <div className="mt-7 flex flex-wrap items-center justify-between gap-2 border-t border-el-border pt-4 font-mono text-[11px] text-el-fg-faint">
+                    <span>ROLE: INSTANT LISTENING &amp; NATURAL SPEECH</span>
+                    <Button variant="ghost" href="/benchmarks/voice-latency" className="text-[10.5px]">
+                      View &lt;50ms Barge-In Benchmark →
+                    </Button>
                   </div>
                 </div>
               </Tilt3DCard>
@@ -227,9 +292,9 @@ export default function ElevenIntelligencePage() {
                       </span>
                     </div>
 
-                    <h2 className="mt-5 text-el-2xl font-medium tracking-[-0.02em] text-el-fg">
+                    <h3 className="mt-5 text-el-2xl font-semibold text-el-fg">
                       Your Quiet Research &amp; Engineering Team
-                    </h2>
+                    </h3>
                     <DualCopy
                       className="mt-3 text-el-sm leading-[1.65] text-el-fg-muted"
                       plain="Works calmly behind the scenes on multi-step jobs: comparing documents, writing and testing code, double-checking facts across multiple AI helpers, and sending short progress updates."
@@ -264,36 +329,39 @@ export default function ElevenIntelligencePage() {
         <SignalBeamDivider />
 
         {/* ── 6 STEPS OF NATURAL VOICE ── */}
-        <Section className="bg-el-bg-raised/45">
-          <div className="max-w-[680px]">
-            <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
-              NATURAL CONVERSATION STEP BY STEP
-            </p>
-            <WordReveal
-              as="h2"
-              text="Six reasons talking to ELEVEN feels effortless."
-              className="mt-3 text-el-3xl font-medium leading-[1.12] tracking-[-0.025em] text-el-fg"
+        <Section className="py-16 lg:py-24 bg-el-bg-raised/45">
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <CipherText text="// 02 NATURAL CONVERSATION PIPELINE" />
+            </div>
+            <h2 className="el-h2">
+              <WordReveal text="Six reasons talking to ELEVEN feels effortless." />
+            </h2>
+            <DualCopy
+              className="el-body"
+              plain="From acoustic noise cancellation to instant interruption, how human-like conversational turns are achieved."
+              technical="Empirical audio pipeline steps including WASAPI exclusive buffers, Silero VAD gating, and turn-token epoch invalidation."
             />
           </div>
 
           <ScrollReveal
             stagger={0.07}
-            className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
             {VOICE_STEPS.map((item) => (
               <RevealItem key={item.step} className="h-full">
                 <Tilt3DCard className="p-6">
-                  <span className="font-mono text-el-xs font-semibold text-el-accent">
+                  <span className="font-mono text-xs font-semibold text-el-cyan">
                     STEP {item.step}
                   </span>
                   <DualCopy
                     as="div"
-                    className="mt-2.5 text-el-base font-medium text-el-fg"
+                    className="mt-2.5 text-base font-semibold text-el-fg"
                     plain={item.plainTitle}
                     technical={item.techTitle}
                   />
                   <DualCopy
-                    className="mt-2 text-el-xs leading-[1.65] text-el-fg-muted"
+                    className="mt-2 text-xs leading-relaxed text-el-fg-muted"
                     plain={item.plainDesc}
                     technical={item.techDesc}
                   />
@@ -306,7 +374,20 @@ export default function ElevenIntelligencePage() {
         <SignalBeamDivider />
 
         {/* ── INTERACTIVE VOICE SPEED + PROOF OVER VOTING DEMO ── */}
-        <Section>
+        <Section className="py-16 lg:py-24">
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <CipherText text="// 03 SYNCHRONIZATION BENCHMARK" />
+            </div>
+            <h2 className="el-h2">
+              <WordReveal text="Simulate Dual-Mind Voice & Evidence Execution" />
+            </h2>
+            <DualCopy
+              className="el-body"
+              plain="Test how quickly ELEVEN stops talking when interrupted, and watch how it verifies evidence instead of blindly trusting helpers."
+              technical="Interactive sandbox benchmarking hardware waveOutReset audio flush times and Ed25519 cryptographic evidence verification."
+            />
+          </div>
           <ScrollReveal>
             <DualMindSynchronizer />
           </ScrollReveal>
@@ -315,27 +396,28 @@ export default function ElevenIntelligencePage() {
         <SignalBeamDivider />
 
         {/* ── FREEDOM TO SWITCH AI BRAINS ── */}
-        <Section>
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-5">
-              <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
-                NEVER LOCKED TO ONE COMPANY
-              </p>
-              <WordReveal
-                as="h2"
-                text="Swap AI brains anytime. Keep all your memories."
-                className="mt-3 text-el-3xl font-medium leading-[1.12] tracking-[-0.025em] text-el-fg"
-              />
+        <Section className="py-16 lg:py-24">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
+            <div className="lg:col-span-5 space-y-4">
+              <div className="el-eyebrow">
+                <CipherText text="// 04 MODEL AGNOSTIC ROUTING" />
+              </div>
+              <h2 className="el-h2">
+                <WordReveal text="Swap AI brains anytime. Keep all your memories." />
+              </h2>
               <DualCopy
-                className="mt-4 text-el-sm leading-[1.65] text-el-fg-muted"
+                className="el-body"
                 plain="If a smarter AI comes out next month—or if your internet goes down—you don’t lose a thing. ELEVEN can use offline AI on your computer or top cloud models interchangeably."
-                technical="Because memory, policy, and tool authority reside in the local Control Plane, ModelRouter switches seamlessly across Ollama, NIM, Claude, GPT, and DeepSeek."
+                technical="Because memory, policy, and tool authority reside in the local Control Plane, ModelRouter switches dynamically across Ollama, NIM, Claude, GPT, and DeepSeek without session loss."
               />
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="pt-4 flex flex-wrap gap-3">
                 <PortalActionButton variant="primary" arrow>
                   Try Live 3D Orb
                 </PortalActionButton>
-                <Button href="/architecture" variant="secondary">
+                <Button href="/tools/vault-calculator" variant="secondary">
+                  Estimate Memory Storage →
+                </Button>
+                <Button href="/architecture" variant="ghost">
                   See How It’s Built
                 </Button>
               </div>

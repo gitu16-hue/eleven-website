@@ -12,6 +12,7 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Our Promises & Research — 15 Safety Rules | ELEVEN v3",
@@ -131,7 +132,7 @@ export default function ResearchPage() {
     <>
       <Nav />
 
-      <main>
+      <main id="main-content">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -139,66 +140,107 @@ export default function ResearchPage() {
           }}
         />
         {/* ── HERO ── */}
-        <Section className="pt-12 pb-20">
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div className="max-w-[780px]">
-              <p className="font-mono text-el-xs uppercase tracking-[0.12em] text-el-accent">
-                GISHH LABS · RESEARCH &amp; HONEST PROMISES
-              </p>
-              <WordReveal
-                as="h1"
-                text="Tested rigorously."
-                mutedText="Explained without AI hype."
-                className="mt-4 text-el-4xl font-medium leading-[1.06] tracking-[-0.03em] text-el-fg"
+        <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60"
+          />
+          <div className="relative">
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
+              <Breadcrumbs
+                items={[
+                  { label: "Our Promises", href: "/research" },
+                ]}
               />
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
+                  TERMINOLOGY DEPTH:
+                </span>
+                <ClarityTogglePill />
+              </div>
+            </div>
+
+            <div className="mt-10 max-w-4xl space-y-6">
+              <div className="el-badge shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
+                <span>SCIENTIFIC RIGOR &amp; HONEST ARCHITECTURE // ZERO AI HYPE</span>
+              </div>
+
+              <h1 className="el-h1">
+                <WordReveal text="Tested rigorously. Explained without AI hype." />
+              </h1>
+
               <DualCopy
-                className="mt-6 max-w-[650px] text-el-lg leading-[1.6] text-el-fg-muted"
+                className="el-lead max-w-3xl"
                 plain="The AI world is full of exaggerated buzzwords. At GISHH Labs, we test every feature in offline stress tests first, follow 15 unbreakable safety rules, and tell you plainly both what ELEVEN does and what its limits are."
                 technical="Architectural changes at GISHH Labs earn rollout authorization only after passing offline causality audits, adversarial taint evaluations, and tail-latency benchmarks."
               />
+
+              <div className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]">
+                <span className="rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
+                  ✓ 15 CONSTITUTIONAL INVARIANTS
+                </span>
+                <span className="rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
+                  ✓ FORMAL THREAT MATRIX
+                </span>
+                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  ✓ EMPIRICAL BENCHMARK DISCLOSURE
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4 pt-4">
+                <Button href="/security" variant="primary" arrow>
+                  Inspect Threat Model &amp; Invariants
+                </Button>
+                <Button href="/benchmarks/voice-latency" variant="secondary">
+                  Voice Latency Targets (&lt;50ms) →
+                </Button>
+              </div>
             </div>
-            <ClarityTogglePill />
           </div>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── 4 RESEARCH BREAKTHROUGHS ── */}
-        <Section>
-          <div className="max-w-[680px]">
-            <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
-              01 · WHAT WE RESEARCHED &amp; SOLVED
-            </p>
-            <WordReveal
-              as="h2"
-              text="Four real-world problems we engineered out of personal AI."
-              className="mt-3 text-el-3xl font-medium leading-[1.12] tracking-[-0.025em] text-el-fg"
+        <Section className="py-16 lg:py-24">
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <span>{"// 01 WHAT WE RESEARCHED &amp; SOLVED"}</span>
+            </div>
+            <h2 className="el-h2">
+              Four real-world problems we engineered out of personal AI.
+            </h2>
+            <DualCopy
+              className="el-body"
+              plain="From halting runaway commands to preventing forgotten memories, here are four engineering breakthroughs built into ELEVEN."
+              technical="Addressing prompt injection taint, split-second acoustic barge-in, bi-temporal memory graph drift, and proof verification."
             />
           </div>
 
           <ScrollReveal
             stagger={0.09}
-            className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2"
+            className="grid grid-cols-1 gap-5 md:grid-cols-2"
           >
             {RESEARCH_PILLARS.map((t) => (
               <RevealItem key={t.id} className="h-full">
                 <Tilt3DCard className="p-7">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-el-border pb-3">
-                    <span className="font-mono text-el-xs font-semibold text-el-accent">
+                    <span className="font-mono text-xs font-semibold text-el-cyan">
                       {t.id}
                     </span>
-                    <span className="rounded-sm bg-el-bg px-2 py-0.5 font-mono text-[10px] text-el-fg-muted">
+                    <span className="rounded-xs bg-el-bg px-2 py-0.5 font-mono text-[10px] text-el-fg-muted border border-el-border/60">
                       {t.status}
                     </span>
                   </div>
                   <DualCopy
                     as="div"
-                    className="mt-4 text-el-lg font-medium tracking-[-0.015em] text-el-fg"
+                    className="mt-4 text-base font-semibold text-el-fg"
                     plain={t.plainTitle}
                     technical={t.techTitle}
                   />
                   <DualCopy
-                    className="mt-2.5 text-el-xs leading-[1.65] text-el-fg-muted"
+                    className="mt-2 text-xs leading-relaxed text-el-fg-muted"
                     plain={t.plainBody}
                     technical={t.techBody}
                   />
@@ -211,17 +253,15 @@ export default function ResearchPage() {
         <SignalBeamDivider />
 
         {/* ── 15 UNBREAKABLE PROMISES ── */}
-        <Section className="bg-el-bg-raised/45">
-          <div className="max-w-[680px]">
-            <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
-              02 · OUR CONSTITUTION
-            </p>
-            <WordReveal
-              as="h2"
-              text="15 safety rules ELEVEN is never allowed to break."
-              className="mt-3 text-el-3xl font-medium leading-[1.12] tracking-[-0.025em] text-el-fg"
-            />
-            <p className="mt-3 text-el-base leading-[1.65] text-el-fg-muted">
+        <Section className="py-16 lg:py-24 bg-el-bg-raised/45">
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <span>{"// 02 OUR CONSTITUTION"}</span>
+            </div>
+            <h2 className="el-h2">
+              15 safety rules ELEVEN is never allowed to break.
+            </h2>
+            <p className="text-base leading-relaxed text-el-fg-muted">
               Written in plain English—no speed shortcut or new feature may ever violate these fifteen promises.
             </p>
           </div>
@@ -229,41 +269,45 @@ export default function ResearchPage() {
           <ScrollReveal
             stagger={0.04}
             threshold={0.05}
-            className="mt-10 grid grid-cols-1 gap-3.5 md:grid-cols-3"
+            className="grid grid-cols-1 gap-3.5 md:grid-cols-3"
           >
             {FIFTEEN_PROMISES.map((rule, i) => (
               <RevealItem key={rule} className="h-full">
                 <Tilt3DCard className="p-5">
-                  <span className="font-mono text-el-xs font-semibold text-el-accent">
+                  <span className="font-mono text-xs font-semibold text-el-cyan">
                     RULE {String(i + 1).padStart(2, "0")}
                   </span>
-                  <p className="mt-2 text-el-xs leading-[1.6] text-el-fg">
+                  <p className="mt-2 text-xs leading-relaxed text-el-fg">
                     {rule}
                   </p>
                 </Tilt3DCard>
               </RevealItem>
             ))}
           </ScrollReveal>
+
+          <div className="mt-8 flex justify-end">
+            <Button href="/security" variant="ghost">
+              Inspect Mathematical Invariant Conditions &amp; Threat Model →
+            </Button>
+          </div>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── HONEST LIMITS (NO OVERCLAIMING) ── */}
-        <Section>
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-5">
-              <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
-                03 · HONESTY BUILDS TRUST
-              </p>
-              <WordReveal
-                as="h2"
-                text="What we refuse to exaggerate."
-                className="mt-3 text-el-3xl font-medium leading-[1.12] tracking-[-0.025em] text-el-fg"
-              />
-              <p className="mt-4 text-el-sm leading-[1.65] text-el-fg-muted">
+        <Section className="py-16 lg:py-24">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
+            <div className="lg:col-span-5 space-y-4">
+              <div className="el-eyebrow">
+                <span>{"// 03 HONESTY BUILDS TRUST"}</span>
+              </div>
+              <h2 className="el-h2">
+                What we refuse to exaggerate.
+              </h2>
+              <p className="text-base leading-relaxed text-el-fg-muted">
                 Real engineering means being upfront about boundaries, not pretending software is magic.
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="pt-4 flex flex-wrap gap-3">
                 <PortalActionButton variant="primary" arrow>
                   Explore Live 3D Orb
                 </PortalActionButton>

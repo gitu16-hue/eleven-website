@@ -291,8 +291,8 @@ export function ElevenHolographicOrb3D({
   satellites?: WorkerSatelliteSpec[];
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [loaded, setLoaded] = useState(false);
-  const [webglOk, setWebglOk] = useState(true);
+  const [webglOk] = useState(() => checkWebGL());
+  const [loaded, setLoaded] = useState(() => !checkWebGL());
 
   const stateRef = useRef<OrbRuntimeState>(state);
   const waveTriggerRef = useRef<number>(0);
@@ -317,11 +317,7 @@ export function ElevenHolographicOrb3D({
   }, [satellites]);
 
   useEffect(() => {
-    if (!checkWebGL()) {
-      setWebglOk(false);
-      setLoaded(true);
-      return;
-    }
+    if (!webglOk) return;
 
     const container = containerRef.current;
     if (!container) return;
@@ -368,6 +364,7 @@ export function ElevenHolographicOrb3D({
     canvas.style.width = "100%";
     canvas.style.height = "100%";
     canvas.style.display = "block";
+    canvas.style.touchAction = "pan-y";
     container.appendChild(canvas);
 
     // OrbitControls with enableZoom=false so scroll events are NEVER captured!
@@ -378,6 +375,11 @@ export function ElevenHolographicOrb3D({
     controls.dampingFactor = 0.035;
     controls.autoRotate = !reducedMotion;
     controls.autoRotateSpeed = 0.42;
+
+    if (isMobile) {
+      // On mobile devices, disable touch rotation so single-finger swipe scrolls the webpage naturally
+      controls.enableRotate = false;
+    }
 
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
@@ -803,7 +805,8 @@ export function ElevenHolographicOrb3D({
       });
     };
 
-    const clock = new THREE.Clock();
+    let lastTime = performance.now();
+    let elapsed = 0;
     let curScale = 1.0;
     let curPulse = 0.0;
     let smoothBass = 0;
@@ -828,17 +831,36 @@ export function ElevenHolographicOrb3D({
     window.addEventListener("resize", onResize);
 
     const onVisibility = () => {
-      if (document.hidden) clock.stop();
-      else clock.start();
+      if (!document.hidden) lastTime = performance.now();
     };
     document.addEventListener("visibilitychange", onVisibility);
+
+    let isVisible = true;
+    let io: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          isVisible = entry ? entry.isIntersecting : true;
+          if (isVisible && !document.hidden) {
+            lastTime = performance.now();
+          }
+        },
+        { threshold: 0.05 }
+      );
+      io.observe(container);
+    }
 
     const animate = () => {
       if (disposed) return;
       animId = requestAnimationFrame(animate);
 
-      const dt = Math.min(clock.getDelta(), 0.05);
-      const elapsed = clock.getElapsedTime();
+      if (!isVisible || document.hidden) return;
+
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+      elapsed += dt;
       const activeKey = stateRef.current;
       const cfg = ORB_STATE_CONFIGS[activeKey];
 
@@ -976,6 +998,7 @@ export function ElevenHolographicOrb3D({
 
     return () => {
       disposed = true;
+      if (io) io.disconnect();
       if (animId) cancelAnimationFrame(animId);
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
@@ -996,7 +1019,7 @@ export function ElevenHolographicOrb3D({
         canvas.parentNode.removeChild(canvas);
       }
     };
-  }, []);
+  }, [webglOk]);
 
   const cfg = ORB_STATE_CONFIGS[state];
 

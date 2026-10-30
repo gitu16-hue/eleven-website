@@ -1,0 +1,79 @@
+-- ==============================================================================
+-- ELEVEN v3 — Supabase Postgres Waitlist Schema & Security Policies
+-- Location: supabase/schema.sql
+-- Description: Sovereign, least-privilege schema for early access & technical waitlist.
+-- ==============================================================================
+
+-- 1. Create Extension for UUID generation if not present
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- 2. Create Waitlist Table
+CREATE TABLE IF NOT EXISTS public.waitlist_registrations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email TEXT NOT NULL,
+    name TEXT NULL,
+    intended_use TEXT NULL,
+    tier TEXT NOT NULL CHECK (tier IN ('general', 'technical')) DEFAULT 'general',
+    consent BOOLEAN NOT NULL DEFAULT TRUE,
+    ip_hash TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+-- 3. Case-Insensitive Unique Index on Email
+-- Guarantees single entry per email while handling re-submissions deterministically
+CREATE UNIQUE INDEX IF NOT EXISTS waitlist_registrations_email_idx 
+    ON public.waitlist_registrations (lower(trim(email)));
+
+-- 4. Auxiliary Query Indexes
+CREATE INDEX IF NOT EXISTS waitlist_registrations_tier_idx 
+    ON public.waitlist_registrations (tier);
+
+CREATE INDEX IF NOT EXISTS waitlist_registrations_created_at_idx 
+    ON public.waitlist_registrations (created_at DESC);
+
+-- 5. Row Level Security (RLS) Configuration
+-- Enforces zero unauthorized database reads or writes
+ALTER TABLE public.waitlist_registrations ENABLE ROW LEVEL SECURITY;
+
+-- Revoke all public execution/access by default
+REVOKE ALL ON public.waitlist_registrations FROM anon, authenticated;
+
+-- Explicitly allow service_role full internal access (used solely by server-side Next.js route)
+DROP POLICY IF EXISTS "Service role managed access" ON public.waitlist_registrations;
+CREATE POLICY "Service role managed access" 
+    ON public.waitlist_registrations
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- 6. Updated Timestamp Trigger
+CREATE OR REPLACE FUNCTION public.handle_waitlist_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = timezone('utc'::text, now());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_waitlist_update ON public.waitlist_registrations;
+CREATE TRIGGER on_waitlist_update
+    BEFORE UPDATE ON public.waitlist_registrations
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_waitlist_updated_at();
+
+-- 7. Data Retention & Deletion Procedure (GDPR Compliance)
+-- Allows programmatic deletion of user records upon request
+CREATE OR REPLACE FUNCTION public.purge_waitlist_registration(target_email TEXT)
+RETURNS BOOLEAN AS $$
+DECLARE
+    deleted_count INT;
+BEGIN
+    DELETE FROM public.waitlist_registrations
+    WHERE lower(trim(email)) = lower(trim(target_email));
+    
+    GET DIAGNOSTICS deleted_count = ROW_COUNT;
+    RETURN deleted_count > 0;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

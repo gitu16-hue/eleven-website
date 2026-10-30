@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ScrollReveal, RevealItem } from "@/components/ui/ScrollReveal";
-import { Tilt3DCard, useClarityMode } from "@/components/motion/PremiumMotion";
+import { Tilt3DCard, useClarityMode, useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 
 function MicroVisual({ index }: { index: number }) {
-  const reduced = useReducedMotion();
+  const reduced = useMountedReducedMotion();
 
   // 0: Natural Duplex Voice Waveform
   if (index === 0) {

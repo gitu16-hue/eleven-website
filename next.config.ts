@@ -26,6 +26,14 @@ const cspHeader = `
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  compress: true,
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
+  images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 31536000,
+  },
   async headers() {
     return [
       {
@@ -37,7 +45,15 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Strict-Transport-Security",
-            value: "max-age=31536000",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "X-DNS-Prefetch-Control",
+            value: "on",
           },
           {
             key: "X-Content-Type-Options",
@@ -57,12 +73,17 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/(fonts/.*|.*\\.(?:ico|png|svg|webp|woff2|jpg|jpeg))",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
 };
 
 export default nextConfig;
-
-
-
-

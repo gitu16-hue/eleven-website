@@ -8,17 +8,31 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
 import { ClarityTogglePill } from "@/components/motion/PremiumMotion";
+import { AiCommandPalette } from "@/components/navigation/AiCommandPalette";
 
-const links = [
+const desktopLinks = [
+  { href: "/eleven", label: "How It Thinks" },
+  { href: "/architecture", label: "Architecture" },
+  { href: "/dashboard", label: "Control Plane" },
+  { href: "/autonomy", label: "Safety" },
+  { href: "/solutions/developers", label: "Developers" },
+  { href: "/docs", label: "Docs" },
+];
+
+const mobileLinks = [
   { href: "/eleven", label: "How It Thinks" },
   { href: "/architecture", label: "How It Works" },
+  { href: "/dashboard", label: "Control Plane Showcase" },
   { href: "/autonomy", label: "Safety & Control" },
+  { href: "/solutions/developers", label: "Developers" },
   { href: "/research", label: "Our Promises" },
+  { href: "/docs", label: "Docs" },
 ];
 
 export function Nav() {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
+  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
   const pathname = usePathname();
   const { enterComputationalMode } = usePortalTransition();
 
@@ -44,15 +58,15 @@ export function Nav() {
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <nav className="mx-auto flex max-w-[1280px] items-center justify-between px-6 py-4 lg:px-10 lg:py-4.5">
+      <nav className="mx-auto flex max-w-[1340px] items-center justify-between gap-3 px-4 py-3.5 sm:px-6 lg:px-8 lg:py-4">
         {/* Brand with GISHH Labs Emblem & ELEVEN v3 Identity */}
         <Link
           href="/"
-          className="group flex items-center gap-3 transition-opacity duration-[var(--el-duration-fast)] hover:opacity-85"
+          className="group flex items-center gap-2.5 shrink-0 transition-opacity duration-[var(--el-duration-fast)] hover:opacity-85"
         >
           <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-sm border border-el-border-strong/50 bg-el-bg-raised p-0.5 shadow-el-sm transition-transform duration-300 group-hover:scale-105">
             <Image
-              src="/gishh-logo.png"
+              src="/gishh-logo-icon.png"
               alt="GISHH Labs"
               width={32}
               height={32}
@@ -61,7 +75,7 @@ export function Nav() {
             />
           </div>
           <div className="flex flex-col">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <span className="text-el-sm font-semibold tracking-[0.06em] text-el-fg">
                 ELEVEN
               </span>
@@ -69,30 +83,43 @@ export function Nav() {
                 v3.1
               </span>
             </div>
-            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-el-fg-faint">
+            <span className="hidden xl:block font-mono text-[9px] uppercase tracking-[0.14em] text-el-fg-faint">
               GISHH LABS · PERSONAL AI
             </span>
           </div>
         </Link>
 
-        {/* Desktop Nav with Active Pill Indicator */}
-        <ul className="hidden items-center gap-1 lg:flex">
-          {links.map((link) => {
+        {/* Desktop Nav with Active + Gliding Hover Pill Indicator */}
+        <ul
+          onMouseLeave={() => setHoveredHref(null)}
+          className="hidden items-center gap-0.5 xl:gap-1 lg:flex shrink-0"
+        >
+          {desktopLinks.map((link) => {
             const isActive = pathname === link.href;
+            const isHovered = hoveredHref === link.href;
             return (
-              <li key={link.href}>
+              <li key={link.href} className="shrink-0">
                 <Link
                   href={link.href}
-                  className={`relative rounded-full px-3.5 py-1.5 text-el-sm transition-colors duration-200 ${
+                  onMouseEnter={() => setHoveredHref(link.href)}
+                  onFocus={() => setHoveredHref(link.href)}
+                  className={`relative block rounded-full px-2.5 py-1.5 text-xs xl:px-3 xl:text-[13px] whitespace-nowrap transition-colors duration-200 shrink-0 ${
                     isActive
                       ? "font-medium text-el-fg"
                       : "text-el-fg-muted hover:text-el-fg"
                   }`}
                 >
+                  {isHovered && !isActive && (
+                    <motion.span
+                      layoutId="hoverNavIndicator"
+                      className="pointer-events-none absolute inset-0 rounded-full bg-el-bg-raised/85 border border-el-border/70"
+                      transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                    />
+                  )}
                   {isActive && (
                     <motion.span
                       layoutId="activeNavIndicator"
-                      className="absolute inset-0 rounded-full bg-el-border/55"
+                      className="pointer-events-none absolute inset-0 rounded-full bg-el-border/60 border border-el-accent/25"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -103,24 +130,27 @@ export function Nav() {
           })}
         </ul>
 
-        {/* Right Controls: Simple/Engineer Toggle + Launch 3D Experience */}
-        <div className="hidden items-center gap-3 md:flex">
-          <ClarityTogglePill />
+        {/* Right Controls: AI Command Palette + Simple/Engineer Toggle (2xl+) + Launch 3D Experience */}
+        <div className="hidden items-center gap-2 xl:gap-2.5 lg:flex shrink-0">
+          <AiCommandPalette />
+          <div className="hidden 2xl:block">
+            <ClarityTogglePill />
+          </div>
           <Button
             type="button"
             variant="ghost"
             arrow
-            className="cursor-pointer"
+            className="cursor-pointer whitespace-nowrap"
             onClick={enterComputationalMode}
           >
             Live 3D Orb
           </Button>
         </div>
 
-        {/* Mobile Hamburger */}
+        {/* Mobile Hamburger (Synchronized with lg breakpoint) */}
         <button
           onClick={() => setOpen((o) => !o)}
-          className="flex flex-col gap-1.5 p-2 md:hidden"
+          className="flex flex-col items-center justify-center gap-1.5 p-2.5 min-w-[44px] min-h-[44px] lg:hidden cursor-pointer"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
@@ -150,7 +180,7 @@ export function Nav() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-el-border/80 bg-el-bg/95 backdrop-blur-xl lg:hidden"
+            className="overflow-hidden border-t border-el-border/80 bg-el-bg/95 backdrop-blur-xl lg:hidden max-h-[calc(100dvh-5rem)] overflow-y-auto pb-safe"
           >
             <div className="px-6 pt-5 pb-2">
               <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.1em] text-el-fg-faint">
@@ -160,15 +190,15 @@ export function Nav() {
             </div>
 
             <ul className="flex flex-col px-6 py-4">
-              {links.map((link) => (
+              {mobileLinks.map((link) => (
                 <li
                   key={link.href}
-                  className="border-b border-el-border/60 py-4 last:border-0"
+                  className="border-b border-el-border/60 py-3.5 last:border-0"
                 >
                   <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className={`block text-el-base ${
+                    className={`block min-h-[44px] flex items-center text-el-base ${
                       pathname === link.href
                         ? "font-medium text-el-fg"
                         : "text-el-fg-muted"
@@ -178,7 +208,7 @@ export function Nav() {
                   </Link>
                 </li>
               ))}
-              <li className="pt-5">
+              <li className="pt-5 flex flex-col gap-2.5">
                 <Button
                   type="button"
                   variant="primary"
@@ -190,6 +220,17 @@ export function Nav() {
                 >
                   Open Live 3D Orb
                 </Button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
+                  }}
+                  className="w-full min-h-[44px] cursor-pointer flex items-center justify-between rounded-xs border border-el-border-strong bg-el-bg-raised px-4 py-2.5 font-mono text-el-xs text-el-fg transition-colors hover:border-el-accent hover:text-el-accent"
+                >
+                  <span>AI Command Palette</span>
+                  <span className="rounded-xs bg-el-bg px-1.5 py-0.5 text-[10px] text-el-accent">⌘K</span>
+                </button>
               </li>
             </ul>
           </motion.div>

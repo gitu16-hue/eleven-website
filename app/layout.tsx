@@ -1,7 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import React from "react";
 import { AmbientGlow } from "@/components/ui/AmbientGlow";
+import { AmbientSpatialFieldEmbed } from "@/components/ui/AmbientSpatialFieldEmbed";
 import { ScrollProgressBar } from "@/components/ui/ScrollProgressBar";
 import { PortalTransitionProvider } from "@/components/ui/PortalTransition";
 import { ClarityProvider } from "@/components/motion/PremiumMotion";
@@ -47,10 +50,15 @@ export const metadata: Metadata = {
     "GISHH Labs",
   ],
   icons: {
-    icon: ["/gishh-logo.png"],
-    shortcut: "/gishh-logo.png",
-    apple: "/gishh-logo.png",
+    icon: ["/gishh-logo-icon.png"],
+    shortcut: "/gishh-logo-icon.png",
+    apple: "/gishh-logo-icon.png",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#06080D",
+  colorScheme: "dark",
 };
 
 const rootJsonLd = {
@@ -85,8 +93,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full antialiased selection:bg-el-accent-soft relative">
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}
+    >
+      <body className="el-grain min-h-full antialiased selection:bg-el-accent-soft relative">
+        {/* Accessible Skip Link for Keyboard Navigation */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-xs focus:border focus:border-el-accent focus:bg-el-bg-raised focus:px-4 focus:py-2 focus:font-mono focus:text-el-xs focus:text-el-accent focus:shadow-el-md focus:outline-none"
+        >
+          Skip to main content
+        </a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -96,8 +114,9 @@ export default function RootLayout({
         <ClarityProvider>
           <PortalTransitionProvider>
             <ScrollProgressBar />
+            <AmbientSpatialFieldEmbed />
             <AmbientGlow />
-            {children}
+            <div className="relative z-[3]">{children}</div>
           </PortalTransitionProvider>
         </ClarityProvider>
       </body>

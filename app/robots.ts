@@ -7,7 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/style-guide"],
       },
       {
         userAgent: [
@@ -18,9 +17,9 @@ export default function robots(): MetadataRoute.Robots {
           "Applebot-Extended",
         ],
         allow: "/",
-        disallow: ["/style-guide"],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
   };
 }
+

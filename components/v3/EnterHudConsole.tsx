@@ -9,6 +9,7 @@ import type {
 } from "@/components/three/ElevenHolographicOrb3D";
 import { ORB_STATE_CONFIGS } from "@/components/three/ElevenHolographicOrb3D";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
+import { WaitlistModal } from "@/components/v3/WaitlistModal";
 
 const ElevenHolographicOrb3D = dynamic(
   () =>
@@ -96,6 +97,8 @@ function nowStamp(): string {
 
 export function EnterHudConsole() {
   const { exitToInstitutionalMode } = usePortalTransition();
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [waitlistTier, setWaitlistTier] = useState<"general" | "technical">("general");
 
   const [orbState, setOrbState] = useState<OrbRuntimeState>("IDLE");
   const [bargeInSignal, setBargeInSignal] = useState<number>(0);
@@ -156,10 +159,8 @@ export function EnterHudConsole() {
 
   useEffect(() => {
     if (orbState !== "AUTHORITY_REQUIRED") {
-      setNonceTtl(30.0);
       return;
     }
-    setNonceTtl(30.0);
     const interval = setInterval(() => {
       setNonceTtl((prev) => {
         if (prev <= 0.1) {
@@ -182,6 +183,9 @@ export function EnterHudConsole() {
       clearScheduledTimers();
       setSwarmActive(false);
       setOrbState(next);
+      if (next === "AUTHORITY_REQUIRED") {
+        setNonceTtl(30.0);
+      }
       const found = STATE_ORDER.find((s) => s.id === next);
       pushLog(
         "ORB STATE",
@@ -393,6 +397,26 @@ export function EnterHudConsole() {
             <span className="hidden text-[#8b929e] xl:inline">
               SHORTCUTS: [1–7] CHANGE STATE · [S] LAUNCH 4 HELPERS · [B] INTERRUPT VOICE
             </span>
+            <button
+              type="button"
+              onClick={() => {
+                setWaitlistTier("general");
+                setIsWaitlistOpen(true);
+              }}
+              className="cursor-pointer rounded-sm border border-[#5fd0cf]/50 bg-[#112024] px-3.5 py-1.5 text-xs text-[#5fd0cf] transition-colors hover:bg-[#162c32]"
+            >
+              Join Early Access
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setWaitlistTier("technical");
+                setIsWaitlistOpen(true);
+              }}
+              className="hidden sm:inline-block cursor-pointer rounded-sm border border-[#2e3747] bg-[#0e121a] px-3.5 py-1.5 text-xs text-[#f2f3ee] transition-colors hover:border-[#5fd0cf] hover:text-[#5fd0cf]"
+            >
+              Request Technical Access
+            </button>
             <button
               type="button"
               onClick={() => exitToInstitutionalMode("/")}
@@ -713,6 +737,11 @@ export function EnterHudConsole() {
           </div>
         </section>
       </main>
+      <WaitlistModal
+        isOpen={isWaitlistOpen}
+        onClose={() => setIsWaitlistOpen(false)}
+        initialTier={waitlistTier}
+      />
     </div>
   );
 }

@@ -8,7 +8,7 @@ export function Container({
   className?: string;
 }) {
   return (
-    <div className={`mx-auto max-w-[1280px] px-6 lg:px-10 ${className}`}>
+    <div className={`mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-10 ${className}`}>
       {children}
     </div>
   );
@@ -26,7 +26,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={`py-20 lg:py-[var(--el-space-section)] ${className}`}
+      className={`py-12 lg:py-[var(--el-space-section)] ${className}`}
     >
       <Container>{children}</Container>
     </section>

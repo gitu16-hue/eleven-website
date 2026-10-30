@@ -7,12 +7,14 @@ import { ScrollReveal, RevealItem } from "@/components/ui/ScrollReveal";
 import { ColdRoomApprovalDemo } from "@/components/v3/ColdRoomApprovalDemo";
 import { PortalActionButton } from "@/components/v3/PortalActionButton";
 import {
+  CipherText,
   ClarityTogglePill,
   DualCopy,
   SignalBeamDivider,
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Safety & Control — You Stay the Boss | ELEVEN v3",
@@ -86,7 +88,7 @@ export default function AutonomyPage() {
     <>
       <Nav />
 
-      <main>
+      <main id="main-content">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -94,42 +96,108 @@ export default function AutonomyPage() {
           }}
         />
         {/* ── HERO ── */}
-        <Section className="pt-12 pb-20">
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div className="max-w-[780px]">
-              <p className="font-mono text-el-xs uppercase tracking-[0.12em] text-el-accent">
-                SAFETY &amp; HUMAN CONTROL
-              </p>
-              <WordReveal
-                as="h1"
-                text="Helpful on its own."
-                mutedText="Asks before anything big."
-                className="mt-4 text-el-4xl font-medium leading-[1.06] tracking-[-0.03em] text-el-fg"
+        <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60"
+          />
+          <div className="relative">
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
+              <Breadcrumbs
+                items={[
+                  { label: "Safety & Control", href: "/autonomy" },
+                ]}
               />
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
+                  TERMINOLOGY DEPTH:
+                </span>
+                <ClarityTogglePill />
+              </div>
+            </div>
+
+            <div className="mt-10 max-w-4xl space-y-6">
+              <div className="el-badge shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
+                <CipherText text="DETERMINISTIC PERMISSION CONTROL // 4-TIER GOVERNANCE" />
+              </div>
+
+              <h1 className="el-h1">
+                <WordReveal text="Helpful on its own. Asks before anything big." />
+              </h1>
+
               <DualCopy
-                className="mt-6 max-w-[650px] text-el-lg leading-[1.6] text-el-fg-muted"
+                className="el-lead max-w-3xl"
                 plain="Nobody wants an AI that interrupts you every 10 seconds to read a note—and nobody wants an AI that deletes files or sends emails without asking! ELEVEN gives you the sweet spot: effortless flow for safe tasks, and rock-solid permission checks when it counts."
                 technical="Graduated DEC-003 4-tier authority enables zero-friction Tier 0/1 local workflows while enforcing cryptographic Cold-Room DEC-008 nonces on Tier 2/3 boundaries."
               />
+
+              <ScrollReveal
+                stagger={0.08}
+                className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]"
+              >
+                <RevealItem>
+                  <span className="inline-block rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
+                    ✓ 4-TIER AUTHORITY (DEC-003)
+                  </span>
+                </RevealItem>
+                <RevealItem>
+                  <span className="inline-block rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
+                    ✓ 30S CRYPTOGRAPHIC NONCE (DEC-008)
+                  </span>
+                </RevealItem>
+                <RevealItem>
+                  <span className="inline-block rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                    ✓ HARDWARE EMERGENCY STOP (&lt;50MS)
+                  </span>
+                </RevealItem>
+              </ScrollReveal>
+
+              <div className="flex flex-wrap items-center gap-4 pt-4">
+                <Button href="/security" variant="primary" arrow>
+                  Inspect Zero-Trust Architecture
+                </Button>
+                <Button href="/tools/inspector" variant="secondary">
+                  Launch ActionProposal Playground →
+                </Button>
+              </div>
             </div>
-            <ClarityTogglePill />
+          </div>
+        </Section>
+
+        <SignalBeamDivider />
+
+        {/* ── 3 INVARIANT LAWS ── */}
+        <Section className="py-16 lg:py-24">
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <CipherText text="// 01 THREE INVARIANT LAWS" />
+            </div>
+            <h2 className="el-h2">
+              <WordReveal text="The three golden rules of safe AI autonomy." />
+            </h2>
+            <DualCopy
+              className="el-body"
+              plain="Clear boundaries, time-limited cryptographic tokens, and instant hardware brakes prevent unexpected actions."
+              technical="TaskCompiler immutable tier bounds, 30s single-use DEC-008 nonces, and <50ms Ring-0 supervisor interrupts."
+            />
           </div>
 
           {/* 3 Simple Rules */}
           <ScrollReveal
             stagger={0.1}
-            className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3"
+            className="grid grid-cols-1 gap-4 md:grid-cols-3"
           >
             <RevealItem className="h-full">
               <Tilt3DCard className="p-6">
-                <span className="font-mono text-[11px] uppercase tracking-[0.09em] text-el-accent">
+                <span className="font-mono text-xs font-semibold text-el-cyan">
                   RULE 01 · CLEAR LIMITS FIRST
                 </span>
-                <h2 className="mt-2.5 text-el-base font-medium text-el-fg">
+                <h3 className="mt-2.5 text-base font-semibold text-el-fg">
                   AI Can Never Promote Itself
-                </h2>
+                </h3>
                 <DualCopy
-                  className="mt-2 text-el-xs leading-[1.6] text-el-fg-muted"
+                  className="mt-2 text-xs leading-relaxed text-el-fg-muted"
                   plain="If you ask ELEVEN to read a folder, deleting and emailing stay locked off from the start—the AI can’t change its own rules midway."
                   technical="TaskCompiler stamps immutable maximum authority tiers and canonical root scopes prior to model invocation."
                 />
@@ -138,14 +206,14 @@ export default function AutonomyPage() {
 
             <RevealItem className="h-full">
               <Tilt3DCard className="p-6">
-                <span className="font-mono text-[11px] uppercase tracking-[0.09em] text-el-accent">
+                <span className="font-mono text-xs font-semibold text-el-cyan">
                   RULE 02 · ONE-TIME PASSES
                 </span>
-                <h2 className="mt-2.5 text-el-base font-medium text-el-fg">
+                <h3 className="mt-2.5 text-base font-semibold text-el-fg">
                   30-Second Exact Permission
-                </h2>
+                </h3>
                 <DualCopy
-                  className="mt-2 text-el-xs leading-[1.6] text-el-fg-muted"
+                  className="mt-2 text-xs leading-relaxed text-el-fg-muted"
                   plain="Approving one action doesn’t give a blank check—your click unlocks that exact step once for 30 seconds, then locks right back up."
                   technical="Single-use 128-bit DEC-008 nonces bind cryptographically to SHA-256 arguments_hash and expire after 30s."
                 />
@@ -154,14 +222,14 @@ export default function AutonomyPage() {
 
             <RevealItem className="h-full">
               <Tilt3DCard className="p-6">
-                <span className="font-mono text-[11px] uppercase tracking-[0.09em] text-el-accent">
+                <span className="font-mono text-xs font-semibold text-el-cyan">
                   RULE 03 · INSTANT BRAKES
                 </span>
-                <h2 className="mt-2.5 text-el-base font-medium text-el-fg">
+                <h3 className="mt-2.5 text-base font-semibold text-el-fg">
                   0.05-Second Emergency Stop
-                </h2>
+                </h3>
                 <DualCopy
-                  className="mt-2 text-el-xs leading-[1.6] text-el-fg-muted"
+                  className="mt-2 text-xs leading-relaxed text-el-fg-muted"
                   plain="Press Ctrl+Alt+Shift+K (or say 'Eleven, stop everything') anytime to freeze speech and cancel tasks in the blink of an eye."
                   technical="Hardware-priority supervisor interrupt flushes DAC audio, revokes active nonces, and halts worker subprocess trees in <50ms."
                 />
@@ -173,7 +241,20 @@ export default function AutonomyPage() {
         <SignalBeamDivider />
 
         {/* ── INTERACTIVE 4 TRUST LEVELS + RECEIPT DEMO ── */}
-        <Section>
+        <Section className="py-16 lg:py-24">
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <CipherText text="// 02 COLD-ROOM APPROVAL DEMO" />
+            </div>
+            <h2 className="el-h2">
+              <WordReveal text="Experience the 4 graduated trust tiers firsthand." />
+            </h2>
+            <DualCopy
+              className="el-body"
+              plain="From zero-friction quiet actions to strict cryptographic approvals: test how ELEVEN handles different sensitivity levels."
+              technical="Simulates DEC-003 Tier 0 through Tier 3 execution boundaries with simulated 128-bit CSPRNG nonces."
+            />
+          </div>
           <ScrollReveal>
             <ColdRoomApprovalDemo />
           </ScrollReveal>
@@ -182,15 +263,18 @@ export default function AutonomyPage() {
         <SignalBeamDivider />
 
         {/* ── 4 BUILT-IN PROTECTION SHIELDS ── */}
-        <Section className="bg-el-bg-raised/45">
-          <div className="max-w-[680px]">
-            <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
-              FOUR BUILT-IN SAFETY SHIELDS
-            </p>
-            <WordReveal
-              as="h2"
-              text="Protected even if a tricky webpage tries to fool the AI."
-              className="mt-3 text-el-3xl font-medium leading-[1.12] tracking-[-0.025em] text-el-fg"
+        <Section className="py-16 lg:py-24 bg-el-bg-raised/45">
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <CipherText text="// 03 ADVERSARIAL DEFENSE" />
+            </div>
+            <h2 className="el-h2">
+              <WordReveal text="Protected even if a tricky webpage tries to fool the AI." />
+            </h2>
+            <DualCopy
+              className="el-body"
+              plain="Four deep security barriers that catch prompt injections, tainted downloads, runaway loops, and unauthorized data leaks."
+              technical="Dynamic taint propagation, canonical root confinement, monotonic privilege checks, and default-deny socket boundaries."
             />
           </div>
 

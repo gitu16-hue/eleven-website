@@ -4,24 +4,58 @@ import Link from "next/link";
 import Image from "next/image";
 import { Container } from "@/components/ui/Section";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
-import { DualCopy, useClarityMode } from "@/components/motion/PremiumMotion";
+import {
+  CipherText,
+  DualCopy,
+  WordReveal,
+  useClarityMode,
+} from "@/components/motion/PremiumMotion";
 
 const columns = [
   {
-    heading: "Explore ELEVEN",
+    heading: "Core Platform",
     links: [
+      { href: "/", label: "Overview" },
       { href: "/eleven", label: "How It Thinks" },
-      { href: "/architecture", label: "How It Works" },
-      { href: "/autonomy", label: "Safety & Control" },
-      { href: "/research", label: "Our Promises" },
+      { href: "/dashboard", label: "Voyage Pipeline Tracker" },
+      { href: "/benchmarks/voice-latency", label: "Voice Latency (<0.05s)" },
+      { href: "/enter", label: "3D Visualizer Core" },
+      { href: "/presentation.html", label: "Executive Deck (16:9)" },
     ],
   },
   {
-    heading: "GISHH Labs",
+    heading: "Architecture & Specs",
     links: [
-      { href: "/", label: "Overview" },
-      { href: "/research", label: "15 Safety Rules" },
+      { href: "/architecture", label: "How It Works" },
+      { href: "/solutions/developers", label: "For Software Engineers" },
+      { href: "/solutions/enterprise", label: "Enterprise Sovereign Fleet" },
+      { href: "/tools/dag-visualizer", label: "System 2 DAG Orchestrator" },
+      { href: "/tools/inspector", label: "ActionProposal Inspector" },
+      { href: "/docs", label: "Developer Blueprints & Specs" },
+      { href: "/architecture#rooms", label: "4 Execution Rooms" },
+      { href: "/autonomy", label: "Safety & Control" },
+    ],
+  },
+  {
+    heading: "Governance & Safety",
+    links: [
+      { href: "/security", label: "Security & Threat Model" },
+      { href: "/autonomy#policy-gates", label: "5 Policy Checkpoints" },
+      { href: "/research", label: "Our Promises" },
+      { href: "/research#rules", label: "15 Invariant Rules" },
       { href: "/style-guide", label: "Design System" },
+    ],
+  },
+  {
+    heading: "Sovereignty & Trust",
+    links: [
+      { href: "/compare/cloud-vs-local", label: "Local vs Cloud Comparison" },
+      { href: "/hardware", label: "Hardware Sizing & Benchmarks" },
+      { href: "/tools/vault-calculator", label: "Vault Storage Estimator" },
+      { href: "/research#audit-trail", label: "Cryptographic Receipts" },
+      { href: "/eleven#memory-drawers", label: "Private Memory Vault" },
+      { href: "/autonomy#killswitch", label: "Emergency Stop (<0.05s)" },
+      { href: "https://gishh.com", label: "GISHH Labs" },
     ],
   },
 ];
@@ -49,7 +83,7 @@ export function Footer() {
             <div className="flex items-center gap-4">
               <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-sm border border-el-border-strong/60 bg-el-bg-raised p-1 shadow-el-sm">
                 <Image
-                  src="/gishh-logo.png"
+                  src="/gishh-logo-icon.png"
                   alt="GISHH Labs"
                   width={44}
                   height={44}
@@ -58,10 +92,10 @@ export function Footer() {
               </div>
               <div>
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-el-fg-faint">
-                  ELEVEN v3.1 · BUILT BY GISHH LABS
+                  <CipherText text="ELEVEN v3.1 · BUILT BY GISHH LABS" />
                 </p>
                 <p className="text-el-xl font-semibold tracking-[-0.02em] text-el-fg">
-                  Brilliant AI. Always Under Your Control.
+                  <WordReveal text="Brilliant AI. Always Under Your Control." />
                 </p>
               </div>
             </div>
@@ -96,7 +130,7 @@ export function Footer() {
 
         {/* Navigation & Summary Card */}
         <div className="mt-14 flex flex-col gap-12 md:flex-row md:justify-between lg:mt-16">
-          <div className="flex flex-wrap gap-16 lg:gap-28">
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:gap-14">
             {columns.map((col) => (
               <div key={col.heading}>
                 <p className="font-mono text-el-xs uppercase tracking-[0.12em] text-el-fg-faint">
@@ -107,7 +141,7 @@ export function Footer() {
                     <li key={l.label}>
                       <Link
                         href={l.href}
-                        className="text-el-sm text-el-fg-muted transition-colors duration-[var(--el-duration-fast)] hover:text-el-fg"
+                        className="el-link-laser text-el-sm text-el-fg-muted transition-colors duration-[var(--el-duration-fast)] hover:text-el-fg"
                       >
                         {l.label}
                       </Link>

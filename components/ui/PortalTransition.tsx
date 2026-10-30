@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -27,10 +28,10 @@ export function usePortalTransition() {
 }
 
 const PHASES = [
-  { bg: "#faf9f6", fg: "#11110e", status: "SEALING INSTITUTIONAL SURFACE" },
-  { bg: "#e6e4dc", fg: "#11110e", status: "VERIFYING CONTROL PLANE BOUNDARIES" },
-  { bg: "#1b2129", fg: "#f2f3ee", status: "COUPLING F.R.I.D.A.Y. ↔ J.A.R.V.I.S. BUS" },
-  { bg: "#080a0f", fg: "#5fd0cf", status: "COMPUTATIONAL HUD // ONLINE" },
+  { bg: "#06080D", accent: "#00F0FF", status: "SEALING HOST CONTROL SURFACE" },
+  { bg: "#080E1A", accent: "#8B5CF6", status: "VERIFYING L5 POLICY INVARIANTS" },
+  { bg: "#050B14", accent: "#00FF9D", status: "COUPLING F.R.I.D.A.Y. ↔ J.A.R.V.I.S. BUS" },
+  { bg: "#04060A", accent: "#00F0FF", status: "QUANTUM HOLOGRAPHIC HUD // ONLINE" },
 ];
 
 export function PortalTransitionProvider({
@@ -43,16 +44,24 @@ export function PortalTransitionProvider({
   const [active, setActive] = useState(false);
   const [phaseIdx, setPhaseIdx] = useState(0);
   const [direction, setDirection] = useState<"enter" | "exit">("enter");
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  }, []);
+
+  useEffect(() => clearTimers, [clearTimers]);
 
   // Clear transition veil cleanly once navigation lands
   useEffect(() => {
     if (!active) return;
     if (direction === "enter" && pathname === "/enter") {
-      const t = setTimeout(() => setActive(false), 260);
+      const t = setTimeout(() => setActive(false), 240);
       return () => clearTimeout(t);
     }
     if (direction === "exit" && pathname !== "/enter") {
-      const t = setTimeout(() => setActive(false), 220);
+      const t = setTimeout(() => setActive(false), 200);
       return () => clearTimeout(t);
     }
   }, [pathname, active, direction]);
@@ -69,19 +78,21 @@ export function PortalTransitionProvider({
       return;
     }
 
+    clearTimers();
     setDirection("enter");
     setPhaseIdx(0);
     setActive(true);
 
-    setTimeout(() => setPhaseIdx(1), 180);
-    setTimeout(() => setPhaseIdx(2), 390);
-    setTimeout(() => {
-      setPhaseIdx(3);
-      router.push("/enter");
-    }, 640);
-    // Safety fallback if already prefetched or route stalls
-    setTimeout(() => setActive(false), 1350);
-  }, [pathname, router]);
+    timersRef.current.push(
+      setTimeout(() => setPhaseIdx(1), 160),
+      setTimeout(() => setPhaseIdx(2), 340),
+      setTimeout(() => {
+        setPhaseIdx(3);
+        router.push("/enter");
+      }, 540),
+      setTimeout(() => setActive(false), 1250)
+    );
+  }, [pathname, router, clearTimers]);
 
   const exitToInstitutionalMode = useCallback(
     (href: string = "/") => {
@@ -94,19 +105,22 @@ export function PortalTransitionProvider({
         return;
       }
 
+      clearTimers();
       setDirection("exit");
       setPhaseIdx(3);
       setActive(true);
 
-      setTimeout(() => setPhaseIdx(2), 140);
-      setTimeout(() => setPhaseIdx(1), 300);
-      setTimeout(() => {
-        setPhaseIdx(0);
-        router.push(href);
-      }, 460);
-      setTimeout(() => setActive(false), 1050);
+      timersRef.current.push(
+        setTimeout(() => setPhaseIdx(2), 130),
+        setTimeout(() => setPhaseIdx(1), 270),
+        setTimeout(() => {
+          setPhaseIdx(0);
+          router.push(href);
+        }, 420),
+        setTimeout(() => setActive(false), 1000)
+      );
     },
-    [router]
+    [router, clearTimers]
   );
 
   const currentPhase = PHASES[phaseIdx] ?? PHASES[0];
@@ -129,37 +143,42 @@ export function PortalTransitionProvider({
             animate={{
               opacity: 1,
               backgroundColor: currentPhase.bg,
-              color: currentPhase.fg,
             }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center px-6 pointer-events-auto"
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center px-6 text-el-fg pointer-events-auto"
             aria-live="polite"
           >
-            {/* Subtle calibration frame */}
-            <div className="relative flex flex-col items-center gap-5 max-w-md w-full">
-              <div className="flex items-center gap-3 font-mono text-[11px] tracking-[0.18em] uppercase opacity-80">
+            <div className="hud-frame relative flex flex-col items-center gap-5 rounded-sm border border-el-border-strong/70 bg-el-bg-raised/85 px-8 py-7 backdrop-blur-xl max-w-md w-full shadow-el-lg">
+              <div className="flex items-center gap-3 font-mono text-[11px] tracking-[0.18em] uppercase text-el-fg-muted">
                 <span
-                  className="h-1.5 w-1.5 rounded-full animate-pulse"
-                  style={{ backgroundColor: currentPhase.fg }}
+                  className="h-2 w-2 rounded-full animate-pulse"
+                  style={{
+                    backgroundColor: currentPhase.accent,
+                    boxShadow: `0 0 10px ${currentPhase.accent}`,
+                  }}
                 />
-                <span>ELEVEN v3.1 // CONTROL PLANE</span>
+                <span>ELEVEN v3.1 // QUANTUM AIRLOCK</span>
               </div>
 
-              <div className="w-48 h-px bg-current/20 overflow-hidden relative">
+              <div className="w-56 h-[2px] bg-el-border overflow-hidden relative rounded-full">
                 <motion.div
                   initial={{ x: "-100%" }}
                   animate={{ x: "100%" }}
                   transition={{
-                    duration: 0.75,
+                    duration: 0.65,
                     ease: [0.16, 1, 0.3, 1],
                     repeat: Infinity,
                   }}
-                  className="h-full w-1/2 bg-current"
+                  className="h-full w-1/2"
+                  style={{ backgroundColor: currentPhase.accent }}
                 />
               </div>
 
-              <p className="font-mono text-xs tracking-[0.12em] text-center opacity-90">
+              <p
+                className="font-mono text-xs tracking-[0.12em] text-center"
+                style={{ color: currentPhase.accent }}
+              >
                 {currentPhase.status}
               </p>
             </div>

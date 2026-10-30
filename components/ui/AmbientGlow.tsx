@@ -1,41 +1,48 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useSpring, useMotionValue } from "framer-motion";
+import { motion, useSpring, useMotionValue, useMotionTemplate } from "framer-motion";
 
+/**
+ * Single global pointer light. Soft, slow spring so it trails the cursor like
+ * a stage light rather than snapping to it. Disabled on touch devices and for
+ * reduced-motion users.
+ */
 export function AmbientGlow() {
-  const [mounted, setMounted] = useState(false);
+  const [enabled, setEnabled] = useState(false);
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
 
-  // Smooth spring physics for fluid movement
-  const springX = useSpring(mouseX, { stiffness: 45, damping: 25 });
-  const springY = useSpring(mouseY, { stiffness: 45, damping: 25 });
+  const springX = useSpring(mouseX, { stiffness: 60, damping: 22, mass: 0.6 });
+  const springY = useSpring(mouseY, { stiffness: 60, damping: 22, mass: 0.6 });
+
+  const background = useMotionTemplate`radial-gradient(560px circle at ${springX}px ${springY}px, rgba(0, 240, 255, 0.055), rgba(139, 92, 246, 0.025) 40%, transparent 72%)`;
 
   useEffect(() => {
-    setMounted(true);
-    const handleMouseMove = (e: MouseEvent) => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const touch = window.matchMedia("(hover: none)").matches;
+    if (reduce || touch) return;
+
+    const handleMove = (e: PointerEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
     };
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener("pointermove", handleMove, { passive: true });
+    // Defer enabling to avoid a synchronous setState inside the effect body.
+    const raf = requestAnimationFrame(() => setEnabled(true));
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", handleMove);
+    };
   }, [mouseX, mouseY]);
 
-  if (!mounted) return null;
+  if (!enabled) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-30 overflow-hidden" aria-hidden="true">
-      {/* Subtle interactive luxury ambient spotlight */}
-      <motion.div
-        className="absolute -top-48 -left-48 h-96 w-96 rounded-full opacity-40 blur-3xl mix-blend-multiply dark:mix-blend-screen transition-opacity duration-1000"
-        style={{
-          x: springX,
-          y: springY,
-          background:
-            "radial-gradient(circle, rgba(43,77,71,0.08) 0%, rgba(43,77,71,0.02) 40%, transparent 70%)",
-        }}
-      />
-    </div>
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 z-[2]"
+      style={{ background }}
+    />
   );
 }
