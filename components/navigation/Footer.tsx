@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/Section";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
 import {
@@ -63,7 +64,17 @@ const columns = [
 export function Footer() {
   const { enterComputationalMode } = usePortalTransition();
   const { mode } = useClarityMode();
+  const pathname = usePathname();
   const isPlain = mode === "plain";
+
+  const handleFooterLinkClick = (href: string, e: React.MouseEvent) => {
+    if (pathname === href) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+  };
 
   return (
     <footer className="relative overflow-hidden border-t border-el-border bg-el-bg">
@@ -141,6 +152,8 @@ export function Footer() {
                     <li key={l.label}>
                       <Link
                         href={l.href}
+                        scroll={true}
+                        onClick={(e) => handleFooterLinkClick(l.href, e)}
                         className="el-link-laser text-el-sm text-el-fg-muted transition-colors duration-[var(--el-duration-fast)] hover:text-el-fg"
                       >
                         {l.label}

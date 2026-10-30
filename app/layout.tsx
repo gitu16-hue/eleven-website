@@ -8,6 +8,7 @@ import { AmbientSpatialFieldEmbed } from "@/components/ui/AmbientSpatialFieldEmb
 import { ScrollProgressBar } from "@/components/ui/ScrollProgressBar";
 import { PortalTransitionProvider } from "@/components/ui/PortalTransition";
 import { ClarityProvider } from "@/components/motion/PremiumMotion";
+import { RouteScrollRestoration } from "@/components/navigation/RouteScrollRestoration";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eleven-website-self.vercel.app"),
@@ -113,6 +114,7 @@ export default function RootLayout({
         />
         <ClarityProvider>
           <PortalTransitionProvider>
+            <RouteScrollRestoration />
             <ScrollProgressBar />
             <AmbientSpatialFieldEmbed />
             <AmbientGlow />

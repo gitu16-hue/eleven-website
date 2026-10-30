@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 
 interface PromptPreset {
   id: string;
@@ -54,7 +55,7 @@ export function HeroAiPromptBox() {
   const [feedback, setFeedback] = useState<string | null>(null);
   const [streamSeq, setStreamSeq] = useState(0);
   const timerRef = useRef<number | null>(null);
-  const reduced = useReducedMotion();
+  const reduced = useMountedReducedMotion();
 
   useEffect(() => {
     return () => {

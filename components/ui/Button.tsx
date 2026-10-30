@@ -2,7 +2,8 @@
 
 import React, { ComponentPropsWithoutRef, useRef } from "react";
 import Link from "next/link";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 
 type Variant = "primary" | "secondary" | "ghost";
 
@@ -39,7 +40,7 @@ export function Button({
 }: ButtonProps) {
   const wrapRef = useRef<HTMLSpanElement>(null);
   const rectRef = useRef<DOMRect | null>(null);
-  const reduced = useReducedMotion();
+  const reduced = useMountedReducedMotion();
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);

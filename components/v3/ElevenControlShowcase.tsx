@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 import gsap from "gsap";
 import {
   ShieldCheck,
@@ -335,7 +336,7 @@ export const SUBCONSCIOUS_FEED = [
 export function ElevenControlShowcase({ className = "" }: { className?: string }) {
   const showcaseRef = useRef<HTMLDivElement>(null);
   const inView = useInView(showcaseRef, { margin: "120px" });
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useMountedReducedMotion();
 
   // Navigation & View State
   const [activeView, setActiveView] = useState<ShowcaseView>("overview");

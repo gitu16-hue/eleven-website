@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useReducedMotion, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 
 interface SimulationScenario {
   id: string;
@@ -90,7 +91,7 @@ export function NeuralTraceSimulator() {
   const [selectedScenario, setSelectedScenario] = useState<SimulationScenario>(SCENARIOS[0]);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isSimulating, setIsSimulating] = useState<boolean>(true);
-  const reduced = useReducedMotion();
+  const reduced = useMountedReducedMotion();
   const stepTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-advance through simulation steps only when visible
@@ -351,12 +352,12 @@ export function NeuralTraceSimulator() {
                       </div>
 
                       {/* Animated Execution Progress Beam */}
-                      {isCurrentNode && !reduced && (
+                      {isCurrentNode && (
                         <motion.div
                           className="absolute bottom-0 left-0 right-0 h-[2px] bg-el-accent"
                           initial={{ width: "0%" }}
                           animate={{ width: "100%" }}
-                          transition={{ duration: 2.4, ease: "linear" }}
+                          transition={reduced ? { duration: 0 } : { duration: 2.4, ease: "linear" }}
                         />
                       )}
                     </motion.div>

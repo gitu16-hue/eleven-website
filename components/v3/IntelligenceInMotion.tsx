@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
-import { DualCopy } from "@/components/motion/PremiumMotion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { DualCopy, useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 
 interface StepSpec {
   id: string;
@@ -84,7 +84,7 @@ const STEPS: StepSpec[] = [
 export function IntelligenceInMotion() {
   const containerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef, { margin: "120px" });
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useMountedReducedMotion();
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);

@@ -9,6 +9,7 @@ import { InvariantRuleExplorer } from "@/components/v3/InvariantRuleExplorer";
 import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
 import { ThreatInterceptionBento } from "@/components/security/ThreatInterceptionBento";
 import { ExplodedLayerStack3D } from "@/components/security/ExplodedLayerStack3D";
+import { FlagshipSecurityExperience } from "@/components/security/FlagshipSecurityExperience";
 import { CurvedGovernanceRouteStepper } from "@/components/security/CurvedGovernanceRouteStepper";
 import {
   CipherText,
@@ -339,44 +340,23 @@ export default function SecurityCenterPage() {
 
         <SignalBeamDivider />
 
-        {/* ── COMPONENT A: INTERACTIVE THREAT INTERCEPTION BENTO GRID ── */}
-        <Section id="threat-simulation" className="py-16 lg:py-24">
+        {/* ── FLAGSHIP WEBSITE ANIMATIONS SHOWCASE: 3D EXPLODED STACK + THREAT BENTO + FLIP MORPHING ── */}
+        <Section id="flagship-security-showcase" className="py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <CipherText text="01B · INTERACTIVE SECURITY SIMULATION" />
+              <CipherText text="01B · FLAGSHIP SECURITY VISUALIZATION EXPERIENCE" />
             </div>
             <h2 className="el-h2">
-              <WordReveal text="Inspect how policy boundaries evaluate real-world scenarios." />
+              <WordReveal text="Shared-layout FLIP morphing, 3D exploded layers & live threat interception." />
             </h2>
             <DualCopy
               className="el-body"
-              plain="Step through four concrete scenarios—from untrusted email prompt injection to everyday local note searches—and test how ELEVEN's permission receipt and sandbox boundaries respond."
-              technical="Deterministic browser simulation modeling TaskCompiler input inspection, PolicyGate invariant evaluation, Cold-Room DEC-008 authorization, worker confinement, and hash-chained audit evidence."
+              plain="Explore ELEVEN's zero-trust security architecture. Click the top telemetry pill to expand the live 3-drone swarm, scrub the 3D isometric stack to explode internal planes, and test real-time threat interception in the obsidian bento grid."
+              technical="Framer Motion LayoutGroup morphing coupled with GSAP ScrollTrigger 1600px isometric stage scrubbing. Models live token scrubbers, default-deny egress barriers, and Cold-Room DEC-008 hardware nonces."
             />
           </div>
 
-          <ThreatInterceptionBento />
-        </Section>
-
-        <SignalBeamDivider />
-
-        {/* ── COMPONENT B: SCROLL-SCRUBBED 3D EXPLODED LAYER STACK ── */}
-        <Section id="exploded-security-stack" className="py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="01C · LAYERED ISOLATION TOPOLOGY" />
-            </div>
-            <h2 className="el-h2">
-              <WordReveal text="Scroll through the seven fault-isolated architectural layers." />
-            </h2>
-            <DualCopy
-              className="el-body"
-              plain="Scroll down (or drag the separation slider) to pull apart ELEVEN's seven safety layers from your screen down to your private local vault, then watch them lock back together."
-              technical="Deterministic scroll-scrubbed 3D architectural stack with on-demand WebGL rendering (0 idle FPS), keyboard-selectable layer specs, and static reduced-motion / WebGL fallbacks."
-            />
-          </div>
-
-          <ExplodedLayerStack3D />
+          <FlagshipSecurityExperience />
         </Section>
 
         <SignalBeamDivider />

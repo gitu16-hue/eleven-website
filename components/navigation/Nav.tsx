@@ -50,6 +50,29 @@ export function Nav() {
     };
   }, [open]);
 
+  const handleNavClick = (href: string, e?: React.MouseEvent) => {
+    // 1. Immediately release body overflow so mobile viewport can freely jump to top
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
+    setOpen(false);
+
+    // 2. If clicking on the current route (e.g. user tapped "How It Works" while already on /architecture)
+    if (pathname === href) {
+      if (e) {
+        e.preventDefault();
+      }
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      return;
+    }
+
+    // 3. For standard route transitions, enforce immediate top scroll coordinate
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
+
   return (
     <header
       className={`sticky top-0 z-40 transition-all duration-300 ${
@@ -62,6 +85,8 @@ export function Nav() {
         {/* Brand with GISHH Labs Emblem & ELEVEN v3 Identity */}
         <Link
           href="/"
+          scroll={true}
+          onClick={(e) => handleNavClick("/", e)}
           className="group flex items-center gap-2.5 shrink-0 transition-opacity duration-[var(--el-duration-fast)] hover:opacity-85"
         >
           <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-sm border border-el-border-strong/50 bg-el-bg-raised p-0.5 shadow-el-sm transition-transform duration-300 group-hover:scale-105">
@@ -101,6 +126,8 @@ export function Nav() {
               <li key={link.href} className="shrink-0">
                 <Link
                   href={link.href}
+                  scroll={true}
+                  onClick={(e) => handleNavClick(link.href, e)}
                   onMouseEnter={() => setHoveredHref(link.href)}
                   onFocus={() => setHoveredHref(link.href)}
                   className={`relative block rounded-full px-2.5 py-1.5 text-xs xl:px-3 xl:text-[13px] whitespace-nowrap transition-colors duration-200 shrink-0 ${
@@ -197,7 +224,8 @@ export function Nav() {
                 >
                   <Link
                     href={link.href}
-                    onClick={() => setOpen(false)}
+                    scroll={true}
+                    onClick={(e) => handleNavClick(link.href, e)}
                     className={`block min-h-[44px] flex items-center text-el-base ${
                       pathname === link.href
                         ? "font-medium text-el-fg"
@@ -214,6 +242,8 @@ export function Nav() {
                   variant="primary"
                   arrow
                   onClick={() => {
+                    document.body.style.overflow = "";
+                    document.documentElement.style.overflow = "";
                     setOpen(false);
                     enterComputationalMode();
                   }}
@@ -223,6 +253,8 @@ export function Nav() {
                 <button
                   type="button"
                   onClick={() => {
+                    document.body.style.overflow = "";
+                    document.documentElement.style.overflow = "";
                     setOpen(false);
                     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
                   }}

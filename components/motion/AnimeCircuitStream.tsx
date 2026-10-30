@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useId, useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 
 /**
  * Kinetic Sci-Fi Circuit Stream (Viewport-Gated & GPU-Optimized)
@@ -12,7 +13,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 export function AnimeCircuitStream() {
   const containerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef, { once: false, margin: "160px" });
-  const reduced = useReducedMotion();
+  const reduced = useMountedReducedMotion();
   const uniqueId = useId().replace(/:/g, "_");
   const animateActive = !reduced && inView;
 

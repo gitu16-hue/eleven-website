@@ -311,7 +311,7 @@ export function CipherText({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.35 });
-  const reduced = useReducedMotion();
+  const reduced = useMountedReducedMotion();
   const [output, setOutput] = useState(text);
 
   useEffect(() => {
@@ -513,7 +513,7 @@ export function Tilt3DCard({
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const rectRef = useRef<DOMRect | null>(null);
-  const reduced = useReducedMotion();
+  const reduced = useMountedReducedMotion();
 
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
@@ -634,7 +634,7 @@ export function AnimatedMetric({
   const ref = useRef<HTMLDivElement>(null);
   const onceInView = useInView(ref, { once: true, amount: 0.4 });
   const activeInView = useInView(ref, { once: false, margin: "80px" });
-  const reduced = useReducedMotion();
+  const reduced = useMountedReducedMotion();
   const formattedTarget = value.toFixed(decimals);
   const [display, setDisplay] = useState<string>(formattedTarget);
 
@@ -810,7 +810,7 @@ export function AnimatedMetric({
 export function SignalBeamDivider() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: false, margin: "120px" });
-  const reduced = useReducedMotion();
+  const reduced = useMountedReducedMotion();
 
   return (
     <div
