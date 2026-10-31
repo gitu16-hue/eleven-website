@@ -168,7 +168,7 @@ export default function AutonomyPage() {
         <SignalBeamDivider />
 
         {/* ── 3 INVARIANT LAWS ── */}
-        <Section className="py-16 lg:py-24">
+        <Section id="killswitch" className="relative py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
               <CipherText text="// 01 THREE INVARIANT LAWS" />
@@ -241,7 +241,7 @@ export default function AutonomyPage() {
         <SignalBeamDivider />
 
         {/* ── INTERACTIVE 4 TRUST LEVELS + RECEIPT DEMO ── */}
-        <Section className="py-16 lg:py-24">
+        <Section id="policy-gates" className="relative py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
               <CipherText text="// 02 COLD-ROOM APPROVAL DEMO" />

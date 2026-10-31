@@ -1,12 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
+
+const LEGACY_ANCHOR_MAP: Record<string, string> = {
+  "threat-simulation": "flagship-security-showcase",
+  "threats": "flagship-security-showcase",
+  "security-simulation": "flagship-security-showcase",
+  "solutions": "intelligence-in-motion",
+  "tools": "live-control-showcase",
+};
 
 /**
  * Ensures that navigating to any route (especially on mobile devices where
  * body overflow toggles and viewport caching can retain previous scroll depth)
- * instantly and reliably scrolls the window to the very top (0, 0).
+ * reliably scrolls to target anchors or to the top (0, 0), while never silently
+ * wiping scroll if a valid anchor exists.
  */
 export function RouteScrollRestoration() {
   const pathname = usePathname();
@@ -22,18 +31,26 @@ export function RouteScrollRestoration() {
     }
   }, []);
 
-  useEffect(() => {
-    // If the URL has an anchor hash, do not hijack top scroll if the hash element exists
-    if (typeof window !== "undefined" && window.location.hash) {
-      const targetId = window.location.hash.slice(1);
-      const el = document.getElementById(targetId);
-      if (el) {
-        el.scrollIntoView({ behavior: "instant" });
-        return;
-      }
+  const resolveTargetElement = useCallback((rawHash: string): HTMLElement | null => {
+    if (!rawHash) return null;
+    const cleanId = rawHash.replace(/^#/, "");
+    const directEl = document.getElementById(cleanId);
+    if (directEl) return directEl;
+
+    const mappedId = LEGACY_ANCHOR_MAP[cleanId];
+    if (mappedId) {
+      const mappedEl = document.getElementById(mappedId);
+      if (mappedEl) return mappedEl;
     }
 
-    const resetScroll = () => {
+    return document.querySelector(`[name="${cleanId}"]`);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    let t1: NodeJS.Timeout | null = null;
+
+    const resetScrollToTop = () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -41,22 +58,50 @@ export function RouteScrollRestoration() {
       document.body.scrollTop = 0;
     };
 
-    // 1. Immediate reset on pathname transition
-    resetScroll();
+    const attemptScrollToAnchorOrTop = (retryCount = 0) => {
+      if (cancelled || typeof window === "undefined") return;
 
-    // 2. Animation frame after layout pass
-    const rafId = requestAnimationFrame(resetScroll);
+      const hash = window.location.hash;
+      if (hash) {
+        const targetEl = resolveTargetElement(hash);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: "instant", block: "start" });
+          return;
+        }
 
-    // 3. Sequential timers to catch any delayed dynamic component hydration
-    const t1 = setTimeout(resetScroll, 60);
-    const t2 = setTimeout(resetScroll, 180);
+        // Retry up to 3 times (frame, 60ms, 150ms) to allow dynamic client components to mount
+        if (retryCount < 2) {
+          const delay = retryCount === 0 ? 60 : 150;
+          t1 = setTimeout(() => attemptScrollToAnchorOrTop(retryCount + 1), delay);
+          return;
+        }
+      }
+
+      // No hash present or anchor target not found after retries -> reset to top
+      resetScrollToTop();
+    };
+
+    // 1. Initial attempt
+    attemptScrollToAnchorOrTop(0);
+
+    // 2. Hash change listener for in-page anchor clicks
+    const handleHashChange = () => {
+      if (typeof window !== "undefined" && window.location.hash) {
+        const el = resolveTargetElement(window.location.hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
 
     return () => {
-      cancelAnimationFrame(rafId);
-      clearTimeout(t1);
-      clearTimeout(t2);
+      cancelled = true;
+      if (t1) clearTimeout(t1);
+      window.removeEventListener("hashchange", handleHashChange);
     };
-  }, [pathname]);
+  }, [pathname, resolveTargetElement]);
 
   return null;
 }

@@ -1,28 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { LayoutGroup, motion, AnimatePresence } from "framer-motion";
 import {
-  ShieldAlert,
-  ShieldCheck,
   Lock,
-  Terminal,
-  Activity,
-  AlertTriangle,
-  RotateCcw,
-  Radio,
-  Eye,
-  EyeOff,
   Cpu,
-  KeyRound,
-  FileCode,
-  CheckCircle2,
   X,
-  ChevronRight,
   Fingerprint,
-  Smartphone,
-  Layers,
-  ArrowRight,
 } from "lucide-react";
 import { SecurityBentoGrid } from "./SecurityBentoGrid";
 import {
@@ -68,7 +52,6 @@ export function FlagshipSecurityExperience() {
   // 5-second Cooling-Off Ring Timer
   useEffect(() => {
     if (!isDec008Open || isApproved || isDenied) {
-      setCoolingSeconds(5.0);
       return;
     }
 
@@ -85,7 +68,13 @@ export function FlagshipSecurityExperience() {
     return () => clearInterval(interval);
   }, [isDec008Open, isApproved, isDenied]);
 
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleOpenDec008 = (traceId: string) => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
     setActiveTraceId(traceId);
     setIsApproved(false);
     setIsDenied(false);
@@ -93,9 +82,22 @@ export function FlagshipSecurityExperience() {
     setIsDec008Open(true);
   };
 
-  const handleCloseDec008 = () => {
+  const handleCloseDec008 = useCallback(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
     setIsDec008Open(false);
-  };
+    setCoolingSeconds(5.0);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // ------------------------------------------------------------------
   // Morph 3 State: 3D Isometric Layer <-> Front-Facing Spec Inspector
@@ -352,7 +354,14 @@ export function FlagshipSecurityExperience() {
         {/* ========================================================= */}
         <AnimatePresence>
           {isDec008Open && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+            <motion.div
+              key="dec008-modal-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+            >
               <motion.div
                 layoutId="dec008-morph-card"
                 transition={SPRING_TRANSITION}
@@ -471,7 +480,8 @@ export function FlagshipSecurityExperience() {
                       type="button"
                       onClick={() => {
                         setIsDenied(true);
-                        setTimeout(handleCloseDec008, 600);
+                        if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+                        closeTimeoutRef.current = setTimeout(handleCloseDec008, 600);
                       }}
                       className="cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 font-mono text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
                     >
@@ -483,7 +493,8 @@ export function FlagshipSecurityExperience() {
                       disabled={coolingSeconds > 0}
                       onClick={() => {
                         setIsApproved(true);
-                        setTimeout(handleCloseDec008, 700);
+                        if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+                        closeTimeoutRef.current = setTimeout(handleCloseDec008, 700);
                       }}
                       className="cursor-pointer flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 font-mono text-xs font-semibold text-white hover:bg-black transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
                     >
@@ -499,7 +510,7 @@ export function FlagshipSecurityExperience() {
                   </div>
                 </div>
               </motion.div>
-            </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

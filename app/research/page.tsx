@@ -203,7 +203,7 @@ export default function ResearchPage() {
         <SignalBeamDivider />
 
         {/* ── 4 RESEARCH BREAKTHROUGHS ── */}
-        <Section className="py-16 lg:py-24">
+        <Section id="audit-trail" className="relative py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
               <span>{"// 01 WHAT WE RESEARCHED &amp; SOLVED"}</span>
@@ -253,7 +253,7 @@ export default function ResearchPage() {
         <SignalBeamDivider />
 
         {/* ── 15 UNBREAKABLE PROMISES ── */}
-        <Section className="py-16 lg:py-24 bg-el-bg-raised/45">
+        <Section id="rules" className="relative py-16 lg:py-24 bg-el-bg-raised/45">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
               <span>{"// 02 OUR CONSTITUTION"}</span>

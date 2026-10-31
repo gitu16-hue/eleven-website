@@ -7,8 +7,6 @@ import { ScrollReveal, RevealItem } from "@/components/ui/ScrollReveal";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { InvariantRuleExplorer } from "@/components/v3/InvariantRuleExplorer";
 import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
-import { ThreatInterceptionBento } from "@/components/security/ThreatInterceptionBento";
-import { ExplodedLayerStack3D } from "@/components/security/ExplodedLayerStack3D";
 import { FlagshipSecurityExperience } from "@/components/security/FlagshipSecurityExperience";
 import { CurvedGovernanceRouteStepper } from "@/components/security/CurvedGovernanceRouteStepper";
 import {
@@ -341,7 +339,9 @@ export default function SecurityCenterPage() {
         <SignalBeamDivider />
 
         {/* ── FLAGSHIP WEBSITE ANIMATIONS SHOWCASE: 3D EXPLODED STACK + THREAT BENTO + FLIP MORPHING ── */}
-        <Section id="flagship-security-showcase" className="py-16 lg:py-24">
+        <Section id="flagship-security-showcase" className="relative py-16 lg:py-24">
+          {/* Legacy anchor compatibility for /security#threat-simulation */}
+          <div id="threat-simulation" className="absolute -top-24 left-0 pointer-events-none" aria-hidden="true" />
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
               <CipherText text="01B · FLAGSHIP SECURITY VISUALIZATION EXPERIENCE" />

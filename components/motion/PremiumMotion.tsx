@@ -8,8 +8,10 @@ import React, {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import {
+  LayoutGroup,
   motion,
   useInView,
   useMotionTemplate,
@@ -61,45 +63,57 @@ export function useClarityMode() {
  * Interactive segmented pill allowing visitors to read effortless Plain English
  * (default) or switch to full ELEVEN v3 engineering terminology at any time.
  */
-export function ClarityTogglePill({ className = "" }: { className?: string }) {
+export function ClarityTogglePill({
+  className = "",
+  layoutIdScope,
+}: {
+  className?: string;
+  layoutIdScope?: string;
+}) {
   const { mode, setMode } = useClarityMode();
+  const reactId = React.useId();
+  const groupId = layoutIdScope || `clarity-pill-${reactId.replace(/:/g, "")}`;
 
   return (
-    <div
-      role="group"
-      aria-label="Explanation detail level"
-      className={`inline-flex items-center rounded-full border border-el-border-strong bg-el-bg-raised p-1 shadow-el-sm ${className}`}
-    >
-      {(
-        [
-          { id: "plain", label: "Simple View" },
-          { id: "technical", label: "Engineer Spec" },
-        ] as const
-      ).map((opt) => {
-        const active = mode === opt.id;
-        return (
-          <button
-            key={opt.id}
-            type="button"
-            onClick={() => setMode(opt.id)}
-            className={`relative cursor-pointer rounded-full px-3 py-1 text-el-xs font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-el-accent ${
-              active ? "text-el-bg" : "text-el-fg-muted hover:text-el-fg"
-            }`}
-          >
-            {active && (
-              <motion.span
-                layoutId="clarityActivePill"
-                transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                className="absolute inset-0 rounded-full bg-el-fg"
-              />
-            )}
-            <span className="relative z-10">{opt.label}</span>
-          </button>
-        );
-      })}
-    </div>
+    <LayoutGroup id={groupId}>
+      <div
+        role="group"
+        aria-label="Explanation detail level"
+        className={`inline-flex items-center rounded-full border border-el-border-strong bg-el-bg-raised p-1 shadow-el-sm ${className}`}
+      >
+        {(
+          [
+            { id: "plain", label: "Simple View" },
+            { id: "technical", label: "Engineer Spec" },
+          ] as const
+        ).map((opt) => {
+          const active = mode === opt.id;
+          return (
+            <button
+              key={opt.id}
+              type="button"
+              onClick={() => setMode(opt.id)}
+              className={`relative cursor-pointer rounded-full px-3 py-1 text-el-xs font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-el-accent ${
+                active ? "text-el-bg" : "text-el-fg-muted hover:text-el-fg"
+              }`}
+            >
+              {active && (
+                <motion.span
+                  layoutId="clarityActivePill"
+                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                  className="absolute inset-0 rounded-full bg-el-fg"
+                />
+              )}
+              <span className="relative z-10">{opt.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </LayoutGroup>
   );
 }
+
+const emptySubscribe = () => () => {};
 
 /**
  * SSR-safe reduced motion hook that guarantees 100% bit-for-bit hydration parity.
@@ -109,14 +123,14 @@ export function ClarityTogglePill({ className = "" }: { className?: string }) {
  * animations for reduced-motion visitors in 0ms.
  */
 export function useMountedReducedMotion(): boolean {
-  const [mounted, setMounted] = useState(false);
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
   const reduced = useReducedMotion();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  return mounted ? Boolean(reduced) : false;
+  return isMounted ? Boolean(reduced) : false;
 }
 
 /**

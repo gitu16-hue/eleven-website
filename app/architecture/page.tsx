@@ -176,7 +176,7 @@ export default function ArchitecturePage() {
         <SignalBeamDivider />
 
         {/* ── FOUR SEPARATE ROOMS (PROCESS ISOLATION) ── */}
-        <Section className="py-16 lg:py-24 bg-el-bg-raised/45">
+        <Section id="rooms" className="relative py-16 lg:py-24 bg-el-bg-raised/45">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
               <CipherText text="// 01 PROCESS ISOLATION" />
@@ -262,7 +262,7 @@ export default function ArchitecturePage() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button href="/security#threat-simulation" variant="secondary" arrow>
+              <Button href="/security#flagship-security-showcase" variant="secondary" arrow>
                 Interactive Security Simulation
               </Button>
             </div>

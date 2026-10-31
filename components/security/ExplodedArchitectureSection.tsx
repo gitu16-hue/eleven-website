@@ -1,21 +1,14 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useId } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Layers,
-  Shield,
   SlidersHorizontal,
   RotateCcw,
-  Cpu,
-  Lock,
-  Terminal,
-  Clock,
   CheckCircle2,
-  ExternalLink,
-  ChevronRight,
   X,
 } from "lucide-react";
 import { usePrefersReducedMotion } from "@/components/security/useSecurityEnv";
@@ -112,19 +105,34 @@ export function ExplodedArchitectureSection({
   const pinTriggerRef = useRef<HTMLDivElement>(null);
   const stackRef = useRef<HTMLDivElement>(null);
   const pulseRef = useRef<HTMLDivElement>(null);
+  const rafThrottledRef = useRef<number | null>(null);
 
   const reducedMotion = usePrefersReducedMotion();
   const [separation, setSeparation] = useState<number>(reducedMotion ? 85 : 32);
   const [activeLayerIndex, setActiveLayerIndex] = useState<number | null>(null);
 
+  // Synchronize reduced-motion preference if OS changes post-mount
+  useEffect(() => {
+    if (reducedMotion) {
+      if (stackRef.current) {
+        stackRef.current.style.setProperty("--layer-gap", "85px");
+      }
+      queueMicrotask(() => {
+        setSeparation(85);
+      });
+    }
+  }, [reducedMotion]);
+
   // Synchronize internal active layer with external prop
   useEffect(() => {
     if (selectedLayer !== undefined) {
-      setActiveLayerIndex(selectedLayer ? selectedLayer.index : null);
+      queueMicrotask(() => {
+        setActiveLayerIndex(selectedLayer ? selectedLayer.index : null);
+      });
     }
   }, [selectedLayer]);
 
-  // GSAP ScrollTrigger Setup
+  // GSAP ScrollTrigger Setup: pinned with 5.5rem offset to clear sticky header
   useEffect(() => {
     if (reducedMotion || typeof window === "undefined" || !pinTriggerRef.current) {
       return;
@@ -132,28 +140,48 @@ export function ExplodedArchitectureSection({
 
     const ctx = gsap.context(() => {
       // Scrub separation from 18px to 115px over 1600px of scroll
+      // start: "top 5.5rem" leaves clearance below the sticky navigation bar
       ScrollTrigger.create({
         trigger: pinTriggerRef.current,
-        start: "top top",
+        start: "top 5.5rem",
         end: "+=1600",
         pin: true,
+        pinSpacing: true,
         scrub: 0.7,
         onUpdate: (self) => {
           const progress = self.progress;
           // Scale separation from 18px (stacked) to 115px (fully exploded)
           const computedSeparation = Math.round(18 + progress * (115 - 18));
-          setSeparation(computedSeparation);
 
-          // Animate central bioluminescent data pulse
+          // 1. Direct hardware-accelerated CSS custom property update without virtual DOM re-renders
+          if (stackRef.current) {
+            stackRef.current.style.setProperty("--layer-gap", `${computedSeparation}px`);
+          }
+
+          // 2. Animate central bioluminescent data pulse
           if (pulseRef.current) {
             pulseRef.current.style.transform = `translateY(${progress * 280}px)`;
             pulseRef.current.style.opacity = `${0.3 + Math.sin(progress * Math.PI) * 0.7}`;
+          }
+
+          // 3. Throttle React slider state update via animation frame to prevent Virtual DOM thrashing
+          if (rafThrottledRef.current === null) {
+            rafThrottledRef.current = requestAnimationFrame(() => {
+              setSeparation(computedSeparation);
+              rafThrottledRef.current = null;
+            });
           }
         },
       });
     }, pinTriggerRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      if (rafThrottledRef.current !== null) {
+        cancelAnimationFrame(rafThrottledRef.current);
+        rafThrottledRef.current = null;
+      }
+    };
   }, [reducedMotion]);
 
   const handleLayerClick = (layer: ExplodedLayerData) => {
@@ -166,8 +194,18 @@ export function ExplodedArchitectureSection({
     }
   };
 
+  const handleSliderChange = (newVal: number) => {
+    setSeparation(newVal);
+    if (stackRef.current) {
+      stackRef.current.style.setProperty("--layer-gap", `${newVal}px`);
+    }
+  };
+
   const handleReset = () => {
     setSeparation(35);
+    if (stackRef.current) {
+      stackRef.current.style.setProperty("--layer-gap", "35px");
+    }
     setActiveLayerIndex(null);
     onSelectLayer?.(null);
   };
@@ -207,7 +245,7 @@ export function ExplodedArchitectureSection({
               min={18}
               max={115}
               value={separation}
-              onChange={(e) => setSeparation(Number(e.target.value))}
+              onChange={(e) => handleSliderChange(Number(e.target.value))}
               className="h-1 w-24 sm:w-32 cursor-pointer accent-cyan-400 bg-slate-800 rounded-lg"
               aria-label="Layer Separation Distance"
             />
@@ -250,12 +288,12 @@ export function ExplodedArchitectureSection({
             style={{
               transformStyle: "preserve-3d",
               transform: "rotateX(58deg) rotateZ(-38deg)",
-            }}
+              "--layer-gap": `${separation}px`,
+            } as React.CSSProperties}
           >
             {ARCHITECTURE_4_LAYERS.map((layer) => {
-              // Calculate vertical translateZ based on separation slider/scroll
+              // Calculate vertical translateZ based on CSS variable --layer-gap
               // Layer 0 is top (highest translateZ), Layer 3 is bottom (0 translateZ)
-              const layerTranslateZ = (3 - layer.index) * separation;
               const isSelected = activeLayerIndex === layer.index;
 
               return (
@@ -268,7 +306,7 @@ export function ExplodedArchitectureSection({
                       : "hover:border-white/60 hover:brightness-110"
                   }`}
                   style={{
-                    transform: `translateZ(${layerTranslateZ}px)`,
+                    transform: `translateZ(calc((3 - ${layer.index}) * var(--layer-gap, ${separation}px)))`,
                     backgroundColor: `rgba(${layer.accentRgb}, 0.12)`,
                     borderColor: layer.isHardBoundary
                       ? "#10b981"

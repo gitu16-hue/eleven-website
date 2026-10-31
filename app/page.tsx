@@ -216,7 +216,9 @@ export default function HomePage() {
         <SignalBeamDivider />
 
         {/* ── 02. INTELLIGENCE IN MOTION: THE AUTONOMOUS EXECUTION SEQUENCE ── */}
-        <Section id="intelligence-in-motion">
+        <Section id="intelligence-in-motion" className="relative">
+          {/* Anchor compatibility for /#solutions */}
+          <div id="solutions" className="absolute -top-24 left-0 pointer-events-none" aria-hidden="true" />
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div className="max-w-[680px]">
               <p className="el-eyebrow">
@@ -255,7 +257,9 @@ export default function HomePage() {
         <SignalBeamDivider />
 
         {/* ── 02B. LIVE INTERACTIVE CONTROL PLANE SHOWCASE & CURVED STEPPER ── */}
-        <Section id="live-control-showcase">
+        <Section id="live-control-showcase" className="relative">
+          {/* Anchor compatibility for /#tools */}
+          <div id="tools" className="absolute -top-24 left-0 pointer-events-none" aria-hidden="true" />
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-[700px]">
               <p className="el-eyebrow">
@@ -410,7 +414,7 @@ export default function HomePage() {
               <Button href="/architecture#exploded-layer-stack" variant="secondary">
                 Read System Spec
               </Button>
-              <Button href="/security#threat-simulation" variant="ghost">
+              <Button href="/security#flagship-security-showcase" variant="ghost">
                 Security Simulation →
               </Button>
             </div>

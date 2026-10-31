@@ -3,10 +3,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ShieldAlert,
   ShieldCheck,
   Lock,
-  Terminal,
   Zap,
   Activity,
   AlertTriangle,
@@ -14,10 +12,8 @@ import {
   Radio,
   Eye,
   EyeOff,
-  Cpu,
   KeyRound,
   FileCode,
-  CheckCircle2,
 } from "lucide-react";
 
 interface SecurityBentoGridProps {
@@ -34,6 +30,14 @@ export function SecurityBentoGrid({
   // Cursor tracking for radial spotlight across obsidian grid
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const gridRef = useRef<HTMLDivElement>(null);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!gridRef.current) return;
@@ -52,11 +56,29 @@ export function SecurityBentoGrid({
   const [scrambleKey, setScrambleKey] = useState("sk-live-98a72cf1904b");
   const [scrambleEntity, setScrambleEntity] = useState("GreySquare LLP");
   const [scrambleVal, setScrambleVal] = useState("₹4,80,000");
+  const scrubberIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const stopScrubberScan = useCallback(() => {
+    if (scrubberIntervalRef.current) {
+      clearInterval(scrubberIntervalRef.current);
+      scrubberIntervalRef.current = null;
+    }
+  }, []);
 
   const runScrubberScan = useCallback(() => {
+    // Clear any previous interval to prevent overlapping timers
+    stopScrubberScan();
+    if (!isMountedRef.current) return;
+
     setIsScanning(true);
     let iterations = 0;
-    const interval = setInterval(() => {
+
+    scrubberIntervalRef.current = setInterval(() => {
+      if (!isMountedRef.current) {
+        stopScrubberScan();
+        return;
+      }
+
       iterations++;
       setScrambleKey(
         Array.from({ length: 16 }, () =>
@@ -75,25 +97,31 @@ export function SecurityBentoGrid({
       );
 
       if (iterations >= 8) {
-        clearInterval(interval);
-        setIsScanning(false);
-        setIsScrubbed(true);
-        setScrambleKey("[VAULT_KEY_01]");
-        setScrambleEntity("[ENTITY_A]");
-        setScrambleVal("[VAL_REDACTED]");
+        stopScrubberScan();
+        if (isMountedRef.current) {
+          setIsScanning(false);
+          setIsScrubbed(true);
+          setScrambleKey("[VAULT_KEY_01]");
+          setScrambleEntity("[ENTITY_A]");
+          setScrambleVal("[VAL_REDACTED]");
+        }
       }
     }, 45);
-  }, []);
+  }, [stopScrubberScan]);
 
-  // Auto-sweep scanline every 4 seconds if nominal
+  // Auto-sweep scanline every 4.5 seconds if nominal
   useEffect(() => {
     const timer = setInterval(() => {
       if (!isScanning) {
         runScrubberScan();
       }
     }, 4500);
-    return () => clearInterval(timer);
-  }, [runScrubberScan, isScanning]);
+
+    return () => {
+      clearInterval(timer);
+      stopScrubberScan();
+    };
+  }, [runScrubberScan, isScanning, stopScrubberScan]);
 
   // -------------------------------------------------------------
   // CARD 2: Default-Deny Egress Shield State
@@ -106,16 +134,20 @@ export function SecurityBentoGrid({
   ]);
   const [forcefieldRipple, setForcefieldRipple] = useState(false);
   const [blockedAlertVisible, setBlockedAlertVisible] = useState(true);
+  const rippleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const loop = setInterval(() => {
+      if (!isMountedRef.current) return;
+
+      let triggeredBlock = false;
+
+      // Pure state update without side-effects in reducer
       setEgressPackets((prev) =>
         prev.map((pkt) => {
-          let nextProgress = pkt.progress + 0.04;
+          const nextProgress = pkt.progress + 0.04;
           if (pkt.type === "POST_BLOCKED" && nextProgress >= 0.52 && nextProgress < 0.6) {
-            setForcefieldRipple(true);
-            setBlockedAlertVisible(true);
-            setTimeout(() => setForcefieldRipple(false), 450);
+            triggeredBlock = true;
           }
           if (nextProgress > 1) {
             return {
@@ -127,9 +159,28 @@ export function SecurityBentoGrid({
           return { ...pkt, progress: nextProgress };
         })
       );
+
+      // Side-effects executed outside state updater callback
+      if (triggeredBlock && isMountedRef.current) {
+        setForcefieldRipple(true);
+        setBlockedAlertVisible(true);
+        if (rippleTimeoutRef.current) {
+          clearTimeout(rippleTimeoutRef.current);
+        }
+        rippleTimeoutRef.current = setTimeout(() => {
+          if (isMountedRef.current) {
+            setForcefieldRipple(false);
+          }
+        }, 450);
+      }
     }, 70);
 
-    return () => clearInterval(loop);
+    return () => {
+      clearInterval(loop);
+      if (rippleTimeoutRef.current) {
+        clearTimeout(rippleTimeoutRef.current);
+      }
+    };
   }, []);
 
   // -------------------------------------------------------------
@@ -138,20 +189,37 @@ export function SecurityBentoGrid({
   const [isSevered, setIsSevered] = useState(false);
   const [shockwave, setShockwave] = useState(false);
   const [severDuration, setSeverDuration] = useState<number | null>(null);
+  const shockwaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const triggerKillswitch = () => {
+  const triggerKillswitch = useCallback(() => {
     const start = performance.now();
     setShockwave(true);
     setIsSevered(true);
     const end = performance.now();
     setSeverDuration(Math.max(12.4, Math.round((end - start + 11.8) * 10) / 10));
-    setTimeout(() => setShockwave(false), 600);
-  };
 
-  const rearmWatchdog = () => {
+    if (shockwaveTimeoutRef.current) {
+      clearTimeout(shockwaveTimeoutRef.current);
+    }
+    shockwaveTimeoutRef.current = setTimeout(() => {
+      if (isMountedRef.current) {
+        setShockwave(false);
+      }
+    }, 600);
+  }, []);
+
+  const rearmWatchdog = useCallback(() => {
     setIsSevered(false);
     setSeverDuration(null);
-  };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (shockwaveTimeoutRef.current) {
+        clearTimeout(shockwaveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div

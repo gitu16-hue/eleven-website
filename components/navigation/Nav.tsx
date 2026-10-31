@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
@@ -16,13 +16,14 @@ const desktopLinks = [
   { href: "/dashboard", label: "Control Plane" },
   { href: "/autonomy", label: "Safety" },
   { href: "/solutions/developers", label: "Developers" },
+  { href: "/research", label: "Research" },
   { href: "/docs", label: "Docs" },
 ];
 
 const mobileLinks = [
   { href: "/eleven", label: "How It Thinks" },
-  { href: "/architecture", label: "How It Works" },
-  { href: "/dashboard", label: "Control Plane Showcase" },
+  { href: "/architecture", label: "Architecture" },
+  { href: "/dashboard", label: "Control Plane" },
   { href: "/autonomy", label: "Safety & Control" },
   { href: "/solutions/developers", label: "Developers" },
   { href: "/research", label: "Our Promises" },
@@ -35,6 +36,7 @@ export function Nav() {
   const [hoveredHref, setHoveredHref] = useState<string | null>(null);
   const pathname = usePathname();
   const { enterComputationalMode } = usePortalTransition();
+  const prevOverflowRef = useRef<string>("");
 
   useEffect(() => {
     const onScroll = () => setSolid(window.scrollY > 20);
@@ -43,20 +45,98 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Safe overflow management: preserve previous style and reliably restore on unmount/close
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (open) {
+      prevOverflowRef.current = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = prevOverflowRef.current || "";
+      document.documentElement.style.overflow = "";
+    }
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = prevOverflowRef.current || "";
+      document.documentElement.style.overflow = "";
     };
   }, [open]);
 
-  const handleNavClick = (href: string, e?: React.MouseEvent) => {
+  // Close drawer on route change
+  useEffect(() => {
+    queueMicrotask(() => {
+      setOpen(false);
+      document.body.style.overflow = prevOverflowRef.current || "";
+      document.documentElement.style.overflow = "";
+    });
+  }, [pathname]);
+
+  // Handle browser back/forward (popstate)
+  useEffect(() => {
+    const handlePopState = () => {
+      setOpen(false);
+      document.body.style.overflow = prevOverflowRef.current || "";
+      document.documentElement.style.overflow = "";
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // Viewport breakpoint listener: close mobile drawer when crossing into desktop breakpoint (1024px lg)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia("(min-width: 1024px)");
+
+    const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      if (e.matches) {
+        setOpen(false);
+        document.body.style.overflow = prevOverflowRef.current || "";
+        document.documentElement.style.overflow = "";
+      }
+    };
+
+    if (mql.matches && open) {
+      queueMicrotask(() => {
+        setOpen(false);
+        document.body.style.overflow = prevOverflowRef.current || "";
+        document.documentElement.style.overflow = "";
+      });
+    }
+
+    if ("addEventListener" in mql) {
+      mql.addEventListener("change", handleMediaChange);
+    } else {
+      // @ts-expect-error - legacy MediaQueryList fallback
+      mql.addListener(handleMediaChange);
+    }
+
+    return () => {
+      if ("removeEventListener" in mql) {
+        mql.removeEventListener("change", handleMediaChange);
+      } else {
+        // @ts-expect-error - legacy MediaQueryList fallback
+        mql.removeListener(handleMediaChange);
+      }
+    };
+  }, [open]);
+
+  // Escape key handler for keyboard accessibility
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) {
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
+  const handleNavClick = useCallback((href: string, e?: React.MouseEvent) => {
     // 1. Immediately release body overflow so mobile viewport can freely jump to top
-    document.body.style.overflow = "";
+    document.body.style.overflow = prevOverflowRef.current || "";
     document.documentElement.style.overflow = "";
     setOpen(false);
 
-    // 2. If clicking on the current route (e.g. user tapped "How It Works" while already on /architecture)
+    // 2. If clicking on the current route (e.g. user tapped "Architecture" while already on /architecture)
     if (pathname === href) {
       if (e) {
         e.preventDefault();
@@ -71,7 +151,7 @@ export function Nav() {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-  };
+  }, [pathname]);
 
   return (
     <header

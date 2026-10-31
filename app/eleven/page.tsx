@@ -396,7 +396,7 @@ export default function ElevenIntelligencePage() {
         <SignalBeamDivider />
 
         {/* ── FREEDOM TO SWITCH AI BRAINS ── */}
-        <Section className="py-16 lg:py-24">
+        <Section id="memory-drawers" className="relative py-16 lg:py-24">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
             <div className="lg:col-span-5 space-y-4">
               <div className="el-eyebrow">
