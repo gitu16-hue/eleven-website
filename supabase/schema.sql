@@ -36,10 +36,12 @@ CREATE INDEX IF NOT EXISTS waitlist_registrations_created_at_idx
 -- Enforces zero unauthorized database reads or writes
 ALTER TABLE public.waitlist_registrations ENABLE ROW LEVEL SECURITY;
 
--- Revoke all public execution/access by default
-REVOKE ALL ON public.waitlist_registrations FROM anon, authenticated;
+-- Revoke all public execution/access by default from client roles
+REVOKE ALL ON public.waitlist_registrations FROM anon, authenticated, public;
 
 -- Explicitly allow service_role full internal access (used solely by server-side Next.js route)
+GRANT ALL ON public.waitlist_registrations TO service_role;
+
 DROP POLICY IF EXISTS "Service role managed access" ON public.waitlist_registrations;
 CREATE POLICY "Service role managed access" 
     ON public.waitlist_registrations
@@ -50,12 +52,16 @@ CREATE POLICY "Service role managed access"
 
 -- 6. Updated Timestamp Trigger
 CREATE OR REPLACE FUNCTION public.handle_waitlist_updated_at()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
     NEW.updated_at = timezone('utc'::text, now());
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 DROP TRIGGER IF EXISTS on_waitlist_update ON public.waitlist_registrations;
 CREATE TRIGGER on_waitlist_update
@@ -66,7 +72,11 @@ CREATE TRIGGER on_waitlist_update
 -- 7. Data Retention & Deletion Procedure (GDPR Compliance)
 -- Allows programmatic deletion of user records upon request
 CREATE OR REPLACE FUNCTION public.purge_waitlist_registration(target_email TEXT)
-RETURNS BOOLEAN AS $$
+RETURNS BOOLEAN 
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
 DECLARE
     deleted_count INT;
 BEGIN
@@ -76,4 +86,14 @@ BEGIN
     GET DIAGNOSTICS deleted_count = ROW_COUNT;
     RETURN deleted_count > 0;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
+
+-- 8. Hardened Function Execution Privileges
+-- In PostgreSQL, functions in public are executable by PUBLIC by default.
+-- Revoke execution from client roles and restrict strictly to service_role to prevent PostgREST RPC abuse.
+REVOKE EXECUTE ON FUNCTION public.handle_waitlist_updated_at() FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.handle_waitlist_updated_at() TO service_role;
+
+REVOKE EXECUTE ON FUNCTION public.purge_waitlist_registration(TEXT) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.purge_waitlist_registration(TEXT) TO service_role;
+

@@ -37,6 +37,7 @@ function WaitlistForm({
   const [persistedResult, setPersistedResult] = useState<{
     tier: "general" | "technical";
     message: string;
+    isDuplicate?: boolean;
   } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -82,6 +83,7 @@ function WaitlistForm({
         setPersistedResult({
           tier: data.tier,
           message: data.message,
+          isDuplicate: Boolean(data.isDuplicate),
         });
       }
     } catch {
@@ -157,14 +159,28 @@ function WaitlistForm({
         </button>
       </div>
 
-      {/* Success State */}
+      {/* Success / Duplicate State */}
       {persistedResult ? (
         <div className="mt-6 space-y-4">
-          <div className="rounded-sm border border-emerald-500/40 bg-emerald-500/10 p-4 text-emerald-300">
+          <div
+            className={`rounded-sm border p-4 ${
+              persistedResult.isDuplicate
+                ? "border-amber-500/40 bg-amber-500/10 text-amber-300"
+                : "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+            }`}
+          >
             <p className="text-xs font-semibold">
-              ✓ Registration confirmed & persisted
+              {persistedResult.isDuplicate
+                ? "ℹ Existing registration confirmed"
+                : "✓ Registration confirmed & persisted"}
             </p>
-            <p className="mt-2 text-xs leading-relaxed text-emerald-200/90">
+            <p
+              className={`mt-2 text-xs leading-relaxed ${
+                persistedResult.isDuplicate
+                  ? "text-amber-200/90"
+                  : "text-emerald-200/90"
+              }`}
+            >
               {persistedResult.message}
             </p>
           </div>

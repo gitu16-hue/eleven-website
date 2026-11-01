@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server.js";
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
 
@@ -13,6 +13,22 @@ const ipRequestTimestamps = new Map<string, number[]>();
 const NO_STORE_HEADERS = {
   "Cache-Control": "no-store, max-age=0",
 };
+
+// Internal client factory type for mocking in unit tests without production overhead
+export type SupabaseFactory = (
+  url: string,
+  serviceRoleKey: string
+) => ReturnType<typeof createClient>;
+
+let customClientFactory: SupabaseFactory | null = null;
+
+export function setSupabaseClientFactoryForTesting(factory: SupabaseFactory | null): void {
+  customClientFactory = factory;
+}
+
+export function resetRateLimitsForTesting(): void {
+  ipRequestTimestamps.clear();
+}
 
 function pruneRateLimitMap(now: number): void {
   if (ipRequestTimestamps.size < MAX_TRACKED_IPS) return;
@@ -170,24 +186,30 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: "You must agree to receive communications regarding early access.",
+          error: "You must accept the communication consent to proceed.",
         },
         { status: 400, headers: NO_STORE_HEADERS }
       );
     }
 
-    // 7. Validate registration tier
-    const validTier = tier === "technical" ? "technical" : "general";
+    // 7. Validate registration tier/category
+    if (tier !== "general" && tier !== "technical") {
+      return NextResponse.json(
+        { success: false, error: "Invalid registration category." },
+        { status: 400, headers: NO_STORE_HEADERS }
+      );
+    }
+    const validTier: "general" | "technical" = tier;
 
     // 8. Sanitize optional name and intendedUse (strip HTML tags & control chars, cap length)
     const cleanName =
       typeof name === "string"
-        ? name.trim().slice(0, 100).replace(/[<>]/g, "")
+        ? name.trim().slice(0, 100).replace(/<[^>]*>/g, "").replace(/[<>]/g, "").trim()
         : null;
 
     const cleanIntendedUse =
       typeof intendedUse === "string"
-        ? intendedUse.trim().slice(0, 300).replace(/[<>]/g, "")
+        ? intendedUse.trim().slice(0, 300).replace(/<[^>]*>/g, "").replace(/[<>]/g, "").trim()
         : null;
 
     // 9. Inspect Supabase credentials
@@ -210,37 +232,104 @@ export async function POST(request: Request) {
 
     // 10. Execute parameterized persistence via Supabase client
     try {
-      const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-        },
-      });
+      const supabase = customClientFactory
+        ? customClientFactory(supabaseUrl, supabaseServiceKey)
+        : createClient(supabaseUrl, supabaseServiceKey, {
+            auth: {
+              persistSession: false,
+              autoRefreshToken: false,
+            },
+          });
 
-      // Upsert record with deterministic conflict resolution on lower(email)
-      const { data, error } = await supabase
+      // Check if registration already exists for this email
+      const { data: existing, error: selectError } = await supabase
         .from("waitlist_registrations")
-        .upsert(
+        .select("id, tier, created_at")
+        .eq("email", cleanEmail)
+        .maybeSingle();
+
+      if (selectError) {
+        console.error("Waitlist DB select error:", selectError.code || "UNKNOWN");
+        return NextResponse.json(
           {
-            email: cleanEmail,
-            name: cleanName,
-            intended_use: cleanIntendedUse,
+            success: false,
+            error: "Persistent storage service encountered an error. Please try again later.",
+          },
+          { status: 502, headers: NO_STORE_HEADERS }
+        );
+      }
+
+      if (existing) {
+        // Friendly duplicate response without creating another row; refresh profile
+        const { error: updateError } = await supabase
+          .from("waitlist_registrations")
+          .update({
+            name: cleanName || undefined,
+            intended_use: cleanIntendedUse || undefined,
             tier: validTier,
-            consent: true,
             ip_hash: clientIpHash,
             updated_at: new Date().toISOString(),
-          },
+          })
+          .eq("id", existing.id);
+
+        if (updateError) {
+          console.error("Waitlist DB update error:", updateError.code || "UNKNOWN");
+          return NextResponse.json(
+            {
+              success: false,
+              error: "Persistent storage service encountered an error. Please try again later.",
+            },
+            { status: 502, headers: NO_STORE_HEADERS }
+          );
+        }
+
+        return NextResponse.json(
           {
-            onConflict: "email",
-            ignoreDuplicates: false,
-          }
-        )
+            success: true,
+            status: "already_registered",
+            isDuplicate: true,
+            id: existing.id,
+            tier: validTier,
+            message:
+              "You are already registered on the ELEVEN waitlist! We have refreshed your access profile.",
+          },
+          { headers: NO_STORE_HEADERS }
+        );
+      }
+
+      // Fresh new registration
+      const { data: inserted, error: insertError } = await supabase
+        .from("waitlist_registrations")
+        .insert({
+          email: cleanEmail,
+          name: cleanName,
+          intended_use: cleanIntendedUse,
+          tier: validTier,
+          consent: true,
+          ip_hash: clientIpHash,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
         .select("id, tier, created_at")
         .single();
 
-      if (error) {
-        // Safe logging without PII or credentials
-        console.error("Waitlist DB write error:", error.code || "UNKNOWN");
+      if (insertError) {
+        // Concurrency edge case: Unique constraint violation (Postgres 23505)
+        if (insertError.code === "23505") {
+          return NextResponse.json(
+            {
+              success: true,
+              status: "already_registered",
+              isDuplicate: true,
+              tier: validTier,
+              message:
+                "You are already registered on the ELEVEN waitlist! We have refreshed your access profile.",
+            },
+            { headers: NO_STORE_HEADERS }
+          );
+        }
+
+        console.error("Waitlist DB insert error:", insertError.code || "UNKNOWN");
         return NextResponse.json(
           {
             success: false,
@@ -255,7 +344,8 @@ export async function POST(request: Request) {
         {
           success: true,
           status: "persisted",
-          id: data?.id,
+          isDuplicate: false,
+          id: inserted?.id,
           tier: validTier,
           message:
             validTier === "technical"
