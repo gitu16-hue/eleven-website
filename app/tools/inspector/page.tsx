@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
-import { Section, Container } from "@/components/ui/Section";
+import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import dynamic from "next/dynamic";
@@ -14,11 +14,12 @@ const ActionProposalPlayground = dynamic(
     ),
   {
     loading: () => (
-      <div className="h-[580px] w-full animate-pulse rounded-sm border border-el-border bg-el-bg-raised/40" />
+      <div className="h-[580px] w-full animate-pulse motion-reduce:animate-none rounded-sm border border-el-border bg-el-bg-raised/40" />
     ),
   }
 );
 import {
+  CipherText,
   ClarityTogglePill,
   DualCopy,
   SignalBeamDivider,
@@ -81,7 +82,10 @@ export default function ActionProposalInspectorPage() {
     <>
       <Nav />
 
-      <main id="main-content">
+      <main
+        id="main-content"
+        className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -99,19 +103,19 @@ export default function ActionProposalInspectorPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60"
+            className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-60"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
-                  { label: "Tools", href: "/#tools" },
+                  { label: "Tools", href: "/tools/inspector" },
                   { label: "ActionProposal Inspector", href: "/tools/inspector" },
                 ]}
               />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                  TERMINOLOGY DEPTH:
+                <span className="text-xs text-el-fg-faint">
+                  Terminology depth:
                 </span>
                 <ClarityTogglePill />
               </div>
@@ -119,8 +123,8 @@ export default function ActionProposalInspectorPage() {
 
             <div className="mt-10 max-w-4xl space-y-6">
               <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
-                <span>DEVELOPER TOOLS // PROTOCOL PLAYGROUND</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime motion-reduce:animate-none" />
+                <CipherText text="Developer Tooling · Protocol Playground" />
               </div>
 
               <h1 className="el-h1">
@@ -133,30 +137,44 @@ export default function ActionProposalInspectorPage() {
                 technical="Interactive simulator for the ELEVEN ActionProposal JSON-RPC protocol. Compose, inspect, and evaluate agent tool calls against static AST bounds, path containment, monotonic privilege barriers, and Ed25519 cryptographic receipts."
               />
 
-              <div className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]">
-                <span className="rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
-                  ✓ JSON-RPC 2.0 LOOPBACK
+              <div className="flex flex-wrap gap-2 pt-2 text-xs text-el-fg-muted">
+                <span className="rounded-xs border border-el-signal-lime/40 bg-el-signal-lime/10 px-2.5 py-1 text-el-signal-lime text-[11px]">
+                  JSON-RPC 2.0 Loopback
                 </span>
-                <span className="rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
-                  ✓ 5 FAIL-CLOSED GATES
+                <span className="rounded-xs border border-el-signal-lime/30 bg-el-signal-lime/5 px-2.5 py-1 text-el-fg-muted text-[11px]">
+                  5 Fail-Closed Gates
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  ✓ ED25519 30S TTL
+                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted text-[11px]">
+                  <code>Ed25519</code> 30s TTL
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  ✓ RING-0 PREEMPTION
+                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted text-[11px]">
+                  Ring-0 Preemption
                 </span>
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <WaitlistActionButton tier="technical" arrow variant="primary">
+                <WaitlistActionButton
+                  tier="technical"
+                  arrow
+                  variant="primary"
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
                   Request CLI &amp; SDK Access
                 </WaitlistActionButton>
-                <Button variant="secondary" href="/docs">
-                  Read JSON-RPC Specs →
+                <Button
+                  variant="secondary"
+                  href="/docs"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
+                  Read JSON-RPC Specs
                 </Button>
-                <Button variant="ghost" href="/tools/dag-visualizer">
+                <Button
+                  variant="ghost"
+                  href="/tools/dag-visualizer"
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
                   Open DAG Visualizer
                 </Button>
               </div>
@@ -167,18 +185,18 @@ export default function ActionProposalInspectorPage() {
         <SignalBeamDivider />
 
         {/* ── INTERACTIVE ACTION PROPOSAL PLAYGROUND ── */}
-        <Section className="py-16 lg:py-24 bg-[#030508]">
+        <Section className="py-16 lg:py-24 bg-el-bg">
           <div className="max-w-3xl space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="el-eyebrow">
-                <span>{"// 01 LIVE PROTOCOL SIMULATOR"}</span>
+                <CipherText text="// 01 LIVE PROTOCOL SIMULATOR" />
               </div>
-              <div className="rounded-xs border border-el-border bg-[#020408] px-2.5 py-1 font-mono text-[11px] text-el-fg-faint">
-                SIMULATOR ENGINE: <span className="text-el-mint font-semibold">HOST_SUPERVISOR_V3</span>
+              <div className="rounded-xs border border-el-border bg-el-bg-raised/60 px-2.5 py-1 text-xs text-el-fg-faint">
+                Simulator engine: <code className="text-el-signal-lime font-semibold">HOST_SUPERVISOR_V3</code>
               </div>
             </div>
             <h2 className="el-h2">
-              Adversarial &amp; Benign Scenario Simulator
+              <WordReveal text="Adversarial and benign scenario simulator" />
             </h2>
             <DualCopy
               className="el-body"
@@ -198,10 +216,10 @@ export default function ActionProposalInspectorPage() {
         <Section className="py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <span>{"// 02 GATE ARCHITECTURE &amp; TIMING"}</span>
+              <CipherText text="// 02 GATE ARCHITECTURE AND TIMING" />
             </div>
             <h2 className="el-h2">
-              Zero-Trust pipeline at 12ms average latency.
+              <WordReveal text="Zero-Trust pipeline at 12ms average latency." />
             </h2>
             <DualCopy
               className="el-body"
@@ -212,10 +230,10 @@ export default function ActionProposalInspectorPage() {
 
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* Gate 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
+                  <span className="text-el-signal-lime font-semibold tracking-wider">
                     GATE 01 // PATH
                   </span>
                   <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
@@ -231,16 +249,16 @@ export default function ActionProposalInspectorPage() {
                   technical="Canonical root boundary check resolves symlinks and relative path components. Blocks access outside assigned workspace chroot/namespace."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-4 font-mono text-[10.5px] text-el-fg-faint">
-                <span className="text-el-accent">Action on Breach:</span> DROP_PACKET + SEGV
+              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+                <span className="text-el-signal-lime">Action on breach:</span> <code className="text-[10.5px]">DROP_PACKET + SEGV</code>
               </div>
             </Tilt3DCard>
 
             {/* Gate 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
+                  <span className="text-el-signal-lime font-semibold tracking-wider">
                     GATE 02 // AST
                   </span>
                   <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
@@ -256,16 +274,16 @@ export default function ActionProposalInspectorPage() {
                   technical="Abstract Syntax Tree parser scans for blacklisted AST nodes (eval, Function, dynamic child_process, and unsafe crypto primitives)."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-4 font-mono text-[10.5px] text-el-fg-faint">
-                <span className="text-el-accent">Action on Breach:</span> QUARANTINE_DIFF
+              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+                <span className="text-el-signal-lime">Action on breach:</span> <code className="text-[10.5px]">QUARANTINE_DIFF</code>
               </div>
             </Tilt3DCard>
 
             {/* Gate 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
+                  <span className="text-el-signal-lime font-semibold tracking-wider">
                     GATE 03 // AUTONOMY
                   </span>
                   <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
@@ -281,16 +299,16 @@ export default function ActionProposalInspectorPage() {
                   technical="State machine invariant ensures Tier(t_2) &le; Tier(t_1). Token downgrade is permitted; privilege elevation causes process termination."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-4 font-mono text-[10.5px] text-el-fg-faint">
-                <span className="text-el-accent">Action on Breach:</span> THREAD_KILL + SIGKILL
+              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+                <span className="text-el-signal-lime">Action on breach:</span> <code className="text-[10.5px]">THREAD_KILL + SIGKILL</code>
               </div>
             </Tilt3DCard>
 
             {/* Gate 4 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
+                  <span className="text-el-signal-lime font-semibold tracking-wider">
                     GATE 04 // FIREWALL
                   </span>
                   <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
@@ -306,19 +324,19 @@ export default function ActionProposalInspectorPage() {
                   technical="Default-deny socket packet filter intercepts connect() system calls. Matches destination IP/port against cryptographic policy whitelist."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-4 font-mono text-[10.5px] text-el-fg-faint">
-                <span className="text-el-accent">Action on Breach:</span> DROP_SOCKET + ALERT
+              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+                <span className="text-el-signal-lime">Action on breach:</span> <code className="text-[10.5px]">DROP_SOCKET + ALERT</code>
               </div>
             </Tilt3DCard>
 
             {/* Gate 5 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
+                  <span className="text-el-signal-lime font-semibold tracking-wider">
                     GATE 05 // ESCROW
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-purple-400">
+                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-fg-muted">
                     ED25519
                   </span>
                 </div>
@@ -331,13 +349,13 @@ export default function ActionProposalInspectorPage() {
                   technical="ActionProposal hashes bind to an ephemeral 128-bit nonce. Executing mutations on the host requires an operator cryptographic signature."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-4 font-mono text-[10.5px] text-el-fg-faint">
-                <span className="text-purple-400">Action on Breach:</span> NONCE_EXPIRE (30s TTL)
+              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+                <span className="text-el-signal-lime">Action on breach:</span> <code className="text-[10.5px]">NONCE_EXPIRE (30s TTL)</code>
               </div>
             </Tilt3DCard>
 
             {/* Total Pipeline */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-el-signal-lime font-semibold tracking-wider">
@@ -356,8 +374,8 @@ export default function ActionProposalInspectorPage() {
                   technical="Host Supervisor Ring-0 watchdog operates independently of userland model runtime. Kernel-level SIGKILL halts processes in under 50ms."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-4 font-mono text-[10.5px] text-el-signal-lime">
-                <span className="text-el-signal-lime">Watchdog Preemption:</span> &lt;0.05s Target
+              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-signal-lime">
+                <span className="text-el-signal-lime">Watchdog preemption:</span> <code className="text-[10.5px]">&lt;0.05s Target</code>
               </div>
             </Tilt3DCard>
           </div>
@@ -369,11 +387,11 @@ export default function ActionProposalInspectorPage() {
         <Section className="py-16">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-6 space-y-5">
-              <p className="el-eyebrow">
-                03 · CLI &amp; DAEMON INTEGRATION
-              </p>
+              <div className="el-eyebrow">
+                <CipherText text="// 03 CLI AND DAEMON INTEGRATION" />
+              </div>
               <h2 className="el-h2">
-                Run the inspector locally on port 9099.
+                <WordReveal text="Run the inspector locally on port 9099." />
               </h2>
               <DualCopy
                 className="el-body"
@@ -381,32 +399,32 @@ export default function ActionProposalInspectorPage() {
                 technical="The `eleven-cli inspector` binary exposes an authenticated local JSON-RPC socket on 127.0.0.1:9099. Connect your MCP servers and watch live ActionProposal telemetry in your terminal."
               />
 
-              <ul className="space-y-3 font-mono text-el-xs text-el-fg-muted">
+              <ul className="space-y-3 text-xs text-el-fg-muted">
                 <li className="flex items-start gap-2.5">
-                  <span className="text-el-accent">▸</span>
-                  <span><strong className="text-el-fg">Interactive Terminal TUI:</strong> Inspect live proposals with curses/ratatui terminal dashboards.</span>
+                  <span className="text-el-signal-lime">▸</span>
+                  <span><strong className="text-el-fg">Interactive terminal TUI:</strong> Inspect live proposals with curses/ratatui terminal dashboards.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-el-accent">▸</span>
-                  <span><strong className="text-el-fg">Automated CI/CD Verification:</strong> Run `eleven test --gates all` in your git pre-commit hooks to block unsafe AI code.</span>
+                  <span className="text-el-signal-lime">▸</span>
+                  <span><strong className="text-el-fg">Automated CI/CD verification:</strong> Run `eleven test --gates all` in your git pre-commit hooks to block unsafe AI code.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-el-accent">▸</span>
-                  <span><strong className="text-el-fg">Local JSON-RPC Bridges:</strong> Compatible with Model Context Protocol (MCP) clients and standard LSP servers.</span>
+                  <span className="text-el-signal-lime">▸</span>
+                  <span><strong className="text-el-fg">Local JSON-RPC bridges:</strong> Compatible with Model Context Protocol (MCP) clients and standard LSP servers.</span>
                 </li>
               </ul>
             </div>
 
             {/* Terminal Preview */}
             <div className="lg:col-span-6">
-              <div className="overflow-hidden rounded-sm border border-el-border bg-[#04060A] font-mono text-[11.5px] shadow-el-md">
+              <div className="overflow-hidden rounded-sm border border-el-border bg-el-bg font-mono text-[11.5px] shadow-el-md">
                 <div className="flex items-center justify-between border-b border-el-border/80 bg-el-bg-raised/70 px-4 py-2.5 text-el-xs">
                   <span className="text-el-fg-faint">terminal // zsh</span>
-                  <span className="text-el-accent text-[10px]">eleven-cli v3.1</span>
+                  <span className="text-el-signal-lime text-[10px]">eleven-cli v3.1</span>
                 </div>
                 <div className="p-5 space-y-3 leading-relaxed">
                   <p className="text-el-fg-faint">
-                    <span className="text-el-accent">$</span> eleven-cli inspector --listen 127.0.0.1:9099 --watch
+                    <span className="text-el-signal-lime">$</span> eleven-cli inspector --listen 127.0.0.1:9099 --watch
                   </p>
                   <p className="text-el-signal-lime">
                     ✔ Host Supervisor bound to loopback socket: 127.0.0.1:9099
@@ -414,16 +432,16 @@ export default function ActionProposalInspectorPage() {
                   <p className="text-el-fg-muted">
                     ✔ 15 Invariant Rules loaded from ~/.eleven/invariants.yaml
                   </p>
-                  <p className="text-purple-400">
+                  <p className="text-el-fg-muted">
                     ✔ Operator Ed25519 Key verified [ed25519:operator_alpha]
                   </p>
                   <div className="border-t border-el-border/60 pt-3 text-[11px] text-el-fg-faint">
-                    <p className="text-el-accent">❯ Staging ActionProposal #0495 (git.push origin release/v3.2)...</p>
+                    <p className="text-el-signal-lime">❯ Staging ActionProposal #0495 (git.push origin release/v3.2)...</p>
                     <p className="text-el-fg-muted">  [Gate 1] Path Confinement: PASS (worktree /tmp/tree_89)</p>
                     <p className="text-el-fg-muted">  [Gate 2] Static AST Check: PASS (0 eval, 0 exec)</p>
                     <p className="text-el-fg-muted">  [Gate 3] Monotonic Autonomy: PASS (Tier 2)</p>
                     <p className="text-el-fg-muted">  [Gate 4] Egress Firewall: PASS (github.com:22)</p>
-                    <p className="text-purple-400 font-semibold">  [Gate 5] Nonce NONCE-9481 generated. Awaiting 30s signature.</p>
+                    <p className="text-el-signal-lime font-semibold">  [Gate 5] Nonce NONCE-9481 generated. Awaiting 30s signature.</p>
                   </div>
                 </div>
               </div>
@@ -441,11 +459,11 @@ export default function ActionProposalInspectorPage() {
               className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-30"
             />
             <div className="relative mx-auto max-w-[640px] space-y-4">
-              <span className="el-eyebrow">
-                DEVELOPER TOOLING // SDK PREVIEW
-              </span>
+              <div className="el-eyebrow">
+                <CipherText text="// 04 DEVELOPER TOOLING AND SDK" />
+              </div>
               <h2 className="el-h2">
-                Integrate ELEVEN into your local workflow.
+                <WordReveal text="Integrate ELEVEN into your local workflow." />
               </h2>
               <DualCopy
                 className="el-body"
@@ -454,18 +472,32 @@ export default function ActionProposalInspectorPage() {
               />
 
               <div className="pt-4 flex flex-wrap justify-center gap-4">
-                <WaitlistActionButton tier="technical" arrow>
+                <WaitlistActionButton
+                  tier="technical"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
                   Request CLI &amp; SDK Access
                 </WaitlistActionButton>
-                <Button variant="secondary" href="/security">
-                  View Threat Model &amp; Invariants →
+                <Button
+                  variant="secondary"
+                  href="/security"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
+                  View Threat Model &amp; Invariants
                 </Button>
-                <Button variant="ghost" href="/tools/dag-visualizer">
-                  DAG Orchestrator →
+                <Button
+                  variant="ghost"
+                  href="/tools/dag-visualizer"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
+                  DAG Orchestrator
                 </Button>
               </div>
 
-              <p className="pt-2 font-mono text-[10.5px] text-el-fg-faint">
+              <p className="pt-2 text-xs text-el-fg-faint">
                 Compatible with Neovim, VS Code, Zed, and custom terminal environments.
               </p>
             </div>

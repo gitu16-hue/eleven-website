@@ -15,11 +15,12 @@ const System2DagVisualizer = dynamic(
     ),
   {
     loading: () => (
-      <div className="h-[560px] w-full animate-pulse rounded-sm border border-el-border bg-el-bg-raised/40" />
+      <div className="h-[560px] w-full animate-pulse motion-reduce:animate-none rounded-sm border border-el-border bg-el-bg-raised/40" />
     ),
   }
 );
 import {
+  CipherText,
   ClarityTogglePill,
   DualCopy,
   SignalBeamDivider,
@@ -58,7 +59,7 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       position: 2,
       name: "Tools",
-      item: "https://eleven-website-self.vercel.app/#tools",
+      item: "https://eleven-website-self.vercel.app/tools/dag-visualizer",
     },
     {
       "@type": "ListItem",
@@ -93,7 +94,10 @@ export default function DagVisualizerPage() {
     <>
       <Nav />
 
-      <main id="main-content">
+      <main
+        id="main-content"
+        className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -109,20 +113,23 @@ export default function DagVisualizerPage() {
 
         {/* HERO SECTION */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60" />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-60"
+          />
 
           <Container className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
-                  { label: "Tools", href: "/#tools" },
+                  { label: "Tools", href: "/tools/dag-visualizer" },
                   { label: "DAG Plan Orchestrator", href: "/tools/dag-visualizer" },
                 ]}
               />
 
               <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                  TERMINOLOGY DEPTH:
+                <span className="text-xs text-el-fg-faint">
+                  Terminology depth:
                 </span>
                 <ClarityTogglePill />
               </div>
@@ -130,8 +137,8 @@ export default function DagVisualizerPage() {
 
             <div className="mt-10 max-w-4xl space-y-6">
               <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
-                <span>SYSTEM 2 ASYNC REASONING // QUARANTINED GIT WORKTREE EXECUTION</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime motion-reduce:animate-none" />
+                <CipherText text="System 2 Async Reasoning · Quarantined Git Worktrees" />
               </div>
 
               <h1 className="el-h1">
@@ -145,33 +152,48 @@ export default function DagVisualizerPage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]">
-                <span className="rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
-                  ✓ ISOLATED GIT WORKTREES (INV-09)
+              <div className="flex flex-wrap gap-2 pt-2 text-xs text-el-fg-muted">
+                <span className="rounded-xs border border-el-signal-lime/40 bg-el-signal-lime/10 px-2.5 py-1 text-el-signal-lime">
+                  Isolated Git Worktrees (<code>INV-09</code>)
                 </span>
-                <span className="rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
-                  ✓ STATIC AST AUDIT GATES (INV-10)
-                </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  ✓ HUMAN SOVEREIGN VETO (INV-02)
+                <span className="rounded-xs border border-el-signal-lime/30 bg-el-signal-lime/5 px-2.5 py-1 text-el-fg-muted">
+                  Static AST Audit Gates (<code>INV-10</code>)
                 </span>
                 <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  ✓ ATOMIC MERKLE ROLLBACK (INV-05)
+                  Human Sovereign Veto (<code>INV-02</code>)
+                </span>
+                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  Atomic Merkle Rollback (<code>INV-05</code>)
                 </span>
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <WaitlistActionButton tier="technical" arrow variant="primary">
+                <WaitlistActionButton
+                  tier="technical"
+                  arrow
+                  variant="primary"
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
                   Request DAG Orchestrator Preview
                 </WaitlistActionButton>
 
-                <Button href="/solutions/developers" variant="secondary">
+                <Button
+                  href="/solutions/developers"
+                  variant="secondary"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
                   Explore Developer Solutions
                 </Button>
 
-                <Button href="/tools/inspector" variant="ghost">
-                  Inspect ActionProposals →
+                <Button
+                  href="/tools/inspector"
+                  variant="ghost"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
+                  Inspect ActionProposals
                 </Button>
               </div>
             </div>
@@ -181,14 +203,14 @@ export default function DagVisualizerPage() {
         <SignalBeamDivider />
 
         {/* INTERACTIVE DAG ORCHESTRATOR COMPONENT */}
-        <Section className="py-16 lg:py-24 bg-[#030508]">
+        <Section className="py-16 lg:py-24 bg-el-bg">
           <Container>
             <div className="max-w-3xl space-y-4">
               <div className="el-eyebrow">
-                <span>{"// 01 INTERACTIVE EXECUTION GRAPH PLAYGROUND"}</span>
+                <CipherText text="// 01 INTERACTIVE EXECUTION GRAPH PLAYGROUND" />
               </div>
               <h2 className="el-h2">
-                Simulate Asynchronous Multi-Agent Planning
+                <WordReveal text="Simulate Asynchronous Multi-Agent Planning" />
               </h2>
               <p className="el-body">
                 Inspect how complex software engineering objectives are decomposed into topological dependency graphs. Click any node to view isolated sandbox worktrees, tool arguments, AST safety checks, and Ed25519 diff hashes.
@@ -208,10 +230,10 @@ export default function DagVisualizerPage() {
           <Container>
             <div className="max-w-3xl space-y-4">
               <div className="el-eyebrow">
-                <span>{"// 02 CONFINEMENT ARCHITECTURE"}</span>
+                <CipherText text="// 02 CONFINEMENT ARCHITECTURE" />
               </div>
               <h2 className="el-h2">
-                The 4 DAG Isolation Invariants
+                <WordReveal text="The 4 DAG Isolation Invariants" />
               </h2>
               <p className="el-body">
                 Autonomous code agents can introduce regression, syntax damage, or accidental deletions if allowed to mutate your working copy unchecked. ELEVEN enforces 4 non-negotiable architectural invariants across every DAG.
@@ -220,13 +242,13 @@ export default function DagVisualizerPage() {
 
             <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Invariant 1 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 lg:p-8 space-y-4">
-                <div className="pointer-events-none absolute top-3 right-3 font-mono text-xs text-el-cyan/40">
-                  ⌜ INV-09 ⌟
+              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 lg:p-8 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+                <div className="pointer-events-none absolute top-3 right-3">
+                  <code className="text-el-signal-lime/50 font-mono text-xs">INV-09</code>
                 </div>
-                <div className="flex items-center gap-2 font-mono text-xs text-el-cyan">
-                  <span className="h-2 w-2 rounded-full bg-el-cyan" />
-                  <span>INVARIANT 01 // WORKTREE ISOLATION</span>
+                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
+                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                  <span>Worktree isolation invariant</span>
                 </div>
                 <h3 className="text-xl font-bold text-el-fg">
                   Quarantined Git Worktree Sandboxes
@@ -236,20 +258,20 @@ export default function DagVisualizerPage() {
                   plain="Agents never touch your primary git branch or uncommitted work. Each worker receives an isolated temporary branch in a quarantined folder. Your current code remains completely untouched."
                   technical="The supervisor spawns ephemeral git worktrees using git worktree add --detach in an isolated ramdisk or temporary directory. Subagents perform file edits, compilation, and unit tests inside this sandbox boundary, guaranteeing zero contamination of refs/heads/main."
                 />
-                <div className="border-t border-el-border/60 pt-3 font-mono text-[11px] text-el-fg-faint flex justify-between">
+                <div className="border-t border-el-border/60 pt-3 text-xs text-el-fg-faint flex justify-between">
                   <span>Enforcement:</span>
-                  <span className="text-el-mint">Filesystem Isolation Sandbox</span>
+                  <code className="text-el-signal-lime text-[11px]">Filesystem Isolation Sandbox</code>
                 </div>
               </Tilt3DCard>
 
               {/* Invariant 2 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 lg:p-8 space-y-4">
-                <div className="pointer-events-none absolute top-3 right-3 font-mono text-xs text-el-cyan/40">
-                  ⌜ INV-10 ⌟
+              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 lg:p-8 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+                <div className="pointer-events-none absolute top-3 right-3">
+                  <code className="text-el-signal-lime/50 font-mono text-xs">INV-10</code>
                 </div>
-                <div className="flex items-center gap-2 font-mono text-xs text-el-cyan">
-                  <span className="h-2 w-2 rounded-full bg-el-cyan" />
-                  <span>INVARIANT 02 // AST SAFETY GATES</span>
+                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
+                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                  <span>AST safety gate invariant</span>
                 </div>
                 <h3 className="text-xl font-bold text-el-fg">
                   Static AST Pre-Verification
@@ -259,20 +281,20 @@ export default function DagVisualizerPage() {
                   plain="Before any generated code is compiled, an automated inspector analyzes the code structure to ensure no destructive shell commands, hidden network calls, or dangerous scripts were inserted."
                   technical="Abstract Syntax Tree (AST) analyzers scan all mutated files against formal security policies. Code containing arbitrary dynamic code evaluation (eval, Function), unverified child process spawns, or hardcoded API keys is rejected immediately before reaching the build stage."
                 />
-                <div className="border-t border-el-border/60 pt-3 font-mono text-[11px] text-el-fg-faint flex justify-between">
+                <div className="border-t border-el-border/60 pt-3 text-xs text-el-fg-faint flex justify-between">
                   <span>Enforcement:</span>
-                  <span className="text-el-mint">Tree-sitter / Babel AST Gate</span>
+                  <code className="text-el-signal-lime text-[11px]">Tree-sitter / Babel AST Gate</code>
                 </div>
               </Tilt3DCard>
 
               {/* Invariant 3 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 lg:p-8 space-y-4">
-                <div className="pointer-events-none absolute top-3 right-3 font-mono text-xs text-el-cyan/40">
-                  ⌜ INV-02 ⌟
+              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 lg:p-8 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+                <div className="pointer-events-none absolute top-3 right-3">
+                  <code className="text-el-signal-lime/50 font-mono text-xs">INV-02</code>
                 </div>
-                <div className="flex items-center gap-2 font-mono text-xs text-el-cyan">
-                  <span className="h-2 w-2 rounded-full bg-el-cyan" />
-                  <span>INVARIANT 03 // HUMAN SOVEREIGN VETO</span>
+                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
+                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                  <span>Human sovereign veto invariant</span>
                 </div>
                 <h3 className="text-xl font-bold text-el-fg">
                   Deterministic Human Approval Gate
@@ -282,20 +304,20 @@ export default function DagVisualizerPage() {
                   plain="When an agent finishes working on a solution, it stops and presents a clear summary of all proposed changes. You review the diff and sign off before any commit is merged."
                   technical="The DAG traversal halts deterministically at Rank 3. The supervisor compiles an ActionProposal containing a unified diff and SHA-256 tree hash. Execution cannot proceed to Rank 4 without an Ed25519 signature from the authorized user or physical FIDO2 biometric assertion."
                 />
-                <div className="border-t border-el-border/60 pt-3 font-mono text-[11px] text-el-fg-faint flex justify-between">
+                <div className="border-t border-el-border/60 pt-3 text-xs text-el-fg-faint flex justify-between">
                   <span>Enforcement:</span>
-                  <span className="text-el-mint">Cryptographic Non-Repudiation</span>
+                  <code className="text-el-signal-lime text-[11px]">Cryptographic Non-Repudiation</code>
                 </div>
               </Tilt3DCard>
 
               {/* Invariant 4 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 lg:p-8 space-y-4">
-                <div className="pointer-events-none absolute top-3 right-3 font-mono text-xs text-el-cyan/40">
-                  ⌜ INV-05 ⌟
+              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 lg:p-8 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+                <div className="pointer-events-none absolute top-3 right-3">
+                  <code className="text-el-signal-lime/50 font-mono text-xs">INV-05</code>
                 </div>
-                <div className="flex items-center gap-2 font-mono text-xs text-el-cyan">
-                  <span className="h-2 w-2 rounded-full bg-el-cyan" />
-                  <span>INVARIANT 04 // MERKLE ROLLBACK</span>
+                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
+                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                  <span>Merkle rollback invariant</span>
                 </div>
                 <h3 className="text-xl font-bold text-el-fg">
                   Atomic Commit &amp; Instant Rollback
@@ -305,9 +327,9 @@ export default function DagVisualizerPage() {
                   plain="If any test fails or you decline a proposed change, the entire execution tree is wiped clean in milliseconds, leaving your code exactly as it was."
                   technical="State transitions are recorded into an immutable local Merkle chain. If any node fails AST validation or unit test assertions, the supervisor invokes an atomic git reset and destroys the ephemeral worktree in &lt;50ms, eliminating partial or corrupted states."
                 />
-                <div className="border-t border-el-border/60 pt-3 font-mono text-[11px] text-el-fg-faint flex justify-between">
+                <div className="border-t border-el-border/60 pt-3 text-xs text-el-fg-faint flex justify-between">
                   <span>Enforcement:</span>
-                  <span className="text-el-mint">Atomic Transaction Ledger</span>
+                  <code className="text-el-signal-lime text-[11px]">Atomic Transaction Ledger</code>
                 </div>
               </Tilt3DCard>
             </div>
@@ -317,14 +339,14 @@ export default function DagVisualizerPage() {
         <SignalBeamDivider />
 
         {/* DUAL-MIND SYMBIOSIS */}
-        <Section className="py-16 lg:py-24 bg-[#030508]">
+        <Section className="py-16 lg:py-24 bg-el-bg">
           <Container>
             <div className="max-w-3xl space-y-4">
               <div className="el-eyebrow">
-                <span>{"// 03 DUAL-MIND SYMBIOSIS"}</span>
+                <CipherText text="// 03 DUAL-MIND SYMBIOSIS" />
               </div>
               <h2 className="el-h2">
-                System 1 Voice + System 2 DAG: Working in Parallel
+                <WordReveal text="System 1 Voice + System 2 DAG: Working in Parallel" />
               </h2>
               <DualCopy
                 className="el-body"
@@ -333,25 +355,25 @@ export default function DagVisualizerPage() {
               />
             </div>
 
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-xs">
-              <div className="rounded-xs border border-el-cyan/40 bg-el-bg-raised/40 p-6 space-y-3">
-                <div className="flex items-center justify-between text-el-cyan border-b border-el-border pb-2">
-                  <span className="font-semibold text-sm">SYSTEM 1 (INSTANT VOICE)</span>
-                  <span className="text-[10px]">SUB-50MS BARGE-IN</span>
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+              <div className="rounded-xs border border-el-signal-lime/40 bg-el-bg-raised/40 p-6 space-y-3">
+                <div className="flex items-center justify-between text-el-signal-lime border-b border-el-border pb-2">
+                  <span className="font-semibold text-sm">System 1 (Instant Voice)</span>
+                  <span className="text-[10px]">Sub-50ms barge-in</span>
                 </div>
-                <ul className="font-sans text-xs text-el-fg-muted space-y-2 leading-relaxed">
+                <ul className="text-xs text-el-fg-muted space-y-2 leading-relaxed">
                   <li>• Continuous 16kHz circular PCM audio loop with immediate hardware VAD interruption.</li>
                   <li>• Interprets user intent, issues quick clarifications, and presents approvals.</li>
                   <li>• Never blocked by slow disk I/O, heavy AST parsing, or compiler output.</li>
                 </ul>
               </div>
 
-              <div className="rounded-xs border border-el-mint/40 bg-el-bg-raised/40 p-6 space-y-3">
-                <div className="flex items-center justify-between text-el-mint border-b border-el-border pb-2">
-                  <span className="font-semibold text-sm">SYSTEM 2 (ASYNC DAG PLANNER)</span>
-                  <span className="text-[10px]">PARALLEL EXECUTION</span>
+              <div className="rounded-xs border border-el-signal-lime/40 bg-el-bg-raised/40 p-6 space-y-3">
+                <div className="flex items-center justify-between text-el-signal-lime border-b border-el-border pb-2">
+                  <span className="font-semibold text-sm">System 2 (Async DAG Planner)</span>
+                  <span className="text-[10px]">Parallel execution</span>
                 </div>
-                <ul className="font-sans text-xs text-el-fg-muted space-y-2 leading-relaxed">
+                <ul className="text-xs text-el-fg-muted space-y-2 leading-relaxed">
                   <li>• Decomposes high-level prompts into topological task nodes with strict dependency trees.</li>
                   <li>• Spawns quarantined git worktrees for isolated parallel code authoring.</li>
                   <li>• Reports live milestone progress back to System 1 for conversational speech updates.</li>
@@ -368,10 +390,10 @@ export default function DagVisualizerPage() {
           <Container>
             <div className="max-w-3xl space-y-4">
               <div className="el-eyebrow">
-                <span>{"// 04 TECHNICAL FAQ"}</span>
+                <CipherText text="// 04 TECHNICAL FAQ" />
               </div>
               <h2 className="el-h2">
-                Frequently Asked Architectural Questions
+                <WordReveal text="Frequently Asked Architectural Questions" />
               </h2>
               <p className="el-body">
                 Implementation details for software architects and senior engineers evaluating ELEVEN’s execution engine.
@@ -398,8 +420,8 @@ export default function DagVisualizerPage() {
                 },
               ].map((faq, i) => (
                 <div key={i} className="rounded-xs border border-el-border bg-el-bg-raised/40 p-5 space-y-2">
-                  <h3 className="font-mono text-sm font-semibold text-el-fg">
-                    Q: {faq.q}
+                  <h3 className="text-sm font-semibold text-el-fg">
+                    {faq.q}
                   </h3>
                   <p className="text-xs text-el-fg-muted leading-relaxed">
                     {faq.a}
@@ -411,15 +433,15 @@ export default function DagVisualizerPage() {
         </Section>
 
         {/* BOTTOM CTA ACCESS FUNNEL */}
-        <Section className="py-16 lg:py-24 border-t border-el-border bg-gradient-to-b from-[#030508] to-[#010204]">
+        <Section className="py-16 lg:py-24 border-t border-el-border bg-gradient-to-b from-el-bg-raised/90 to-el-bg">
           <Container>
             <div className="mx-auto max-w-3xl text-center space-y-6">
-              <div className="el-badge">
-                <span>{"// ASYNCHRONOUS SYSTEM 2 ENGINE · DEVELOPER ALPHA"}</span>
+              <div className="el-eyebrow">
+                <CipherText text="// 05 ASYNCHRONOUS SYSTEM 2 ENGINE" />
               </div>
 
               <h2 className="el-h2">
-                Ready to build with supervised multi-agent graphs?
+                <WordReveal text="Ready to build with supervised multi-agent graphs?" />
               </h2>
 
               <DualCopy
@@ -429,28 +451,38 @@ export default function DagVisualizerPage() {
               />
 
               <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                <WaitlistActionButton tier="technical" arrow variant="primary">
+                <WaitlistActionButton
+                  tier="technical"
+                  arrow
+                  variant="primary"
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
                   Request DAG Orchestrator Preview
                 </WaitlistActionButton>
 
-                <Button href="/solutions/developers" variant="secondary">
-                  Developer Diff Review Console →
+                <Button
+                  href="/solutions/developers"
+                  variant="secondary"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
+                  Developer Diff Review Console
                 </Button>
               </div>
 
               {/* Cross Links to Other Deep Architecture Pages */}
-              <div className="flex flex-wrap items-center justify-center gap-6 pt-8 font-mono text-xs text-el-fg-faint">
-                <Link href="/tools/inspector" className="hover:text-el-cyan hover:underline">
-                  → ActionProposal Inspector
+              <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
+                <Link href="/tools/inspector" className="hover:text-el-signal-lime hover:underline">
+                  ActionProposal Inspector
                 </Link>
-                <Link href="/hardware" className="hover:text-el-cyan hover:underline">
-                  → Hardware Compatibility
+                <Link href="/hardware" className="hover:text-el-signal-lime hover:underline">
+                  Hardware Compatibility
                 </Link>
-                <Link href="/security" className="hover:text-el-cyan hover:underline">
-                  → Security Architecture
+                <Link href="/security" className="hover:text-el-signal-lime hover:underline">
+                  Security Architecture
                 </Link>
-                <Link href="/solutions/enterprise" className="hover:text-el-cyan hover:underline">
-                  → Enterprise Fleet Governance
+                <Link href="/solutions/enterprise" className="hover:text-el-signal-lime hover:underline">
+                  Enterprise Fleet Governance
                 </Link>
               </div>
             </div>

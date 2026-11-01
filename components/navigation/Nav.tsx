@@ -155,7 +155,7 @@ export function Nav() {
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-all duration-300 ${
+      className={`sticky top-0 z-40 transition-[background-color,border-color,box-shadow] duration-300 ${
         solid || open
           ? "bg-el-bg/88 backdrop-blur-xl border-b border-el-border/80 shadow-el-sm"
           : "bg-transparent border-b border-transparent"
@@ -167,7 +167,7 @@ export function Nav() {
           href="/"
           scroll={true}
           onClick={(e) => handleNavClick("/", e)}
-          className="group flex items-center gap-2.5 shrink-0 transition-opacity duration-[var(--el-duration-fast)] hover:opacity-85"
+          className="group flex items-center gap-2.5 shrink-0 transition-opacity duration-[var(--el-duration-fast)] hover:opacity-85 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime rounded-xs"
         >
           <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-sm border border-el-border-strong/50 bg-el-bg-raised p-0.5 shadow-el-sm transition-transform duration-300 group-hover:scale-105">
             <Image
@@ -188,8 +188,8 @@ export function Nav() {
                 v3.1
               </span>
             </div>
-            <span className="hidden xl:block font-mono text-[9px] uppercase tracking-[0.14em] text-el-fg-faint">
-              GISHH LABS · PERSONAL AI
+            <span className="hidden xl:block text-[9.5px] text-el-fg-faint">
+              GISHH Labs · Personal AI
             </span>
           </div>
         </Link>
@@ -210,7 +210,7 @@ export function Nav() {
                   onClick={(e) => handleNavClick(link.href, e)}
                   onMouseEnter={() => setHoveredHref(link.href)}
                   onFocus={() => setHoveredHref(link.href)}
-                  className={`relative block rounded-full px-2.5 py-1.5 text-xs xl:px-3 xl:text-[13px] whitespace-nowrap transition-colors duration-200 shrink-0 ${
+                  className={`relative block rounded-full px-2.5 py-1.5 text-xs xl:px-3 xl:text-[13px] whitespace-nowrap transition-colors duration-200 shrink-0 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime ${
                     isActive
                       ? "font-medium text-el-fg"
                       : "text-el-fg-muted hover:text-el-fg"
@@ -226,7 +226,7 @@ export function Nav() {
                   {isActive && (
                     <motion.span
                       layoutId="activeNavIndicator"
-                      className="pointer-events-none absolute inset-0 rounded-full bg-el-border/60 border border-el-accent/25"
+                      className="pointer-events-none absolute inset-0 rounded-full bg-el-border/60 border border-el-signal-lime/25"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -247,7 +247,7 @@ export function Nav() {
             type="button"
             variant="ghost"
             arrow
-            className="cursor-pointer whitespace-nowrap"
+            className="cursor-pointer whitespace-nowrap focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98]"
             onClick={enterComputationalMode}
           >
             Live 3D Orb
@@ -257,7 +257,7 @@ export function Nav() {
         {/* Mobile Hamburger (Synchronized with lg breakpoint) */}
         <button
           onClick={() => setOpen((o) => !o)}
-          className="flex flex-col items-center justify-center gap-1.5 p-2.5 min-w-[44px] min-h-[44px] lg:hidden cursor-pointer"
+          className="flex flex-col items-center justify-center gap-1.5 p-2.5 min-w-[44px] min-h-[44px] lg:hidden cursor-pointer focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime rounded-xs"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
@@ -290,8 +290,8 @@ export function Nav() {
             className="overflow-hidden border-t border-el-border/80 bg-el-bg/95 backdrop-blur-xl lg:hidden max-h-[calc(100dvh-5rem)] overflow-y-auto pb-safe"
           >
             <div className="px-6 pt-5 pb-2">
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.1em] text-el-fg-faint">
-                Explanation Style
+              <p className="mb-2 text-xs text-el-fg-faint">
+                Explanation style
               </p>
               <ClarityTogglePill />
             </div>
@@ -306,7 +306,7 @@ export function Nav() {
                     href={link.href}
                     scroll={true}
                     onClick={(e) => handleNavClick(link.href, e)}
-                    className={`block min-h-[44px] flex items-center text-el-base ${
+                    className={`block min-h-[44px] flex items-center text-el-base focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime rounded-xs ${
                       pathname === link.href
                         ? "font-medium text-el-fg"
                         : "text-el-fg-muted"
@@ -327,6 +327,7 @@ export function Nav() {
                     setOpen(false);
                     enterComputationalMode();
                   }}
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98]"
                 >
                   Open Live 3D Orb
                 </Button>
@@ -338,10 +339,10 @@ export function Nav() {
                     setOpen(false);
                     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
                   }}
-                  className="w-full min-h-[44px] cursor-pointer flex items-center justify-between rounded-xs border border-el-border-strong bg-el-bg-raised px-4 py-2.5 font-mono text-el-xs text-el-fg transition-colors hover:border-el-accent hover:text-el-accent"
+                  className="w-full min-h-[44px] cursor-pointer flex items-center justify-between rounded-xs border border-el-border-strong bg-el-bg-raised px-4 py-2.5 text-xs text-el-fg transition-colors hover:border-el-signal-lime/50 hover:text-el-signal-lime focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98]"
                 >
                   <span>AI Command Palette</span>
-                  <span className="rounded-xs bg-el-bg px-1.5 py-0.5 text-[10px] text-el-accent">⌘K</span>
+                  <span className="rounded-xs bg-el-bg px-1.5 py-0.5 text-[10px] text-el-signal-lime font-mono">⌘K</span>
                 </button>
               </li>
             </ul>

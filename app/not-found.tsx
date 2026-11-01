@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
 import { Section } from "@/components/ui/Section";

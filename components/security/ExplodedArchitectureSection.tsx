@@ -37,10 +37,10 @@ export const ARCHITECTURE_4_LAYERS: ExplodedLayerData[] = [
     index: 0,
     id: "conscious-interface",
     name: "Conscious Interface",
-    techTitle: "F.R.I.D.A.Y. + VoiceStudio <300ms Stream",
-    accent: "#06b6d4",
-    accentRgb: "6, 182, 212",
-    latencyTarget: "<300ms Duplex Stream",
+    techTitle: "VoiceStudio <300ms stream",
+    accent: "var(--el-sec-lime)",
+    accentRgb: "184, 243, 107",
+    latencyTarget: "<300ms duplex stream",
     securityInvariant: "INV-01 Duplex Acoustic Isolation",
     domain: "eleven_voice / 16kHz PCM Lockless Buffer",
     description:
@@ -51,10 +51,10 @@ export const ARCHITECTURE_4_LAYERS: ExplodedLayerData[] = [
     index: 1,
     id: "cognitive-triad",
     name: "Cognitive Triad & Hive Spawner",
-    techTitle: "Jev Triage + CDM TaskSpec Router",
-    accent: "#8b5cf6",
-    accentRgb: "139, 92, 246",
-    latencyTarget: "<50ms Triage & Dispatch",
+    techTitle: "Triage & CDM TaskSpec Router",
+    accent: "var(--el-sec-sage-light)",
+    accentRgb: "178, 195, 183",
+    latencyTarget: "<50ms triage & dispatch",
     securityInvariant: "INV-03 TaskSpec Provenance Binding",
     domain: "eleven_supervisor / IPC Bus",
     description:
@@ -66,9 +66,9 @@ export const ARCHITECTURE_4_LAYERS: ExplodedLayerData[] = [
     id: "l5-hypervisor",
     name: "L5 Deterministic Hypervisor",
     techTitle: "Default-Deny Egress + DEC-008 Gate",
-    accent: "#10b981",
-    accentRgb: "16, 185, 129",
-    latencyTarget: "<0.05ms Kernel Intercept",
+    accent: "var(--el-sec-lime)",
+    accentRgb: "184, 243, 107",
+    latencyTarget: "<0.05ms kernel intercept",
     securityInvariant: "INV-02 Default-Deny Network Egress",
     domain: "kernel_hypervisor / OS Sandbox",
     description:
@@ -81,9 +81,9 @@ export const ARCHITECTURE_4_LAYERS: ExplodedLayerData[] = [
     id: "sovereign-vault",
     name: "Sovereign Engram Vault",
     techTitle: "AES-256-GCM + Windows DPAPI",
-    accent: "#f59e0b",
-    accentRgb: "245, 158, 11",
-    latencyTarget: "<5ms Hardware Key Decrypt",
+    accent: "var(--el-sec-porcelain)",
+    accentRgb: "245, 245, 240",
+    latencyTarget: "<5ms hardware key decrypt",
     securityInvariant: "INV-09 At-Rest DPAPI Enclave Encryption",
     domain: "eleven_vault / Encrypted SQLite",
     description:
@@ -99,90 +99,67 @@ interface ExplodedArchitectureSectionProps {
 
 export function ExplodedArchitectureSection({
   onSelectLayer,
-  selectedLayer = null,
+  selectedLayer,
 }: ExplodedArchitectureSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pinTriggerRef = useRef<HTMLDivElement>(null);
   const stackRef = useRef<HTMLDivElement>(null);
   const pulseRef = useRef<HTMLDivElement>(null);
-  const rafThrottledRef = useRef<number | null>(null);
 
-  const reducedMotion = usePrefersReducedMotion();
-  const [separation, setSeparation] = useState<number>(reducedMotion ? 85 : 32);
-  const [activeLayerIndex, setActiveLayerIndex] = useState<number | null>(null);
+  const prefersReduced = usePrefersReducedMotion();
 
-  // Synchronize reduced-motion preference if OS changes post-mount
+  // Controlled layer expansion distance (in pixels between planes)
+  // Default resting: 32px, Maximum exploded scrub: 110px
+  const [separation, setSeparation] = useState<number>(36);
+  const [activeLayerIndex, setActiveLayerIndex] = useState<number | null>(
+    selectedLayer ? selectedLayer.index : null
+  );
+  const [prevSelectedLayer, setPrevSelectedLayer] = useState(selectedLayer);
+
+  // Adjust state during render when selectedLayer prop changes (idiomatic React pattern)
+  if (selectedLayer !== prevSelectedLayer) {
+    setPrevSelectedLayer(selectedLayer);
+    setActiveLayerIndex(selectedLayer ? selectedLayer.index : null);
+  }
+
+  // GSAP ScrollTrigger Scroll-Scrub binding
   useEffect(() => {
-    if (reducedMotion) {
-      if (stackRef.current) {
-        stackRef.current.style.setProperty("--layer-gap", "85px");
-      }
-      queueMicrotask(() => {
-        setSeparation(85);
-      });
-    }
-  }, [reducedMotion]);
-
-  // Synchronize internal active layer with external prop
-  useEffect(() => {
-    if (selectedLayer !== undefined) {
-      queueMicrotask(() => {
-        setActiveLayerIndex(selectedLayer ? selectedLayer.index : null);
-      });
-    }
-  }, [selectedLayer]);
-
-  // GSAP ScrollTrigger Setup: pinned with 5.5rem offset to clear sticky header
-  useEffect(() => {
-    if (reducedMotion || typeof window === "undefined" || !pinTriggerRef.current) {
-      return;
-    }
+    if (prefersReduced || !pinTriggerRef.current || !stackRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Scrub separation from 18px to 115px over 1600px of scroll
-      // start: "top 5.5rem" leaves clearance below the sticky navigation bar
+      // 1. Scrub the CSS variable --layer-gap from 32px to 105px over 1600px of scrolling
       ScrollTrigger.create({
         trigger: pinTriggerRef.current,
-        start: "top 5.5rem",
+        start: "top center",
         end: "+=1600",
-        pin: true,
-        pinSpacing: true,
-        scrub: 0.7,
+        scrub: 1.2,
         onUpdate: (self) => {
-          const progress = self.progress;
-          // Scale separation from 18px (stacked) to 115px (fully exploded)
-          const computedSeparation = Math.round(18 + progress * (115 - 18));
+          // Linear interpolation between 32px and 105px
+          const targetGap = 32 + self.progress * 73;
+          setSeparation(Math.round(targetGap));
 
-          // 1. Direct hardware-accelerated CSS custom property update without virtual DOM re-renders
+          // Also scrub 3D rotation slightly for dynamic parallax
           if (stackRef.current) {
-            stackRef.current.style.setProperty("--layer-gap", `${computedSeparation}px`);
+            const rotX = 58 - self.progress * 8; // 58deg -> 50deg
+            const rotZ = -38 + self.progress * 12; // -38deg -> -26deg
+            stackRef.current.style.transform = `rotateX(${rotX}deg) rotateZ(${rotZ}deg)`;
           }
 
-          // 2. Animate central bioluminescent data pulse
+          // Move the bioluminescent data packet up and down the spine
           if (pulseRef.current) {
-            pulseRef.current.style.transform = `translateY(${progress * 280}px)`;
-            pulseRef.current.style.opacity = `${0.3 + Math.sin(progress * Math.PI) * 0.7}`;
-          }
-
-          // 3. Throttle React slider state update via animation frame to prevent Virtual DOM thrashing
-          if (rafThrottledRef.current === null) {
-            rafThrottledRef.current = requestAnimationFrame(() => {
-              setSeparation(computedSeparation);
-              rafThrottledRef.current = null;
-            });
+            const pulseY = self.progress * 280;
+            pulseRef.current.style.transform = `translateY(${pulseY}px)`;
           }
         },
       });
     }, pinTriggerRef);
 
-    return () => {
-      ctx.revert();
-      if (rafThrottledRef.current !== null) {
-        cancelAnimationFrame(rafThrottledRef.current);
-        rafThrottledRef.current = null;
-      }
-    };
-  }, [reducedMotion]);
+    return () => ctx.revert();
+  }, [prefersReduced]);
+
+  const handleSliderChange = (newVal: number) => {
+    setSeparation(newVal);
+  };
 
   const handleLayerClick = (layer: ExplodedLayerData) => {
     if (activeLayerIndex === layer.index) {
@@ -194,18 +171,8 @@ export function ExplodedArchitectureSection({
     }
   };
 
-  const handleSliderChange = (newVal: number) => {
-    setSeparation(newVal);
-    if (stackRef.current) {
-      stackRef.current.style.setProperty("--layer-gap", `${newVal}px`);
-    }
-  };
-
   const handleReset = () => {
-    setSeparation(35);
-    if (stackRef.current) {
-      stackRef.current.style.setProperty("--layer-gap", "35px");
-    }
+    setSeparation(36);
     setActiveLayerIndex(null);
     onSelectLayer?.(null);
   };
@@ -216,40 +183,39 @@ export function ExplodedArchitectureSection({
   return (
     <div
       ref={pinTriggerRef}
-      className="relative w-full rounded-2xl border border-[#17232d] bg-[#070d12] p-5 sm:p-7 lg:p-10 shadow-2xl overflow-hidden"
+      className="relative w-full rounded-md border border-el-border bg-el-sec-graphite p-5 sm:p-7 lg:p-10 shadow-sm overflow-hidden"
     >
       {/* Top Section Header with Live Separation Controls */}
-      <div className="relative z-20 flex flex-wrap items-center justify-between gap-4 border-b border-[#17232d] pb-6 mb-8">
+      <div className="relative z-20 flex flex-wrap items-center justify-between gap-4 border-b border-el-border pb-6 mb-8">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs uppercase tracking-[0.14em] text-cyan-400 font-semibold">
-              SCROLL-SCRUBBED 3D EXPLODED ARCHITECTURE
+            <span className="text-xs font-medium text-el-sec-lime">
+              Scroll-scrubbed 3D exploded architecture
             </span>
-            <span className="rounded-xs border border-[#1c2d3a] bg-[#0a141d] px-1.5 py-0.5 font-mono text-[9.5px] text-slate-400">
-              1600PX PIN TRIGGER
+            <span className="rounded-xs border border-el-border bg-el-sec-graphite-deep px-1.5 py-0.5 text-[11px] text-el-fg-faint">
+              1600px pin trigger
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
-            4 Translucent Glass Planes · Scroll page down or drag the separation slider to pull
-            layers apart
+          <p className="text-xs text-el-fg-muted mt-1">
+            4 translucent glass planes · Scroll page or drag slider to pull layers apart
           </p>
         </div>
 
         <div className="flex items-center gap-4">
           {/* Manual Scrub Slider */}
-          <div className="flex items-center gap-2.5 rounded-md border border-[#1c2d3a] bg-[#0a141d] px-3 py-1.5 font-mono text-xs text-slate-300">
-            <SlidersHorizontal className="h-3.5 w-3.5 text-cyan-400" />
-            <span className="text-[11px] text-slate-400">Gap:</span>
+          <div className="flex items-center gap-2.5 rounded-sm border border-el-border bg-el-sec-graphite-deep px-3 py-1.5 text-xs text-el-fg-muted">
+            <SlidersHorizontal className="h-3.5 w-3.5 text-el-sec-lime" />
+            <span className="text-xs text-el-fg-faint">Gap:</span>
             <input
               type="range"
               min={18}
               max={115}
               value={separation}
               onChange={(e) => handleSliderChange(Number(e.target.value))}
-              className="h-1 w-24 sm:w-32 cursor-pointer accent-cyan-400 bg-slate-800 rounded-lg"
+              className="h-1 w-24 sm:w-32 cursor-pointer accent-el-sec-lime bg-el-sec-graphite rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
               aria-label="Layer Separation Distance"
             />
-            <span className="w-10 text-right font-semibold text-cyan-300">
+            <span className="w-10 text-right font-medium text-el-sec-lime text-xs">
               {separation}px
             </span>
           </div>
@@ -257,7 +223,7 @@ export function ExplodedArchitectureSection({
           <button
             type="button"
             onClick={handleReset}
-            className="cursor-pointer flex items-center gap-1.5 rounded-md border border-[#1c2d3a] bg-[#0a141d] px-3 py-1.5 font-mono text-xs text-slate-400 hover:text-slate-200 hover:border-slate-700 transition-colors"
+            className="cursor-pointer flex items-center gap-1.5 rounded-sm border border-el-border bg-el-sec-graphite-deep px-3 py-1.5 text-xs text-el-fg-muted hover:text-el-sec-porcelain hover:border-el-border-strong transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.99] disabled:opacity-50"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Reset</span>
@@ -265,7 +231,7 @@ export function ExplodedArchitectureSection({
         </div>
       </div>
 
-      {/* Main Grid: 3D Stage (Left/Center) + Docked Spec Inspector (Morph 3, Right) */}
+      {/* Main Grid: 3D Stage (Left/Center) + Docked Spec Inspector (Right) */}
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[520px]">
         {/* 3D Isometric Viewport Container */}
         <div
@@ -274,17 +240,17 @@ export function ExplodedArchitectureSection({
           style={{ perspective: "1400px" }}
         >
           {/* Central Bioluminescent Data Pulse Track (GSAP Scroll Scrubbed) */}
-          <div className="pointer-events-none absolute h-[320px] w-0.5 bg-gradient-to-b from-cyan-500/20 via-emerald-500/30 to-amber-500/20 z-0">
+          <div className="pointer-events-none absolute h-[320px] w-0.5 bg-gradient-to-b from-el-sec-lime/20 via-el-sec-sage/30 to-el-sec-lime/20 z-0">
             <div
               ref={pulseRef}
-              className="h-10 w-2 -left-[3px] rounded-full bg-emerald-400 blur-[3px] opacity-70 transition-transform duration-75"
+              className="h-10 w-2 -left-[3px] rounded-full bg-el-sec-lime blur-[3px] opacity-70 transition-transform duration-75 motion-reduce:transition-none"
             />
           </div>
 
           {/* 3D Stack Transform Container */}
           <div
             ref={stackRef}
-            className="relative w-[280px] sm:w-[360px] md:w-[420px] h-[220px] sm:h-[260px] transition-transform duration-300"
+            className="relative w-[280px] sm:w-[360px] md:w-[420px] h-[220px] sm:h-[260px] transition-transform duration-300 motion-reduce:transition-none"
             style={{
               transformStyle: "preserve-3d",
               transform: "rotateX(58deg) rotateZ(-38deg)",
@@ -292,28 +258,23 @@ export function ExplodedArchitectureSection({
             } as React.CSSProperties}
           >
             {ARCHITECTURE_4_LAYERS.map((layer) => {
-              // Calculate vertical translateZ based on CSS variable --layer-gap
-              // Layer 0 is top (highest translateZ), Layer 3 is bottom (0 translateZ)
               const isSelected = activeLayerIndex === layer.index;
 
               return (
                 <div
                   key={layer.id}
                   onClick={() => handleLayerClick(layer)}
-                  className={`absolute inset-0 cursor-pointer rounded-xl border backdrop-blur-md transition-all duration-300 group ${
+                  className={`absolute inset-0 cursor-pointer rounded-md border backdrop-blur-md transition-colors duration-200 group ${
                     isSelected
-                      ? "ring-2 ring-white shadow-[0_0_30px_rgba(255,255,255,0.4)]"
-                      : "hover:border-white/60 hover:brightness-110"
+                      ? "ring-1 ring-el-sec-lime border-el-sec-lime"
+                      : "hover:border-el-border-strong"
                   }`}
                   style={{
                     transform: `translateZ(calc((3 - ${layer.index}) * var(--layer-gap, ${separation}px)))`,
-                    backgroundColor: `rgba(${layer.accentRgb}, 0.12)`,
-                    borderColor: layer.isHardBoundary
-                      ? "#10b981"
-                      : `rgba(${layer.accentRgb}, 0.45)`,
-                    boxShadow: layer.isHardBoundary
-                      ? "0 0 25px rgba(16, 185, 129, 0.25)"
-                      : undefined,
+                    backgroundColor: `rgba(${layer.accentRgb}, 0.08)`,
+                    borderColor: isSelected
+                      ? undefined
+                      : `rgba(${layer.accentRgb}, 0.25)`,
                   }}
                 >
                   {/* Glass Card Surface Details */}
@@ -321,35 +282,35 @@ export function ExplodedArchitectureSection({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span
-                          className="h-2.5 w-2.5 rounded-full shadow-sm"
+                          className="h-2 w-2 rounded-full"
                           style={{ backgroundColor: layer.accent }}
                         />
-                        <span className="font-mono text-xs sm:text-sm font-semibold tracking-wider text-slate-100">
+                        <span className="text-xs sm:text-sm font-medium tracking-tight text-el-sec-porcelain">
                           {layer.name}
                         </span>
                       </div>
                       {layer.isHardBoundary && (
-                        <span className="rounded-xs border border-emerald-400/60 bg-emerald-950/80 px-2 py-0.5 font-mono text-[9px] font-bold text-emerald-300 shadow-sm animate-pulse">
-                          HARD SECURITY BOUNDARY
+                        <span className="rounded-xs border border-el-sec-lime/40 bg-el-sec-lime/10 px-2 py-0.5 text-[10px] font-medium text-el-sec-lime">
+                          Hard security boundary
                         </span>
                       )}
                     </div>
 
                     <div className="space-y-1">
-                      <p className="font-mono text-[11px] sm:text-xs text-slate-300 font-medium">
+                      <p className="text-xs text-el-fg-muted font-medium">
                         {layer.techTitle}
                       </p>
-                      <div className="flex items-center gap-3 font-mono text-[10px] text-slate-400">
-                        <span>Latency: {layer.latencyTarget}</span>
+                      <div className="flex items-center gap-3 text-[11px] text-el-fg-faint">
+                        <span>Latency: <code className="font-mono text-el-fg-muted">{layer.latencyTarget}</code></span>
                         <span>·</span>
-                        <span className="text-emerald-400">{layer.securityInvariant}</span>
+                        <span className="text-el-sec-lime font-mono text-[10px]">{layer.securityInvariant}</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-white/10 pt-2 font-mono text-[9px] text-slate-400">
+                    <div className="flex items-center justify-between border-t border-white/10 pt-2 text-[10px] text-el-fg-faint">
                       <span>{layer.domain}</span>
-                      <span className="text-cyan-300 group-hover:translate-x-1 transition-transform">
-                        Click to Inspect Spec →
+                      <span className="text-el-sec-lime group-hover:translate-x-1 transition-transform motion-reduce:transition-none">
+                        Inspect specification →
                       </span>
                     </div>
                   </div>
@@ -370,29 +331,25 @@ export function ExplodedArchitectureSection({
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                className="w-full rounded-xl border p-6 shadow-2xl relative bg-[#091118]/95 backdrop-blur-xl"
-                style={{
-                  borderColor: `rgba(${activeSpec.accentRgb}, 0.5)`,
-                  boxShadow: `0 0 35px rgba(${activeSpec.accentRgb}, 0.15)`,
-                }}
+                className="w-full rounded-md border border-el-border p-6 shadow-md relative bg-el-sec-graphite-deep/95 backdrop-blur-xl"
               >
                 {/* Header with Close */}
-                <div className="flex items-center justify-between border-b border-[#17232d] pb-4 mb-4">
+                <div className="flex items-center justify-between border-b border-el-border pb-4 mb-4">
                   <div className="flex items-center gap-2.5">
                     <span
-                      className="h-3 w-3 rounded-full shadow-sm"
+                      className="h-2.5 w-2.5 rounded-full"
                       style={{ backgroundColor: activeSpec.accent }}
                     />
                     <div>
                       <motion.h4
                         layout="position"
-                        className="font-mono text-sm font-semibold text-slate-100"
+                        className="text-sm font-semibold text-el-sec-porcelain"
                       >
                         {activeSpec.name}
                       </motion.h4>
                       <motion.p
                         layout="position"
-                        className="font-mono text-[10px] text-slate-400"
+                        className="text-xs text-el-fg-faint"
                       >
                         Layer 0{activeSpec.index + 1} of 04 · {activeSpec.domain}
                       </motion.p>
@@ -405,7 +362,7 @@ export function ExplodedArchitectureSection({
                       setActiveLayerIndex(null);
                       onSelectLayer?.(null);
                     }}
-                    className="cursor-pointer rounded-xs border border-slate-700 bg-slate-900/60 p-1 text-slate-400 hover:text-white transition-colors"
+                    className="cursor-pointer rounded-xs border border-el-border bg-el-sec-graphite p-1 text-el-fg-faint hover:text-el-sec-porcelain transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.99] disabled:opacity-50"
                     aria-label="Close Specification"
                   >
                     <X className="h-4 w-4" />
@@ -416,55 +373,54 @@ export function ExplodedArchitectureSection({
                 <div className="space-y-4">
                   <motion.p
                     layout="position"
-                    className="text-xs text-slate-300 leading-relaxed"
+                    className="text-xs text-el-fg-muted leading-relaxed"
                   >
                     {activeSpec.description}
                   </motion.p>
 
-                  <div className="space-y-2.5 rounded-md border border-[#17232d] bg-[#04080c] p-3.5 font-mono text-[11px]">
-                    <div className="flex items-center justify-between text-slate-400">
-                      <span>LATENCY TARGET:</span>
-                      <span className="font-semibold text-cyan-300">
+                  <div className="space-y-2.5 rounded-sm border border-el-border bg-el-sec-graphite p-3.5 text-xs">
+                    <div className="flex items-center justify-between text-el-fg-faint">
+                      <span>Latency target:</span>
+                      <span className="font-medium text-el-sec-lime font-mono text-[11px]">
                         {activeSpec.latencyTarget}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-slate-400">
-                      <span>SECURITY INVARIANT:</span>
-                      <span className="font-semibold text-emerald-400">
+                    <div className="flex items-center justify-between text-el-fg-faint">
+                      <span>Security invariant:</span>
+                      <span className="font-medium text-el-sec-lime font-mono text-[11px]">
                         {activeSpec.securityInvariant}
                       </span>
                     </div>
 
-                    <div className="border-t border-[#17232d] pt-2 text-slate-400">
-                      <span className="block text-[10px] text-slate-500 mb-1">
-                        BOUNDARY CONTRACT:
+                    <div className="border-t border-el-border pt-2 text-el-fg-faint">
+                      <span className="block text-[11px] mb-1">
+                        Boundary contract:
                       </span>
-                      <span className="text-[10.5px] text-slate-200">
+                      <span className="text-xs text-el-fg-muted">
                         {activeSpec.contract}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 text-[10px] font-mono text-slate-400">
-                    <span className="flex items-center gap-1.5 text-emerald-400">
+                  <div className="flex items-center justify-between pt-2 text-xs text-el-fg-faint">
+                    <span className="flex items-center gap-1.5 text-el-sec-lime font-medium">
                       <CheckCircle2 className="h-3.5 w-3.5" />
-                      Runtime Verified Invariant
+                      Runtime verified invariant
                     </span>
-                    <span className="text-slate-500">SPEC: DEC-008</span>
+                    <span>Spec: DEC-008</span>
                   </div>
                 </div>
               </motion.div>
             ) : (
-              <div className="w-full rounded-xl border border-dashed border-[#1c2d3a] bg-[#091118]/40 p-8 text-center text-slate-400 flex flex-col items-center justify-center gap-3">
-                <Layers className="h-8 w-8 text-cyan-400/60 animate-pulse" />
+              <div className="w-full rounded-md border border-dashed border-el-border bg-el-sec-graphite-deep/40 p-8 text-center text-el-fg-faint flex flex-col items-center justify-center gap-3">
+                <Layers className="h-8 w-8 text-el-sec-lime/60 motion-safe:animate-pulse motion-reduce:animate-none" />
                 <div>
-                  <p className="font-mono text-xs font-medium text-slate-300">
-                    Interactive Layer Inspector (Morph 3)
+                  <p className="text-xs font-medium text-el-sec-porcelain">
+                    Interactive Layer Inspector
                   </p>
-                  <p className="text-[11px] text-slate-500 mt-1 max-w-[24ch]">
-                    Click any floating glass plane in the 3D stack to undock its real-time
-                    technical contract.
+                  <p className="text-xs text-el-fg-faint mt-1 max-w-[28ch]">
+                    Click any floating glass plane in the 3D stack to inspect its technical contract.
                   </p>
                 </div>
               </div>

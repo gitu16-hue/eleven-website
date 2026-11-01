@@ -27,6 +27,7 @@ const columns = [
   {
     heading: "Architecture & Specs",
     links: [
+      { href: "/solutions", label: "Solutions Overview" },
       { href: "/architecture", label: "How It Works" },
       { href: "/solutions/developers", label: "For Software Engineers" },
       { href: "/solutions/enterprise", label: "Enterprise Sovereign Fleet" },
@@ -71,8 +72,6 @@ export function Footer() {
     if (pathname === href) {
       e.preventDefault();
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
     }
   };
 
@@ -102,8 +101,8 @@ export function Footer() {
                 />
               </div>
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-el-fg-faint">
-                  <CipherText text="ELEVEN v3.1 · BUILT BY GISHH LABS" />
+                <p className="text-xs text-el-fg-faint">
+                  <CipherText text="ELEVEN v3.1 · Built by GISHH Labs" />
                 </p>
                 <p className="text-el-xl font-semibold tracking-[-0.02em] text-el-fg">
                   <WordReveal text="Brilliant AI. Always Under Your Control." />
@@ -122,17 +121,17 @@ export function Footer() {
             <button
               type="button"
               onClick={enterComputationalMode}
-              className="group flex cursor-pointer items-center gap-4 border border-el-border-strong bg-el-bg-raised px-6 py-4 text-left shadow-el-sm transition-all duration-[var(--el-duration-base)] hover:border-el-fg hover:shadow-el-md"
+              className="group flex cursor-pointer items-center gap-4 border border-el-border-strong bg-el-bg-raised px-6 py-4 text-left shadow-el-sm transition-[border-color,box-shadow] duration-200 hover:border-el-fg hover:shadow-el-md focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98]"
             >
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-el-fg-faint">
-                  INTERACTIVE 3D EXPERIENCE
+                <p className="text-xs text-el-fg-faint">
+                  Interactive 3D experience
                 </p>
-                <p className="mt-0.5 text-el-sm font-medium text-el-fg transition-colors group-hover:text-el-accent">
+                <p className="mt-0.5 text-el-sm font-medium text-el-fg transition-colors group-hover:text-el-signal-lime">
                   Explore the Live 3D Holographic Orb
                 </p>
               </div>
-              <span className="font-mono text-el-sm text-el-fg-muted transition-transform duration-200 group-hover:translate-x-1 group-hover:text-el-accent">
+              <span className="text-el-sm text-el-fg-muted transition-transform duration-200 group-hover:translate-x-1 group-hover:text-el-signal-lime">
                 →
               </span>
             </button>
@@ -144,7 +143,7 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:gap-14">
             {columns.map((col) => (
               <div key={col.heading}>
-                <p className="font-mono text-el-xs uppercase tracking-[0.12em] text-el-fg-faint">
+                <p className="text-xs font-semibold text-el-fg-faint">
                   {col.heading}
                 </p>
                 <ul className="mt-5 space-y-3.5">
@@ -154,7 +153,7 @@ export function Footer() {
                         href={l.href}
                         scroll={true}
                         onClick={(e) => handleFooterLinkClick(l.href, e)}
-                        className="el-link-laser text-el-sm text-el-fg-muted transition-colors duration-[var(--el-duration-fast)] hover:text-el-fg"
+                        className="el-link-laser text-el-sm text-el-fg-muted transition-colors duration-[var(--el-duration-fast)] hover:text-el-fg focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime rounded-xs"
                       >
                         {l.label}
                       </Link>
@@ -166,39 +165,39 @@ export function Footer() {
           </div>
 
           {/* At-a-Glance Summary Card */}
-          <div className="min-w-[295px] border border-el-border bg-el-bg-raised p-5 font-mono text-[11px] leading-relaxed text-el-fg-muted shadow-el-sm">
+          <div className="min-w-[295px] border border-el-border bg-el-bg-raised p-5 text-xs leading-relaxed text-el-fg-muted shadow-el-sm">
             <div className="flex items-center justify-between border-b border-el-border pb-2.5 text-el-fg">
-              <span className="font-medium tracking-[0.08em]">
-                {isPlain ? "AT A GLANCE" : "ARCHITECTURE LEDGER"}
+              <span className="font-medium">
+                {isPlain ? "At a glance" : "Architecture ledger"}
               </span>
-              <span className="flex items-center gap-1.5 text-el-accent">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent" />
-                <span>VERIFIED v3.1</span>
+              <span className="flex items-center gap-1.5 text-el-signal-lime">
+                <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime" />
+                <span>Verified v3.1</span>
               </span>
             </div>
-            <div className="mt-3 space-y-1.5 text-[10.5px]">
+            <div className="mt-3 space-y-1.5 text-xs">
               <div className="flex justify-between gap-6">
-                <span className="text-el-fg-faint">TWO MINDS</span>
+                <span className="text-el-fg-faint">Two minds</span>
                 <span className="text-el-fg">
                   {isPlain ? "Quick Voice + Deep Planner" : "F.R.I.D.A.Y. · J.A.R.V.I.S."}
                 </span>
               </div>
               <div className="flex justify-between gap-6">
-                <span className="text-el-fg-faint">SAFETY</span>
+                <span className="text-el-fg-faint">Safety</span>
                 <span className="text-el-fg">
-                  {isPlain ? "5 Automatic Checkpoints" : "5-STAGE CONTROL PLANE"}
+                  {isPlain ? "5 Automatic Checkpoints" : "5-Stage Control Plane"}
                 </span>
               </div>
               <div className="flex justify-between gap-6">
-                <span className="text-el-fg-faint">APPROVALS</span>
+                <span className="text-el-fg-faint">Approvals</span>
                 <span className="text-el-fg">
-                  {isPlain ? "Honest 30s One-Time Pass" : "DEC-008 NONCE · SHA-256"}
+                  {isPlain ? "Honest 30s One-Time Pass" : "DEC-008 Nonce · SHA-256"}
                 </span>
               </div>
               <div className="flex justify-between gap-6">
-                <span className="text-el-fg-faint">MEMORY</span>
+                <span className="text-el-fg-faint">Memory</span>
                 <span className="text-el-fg">
-                  {isPlain ? "100% Private on Your PC" : "REDIS · NEO4J · QDRANT"}
+                  {isPlain ? "100% Private on Your PC" : "Redis · Neo4j · Qdrant"}
                 </span>
               </div>
             </div>
@@ -207,11 +206,11 @@ export function Footer() {
 
         {/* Bottom Legal & Motto Bar */}
         <div className="mt-16 flex flex-col-reverse items-start gap-4 border-t border-el-border pt-8 md:flex-row md:items-center md:justify-between">
-          <p className="font-mono text-el-xs tracking-[0.02em] text-el-fg-faint">
+          <p className="text-xs text-el-fg-faint">
             © {new Date().getFullYear()} GISHH Labs Pvt. Ltd. All rights reserved.
           </p>
-          <p className="font-mono text-el-xs tracking-[0.04em] text-el-fg-faint">
-            QUIET AUTHORITY · YOUR AI, YOUR RULES
+          <p className="text-xs text-el-fg-faint">
+            Quiet Authority · Your AI, Your Rules
           </p>
         </div>
       </Container>

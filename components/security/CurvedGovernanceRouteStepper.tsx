@@ -540,16 +540,16 @@ export function CurvedGovernanceRouteStepper() {
       <div className="border-b border-el-sec-sage/35 bg-el-sec-graphite-deep px-4 py-4 sm:px-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-el-sec-lime">
-                GRADUATED GOVERNANCE ROUTE
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-xs font-medium text-el-sec-lime">
+                Graduated governance route
               </span>
-              <span className="font-mono text-[10.5px] text-el-sec-sage-light">
-                Understand → Plan → Authorize → Execute → Verify
+              <span className="text-xs text-el-sec-sage-light">
+                Five phases from input intake to verifiable audit receipt
               </span>
             </div>
             <p className="mt-1 text-xs text-el-sec-sage-light">
-              Select a task autonomy profile below—approval behavior adapts to task risk rather than forcing identical prompts on every action.
+              Select a task autonomy profile below: approval behavior adapts to task risk rather than forcing identical prompts on every action.
             </p>
           </div>
 
@@ -557,10 +557,10 @@ export function CurvedGovernanceRouteStepper() {
             <button
               type="button"
               onClick={() => setScrollDriven(true)}
-              className="inline-flex self-start items-center gap-1.5 rounded-xs border border-el-sec-lime/50 bg-el-sec-graphite-raised px-3 py-1.5 font-mono text-[11px] text-el-sec-lime transition-colors hover:bg-el-sec-lime hover:text-el-sec-graphite lg:self-auto"
+              className="inline-flex self-start items-center gap-1.5 rounded-xs border border-el-sec-lime/50 bg-el-sec-graphite-raised px-3 py-1.5 text-xs text-el-sec-lime transition-colors hover:bg-el-sec-lime hover:text-el-sec-graphite lg:self-auto focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.99] disabled:opacity-50"
             >
               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-              Resume Scroll Sync
+              Resume scroll sync
             </button>
           )}
         </div>
@@ -580,22 +580,22 @@ export function CurvedGovernanceRouteStepper() {
                 role="radio"
                 aria-checked={selected}
                 onClick={() => setTierProfileId(profile.id)}
-                className={`flex flex-col justify-between rounded-xs border p-3 text-left transition-colors ${
+                className={`flex flex-col justify-between rounded-xs border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.99] disabled:opacity-50 ${
                   selected
                     ? "border-el-sec-lime bg-el-sec-graphite-raised text-el-sec-porcelain"
                     : "border-el-sec-sage/35 bg-el-sec-graphite text-el-sec-porcelain/80 hover:border-el-sec-sage/75 hover:text-el-sec-porcelain"
                 }`}
               >
-                <div className="flex w-full items-center justify-between gap-2 font-mono text-[10.5px]">
+                <div className="flex w-full items-center justify-between gap-2 text-xs">
                   <span
                     className={
-                      selected ? "font-bold text-el-sec-lime" : "text-el-sec-sage-light"
+                      selected ? "font-semibold text-el-sec-lime" : "text-el-sec-sage-light"
                     }
                   >
                     {profile.badge} · {profile.label}
                   </span>
                   <span
-                    className={`rounded-xs px-1.5 py-0.5 text-[9.5px] ${
+                    className={`rounded-xs px-1.5 py-0.5 text-[10px] ${
                       profile.requiresHumanPrompt
                         ? "bg-el-sec-porcelain text-el-sec-graphite font-semibold"
                         : "bg-el-sec-lime/15 text-el-sec-lime"
@@ -604,7 +604,7 @@ export function CurvedGovernanceRouteStepper() {
                     {profile.requiresHumanPrompt ? "Human Nonce" : "0 Prompts"}
                   </span>
                 </div>
-                <p className="mt-1.5 font-mono text-[11px] text-el-sec-sage-light">
+                <p className="mt-1.5 text-xs text-el-sec-sage-light">
                   {profile.exampleTask}
                 </p>
               </button>
@@ -619,21 +619,21 @@ export function CurvedGovernanceRouteStepper() {
           {/* Journey Progress & Autonomy Risk Graph Bar */}
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-el-sec-sage/25 pb-3">
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[10.5px] uppercase tracking-wider text-el-sec-sage-light">
+              <span className="text-xs text-el-sec-sage-light">
                 Stage 0{activeStepIndex + 1} of 05
               </span>
-              <span className="font-mono text-xs font-bold text-el-sec-lime">
+              <span className="text-xs font-semibold text-el-sec-lime">
                 <SecurityNumberCounter
                   value={Math.round(((activeStepIndex + 1) / 5) * 100)}
-                  suffix="% Journey Progress"
+                  suffix="% journey progress"
                 />
               </span>
             </div>
 
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10.5px] text-el-sec-sage-light">
-                  Autonomy Risk Profile:
+                <span className="text-xs text-el-sec-sage-light">
+                  Autonomy risk profile:
                 </span>
                 <SecuritySparkline
                   points={[8, 18, activeProfile.requiresHumanPrompt ? 85 : 12, 28, 14]}
@@ -792,7 +792,7 @@ export function CurvedGovernanceRouteStepper() {
                   tabIndex={isCurrent ? 0 : -1}
                   onClick={() => selectStepManually(idx)}
                   onKeyDown={(e) => handleStepKeyDown(e, idx, "desktop")}
-                  className={`rounded-xs border p-2.5 text-left transition-[border-color] ${
+                  className={`rounded-xs border p-2.5 text-left transition-[border-color] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.99] disabled:opacity-50 ${
                     isCurrent
                       ? isAuthorize && activeProfile.requiresHumanPrompt
                         ? "border-el-sec-porcelain bg-el-sec-porcelain text-el-sec-graphite"
@@ -802,7 +802,7 @@ export function CurvedGovernanceRouteStepper() {
                       : "border-el-sec-sage/30 bg-el-sec-graphite text-el-sec-sage-light hover:border-el-sec-sage/65 hover:text-el-sec-porcelain"
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-1 font-mono text-[10px]">
+                  <div className="flex items-center justify-between gap-1 text-xs">
                     <span
                       className={
                         isCurrent && isAuthorize && activeProfile.requiresHumanPrompt
@@ -812,11 +812,11 @@ export function CurvedGovernanceRouteStepper() {
                           : "text-el-sec-sage-light"
                       }
                     >
-                      STEP {st.stepNum}
+                      Step {st.stepNum}
                     </span>
                     {isAuthorize && (
                       <span
-                        className={`rounded-xs px-1 py-0.2 text-[9px] font-semibold ${
+                        className={`rounded-xs px-1 py-0.2 text-[10px] font-medium ${
                           isCurrent && activeProfile.requiresHumanPrompt
                             ? "bg-el-sec-graphite text-el-sec-lime"
                             : activeProfile.requiresHumanPrompt
@@ -824,7 +824,7 @@ export function CurvedGovernanceRouteStepper() {
                             : "bg-el-sec-lime/15 text-el-sec-lime"
                         }`}
                       >
-                        {activeProfile.requiresHumanPrompt ? "NONCE" : "AUTO"}
+                        {activeProfile.requiresHumanPrompt ? "Nonce" : "Auto"}
                       </span>
                     )}
                   </div>
@@ -945,13 +945,13 @@ export function CurvedGovernanceRouteStepper() {
                       {st.stepNum} · {st.name}
                     </span>
                     {isAuthorize && (
-                      <span className="font-mono text-[9.5px] font-semibold uppercase">
+                      <span className="text-[10px] font-medium">
                         {activeProfile.requiresHumanPrompt ? "30s Nonce" : "Auto-Pass"}
                       </span>
                     )}
                   </div>
                   <span
-                    className={`mt-0.5 truncate font-mono text-[10px] ${
+                    className={`mt-0.5 truncate text-xs ${
                       isCurrent && isAuthorize && activeProfile.requiresHumanPrompt
                         ? "text-el-sec-graphite/75"
                         : "text-el-sec-sage-light"
@@ -992,12 +992,12 @@ export function CurvedGovernanceRouteStepper() {
                 {stepIcon(activeStepIndex)}
               </span>
               <div>
-                <div className="font-mono text-[10.5px] uppercase tracking-wider opacity-80">
-                  STAGE {activeStep.stepNum} OF 05 · {activeStep.subsystem}
+                <div className="text-xs text-el-sec-sage-light">
+                  Stage {activeStep.stepNum} of 05 · {activeStep.subsystem}
                 </div>
                 <SecurityTextReveal
                   key={activeStep.id + "-headline"}
-                  text={`${activeStep.name} — ${isPlain ? activeStep.plainHeadline : activeStep.techHeadline}`}
+                  text={`${activeStep.name}: ${isPlain ? activeStep.plainHeadline : activeStep.techHeadline}`}
                   as="h3"
                   className="text-base font-semibold tracking-tight sm:text-lg"
                 />

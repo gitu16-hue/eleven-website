@@ -17,7 +17,7 @@ import {
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "How It Thinks — Two Brains & Natural Voice | ELEVEN v3",
+  title: "How It Thinks: Two Brains & Natural Voice | ELEVEN v3",
   description:
     "Discover how ELEVEN talks naturally without freezing: a Quick Voice mind for instant conversation and a Deep Planner mind for heavy background work.",
   alternates: {
@@ -68,7 +68,7 @@ const VOICE_STEPS = [
     plainTitle: "Waits Politely When You Pause to Think",
     techTitle: "Hybrid Silero VAD + Safe 380ms Fallback",
     plainDesc:
-      "Doesn’t rudely jump in just because you took a quick breath or said 'um' mid-thought.",
+      "Doesn't rudely jump in just because you took a quick breath or paused mid-thought.",
     techDesc:
       "Tracks speech onset and trailing-word safety with deterministic fallback to 380ms whenever uncertain.",
   },
@@ -95,7 +95,7 @@ const VOICE_STEPS = [
     plainTitle: "Stops Talking the Instant You Speak",
     techTitle: "<50ms Hardware waveOutReset Flush",
     plainDesc:
-      "Say 'Wait—actually…' and ELEVEN goes quiet in a twentieth of a second, throwing out outdated replies.",
+      "Say 'Wait, actually' and ELEVEN goes quiet in a twentieth of a second, throwing out outdated replies.",
     techDesc:
       "Flushes hardware DAC buffers in <50ms, increments turn epoch tokens, and invalidates stale ASR results.",
   },
@@ -103,26 +103,26 @@ const VOICE_STEPS = [
 
 const AI_LANES = [
   {
-    lane: "OPTION 1 · 100% OFFLINE ON YOUR PC",
+    lane: "Option 1: 100% Offline On Your Computer",
     providers: "Ollama · Local Voice & Vision Models",
     plainRole:
-      "Works even on an airplane with Wi-Fi turned off—ideal for ultra-private notes and everyday commands.",
+      "Works even on an airplane with Wi-Fi turned off: ideal for private notes and local commands.",
     techRole:
       "Zero-egress offline execution, privacy-critical intent classification, and disconnected resilience.",
   },
   {
-    lane: "OPTION 2 · LIGHTNING-FAST SPEED",
+    lane: "Option 2: High-Speed Sub-Second Voice",
     providers: "NVIDIA NIM · Groq · Streaming Voice",
     plainRole:
-      "Delivers blink-of-an-eye answers when you’re brainstorming fast—after hiding any private passwords first.",
+      "Delivers fast answers when you are brainstorming, after stripping any private tokens or passwords first.",
     techRole:
       "Sub-second conversational synthesis and rapid TaskSpec decomposition under DataMinimizer redaction.",
   },
   {
-    lane: "OPTION 3 · WORLD’S SMARTEST CLOUD BRAINS",
+    lane: "Option 3: Advanced Cloud Reasoning",
     providers: "Claude · GPT · DeepSeek · Gemini",
     plainRole:
-      "Brings in heavyweight reasoning for big coding, legal, or research tasks—still safely locked inside ELEVEN’s guardrails.",
+      "Brings in heavyweight reasoning for complex engineering or research, safely enclosed within ELEVEN's policy gates.",
     techRole:
       "Multi-file architecture synthesis and adversarial verification inside untrusted proposal sandboxes.",
   },
@@ -144,7 +144,7 @@ export default function ElevenIntelligencePage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -154,8 +154,8 @@ export default function ElevenIntelligencePage() {
                 ]}
               />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                  TERMINOLOGY DEPTH:
+                <span className="text-el-xs font-medium text-el-fg-faint">
+                  Terminology depth:
                 </span>
                 <ClarityTogglePill />
               </div>
@@ -163,8 +163,8 @@ export default function ElevenIntelligencePage() {
 
             <div className="mt-10 max-w-4xl space-y-6">
               <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
-                <CipherText text="DUAL-MIND COGNITION // REAL-TIME CONVERSATION & ASYNC REASONING" />
+                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+                <CipherText text="Dual-Mind Cognition · Real-Time Conversation & Async Reasoning" />
               </div>
 
               <h1 className="el-h1">
@@ -174,36 +174,46 @@ export default function ElevenIntelligencePage() {
               <DualCopy
                 className="el-lead max-w-3xl"
                 plain="Imagine talking to a friend while they cook dinner: they can answer you right away without burning the food. ELEVEN works the exact same way by splitting conversation and heavy work into two separate brains."
-                technical="ELEVEN v3 bifurcates runtime cognition into two OS processes—System 1 (eleven_voice) and System 2 (eleven_deep)—synchronized across a non-blocking Async Mind Event Bus."
+                technical="ELEVEN v3 bifurcates runtime cognition into two OS processes: System 1 (eleven_voice) and System 2 (eleven_deep), synchronized across a non-blocking Async Mind Event Bus."
               />
 
               <ScrollReveal
                 stagger={0.08}
-                className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]"
+                className="flex flex-wrap gap-2 pt-2 text-[11px] font-medium"
               >
                 <RevealItem>
-                  <span className="inline-block rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
-                    ✓ DUAL-MIND ARCHITECTURE (INV-01)
+                  <span className="inline-block rounded-xs border border-el-accent/30 bg-el-accent-soft px-2.5 py-1 text-el-accent">
+                    Dual-Mind Architecture (INV-01)
                   </span>
                 </RevealItem>
                 <RevealItem>
-                  <span className="inline-block rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
-                    ✓ SUB-50MS BARGE-IN TARGET
+                  <span className="inline-block rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg">
+                    Sub-50ms Barge-In Target
                   </span>
                 </RevealItem>
                 <RevealItem>
                   <span className="inline-block rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                    ✓ ZERO MODEL VENDOR LOCK-IN
+                    Zero Model Vendor Lock-In
                   </span>
                 </RevealItem>
               </ScrollReveal>
 
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <Button href="/benchmarks/voice-latency" variant="primary" arrow>
+                <Button
+                  href="/benchmarks/voice-latency"
+                  variant="primary"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
                   View &lt;50ms Barge-In Benchmark
                 </Button>
-                <Button href="/architecture" variant="secondary">
-                  Explore System Architecture →
+                <Button
+                  href="/architecture"
+                  variant="secondary"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
+                  Explore System Architecture
                 </Button>
               </div>
             </div>
@@ -216,7 +226,7 @@ export default function ElevenIntelligencePage() {
         <Section className="py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <CipherText text="// 01 DUAL-MIND ARCHITECTURE" />
+              <CipherText text="// 01 Dual-Mind Architecture" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Two minds side by side: Instant speech meets thorough planning." />
@@ -236,10 +246,10 @@ export default function ElevenIntelligencePage() {
                 <div className="flex h-full flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between border-b border-el-border pb-4">
-                      <span className="font-mono text-el-xs font-semibold text-el-accent">
-                        BRAIN 1 · QUICK VOICE (F.R.I.D.A.Y.)
+                      <span className="text-el-xs font-semibold text-el-accent">
+                        Brain 1: Quick Voice (F.R.I.D.A.Y.)
                       </span>
-                      <span className="rounded-sm bg-el-bg px-2.5 py-1 font-mono text-[11px] text-el-fg-muted">
+                      <span className="rounded-sm bg-el-bg px-2.5 py-1 text-[11px] font-medium text-el-fg-muted">
                         Fast &amp; Conversational
                       </span>
                     </div>
@@ -269,10 +279,15 @@ export default function ElevenIntelligencePage() {
                     </ul>
                   </div>
 
-                  <div className="mt-7 flex flex-wrap items-center justify-between gap-2 border-t border-el-border pt-4 font-mono text-[11px] text-el-fg-faint">
-                    <span>ROLE: INSTANT LISTENING &amp; NATURAL SPEECH</span>
-                    <Button variant="ghost" href="/benchmarks/voice-latency" className="text-[10.5px]">
-                      View &lt;50ms Barge-In Benchmark →
+                  <div className="mt-7 flex flex-wrap items-center justify-between gap-2 border-t border-el-border pt-4 text-[11px] text-el-fg-faint">
+                    <span>Role: Instant listening and natural speech</span>
+                    <Button
+                      variant="ghost"
+                      href="/benchmarks/voice-latency"
+                      className="text-[10.5px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                      arrow
+                    >
+                      View &lt;50ms Barge-In Benchmark
                     </Button>
                   </div>
                 </div>
@@ -284,10 +299,10 @@ export default function ElevenIntelligencePage() {
                 <div className="flex h-full flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between border-b border-el-border pb-4">
-                      <span className="font-mono text-el-xs font-semibold text-el-accent">
-                        BRAIN 2 · DEEP PLANNER (J.A.R.V.I.S.)
+                      <span className="text-el-xs font-semibold text-el-accent">
+                        Brain 2: Deep Planner (J.A.R.V.I.S.)
                       </span>
-                      <span className="rounded-sm bg-el-bg px-2.5 py-1 font-mono text-[11px] text-el-fg-muted">
+                      <span className="rounded-sm bg-el-bg px-2.5 py-1 text-[11px] font-medium text-el-fg-muted">
                         Thorough &amp; Careful
                       </span>
                     </div>
@@ -308,7 +323,7 @@ export default function ElevenIntelligencePage() {
                       </li>
                       <li className="flex items-start gap-2.5">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-el-accent" />
-                        <span>Verifies proof from helpers—never guesses by majority vote.</span>
+                        <span>Verifies proof from helpers; never guesses by majority vote.</span>
                       </li>
                       <li className="flex items-start gap-2.5">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-el-accent" />
@@ -317,8 +332,8 @@ export default function ElevenIntelligencePage() {
                     </ul>
                   </div>
 
-                  <div className="mt-7 border-t border-el-border pt-4 font-mono text-[11px] text-el-fg-faint">
-                    ROLE: DEEP RESEARCH, CODING &amp; VERIFIED TASKS
+                  <div className="mt-7 border-t border-el-border pt-4 text-[11px] text-el-fg-faint">
+                    Role: Deep research, coding and verified tasks
                   </div>
                 </div>
               </Tilt3DCard>
@@ -332,7 +347,7 @@ export default function ElevenIntelligencePage() {
         <Section className="py-16 lg:py-24 bg-el-bg-raised/45">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <CipherText text="// 02 NATURAL CONVERSATION PIPELINE" />
+              <CipherText text="// 02 Natural Conversation Pipeline" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Six reasons talking to ELEVEN feels effortless." />
@@ -351,8 +366,8 @@ export default function ElevenIntelligencePage() {
             {VOICE_STEPS.map((item) => (
               <RevealItem key={item.step} className="h-full">
                 <Tilt3DCard className="p-6">
-                  <span className="font-mono text-xs font-semibold text-el-cyan">
-                    STEP {item.step}
+                  <span className="text-xs font-semibold text-el-accent">
+                    Step {item.step}
                   </span>
                   <DualCopy
                     as="div"
@@ -377,7 +392,7 @@ export default function ElevenIntelligencePage() {
         <Section className="py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <CipherText text="// 03 SYNCHRONIZATION BENCHMARK" />
+              <CipherText text="// 03 Synchronization Benchmark" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Simulate Dual-Mind Voice & Evidence Execution" />
@@ -400,24 +415,33 @@ export default function ElevenIntelligencePage() {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
             <div className="lg:col-span-5 space-y-4">
               <div className="el-eyebrow">
-                <CipherText text="// 04 MODEL AGNOSTIC ROUTING" />
+                <CipherText text="// 04 Model Agnostic Routing" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Swap AI brains anytime. Keep all your memories." />
               </h2>
               <DualCopy
                 className="el-body"
-                plain="If a smarter AI comes out next month—or if your internet goes down—you don’t lose a thing. ELEVEN can use offline AI on your computer or top cloud models interchangeably."
+                plain="If a smarter AI comes out next month, or if your internet goes down, you don’t lose a thing. ELEVEN can use offline AI on your computer or top cloud models interchangeably."
                 technical="Because memory, policy, and tool authority reside in the local Control Plane, ModelRouter switches dynamically across Ollama, NIM, Claude, GPT, and DeepSeek without session loss."
               />
               <div className="pt-4 flex flex-wrap gap-3">
                 <PortalActionButton variant="primary" arrow>
                   Try Live 3D Orb
                 </PortalActionButton>
-                <Button href="/tools/vault-calculator" variant="secondary">
-                  Estimate Memory Storage →
+                <Button
+                  href="/tools/vault-calculator"
+                  variant="secondary"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
+                  Estimate Memory Storage
                 </Button>
-                <Button href="/architecture" variant="ghost">
+                <Button
+                  href="/architecture"
+                  variant="ghost"
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
                   See How It’s Built
                 </Button>
               </div>
@@ -431,7 +455,7 @@ export default function ElevenIntelligencePage() {
                 <RevealItem key={tier.lane}>
                   <Tilt3DCard className="p-6">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="font-mono text-el-xs font-semibold text-el-accent">
+                      <span className="text-el-xs font-semibold text-el-accent">
                         {tier.lane}
                       </span>
                       <span className="font-mono text-el-xs text-el-fg">

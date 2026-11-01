@@ -8,16 +8,13 @@ import { useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 type Variant = "primary" | "secondary" | "ghost";
 
 const base =
-  "group relative overflow-hidden inline-flex items-center justify-center gap-2 text-el-sm font-medium tracking-[-0.01em] " +
-  "transition-[box-shadow,border-color,background-color,color,filter] duration-[var(--el-duration-fast)] " +
-  "focus-visible:outline-2 focus-visible:outline-offset-3 disabled:opacity-40 disabled:pointer-events-none " +
-  "active:scale-[0.97] rounded-xs cursor-pointer";
+  "group relative overflow-hidden inline-flex items-center justify-center gap-2 text-el-sm font-medium tracking-[-0.01em] transition-[box-shadow,border-color,background-color,color,filter] duration-[var(--el-duration-fast)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--el-accent)] disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed active:scale-[0.98] active:brightness-95 rounded-xs cursor-pointer";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-el-accent text-[#04060A] font-semibold px-5 py-2.5 sm:px-5.5 sm:py-2.5 min-h-[44px] hover:shadow-[0_0_28px_rgba(0,240,255,0.48)] hover:brightness-105",
+    "bg-el-accent text-el-sec-graphite-deep font-semibold px-5 py-2.5 sm:px-5.5 sm:py-2.5 min-h-[44px] hover:shadow-md hover:brightness-105",
   secondary:
-    "border border-el-border-strong text-el-fg bg-el-bg-raised/75 px-5 py-2.5 sm:px-5.5 sm:py-2.5 min-h-[44px] hover:border-el-accent hover:text-el-fg hover:shadow-[0_0_20px_rgba(0,240,255,0.16)] hover:bg-el-bg-raised",
+    "border border-el-border-strong text-el-fg bg-el-bg-raised px-5 py-2.5 sm:px-5.5 sm:py-2.5 min-h-[44px] hover:border-el-accent hover:text-el-fg hover:shadow-sm",
   ghost:
     "text-el-fg-muted hover:text-el-accent px-3 py-2 min-h-[44px]",
 };
@@ -76,7 +73,7 @@ export function Button({
       {variant !== "ghost" && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
+          className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent motion-safe:transition-transform duration-700 ease-out group-hover:translate-x-full"
         />
       )}
       <span className="relative z-10 inline-flex items-center gap-2">
@@ -123,7 +120,7 @@ function ArrowIcon() {
       viewBox="0 0 16 16"
       fill="none"
       aria-hidden="true"
-      className="transition-transform duration-[var(--el-duration-fast)] group-hover:translate-x-1"
+      className="motion-safe:transition-transform duration-[var(--el-duration-fast)] group-hover:translate-x-1"
     >
       <path
         d="M3 8H13M13 8L9 4M13 8L9 12"

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
-import { Section, Container } from "@/components/ui/Section";
+import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { VoiceLatencyBenchmarkSimulator } from "@/components/v3/VoiceLatencyBenchmarkSimulator";
 import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
 import {
+  CipherText,
   ClarityTogglePill,
   DualCopy,
   SignalBeamDivider,
@@ -15,9 +16,9 @@ import {
 } from "@/components/motion/PremiumMotion";
 
 export const metadata: Metadata = {
-  title: "16kHz Voice Pipeline & Barge-In Latency Benchmark | ELEVEN",
+  title: "Sub-50ms Speech Latency Benchmarks | ELEVEN v3",
   description:
-    "Empirical benchmarks comparing ELEVEN's local 16kHz lockless PCM audio ring (<50ms barge-in) with commercial cloud WebSocket voice streaming APIs.",
+    "Empirical turn latency and barge-in speed benchmarks comparing ELEVEN's local 16kHz circular PCM buffer against commercial cloud assistants. <0.05s interruption.",
   alternates: {
     canonical: "/benchmarks/voice-latency",
   },
@@ -51,12 +52,12 @@ const breadcrumbJsonLd = {
 const techArticleJsonLd = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
-  headline: "16kHz Voice Pipeline & Sub-50ms Barge-In Latency Benchmark",
+  headline: "Empirical Turn Latency and Barge-In Audio Benchmarks",
   description:
-    "Empirical test results and architecture specification for the ELEVEN low-latency SpeechPipeline, covering 16kHz lockless circular buffers, turn-epoch invalidation, and WASAPI exclusive mode bindings.",
+    "Technical benchmarks and architecture analysis of ELEVEN's local-first 16kHz audio runtime, achieving sub-50ms conversational barge-in.",
   author: {
     "@type": "Organization",
-    name: "GISHH Labs Audio Research",
+    name: "GISHH Labs",
     url: "https://eleven-website-self.vercel.app",
   },
   publisher: {
@@ -90,7 +91,7 @@ export default function VoiceLatencyBenchmarkPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -101,8 +102,8 @@ export default function VoiceLatencyBenchmarkPage() {
                 ]}
               />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                  TERMINOLOGY DEPTH:
+                <span className="text-el-xs font-medium text-el-fg-faint">
+                  Terminology depth:
                 </span>
                 <ClarityTogglePill />
               </div>
@@ -110,12 +111,12 @@ export default function VoiceLatencyBenchmarkPage() {
 
             <div className="mt-10 max-w-4xl space-y-6">
               <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
-                <span>EMPIRICAL BENCHMARKS // 16KHZ AUDIO RUNTIME</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+                <CipherText text="Empirical Benchmarks · 16kHz Audio Runtime" />
               </div>
 
               <h1 className="el-h1">
-                <WordReveal text="Conversations don't have loading spinners. Sub-50ms natural interruption." />
+                <WordReveal text="Conversations do not have loading spinners. Sub-50ms natural interruption." />
               </h1>
 
               <DualCopy
@@ -124,30 +125,44 @@ export default function VoiceLatencyBenchmarkPage() {
                 technical="How ELEVEN achieves sub-50ms speech barge-in and <500ms conversational turns using a 16kHz lockless local PCM ring, turn-epoch invalidation, and direct WASAPI/CoreAudio low-latency host bindings."
               />
 
-              <div className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]">
-                <span className="rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
-                  ✓ SUB-50MS BARGE-IN TARGET
+              <div className="flex flex-wrap gap-2 pt-2 text-el-xs">
+                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  Sub-50ms barge-in target
                 </span>
-                <span className="rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
-                  ✓ 16KHZ LOCKLESS RING BUFFER
+                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  16kHz lockless ring buffer
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  ✓ WASAPI / COREAUDIO EXCLUSIVE
+                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  WASAPI / CoreAudio exclusive
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  ✓ ZERO CLOUD AUDIO STREAMS
+                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  Zero cloud audio streams
                 </span>
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <WaitlistActionButton tier="technical" arrow variant="primary">
+                <WaitlistActionButton
+                  tier="technical"
+                  arrow
+                  variant="primary"
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
                   Test Local Voice Pipeline
                 </WaitlistActionButton>
-                <Button variant="secondary" href="/eleven">
-                  Explore Dual-Mind Architecture →
+                <Button
+                  variant="secondary"
+                  href="/eleven"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
+                  Explore Dual-Mind Architecture
                 </Button>
-                <Button variant="ghost" href="/hardware">
+                <Button
+                  variant="ghost"
+                  href="/hardware"
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
                   Verify Hardware Requirements
                 </Button>
               </div>
@@ -158,18 +173,18 @@ export default function VoiceLatencyBenchmarkPage() {
         <SignalBeamDivider />
 
         {/* ── INTERACTIVE AUDIO SIMULATOR ── */}
-        <Section className="py-16 lg:py-24 bg-[#030508]">
+        <Section className="py-16 lg:py-24 bg-el-bg">
           <div className="max-w-3xl space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="el-eyebrow">
-                <span>{"// 01 INTERACTIVE BENCHMARK HARNESS"}</span>
+                <CipherText text="// 01 Interactive Benchmark Harness" />
               </div>
-              <div className="rounded-xs border border-el-border bg-[#020408] px-2.5 py-1 font-mono text-[11px] text-el-fg-faint">
-                AUDIO BUS: <span className="text-el-mint font-semibold">16KHZ LOCKLESS ACTIVE</span>
+              <div className="rounded-xs border border-el-border bg-el-bg-raised px-2.5 py-1 text-xs text-el-fg-faint">
+                Audio Bus: <span className="text-el-mint font-medium">16kHz Lockless Active</span>
               </div>
             </div>
             <h2 className="el-h2">
-              Experience the 30x barge-in difference.
+              <WordReveal text="Experience the 30x barge-in difference." />
             </h2>
             <DualCopy
               className="el-body"
@@ -189,10 +204,10 @@ export default function VoiceLatencyBenchmarkPage() {
         <Section className="py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <span>{"// 02 SPEECH PIPELINE ARCHITECTURE"}</span>
+              <CipherText text="// 02 Speech Pipeline Architecture" />
             </div>
             <h2 className="el-h2">
-              Four breakthroughs that eliminate audio lag.
+              <WordReveal text="Four breakthroughs that eliminate audio lag." />
             </h2>
             <DualCopy
               className="el-body"
@@ -203,14 +218,14 @@ export default function VoiceLatencyBenchmarkPage() {
 
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {/* Stage 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
               <div className="space-y-3">
-                <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
-                    STAGE 01 // RING
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-el-accent font-medium">
+                    01 · Ring Buffer
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
-                    0ms JITTER
+                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
+                    0ms jitter
                   </span>
                 </div>
                 <h3 className="text-el-base font-semibold text-el-fg">
@@ -222,19 +237,19 @@ export default function VoiceLatencyBenchmarkPage() {
                   technical="Eliminates mutex contention in SpeechPipeline._ingestion_loop via atomic read/write pointers and pre-allocated circular ring buffers."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-3 font-mono text-[10px] text-el-fg-faint">
-                <span className="text-el-accent">Buffer:</span> 16000Hz 16-bit Mono
+              <div className="mt-6 border-t border-el-border/60 pt-3 text-xs text-el-fg-faint">
+                <span className="text-el-accent">Buffer:</span> <code>16000Hz 16-bit Mono</code>
               </div>
             </Tilt3DCard>
 
             {/* Stage 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
               <div className="space-y-3">
-                <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
-                    STAGE 02 // VAD
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-el-accent font-medium">
+                    02 · Voice Activity
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
+                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
                     14ms VAD
                   </span>
                 </div>
@@ -247,20 +262,20 @@ export default function VoiceLatencyBenchmarkPage() {
                   technical="Silero VAD / WebRTC VAD tuned to 380ms silence threshold paired with a 120ms speculative audio lookback buffer."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-3 font-mono text-[10px] text-el-fg-faint">
-                <span className="text-el-signal-lime">Detection:</span> 14ms Latency
+              <div className="mt-6 border-t border-el-border/60 pt-3 text-xs text-el-fg-faint">
+                <span className="text-el-signal-lime">Detection:</span> <code>14ms Latency</code>
               </div>
             </Tilt3DCard>
 
             {/* Stage 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
               <div className="space-y-3">
-                <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
-                    STAGE 03 // EPOCH
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-el-accent font-medium">
+                    03 · Turn Invalidation
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-purple-400">
-                    ATOMIC UINT64
+                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-fg-muted">
+                    Atomic
                   </span>
                 </div>
                 <h3 className="text-el-base font-semibold text-el-fg">
@@ -272,20 +287,20 @@ export default function VoiceLatencyBenchmarkPage() {
                   technical="Atomic turn_epoch counter increments on barge-in. Downstream audio packets with stale epoch tags are discarded in O(1) time."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-3 font-mono text-[10px] text-el-fg-faint">
-                <span className="text-purple-400">Overhead:</span> 0.00ms Drop Time
+              <div className="mt-6 border-t border-el-border/60 pt-3 text-xs text-el-fg-faint">
+                <span className="text-el-accent">Overhead:</span> <code>0.00ms Drop Time</code>
               </div>
             </Tilt3DCard>
 
             {/* Stage 4 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
               <div className="space-y-3">
-                <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
-                    STAGE 04 // HARDWARE
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-el-accent font-medium">
+                    04 · Hardware Access
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
-                    6ms MUTE
+                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
+                    6ms mute
                   </span>
                 </div>
                 <h3 className="text-el-base font-semibold text-el-fg">
@@ -297,8 +312,8 @@ export default function VoiceLatencyBenchmarkPage() {
                   technical="Direct WASAPI Exclusive Mode (Windows) and CoreAudio HAL (macOS) binding flush output ring buffers directly at the hardware DAC."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-3 font-mono text-[10px] text-el-fg-faint">
-                <span className="text-el-signal-lime">Mute Delay:</span> 6ms Direct DAC
+              <div className="mt-6 border-t border-el-border/60 pt-3 text-xs text-el-fg-faint">
+                <span className="text-el-signal-lime">Mute Delay:</span> <code>6ms Direct DAC</code>
               </div>
             </Tilt3DCard>
           </div>
@@ -308,28 +323,28 @@ export default function VoiceLatencyBenchmarkPage() {
 
         {/* ── EMPIRICAL BENCHMARK HARDWARE DATA GRID ── */}
         <Section className="py-16">
-          <div className="max-w-[700px]">
-            <p className="el-eyebrow">
-              03 · EMPIRICAL MEASUREMENTS
-            </p>
-            <h2 className="mt-2 el-h2">
-              Tested across real developer workstations.
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <CipherText text="// 03 Empirical Measurements" />
+            </div>
+            <h2 className="el-h2">
+              <WordReveal text="Tested across real developer workstations." />
             </h2>
             <DualCopy
-              className="mt-3 el-body"
+              className="el-body"
               plain="Measured real-world latency across popular modern computers compared to cloud speech endpoints."
               technical="Laboratory turn latency benchmarks measured from audio VAD threshold trigger to first audio byte emitted."
             />
           </div>
 
           <div className="mt-10 overflow-x-auto rounded-sm border border-el-border bg-el-bg-raised/40">
-            <table className="w-full text-left font-mono text-el-xs">
+            <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-el-border bg-el-bg-raised/90 text-el-fg-faint">
-                  <th className="py-3.5 px-4 font-medium uppercase tracking-wider">Hardware / Architecture</th>
-                  <th className="py-3.5 px-4 font-medium uppercase tracking-wider text-el-accent">Barge-In Interruption</th>
-                  <th className="py-3.5 px-4 font-medium uppercase tracking-wider text-el-signal-lime">Turn Latency (ASR+LLM+TTS)</th>
-                  <th className="py-3.5 px-4 font-medium uppercase tracking-wider text-el-fg-faint">Network Dependency</th>
+                <tr className="border-b border-el-border bg-el-bg-raised text-el-fg-muted">
+                  <th className="py-3.5 px-4 font-medium text-el-fg">Hardware / architecture</th>
+                  <th className="py-3.5 px-4 font-medium text-el-accent">Barge-in interruption</th>
+                  <th className="py-3.5 px-4 font-medium text-el-signal-lime">Turn latency (ASR+LLM+TTS)</th>
+                  <th className="py-3.5 px-4 font-medium text-el-fg-faint">Network dependency</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-el-border/60 text-el-fg-muted">
@@ -337,24 +352,24 @@ export default function VoiceLatencyBenchmarkPage() {
                   <td className="py-3.5 px-4 font-semibold text-el-fg">Apple Silicon M3/M4 Max (CoreAudio)</td>
                   <td className="py-3.5 px-4 text-el-signal-lime font-medium">28ms (&lt;0.03s)</td>
                   <td className="py-3.5 px-4 text-el-signal-lime font-medium">380ms (&lt;0.4s)</td>
-                  <td className="py-3.5 px-4 text-el-signal-lime font-medium">100% Offline (0 bytes egress)</td>
+                  <td className="py-3.5 px-4 text-el-signal-lime font-medium">100% offline (0 bytes egress)</td>
                 </tr>
                 <tr>
                   <td className="py-3.5 px-4 font-semibold text-el-fg">Windows 11 (WASAPI + RTX 4080)</td>
                   <td className="py-3.5 px-4 text-el-signal-lime font-medium">32ms (&lt;0.05s)</td>
                   <td className="py-3.5 px-4 text-el-signal-lime font-medium">420ms (&lt;0.5s)</td>
-                  <td className="py-3.5 px-4 text-el-signal-lime font-medium">100% Offline (0 bytes egress)</td>
+                  <td className="py-3.5 px-4 text-el-signal-lime font-medium">100% offline (0 bytes egress)</td>
                 </tr>
                 <tr>
                   <td className="py-3.5 px-4 font-semibold text-el-fg">Linux Workstation (ALSA + RTX 3080)</td>
                   <td className="py-3.5 px-4 text-el-signal-lime font-medium">34ms (&lt;0.05s)</td>
                   <td className="py-3.5 px-4 text-el-signal-lime font-medium">450ms (&lt;0.5s)</td>
-                  <td className="py-3.5 px-4 text-el-signal-lime font-medium">100% Offline (0 bytes egress)</td>
+                  <td className="py-3.5 px-4 text-el-signal-lime font-medium">100% offline (0 bytes egress)</td>
                 </tr>
                 <tr>
                   <td className="py-3.5 px-4 font-semibold text-red-400">Commercial Cloud Voice Assistant (WiFi)</td>
-                  <td className="py-3.5 px-4 text-red-400 font-medium">920ms–1,280ms (~1.1s)</td>
-                  <td className="py-3.5 px-4 text-red-400 font-medium">1,600ms–2,400ms (~2.0s)</td>
+                  <td className="py-3.5 px-4 text-red-400 font-medium">920ms to 1,280ms (~1.1s)</td>
+                  <td className="py-3.5 px-4 text-red-400 font-medium">1,600ms to 2,400ms (~2.0s)</td>
                   <td className="py-3.5 px-4 text-red-400 font-medium">High (Opus WebSockets to US-East)</td>
                 </tr>
               </tbody>
@@ -372,12 +387,15 @@ export default function VoiceLatencyBenchmarkPage() {
               className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-30"
             />
             <div className="relative mx-auto max-w-[640px] space-y-4">
-              <span className="el-eyebrow">
-                SYSTEM 1 AUDIO // DIRECT PREVIEW
-              </span>
+              <div className="el-badge mx-auto shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+                <CipherText text="System 1 Audio · Direct Preview" />
+              </div>
+
               <h2 className="el-h2">
-                Ready for conversation that feels human?
+                <WordReveal text="Ready for conversation that feels human?" />
               </h2>
+
               <DualCopy
                 className="el-body"
                 plain="Join the early access program to test the 16kHz local audio engine directly on your laptop or workstation."
@@ -385,18 +403,32 @@ export default function VoiceLatencyBenchmarkPage() {
               />
 
               <div className="pt-4 flex flex-wrap justify-center gap-4">
-                <WaitlistActionButton tier="technical" arrow>
+                <WaitlistActionButton
+                  tier="technical"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
                   Test Local Voice Pipeline (Join Waitlist)
                 </WaitlistActionButton>
-                <Button variant="secondary" href="/tools/inspector">
-                  Inspect Policy Sandbox →
+                <Button
+                  variant="secondary"
+                  href="/tools/inspector"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
+                  Inspect Policy Sandbox
                 </Button>
-                <Button variant="ghost" href="/hardware">
-                  Verify Hardware Sizing →
+                <Button
+                  variant="ghost"
+                  href="/hardware"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
+                  Verify Hardware Sizing
                 </Button>
               </div>
 
-              <p className="pt-2 font-mono text-[10.5px] text-el-fg-faint">
+              <p className="pt-2 text-xs text-el-fg-faint">
                 Supports standard USB microphones, laptop mic arrays, and Bluetooth headset profiles.
               </p>
             </div>

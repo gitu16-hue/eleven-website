@@ -30,7 +30,7 @@ const ArchitectureVisualization = dynamic(
     ),
   {
     loading: () => (
-      <div className="h-[480px] w-full animate-pulse rounded-sm border border-el-border bg-el-bg-raised/40" />
+      <div className="h-[480px] w-full animate-pulse motion-reduce:animate-none rounded-sm border border-el-border bg-el-bg-raised/40" />
     ),
   }
 );
@@ -42,7 +42,7 @@ const AutonomyControlSection = dynamic(
     ),
   {
     loading: () => (
-      <div className="h-[420px] w-full animate-pulse rounded-sm border border-el-border bg-el-bg-raised/40" />
+      <div className="h-[420px] w-full animate-pulse motion-reduce:animate-none rounded-sm border border-el-border bg-el-bg-raised/40" />
     ),
   }
 );
@@ -103,7 +103,10 @@ export default function HomePage() {
       <Nav />
       <LiveTelemetryTicker />
 
-      <main id="main-content">
+      <main
+        id="main-content"
+        className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -113,18 +116,18 @@ export default function HomePage() {
 
         {/* ── 01. HERO + 3D COGNITIVE ORB CENTERPIECE ── */}
         <section className="relative overflow-hidden pt-6 pb-14 lg:pt-10 lg:pb-16">
-          <div aria-hidden="true" className="el-aurora pointer-events-none absolute inset-0 el-breathe" />
-          <div aria-hidden="true" className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(70%_60%_at_50%_30%,#000,transparent)]" />
+          <div aria-hidden="true" className="el-aurora pointer-events-none absolute inset-0 motion-safe:el-breathe" />
+          <div aria-hidden="true" className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(70%_60%_at_50%_30%,black,transparent)]" />
           <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
             {/* Left 7 Columns */}
             <div className="lg:col-span-7">
               <ScrollReveal direction="up" duration={0.55}>
                 <div className="inline-flex flex-wrap items-center gap-3">
-                  <div className="spatial-glass inline-flex items-center gap-2.5 rounded-full px-3 py-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-el-accent el-breathe" />
-                    <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-el-fg-muted">
-                      <CipherText text="ELEVEN v3.1 · PERSONAL AI OPERATING SYSTEM" />
+                  <div className="inline-flex items-center gap-2.5 rounded-full border border-el-border bg-el-bg-raised px-3.5 py-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-el-accent motion-safe:el-breathe" />
+                    <span className="font-sans text-xs text-el-fg-muted">
+                      <CipherText text="ELEVEN v3.1 · Personal AI Operating System" />
                     </span>
                   </div>
                 </div>
@@ -222,7 +225,7 @@ export default function HomePage() {
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div className="max-w-[680px]">
               <p className="el-eyebrow">
-                <CipherText text="01 · THE AUTONOMOUS EXECUTION SEQUENCE" />
+                <CipherText text="01 · Autonomous execution pipeline" />
               </p>
               <WordReveal
                 as="h2"
@@ -238,7 +241,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex flex-col items-start gap-1.5 lg:items-end">
-              <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-el-fg-faint">
+              <span className="font-sans text-xs text-el-fg-faint">
                 Switch explanation depth anytime
               </span>
               <ClarityTogglePill />
@@ -263,7 +266,7 @@ export default function HomePage() {
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-[700px]">
               <p className="el-eyebrow">
-                <CipherText text="02 · INTERACTIVE ZERO-PROMPT CONTROL PLANE" />
+                <CipherText text="02 · Interactive control plane" />
               </p>
               <WordReveal
                 as="h2"
@@ -300,10 +303,10 @@ export default function HomePage() {
               {/* Left 6 Columns */}
               <div className="lg:col-span-6">
                 <ScrollReveal>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-el-border bg-el-bg-raised/70 px-3.5 py-1.5 backdrop-blur-sm">
-                    <span className="h-2 w-2 rounded-full bg-el-signal-lime animate-pulse" />
-                    <span className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-fg-muted">
-                      <CipherText text="02 · IMMERSIVE CONTROL PLANE PREVIEW" />
+                  <div className="inline-flex items-center gap-2 rounded-full border border-el-border bg-el-bg-raised px-3.5 py-1">
+                    <span className="h-2 w-2 rounded-full bg-el-signal-lime motion-safe:animate-pulse" />
+                    <span className="font-sans text-xs text-el-fg-muted">
+                      <CipherText text="02 · Concentric safety rings" />
                     </span>
                   </div>
 
@@ -321,35 +324,35 @@ export default function HomePage() {
                   />
 
                   {/* Interactive Gyroscope Telemetry Badges */}
-                  <div className="mt-8 grid grid-cols-2 gap-4 border-t border-el-border/60 pt-6 sm:grid-cols-3">
-                    <div className="rounded-sm border border-el-border/70 bg-el-bg-raised/50 p-3.5">
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                        RING 0 // WATCHDOG
+                  <div className="mt-8 grid grid-cols-2 gap-4 border-t border-el-border pt-6 sm:grid-cols-3">
+                    <div className="rounded-sm border border-el-border bg-el-bg-raised p-3.5">
+                      <span className="font-sans text-xs text-el-fg-faint">
+                        Ring 0 Watchdog
                       </span>
-                      <p className="mt-1 font-mono text-el-sm font-semibold text-el-signal-lime">
+                      <p className="mt-1 font-sans text-sm font-semibold text-el-signal-lime">
                         Fail-Closed
                       </p>
-                      <span className="text-[11px] text-el-fg-faint">Sub-50ms halt</span>
+                      <span className="text-xs text-el-fg-faint">Sub-50ms halt</span>
                     </div>
 
-                    <div className="rounded-sm border border-el-border/70 bg-el-bg-raised/50 p-3.5">
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                        RINGS 1–4 // CHECKS
+                    <div className="rounded-sm border border-el-border bg-el-bg-raised p-3.5">
+                      <span className="font-sans text-xs text-el-fg-faint">
+                        Rings 1 to 4 Checks
                       </span>
-                      <p className="mt-1 font-mono text-el-sm font-semibold text-el-signal-lime">
+                      <p className="mt-1 font-sans text-sm font-semibold text-el-signal-lime">
                         5 Guards
                       </p>
-                      <span className="text-[11px] text-el-fg-faint">15 strict invariants</span>
+                      <span className="text-xs text-el-fg-faint">15 strict invariants</span>
                     </div>
 
-                    <div className="rounded-sm border border-el-border/70 bg-el-bg-raised/50 p-3.5 col-span-2 sm:col-span-1">
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                        APPROVAL NONCE
+                    <div className="rounded-sm border border-el-border bg-el-bg-raised p-3.5 col-span-2 sm:col-span-1">
+                      <span className="font-sans text-xs text-el-fg-faint">
+                        Approval Nonce
                       </span>
-                      <p className="mt-1 font-mono text-el-sm font-semibold text-el-signal-lime">
+                      <p className="mt-1 font-mono text-sm font-semibold text-el-signal-lime tabular-nums">
                         30.0s TTL
                       </p>
-                      <span className="text-[11px] text-el-fg-faint">Cryptographic token</span>
+                      <span className="text-xs text-el-fg-faint">Cryptographic token</span>
                     </div>
                   </div>
 
@@ -371,13 +374,13 @@ export default function HomePage() {
                     {/* Simulation tag */}
                     <div className="mb-3 flex items-center justify-between px-1">
                       <div className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime animate-pulse" />
-                        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-el-fg-faint">
-                          TOPOLOGY SIMULATOR · SPECIFICATION v3.1
+                        <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime motion-safe:animate-pulse" />
+                        <span className="font-sans text-xs text-el-fg-faint">
+                          Topology simulator · Specification v3.1
                         </span>
                       </div>
-                      <span className="font-mono text-[10px] text-el-fg-faint">
-                        DRAG TO ROTATE 3D VIEW
+                      <span className="font-sans text-xs text-el-fg-faint">
+                        Drag to rotate 3D view
                       </span>
                     </div>
 
@@ -396,7 +399,7 @@ export default function HomePage() {
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-[680px]">
               <p className="el-eyebrow">
-                <CipherText text="03 · VERIFIED SYSTEM ARCHITECTURE" />
+                <CipherText text="03 · Verified system architecture" />
               </p>
               <WordReveal
                 as="h2"
@@ -414,8 +417,8 @@ export default function HomePage() {
               <Button href="/architecture#exploded-layer-stack" variant="secondary">
                 Read System Spec
               </Button>
-              <Button href="/security#flagship-security-showcase" variant="ghost">
-                Security Simulation →
+              <Button href="/security#flagship-security-showcase" variant="ghost" arrow>
+                Review Security Simulation
               </Button>
             </div>
           </div>
@@ -432,7 +435,7 @@ export default function HomePage() {
         <Section id="autonomy-control" className="bg-el-bg-raised/40">
           <div className="max-w-[700px]">
             <p className="el-eyebrow">
-              <CipherText text="04 · AUTONOMY WITH HARD BOUNDARIES" />
+              <CipherText text="04 · Autonomy with hard boundaries" />
             </p>
             <WordReveal
               as="h2"
@@ -457,17 +460,13 @@ export default function HomePage() {
         {/* ── 06. PREMIUM EARLY ACCESS CLOSING SECTION ── */}
         <Section id="early-access">
           <ScrollReveal>
-            <div className="relative overflow-hidden rounded-sm border border-el-border-strong bg-el-bg-raised p-8 shadow-el-lg sm:p-12 lg:p-16">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-el-accent/5 blur-3xl"
-              />
+            <div className="relative overflow-hidden rounded-sm border border-el-border-strong bg-el-bg-raised p-8 shadow-el-md sm:p-12 lg:p-16">
               <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
                 <div className="lg:col-span-8">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-el-border bg-el-bg px-3 py-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse" />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-el-fg-muted">
-                      <CipherText text="EARLY ACCESS INVITATION" />
+                  <div className="inline-flex items-center gap-2 rounded-full border border-el-border bg-el-bg px-3.5 py-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-el-accent motion-safe:animate-pulse" />
+                    <span className="font-sans text-xs text-el-fg-muted">
+                      <CipherText text="Early Access Invitation" />
                     </span>
                   </div>
                   <WordReveal
@@ -479,15 +478,15 @@ export default function HomePage() {
                     className="mt-4 max-w-[600px] text-el-base leading-[1.65] text-el-fg-muted"
                     text="Join the early access program to experience fast voice conversation, background project planning, private encrypted memory, and deterministic safety checkpoints—running entirely under your control."
                   />
-                  <div className="mt-6 flex flex-wrap items-center gap-4 text-el-xs font-mono text-el-fg-faint">
+                  <div className="mt-6 flex flex-wrap items-center gap-5 font-sans text-xs text-el-fg-faint">
                     <span className="flex items-center gap-1.5">
-                      <span className="text-el-accent">✓</span> Local-First Architecture
+                      <span className="text-el-accent font-semibold">✓</span> Local-First Architecture
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <span className="text-el-accent">✓</span> Zero Cloud Memory Lock-In
+                      <span className="text-el-accent font-semibold">✓</span> Zero Cloud Memory Lock-In
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <span className="text-el-accent">✓</span> 5-Checkpoint Safety Policy
+                      <span className="text-el-accent font-semibold">✓</span> 5-Checkpoint Safety Policy
                     </span>
                   </div>
                 </div>

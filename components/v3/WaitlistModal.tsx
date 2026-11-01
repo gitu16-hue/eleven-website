@@ -1,7 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+} from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+
+const emptySubscribe = () => () => {};
 
 interface WaitlistModalProps {
   isOpen: boolean;
@@ -87,19 +96,19 @@ function WaitlistForm({
       initial={{ opacity: 0, scale: 0.96, y: 12 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96, y: 12 }}
-      transition={{ duration: 0.22, ease: "easeOut" }}
-      className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto overscroll-contain rounded-sm border border-el-border-strong bg-el-bg-raised p-5 sm:p-8 shadow-el-lg"
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="relative z-10 w-full max-w-lg max-h-[90dvh] overflow-y-auto overscroll-contain rounded-md border border-white/10 bg-el-sec-graphite p-6 sm:p-8 text-el-sec-porcelain shadow-lg"
     >
       {/* Header */}
-      <div className="flex items-start justify-between border-b border-el-border pb-4">
+      <div className="flex items-start justify-between border-b border-white/10 pb-4">
         <div>
-          <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-el-accent">
-            <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse" />
-            ACCESS GATE · ELEVEN v3.1
+          <div className="inline-flex items-center gap-2 text-xs font-medium text-el-sec-lime">
+            <span className="h-1.5 w-1.5 rounded-full bg-el-sec-lime motion-safe:animate-pulse motion-reduce:animate-none" />
+            Access Gate · ELEVEN v3.1
           </div>
           <h2
             id="waitlist-title"
-            className="mt-1.5 text-el-xl font-medium tracking-[-0.02em] text-el-fg"
+            className="mt-1.5 text-xl font-medium tracking-tight text-el-sec-porcelain"
           >
             {tier === "technical"
               ? "Request Technical Access"
@@ -110,24 +119,24 @@ function WaitlistForm({
           type="button"
           onClick={onClose}
           aria-label="Close dialog"
-          className="cursor-pointer rounded-sm border border-el-border p-1.5 text-el-fg-faint transition-colors hover:border-el-border-strong hover:text-el-fg"
+          className="cursor-pointer rounded-xs border border-white/10 p-1.5 text-neutral-400 transition-colors hover:border-white/20 hover:text-el-sec-porcelain focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.96]"
         >
           ✕
         </button>
       </div>
 
       {/* Mode Selector Tabs */}
-      <div className="mt-5 grid grid-cols-2 gap-2 rounded-sm border border-el-border bg-el-bg p-1 font-mono text-el-xs">
+      <div className="mt-5 grid grid-cols-2 gap-1.5 rounded-sm border border-white/10 bg-el-sec-graphite-deep p-1 text-xs font-medium">
         <button
           type="button"
           onClick={() => {
             setTier("general");
             setErrorMessage(null);
           }}
-          className={`cursor-pointer rounded-xs py-1.5 text-center transition-colors ${
+          className={`cursor-pointer rounded-xs py-1.5 text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] ${
             tier === "general"
-              ? "bg-el-bg-raised font-semibold text-el-fg shadow-el-sm"
-              : "text-el-fg-muted hover:text-el-fg"
+              ? "bg-el-sec-graphite-raised text-el-sec-porcelain shadow-sm"
+              : "text-neutral-400 hover:text-el-sec-porcelain"
           }`}
         >
           General Early Access
@@ -138,24 +147,24 @@ function WaitlistForm({
             setTier("technical");
             setErrorMessage(null);
           }}
-          className={`cursor-pointer rounded-xs py-1.5 text-center transition-colors ${
+          className={`cursor-pointer rounded-xs py-1.5 text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] ${
             tier === "technical"
-              ? "bg-el-bg-raised font-semibold text-el-fg shadow-el-sm"
-              : "text-el-fg-muted hover:text-el-fg"
+              ? "bg-el-sec-graphite-raised text-el-sec-porcelain shadow-sm"
+              : "text-neutral-400 hover:text-el-sec-porcelain"
           }`}
         >
           Technical Access (Devs)
         </button>
       </div>
 
-      {/* Success State — Rendered ONLY when actually persisted in DB */}
+      {/* Success State */}
       {persistedResult ? (
         <div className="mt-6 space-y-4">
           <div className="rounded-sm border border-emerald-500/40 bg-emerald-500/10 p-4 text-emerald-300">
-            <p className="font-mono text-[10px] uppercase tracking-[0.1em] font-semibold">
-              ✓ REGISTRATION CONFIRMED & PERSISTED
+            <p className="text-xs font-semibold">
+              ✓ Registration confirmed & persisted
             </p>
-            <p className="mt-2 text-el-xs leading-[1.6]">
+            <p className="mt-2 text-xs leading-relaxed text-emerald-200/90">
               {persistedResult.message}
             </p>
           </div>
@@ -164,7 +173,7 @@ function WaitlistForm({
             <button
               type="button"
               onClick={onClose}
-              className="w-full cursor-pointer rounded-sm border border-el-border-strong bg-el-bg-raised py-2.5 font-mono text-el-xs uppercase tracking-[0.06em] text-el-fg transition-colors hover:bg-el-bg"
+              className="w-full cursor-pointer rounded-sm border border-white/10 bg-el-sec-graphite-raised py-2.5 text-xs font-medium text-el-sec-porcelain transition-colors hover:bg-el-sec-graphite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             >
               Done
             </button>
@@ -191,9 +200,9 @@ function WaitlistForm({
           <div>
             <label
               htmlFor="waitlist-email"
-              className="block font-mono text-[11px] uppercase tracking-[0.06em] text-el-fg-muted"
+              className="block text-xs font-medium text-neutral-300"
             >
-              Email Address <span className="text-el-accent">*</span>
+              Email Address <span className="text-el-sec-lime">*</span>
             </label>
             <input
               id="waitlist-email"
@@ -202,7 +211,7 @@ function WaitlistForm({
               placeholder="name@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1.5 w-full rounded-sm border border-el-border bg-el-bg px-3.5 py-2 text-base sm:text-el-sm text-el-fg placeholder-el-fg-faint transition-colors focus:border-el-accent focus:outline-none"
+              className="mt-1.5 w-full rounded-sm border border-white/10 bg-el-sec-graphite-deep px-3.5 py-2 text-sm text-el-sec-porcelain placeholder-neutral-500 transition-colors focus:border-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             />
           </div>
 
@@ -210,9 +219,9 @@ function WaitlistForm({
           <div>
             <label
               htmlFor="waitlist-name"
-              className="block font-mono text-[11px] uppercase tracking-[0.06em] text-el-fg-muted"
+              className="block text-xs font-medium text-neutral-300"
             >
-              Full Name <span className="text-el-fg-faint">(Optional)</span>
+              Full Name <span className="text-neutral-500">(Optional)</span>
             </label>
             <input
               id="waitlist-name"
@@ -220,7 +229,7 @@ function WaitlistForm({
               placeholder="Ada Lovelace"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1.5 w-full rounded-sm border border-el-border bg-el-bg px-3.5 py-2 text-base sm:text-el-sm text-el-fg placeholder-el-fg-faint transition-colors focus:border-el-accent focus:outline-none"
+              className="mt-1.5 w-full rounded-sm border border-white/10 bg-el-sec-graphite-deep px-3.5 py-2 text-sm text-el-sec-porcelain placeholder-neutral-500 transition-colors focus:border-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             />
           </div>
 
@@ -228,12 +237,12 @@ function WaitlistForm({
           <div>
             <label
               htmlFor="waitlist-use"
-              className="block font-mono text-[11px] uppercase tracking-[0.06em] text-el-fg-muted"
+              className="block text-xs font-medium text-neutral-300"
             >
               {tier === "technical"
                 ? "Primary Architecture / System Integration"
                 : "Primary Use Case"}{" "}
-              <span className="text-el-fg-faint">(Optional)</span>
+              <span className="text-neutral-500">(Optional)</span>
             </label>
             <input
               id="waitlist-use"
@@ -245,7 +254,7 @@ function WaitlistForm({
               }
               value={intendedUse}
               onChange={(e) => setIntendedUse(e.target.value)}
-              className="mt-1.5 w-full rounded-sm border border-el-border bg-el-bg px-3.5 py-2 text-base sm:text-el-sm text-el-fg placeholder-el-fg-faint transition-colors focus:border-el-accent focus:outline-none"
+              className="mt-1.5 w-full rounded-sm border border-white/10 bg-el-sec-graphite-deep px-3.5 py-2 text-sm text-el-sec-porcelain placeholder-neutral-500 transition-colors focus:border-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             />
           </div>
 
@@ -257,11 +266,11 @@ function WaitlistForm({
               required
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded-xs border-el-border bg-el-bg text-el-accent accent-el-accent focus:ring-0"
+              className="mt-0.5 h-4 w-4 rounded-xs border-white/20 bg-el-sec-graphite-deep text-el-sec-lime accent-el-sec-lime focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             />
             <label
               htmlFor="waitlist-consent"
-              className="text-el-xs leading-[1.5] text-el-fg-muted"
+              className="text-xs leading-relaxed text-neutral-400"
             >
               I consent to receive release notifications from GISHH Labs.
               Personal information is never shared, rented, or sold.
@@ -270,8 +279,8 @@ function WaitlistForm({
 
           {/* Error Banner */}
           {errorMessage && (
-            <div className="rounded-sm border border-rose-500/40 bg-rose-500/10 p-3 font-mono text-[11px] leading-[1.6] text-rose-300">
-              <span className="font-semibold uppercase">System Notice:</span>{" "}
+            <div className="rounded-sm border border-rose-500/40 bg-rose-500/10 p-3 text-xs leading-relaxed text-rose-300">
+              <span className="font-semibold">Notice:</span>{" "}
               {errorMessage}
             </div>
           )}
@@ -281,7 +290,7 @@ function WaitlistForm({
             <button
               type="submit"
               disabled={loading}
-              className="w-full cursor-pointer rounded-sm border border-el-border-strong bg-el-fg py-2.5 font-mono text-el-xs uppercase tracking-[0.08em] text-el-bg font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full cursor-pointer rounded-sm bg-el-sec-lime py-2.5 text-xs font-semibold text-el-sec-graphite transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             >
               {loading
                 ? "Validating…"
@@ -291,8 +300,8 @@ function WaitlistForm({
             </button>
           </div>
 
-          <p className="text-center font-mono text-[10px] text-el-fg-faint">
-            SOVEREIGN MEMORY · HUMAN CONTROL PLANE · GISHH LABS
+          <p className="text-center text-[11px] text-neutral-500 font-sans">
+            Sovereign memory and human control plane. GISHH Labs.
           </p>
         </form>
       )}
@@ -305,56 +314,121 @@ export function WaitlistModal({
   onClose,
   initialTier = "general",
 }: WaitlistModalProps) {
-  // Handle ESC key to close modal
+  // SSR hydration safety guard using idiomatic React external store subscription
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+  const triggerRef = useRef<HTMLElement | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Focus preservation and body scroll lock
+  useEffect(() => {
+    if (isOpen) {
+      triggerRef.current = document.activeElement as HTMLElement | null;
+      document.body.style.overflow = "hidden";
+
+      // Focus first focusable input or button
+      const timer = setTimeout(() => {
+        const firstFocusable = modalRef.current?.querySelector<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]):not([type="hidden"]), [tabindex]:not([tabindex="-1"])'
+        );
+        firstFocusable?.focus();
+      }, 50);
+
+      return () => clearTimeout(timer);
+    } else {
+      document.body.style.overflow = "";
+      triggerRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  // Ensure body scroll lock cleanup on unmount
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  // Keyboard accessibility: ESC to close, Tab trapping
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
       if (e.key === "Escape") {
+        e.preventDefault();
         onClose();
+        return;
+      }
+
+      if (e.key === "Tab" && modalRef.current) {
+        const focusableElements = Array.from(
+          modalRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => el.offsetParent !== null);
+
+        if (focusableElements.length === 0) return;
+
+        const first = focusableElements[0];
+        const last = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     },
-    [onClose]
+    [isOpen, onClose]
   );
 
   useEffect(() => {
     if (isOpen) {
       window.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
     }
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
     };
   }, [isOpen, handleKeyDown]);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div
+        <motion.div
+          ref={modalRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="waitlist-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              onClose();
+            }
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-sm overflow-y-auto"
         >
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-            aria-hidden="true"
-          />
-
           {/* Form Content Component: freshly mounted with initial state */}
           <WaitlistForm
             key={initialTier}
             initialTier={initialTier}
             onClose={onClose}
           />
-        </div>
+        </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

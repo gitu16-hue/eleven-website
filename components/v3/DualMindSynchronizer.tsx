@@ -34,7 +34,7 @@ const VOICE_LATENCY_STAGES = [
     techLabel: "Neural TTS First-Frame",
     budgetMs: 90,
     pct: 18,
-    plainDetail: "Starts generating warm speech right away—sentence by sentence.",
+    plainDetail: "Starts generating speech right away, sentence by sentence.",
     techDetail: "Streaming sentence-chunked synthesis + Speculative Audio Bridge.",
   },
   {
@@ -42,7 +42,7 @@ const VOICE_LATENCY_STAGES = [
     techLabel: "WASAPI Audio Buffer Output",
     budgetMs: 30,
     pct: 6,
-    plainDetail: "Instant sound—and stops in 0.05s if you interrupt!",
+    plainDetail: "Instant sound, and stops in 0.05s if you interrupt.",
     techDetail: "Direct DAC output; <50ms waveOutReset barge-in flush.",
   },
 ];
@@ -80,27 +80,27 @@ const SWARM_CASES: SwarmCase[] = [
         plainRole: "worker-ast-01",
         plainClaim: "Checked every line: voice loop never freezes while transcribing.",
         techClaim: "speech_pipeline.py: 0 blocking transcribe() calls · Ed25519 VALID",
-        badge: "✓ Signed Proof",
+        badge: "Signed Proof",
         tone: "good",
       },
       {
         id: "Helper #2 (Test Runner)",
         plainRole: "worker-test-02",
-        plainClaim: "Ran all 28 automated tests—every single one passed!",
+        plainClaim: "Ran all 28 automated tests; every single test passed.",
         techClaim: "pytest suite: 28/28 passed · SHA-256:3f90…11e4 (TTL 22s)",
-        badge: "✓ Signed Proof",
+        badge: "Signed Proof",
         tone: "good",
       },
     ],
     plainOutcome:
-      "Both helpers showed signed proof and agreed cleanly—so ELEVEN trusts the result and saves it!",
+      "Both helpers showed signed proof and agreed cleanly, so ELEVEN trusts the result and saves it.",
     techOutcome:
       "SwarmTournamentGate verifies Ed25519 signatures, SHA-256 digests, and <300s freshness TTL before memory promotion.",
   },
   {
     id: "disputed",
     tabLabel: "1 Helper Spots Danger",
-    plainTitle: "Case 2: Three Say 'Fine,' One Finds a Problem (Why We Never Vote!)",
+    plainTitle: "Case 2: Three Say 'Fine,' One Finds a Problem (Why We Never Vote)",
     techTitle: "Scenario B: Conflicting Worker Claims (Zero Majority Voting)",
     verdict: "CONFLICT FLAGGED",
     techVerdict: "UNRESOLVED [DISPUTED]",
@@ -108,7 +108,7 @@ const SWARM_CASES: SwarmCase[] = [
       {
         id: "Helpers #1, #2 & #3",
         plainRole: "3x Quick Scanners",
-        plainClaim: "“Looks totally safe to us! No internet calls spotted.”",
+        plainClaim: "“Looks totally safe to us. No internet calls spotted.”",
         techClaim: "Static scan: 0 obvious outbound sockets · Ed25519 VALID",
         badge: "3 Say Safe",
         tone: "good",
@@ -116,14 +116,14 @@ const SWARM_CASES: SwarmCase[] = [
       {
         id: "Helper #4 (Network Monitor)",
         plainRole: "worker-sec-02",
-        plainClaim: "“Hold on! When I ran it in a test box, it secretly pinged an external server!”",
+        plainClaim: "“Hold on. When I ran it in a test box, it secretly pinged an external server.”",
         techClaim: "Sandbox trace: hidden DNS lookup on init · SHA-256:90d2…77c1",
-        badge: "⚠ 1 Spots Leak",
+        badge: "1 Spots Leak",
         tone: "warn",
       },
     ],
     plainOutcome:
-      "If ELEVEN took a majority vote (3 vs 1), it would make a dangerous mistake! Instead, ELEVEN NEVER votes on truth—it pauses and shows you the exact warning.",
+      "If ELEVEN took a majority vote (3 vs 1), it would make a dangerous mistake. Instead, ELEVEN never votes on truth: it pauses and shows you the exact warning.",
     techOutcome:
       "Zero Majority Voting invariant: contradictory signed EvidencePackets are quarantined as UNRESOLVED [DISPUTED] and escalated.",
   },
@@ -138,14 +138,14 @@ const SWARM_CASES: SwarmCase[] = [
       {
         id: "Unknown Helper #9",
         plainRole: "worker-ext-04",
-        plainClaim: "“Trust me, everything passed 10 minutes ago!” (Missing security seal)",
+        plainClaim: "“Trust me, everything passed 10 minutes ago.” (Missing security seal)",
         techClaim: "Ed25519:MISMATCH · TTL 412s > 300s freshness limit",
-        badge: "✕ Invalid Seal",
+        badge: "Invalid Seal",
         tone: "bad",
       },
     ],
     plainOutcome:
-      "Automatically thrown in the trash! Every helper report must carry a fresh cryptographic seal from the last 5 minutes—otherwise ELEVEN ignores it.",
+      "Automatically dropped. Every helper report must carry a fresh cryptographic seal from the last 5 minutes, otherwise ELEVEN ignores it.",
     techOutcome:
       "Fail-closed deterministic rejection. Unsigned, digest-mismatched, or expired (>300s) packets are dropped immediately.",
   },
@@ -163,10 +163,10 @@ export function DualMindSynchronizer() {
       <div className="rounded-sm border border-el-border bg-el-bg-raised p-6 shadow-el-md lg:p-8">
         <div className="flex flex-col justify-between gap-3 border-b border-el-border pb-5 sm:flex-row sm:items-end">
           <div>
-            <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
+            <p className="text-el-xs font-medium text-el-accent">
               {isPlain
-                ? "WHY TALKING TO ELEVEN FEELS NATURAL"
-                : "SYSTEM 1 · F.R.I.D.A.Y. ACOUSTIC ENGINEERING TARGET"}
+                ? "Why talking to ELEVEN feels natural"
+                : "System 1: Acoustic engineering target"}
             </p>
             <h3 className="mt-1 text-el-xl font-medium tracking-[-0.02em] text-el-fg">
               {isPlain
@@ -174,10 +174,10 @@ export function DualMindSynchronizer() {
                 : "<500ms Conversational Turn Budget & <50ms Hardware Barge-In"}
             </h3>
           </div>
-          <span className="font-mono text-el-xs text-el-fg-faint">
+          <span className="text-el-xs font-medium text-el-fg-faint">
             {isPlain
-              ? "BLINK OF AN EYE = ~400ms"
-              : "DESIGN GOAL: 500ms TOTAL · 16kHz PCM"}
+              ? "Blink of an eye: ~400ms"
+              : "Design goal: 500ms total · 16kHz PCM"}
           </span>
         </div>
 
@@ -205,7 +205,7 @@ export function DualMindSynchronizer() {
           {VOICE_LATENCY_STAGES.map((st) => (
             <div
               key={st.techLabel}
-              className="rounded-sm border border-el-border bg-el-bg p-4 transition-colors hover:border-el-border-strong"
+              className="rounded-sm border border-el-border bg-el-bg p-4 transition-colors duration-200 hover:border-el-border-strong"
             >
               <div className="flex items-baseline justify-between gap-2">
                 <span className="font-mono text-el-sm font-semibold text-el-accent">
@@ -230,15 +230,15 @@ export function DualMindSynchronizer() {
       <div className="rounded-sm border border-el-border bg-el-bg-raised p-6 shadow-el-md lg:p-8">
         <div className="flex flex-col justify-between gap-4 border-b border-el-border pb-5 md:flex-row md:items-end">
           <div>
-            <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
+            <p className="text-el-xs font-medium text-el-accent">
               {isPlain
-                ? "HOW MULTIPLE AI HELPERS FACT-CHECK WORK"
-                : "SYSTEM 2 · SWARMTOURNAMENT EVIDENCE GATE"}
+                ? "How multiple AI helpers fact-check work"
+                : "System 2: SwarmTournament evidence gate"}
             </p>
             <h3 className="mt-1 text-el-xl font-medium tracking-[-0.02em] text-el-fg">
               {isPlain
-                ? "Proof Beats Popularity — Why ELEVEN Never Takes a Majority Vote"
-                : "Cryptographic Evidence Adjudication — Zero Majority Voting"}
+                ? "Proof Beats Popularity: Why ELEVEN Never Takes a Majority Vote"
+                : "Cryptographic Evidence Adjudication: Zero Majority Voting"}
             </h3>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -247,7 +247,7 @@ export function DualMindSynchronizer() {
                 key={c.id}
                 type="button"
                 onClick={() => setActiveSwarmIdx(idx)}
-                className={`cursor-pointer rounded-full border px-3.5 py-1.5 font-mono text-[11px] transition-all ${
+                className={`cursor-pointer whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[11px] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${
                   idx === activeSwarmIdx
                     ? "border-el-accent bg-el-accent text-el-bg shadow-el-sm"
                     : "border-el-border bg-el-bg text-el-fg-muted hover:border-el-border-strong hover:text-el-fg"
@@ -282,7 +282,7 @@ export function DualMindSynchronizer() {
                       {isPlain ? w.id : w.plainRole}
                     </span>
                     <span
-                      className={`rounded-sm px-2 py-0.5 font-mono text-[10.5px] font-medium ${
+                      className={`rounded-sm px-2 py-0.5 text-[11px] font-medium ${
                         w.tone === "good"
                           ? "bg-el-accent-soft text-el-accent"
                           : w.tone === "warn"
@@ -302,11 +302,11 @@ export function DualMindSynchronizer() {
 
             <div className="flex flex-col justify-between rounded-sm border border-el-border-strong bg-el-bg p-5 lg:col-span-5">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.09em] text-el-fg-faint">
-                  {isPlain ? "What ELEVEN Decides" : "SwarmTournamentGate Verdict"}
+                <p className="text-el-xs font-medium text-el-fg-faint">
+                  {isPlain ? "What ELEVEN decides" : "SwarmTournamentGate verdict"}
                 </p>
                 <p
-                  className={`mt-2 inline-block rounded-sm px-3 py-1 font-mono text-el-xs font-semibold ${
+                  className={`mt-2 inline-block rounded-sm px-3 py-1 text-el-xs font-medium ${
                     swarm.techVerdict === "ACCEPTED"
                       ? "bg-el-accent-soft text-el-accent"
                       : swarm.techVerdict.startsWith("UNRESOLVED")
@@ -321,10 +321,10 @@ export function DualMindSynchronizer() {
                 </p>
               </div>
 
-              <div className="mt-6 border-t border-el-border pt-3 font-mono text-[10.5px] text-el-fg-faint">
+              <div className="mt-6 border-t border-el-border pt-3 text-[11px] font-medium text-el-fg-faint">
                 {isPlain
-                  ? "RULE: 4 guesses never beat 1 proven fact."
-                  : "INVARIANT: Ed25519 + SHA-256 + 300s TTL · Zero Majority Vote."}
+                  ? "Rule: 4 guesses never beat 1 proven fact."
+                  : "Invariant: Ed25519 + SHA-256 + 300s TTL · Zero Majority Vote"}
               </div>
             </div>
           </motion.div>

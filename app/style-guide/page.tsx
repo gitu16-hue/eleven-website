@@ -34,20 +34,24 @@ export default function StyleGuide() {
 
   return (
     <div className={dark ? "mode-dark" : ""}>
-      <div className="min-h-screen bg-el-bg text-el-fg transition-colors duration-[var(--el-duration-slow)]">
+      <div className="min-h-screen bg-el-bg text-el-fg transition-colors duration-[var(--el-duration-slow)] focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none">
         <Nav />
 
         <Section className="py-14 lg:py-16">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-mono text-el-xs uppercase tracking-[0.08em] text-el-fg-faint">
-                Design foundation — Phase 1
+              <p className="text-el-xs text-el-fg-faint">
+                Design foundation: Phase 1
               </p>
               <h1 className="mt-3 text-el-3xl font-semibold tracking-[-0.02em]">
                 ELEVEN design system
               </h1>
             </div>
-            <Button variant="secondary" onClick={() => setDark((d) => !d)}>
+            <Button
+              variant="secondary"
+              onClick={() => setDark((d) => !d)}
+              className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+            >
               {dark ? "Institutional mode" : "Computational mode"}
             </Button>
           </div>
@@ -72,7 +76,7 @@ export default function StyleGuide() {
             ))}
             <div className="pt-2">
               <span className="font-mono text-el-xs text-el-fg-faint">
-                Technical / mono — used for system state, metrics, labels
+                Technical / mono: used for system state, metrics, labels
               </span>
               <p className="mt-2 font-mono text-el-sm text-el-fg">
                 PERCEPTION → REASONING → DECISION → EXECUTION
@@ -99,7 +103,7 @@ export default function StyleGuide() {
           </div>
           <p className="mt-8 max-w-[60ch] text-el-sm text-el-fg-muted">
             One accent, used sparingly. Institutional mode carries almost no
-            color at all — restraint is the signal. Computational mode
+            color at all (restraint is the signal). Computational mode
             introduces cyan and violet only inside the system interface.
           </p>
         </Section>
@@ -108,11 +112,25 @@ export default function StyleGuide() {
         <Section className="border-t border-el-border">
           <h2 className="mb-10 text-el-lg font-semibold">Buttons</h2>
           <div className="flex flex-wrap items-center gap-4">
-            <Button variant="primary" arrow>
+            <Button
+              variant="primary"
+              arrow
+              className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+            >
               Explore ELEVEN
             </Button>
-            <Button variant="secondary">Explore the architecture</Button>
-            <Button variant="ghost">Read the research</Button>
+            <Button
+              variant="secondary"
+              className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+            >
+              Explore the architecture
+            </Button>
+            <Button
+              variant="ghost"
+              className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+            >
+              Read the research
+            </Button>
           </div>
         </Section>
 
@@ -130,8 +148,8 @@ export default function StyleGuide() {
 
         <footer className="border-t border-el-border py-10">
           <Container>
-            <p className="font-mono text-el-xs text-el-fg-faint">
-              GISHH LABS — ELEVEN
+            <p className="text-el-xs text-el-fg-faint">
+              GISHH Labs · ELEVEN
             </p>
           </Container>
         </footer>

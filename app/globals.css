@@ -1,8 +1,9 @@
+/* Hallmark v2.0.0 · theme: quiet-authority · genre: atmospheric · redesign: restyle */
 @import "tailwindcss";
 
 /* ============================================================
-   ELEVEN Design System — "Sci-Fi Quantum Architecture"
-   Visual Direction: Deep Void Space · Cyber Deck · Hologram Cyan · Ultraviolet
+   ELEVEN Design System — "Quiet Authority Institutional Architecture"
+   Visual Direction: Warm Porcelain · Graphite · Signal Lime · Muted Sage
    ============================================================ */
 
 /* ── Self‑hosted font faces ───────────────────────────────── */
@@ -18,36 +19,36 @@
 /* ============================================================ */
 
 :root {
-  /* Sci-Fi Core Spectral Tokens */
-  --el-void: #06080D;              /* Deep interstellar void black */
-  --el-deck: #0B0F19;              /* Primary dark cyber surface */
-  --el-deck-raised: #101624;       /* Raised component surface */
-  --el-deck-highlight: #162034;    /* Active card highlight */
-  --el-starlight: #F1F5F9;         /* High-contrast starlight white */
-  --el-titanium: #94A3B8;          /* Matte cool titanium slate */
-  --el-slate-faint: #475569;       /* Deep telemetry slate */
-  --el-grid-line: #162033;         /* Structural cyan-tinted grid */
-  --el-grid-strong: #253550;       /* Luminous structural border */
-  --el-cyan: #00F0FF;              /* Holographic Electric Cyan */
-  --el-cyan-glow: rgba(0, 240, 255, 0.14);
-  --el-violet: #8B5CF6;            /* Singularity Ultraviolet */
-  --el-lime: #00FF9D;              /* Quantum Telemetry Mint-Lime */
+  /* Institutional Core Spectral Tokens */
+  --el-void: #111412;              /* Deep institutional graphite black */
+  --el-deck: #171A18;              /* Primary dark surface */
+  --el-deck-raised: #1F2421;       /* Raised component surface */
+  --el-deck-highlight: #28302A;    /* Active card highlight */
+  --el-starlight: #F5F5F0;         /* Warm porcelain white */
+  --el-titanium: #B2C3B7;          /* Matte muted sage slate */
+  --el-slate-faint: #647A6A;       /* Deep telemetry sage */
+  --el-grid-line: rgba(100, 122, 106, 0.16); /* Structural muted sage grid */
+  --el-grid-strong: rgba(100, 122, 106, 0.35); /* Luminous structural border */
+  --el-cyan: #B8F36B;              /* Normalized to signal lime */
+  --el-cyan-glow: rgba(184, 243, 107, 0.14);
+  --el-violet: #647A6A;            /* Normalized to muted sage */
+  --el-lime: #B8F36B;              /* Quantum Telemetry Signal Lime */
 
-  /* Default Canvas Mode — Full Sci-Fi Dark Mode */
-  --el-bg: var(--el-void);
+  /* Default Canvas Mode — Institutional Dark Mode */
+  --el-bg: var(--el-deck);
   --el-bg-raised: var(--el-deck-raised);
   --el-fg: var(--el-starlight);
   --el-fg-muted: var(--el-titanium);
   --el-fg-faint: var(--el-slate-faint);
   --el-border: var(--el-grid-line);
   --el-border-strong: var(--el-grid-strong);
-  --el-accent: var(--el-cyan);
-  --el-accent-soft: var(--el-cyan-glow);
-  --el-signal-lime: var(--el-lime);
-  --el-signal-violet: var(--el-violet);
+  --el-accent: #B8F36B;
+  --el-accent-soft: rgba(184, 243, 107, 0.14);
+  --el-signal-lime: #B8F36B;
+  --el-signal-violet: #647A6A;
 
   /* Semantic verification & governance status tokens */
-  --el-status-nominal: #00FF9D;
+  --el-status-nominal: #B8F36B;
   --el-status-warn: #F59E0B;
   --el-status-warn-soft: rgba(245, 158, 11, 0.15);
   --el-status-danger: #EF4444;
@@ -59,6 +60,7 @@
   --el-sec-graphite-deep: #111412;
   --el-sec-porcelain: #F5F5F0;
   --el-sec-porcelain-muted: #E6E7E0;
+  --el-sec-porcelain-dark: #3F4B43;
   --el-sec-lime: #B8F36B;
   --el-sec-lime-soft: rgba(184, 243, 107, 0.14);
   --el-sec-sage: #647A6A;
@@ -84,10 +86,10 @@
   --el-space-section: clamp(4rem, 3.2rem + 2.5vw, 6.25rem);
   --el-space-section-sm: clamp(2.5rem, 2rem + 1.8vw, 3.75rem);
 
-  /* Sci-Fi Holographic Glow Shadows */
-  --el-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.05);
-  --el-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.75), 0 0 24px rgba(0, 240, 255, 0.09);
-  --el-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 45px rgba(0, 240, 255, 0.14);
+  /* Institutional Architectural Shadows */
+  --el-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 12px rgba(184, 243, 107, 0.03);
+  --el-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 24px rgba(184, 243, 107, 0.05);
+  --el-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 45px rgba(184, 243, 107, 0.08);
 
   /* Micro-Motion Timings */
   --el-ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -99,25 +101,16 @@
 /* Computational Mode & Section Graphite */
 .mode-dark,
 .section-graphite {
-  --el-bg: #04060A;
-  --el-bg-raised: #0A0F1A;
-  --el-fg: #F1F5F9;
-  --el-fg-muted: #94A3B8;
-  --el-fg-faint: #475569;
-  --el-border: #151D2E;
-  --el-border-strong: #23314D;
-  --el-accent: var(--el-cyan);
-  --el-accent-soft: rgba(0, 240, 255, 0.14);
-
-  --el-status-nominal: #00FF9D;
-  --el-status-warn: #F59E0B;
-  --el-status-warn-soft: rgba(245, 158, 11, 0.15);
-  --el-status-danger: #EF4444;
-  --el-status-danger-soft: rgba(239, 68, 68, 0.15);
-
-  --el-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.7), 0 0 12px rgba(0, 240, 255, 0.08);
-  --el-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 24px rgba(0, 240, 255, 0.12);
-  --el-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 48px rgba(0, 240, 255, 0.18);
+  --el-bg: var(--el-sec-graphite-deep);
+  --el-bg-raised: var(--el-sec-graphite-raised);
+  --el-fg: var(--el-sec-porcelain);
+  --el-fg-muted: var(--el-sec-sage-light);
+  --el-fg-faint: var(--el-sec-sage);
+  --el-border: var(--el-grid-line);
+  --el-border-strong: var(--el-grid-strong);
+  --el-accent: var(--el-sec-lime);
+  --el-accent-soft: var(--el-sec-lime-soft);
+  --el-status-nominal: var(--el-sec-lime);
 }
 
 @theme inline {
@@ -167,6 +160,15 @@
 :focus-visible {
   outline: 2px solid var(--el-accent);
   outline-offset: 3px;
+}
+
+:active {
+  transform: translateY(0);
+}
+
+:disabled, [disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 /* Heading / paragraph rules live in the UNIFIED TYPE SYSTEM block below. */
@@ -229,6 +231,15 @@ body {
   outline-offset: 3px;
 }
 
+:active {
+  transform: translateY(0);
+}
+
+:disabled, [disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 ::selection {
   background: var(--el-accent-soft);
   color: var(--el-accent);
@@ -251,17 +262,11 @@ body {
 
 /* Technical Linework & Background Grids */
 .bg-grid-porcelain,
-.bg-grid-scifi {
-  background-image: 
-    linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
+.bg-grid-scifi,
 .bg-grid-graphite {
   background-image: 
-    linear-gradient(to right, rgba(139, 92, 246, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(139, 92, 246, 0.06) 1px, transparent 1px);
+    linear-gradient(to right, var(--el-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--el-grid-line) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -285,21 +290,13 @@ body {
 }
 
 /* ============================================================
-   DESIGN-IT: AI-Native & Sci-Fi HUD Architecture
+   DESIGN-IT: Institutional Architecture & Controls
    ============================================================ */
 
-/* 1. Generative Iridescent Shimmer Text */
+/* 1. Solid Ink Text Token (Hallmark Gate 2a: No multi-hue shimmer) */
 .ai-shimmer-text {
-  background: linear-gradient(90deg, #F1F5F9 0%, #00F0FF 30%, #8B5CF6 65%, #00FF9D 90%, #F1F5F9 100%);
-  background-size: 250% auto;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: ai-shimmer 3.2s linear infinite;
-}
-
-@keyframes ai-shimmer {
-  to { background-position: 250% center; }
+  color: var(--el-fg);
+  font-weight: 500;
 }
 
 /* 2. Tactical HUD Corner Brackets */
@@ -313,8 +310,8 @@ body {
   left: -1px;
   width: 14px;
   height: 14px;
-  border-top: 2px solid var(--el-cyan);
-  border-left: 2px solid var(--el-cyan);
+  border-top: 1.5px solid var(--el-border-strong);
+  border-left: 1.5px solid var(--el-border-strong);
   pointer-events: none;
   z-index: 10;
 }
@@ -325,40 +322,28 @@ body {
   right: -1px;
   width: 14px;
   height: 14px;
-  border-bottom: 2px solid var(--el-cyan);
-  border-right: 2px solid var(--el-cyan);
+  border-bottom: 1.5px solid var(--el-border-strong);
+  border-right: 1.5px solid var(--el-border-strong);
   pointer-events: none;
   z-index: 10;
 }
 
-/* 3. Spatial Computing Specular Glass */
+/* 3. Spatial Institutional Panel Surface */
 .spatial-glass {
-  background: rgba(11, 15, 25, 0.75);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.15),
-    0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  background: var(--el-bg-raised);
+  border: 1px solid var(--el-border);
+  box-shadow: var(--el-shadow-sm);
 }
 
-/* 4. AI-Native Prompt Container */
+/* 4. Architectural Prompt Container */
 .ai-native-prompt-container {
-  background: rgba(11, 15, 25, 0.85);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 240, 255, 0.25);
-  box-shadow: 
-    inset 0 1px 1px rgba(0, 240, 255, 0.15),
-    0 12px 36px -10px rgba(0, 0, 0, 0.8),
-    0 0 20px rgba(0, 240, 255, 0.08);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: var(--el-bg-raised);
+  border: 1px solid var(--el-border);
+  box-shadow: var(--el-shadow-sm);
+  transition: border-color var(--el-duration-fast) var(--el-ease);
 }
 .ai-native-prompt-container:focus-within {
-  border-color: rgba(0, 240, 255, 0.65);
-  box-shadow: 
-    inset 0 1px 2px rgba(0, 240, 255, 0.3),
-    0 16px 48px -12px rgba(0, 0, 0, 0.9),
-    0 0 32px rgba(0, 240, 255, 0.18);
+  border-color: var(--el-accent);
 }
 
 
@@ -394,7 +379,7 @@ h1, h2, h3, h4, h5, h6 {
 .bg-el-sec-porcelain,
 .surface-porcelain {
   --el-fg: var(--el-sec-graphite);
-  --el-fg-muted: #3F4B43;
+  --el-fg-muted: var(--el-sec-porcelain-dark);
 }
 h1 { line-height: 1.05; letter-spacing: -0.038em; }
 h2 { line-height: 1.12; letter-spacing: -0.028em; }
@@ -448,56 +433,39 @@ p { line-height: 1.68; }
   color: var(--el-fg-muted);
 }
 
-/* Section eyebrow label — "// 01 SECTION NAME" */
+/* Section eyebrow label — editorial sentence case */
 .el-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
   font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  text-transform: none;
   color: var(--el-accent);
 }
 
-/* Hero category pill with live dot + subtle anodized glass sweep */
+/* Editorial pill badge */
 .el-badge {
   position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.3125rem 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--el-cyan) 40%, transparent);
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--el-cyan) 10%, transparent);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--el-border);
+  border-radius: 9999px;
+  background: var(--el-bg-raised);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.2;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--el-cyan);
-}
-.el-badge::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  width: 45%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 240, 255, 0.18),
-    transparent
-  );
-  transform: translate3d(-140%, 0, 0) skewX(-20deg);
-  animation: el-badge-sheen 7.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-  pointer-events: none;
+  letter-spacing: -0.01em;
+  color: var(--el-fg-muted);
 }
 
-/* Directional cyan laser underline for interactive editorial links */
+/* Directional accent underline for interactive editorial links */
 .el-link-laser {
   position: relative;
   display: inline-block;
@@ -509,10 +477,10 @@ p { line-height: 1.68; }
   right: 0;
   bottom: -2px;
   height: 1px;
-  background: linear-gradient(90deg, var(--el-cyan), var(--el-violet));
+  background: var(--el-accent);
   transform: scaleX(0);
   transform-origin: right center;
-  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--el-duration-fast) var(--el-ease);
   pointer-events: none;
 }
 .el-link-laser:hover::after,
@@ -525,12 +493,9 @@ p { line-height: 1.68; }
 .el-eyebrow + h1, .el-eyebrow + h2,
 .el-badge + h1, .el-badge + h2 { margin-top: 0; }
 
-/* Premium headline gradient (static, no gimmick) */
+/* Premium headline (solid ink, high contrast) */
 .el-headline-sheen {
-  background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 55%, #94A3B8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--el-fg);
 }
 
 /* Hairline divider with soft fade at both ends */
@@ -596,20 +561,19 @@ p { line-height: 1.68; }
   z-index: -1;
   border-radius: inherit;
   padding: 1px;
-  background: conic-gradient(from var(--el-orbit-angle), transparent 0deg, rgba(0, 240, 255, 0.55) 60deg, transparent 120deg, transparent 360deg);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  background: conic-gradient(from var(--el-orbit-angle), transparent 0deg, var(--el-accent-soft) 60deg, transparent 120deg, transparent 360deg);
+  -webkit-mask: linear-gradient(var(--el-void) 0 0) content-box, linear-gradient(var(--el-void) 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: el-border-orbit 9s linear infinite;
   pointer-events: none;
 }
 
-/* Hero aurora backdrop */
+/* Hero architectural backdrop */
 .el-aurora {
   background:
-    radial-gradient(40% 50% at 78% 30%, rgba(0, 240, 255, 0.10), transparent 70%),
-    radial-gradient(35% 45% at 20% 10%, rgba(139, 92, 246, 0.09), transparent 70%),
-    radial-gradient(50% 40% at 50% 100%, rgba(0, 255, 157, 0.04), transparent 70%);
+    radial-gradient(50% 50% at 50% 20%, var(--el-accent-soft), transparent 70%),
+    radial-gradient(40% 40% at 80% 40%, var(--el-grid-line), transparent 70%);
 }
 
 /* Utility: Hide scrollbars cleanly on mobile swipable pill rails */

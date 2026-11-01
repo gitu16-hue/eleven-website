@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Mic } from "lucide-react";
 import { useClarityMode } from "@/components/motion/PremiumMotion";
 
 interface TierSpec {
@@ -41,7 +42,7 @@ const TIERS: TierSpec[] = [
     argsHash: "sha256:4d918b0c77e12a98b3c19f08a1d77c89",
     blastRadiusPlain: "Changes 0 files · Sends 0 bytes to the internet",
     blastRadiusTech: "0 files mutated · 0 bytes network egress · Local loopback only",
-    cautionNotePlain: "100% Safe — Direct request from you",
+    cautionNotePlain: "100% Safe: Direct request from you",
     taintStatusTech: "CLEAN (Trusted Workspace Root)",
     requiresColdRoom: false,
   },
@@ -56,7 +57,7 @@ const TIERS: TierSpec[] = [
     plainActionTitle: "Save draft changes to speech_pipeline.py",
     toolName: "workspace.apply_patch",
     plainWhatHappens:
-      "Updates 14 lines in your project file—with an automatic backup so you can undo in one click.",
+      "Updates 14 lines in your project file, with an automatic backup so you can undo in one click.",
     canonicalArgs: '{"path":"src/eleven/voice/speech_pipeline.py","lines_changed":14}',
     argsHash: "sha256:9f03c4e21a6d58b09c3a71e2554f18d2",
     blastRadiusPlain: "Edits 1 project file · Instant undo available",
@@ -82,7 +83,7 @@ const TIERS: TierSpec[] = [
     blastRadiusPlain: "Connects to github.com · Updates shared team branch",
     blastRadiusTech: "Outbound HTTPS egress to github.com · Updates shared remote ref",
     cautionNotePlain: "Heads-up: Triggered while reading an external webpage comment",
-    taintStatusTech: "TAINT_WARN — Context includes external PR comment (#412)",
+    taintStatusTech: "TAINT_WARN: Context includes external PR comment (#412)",
     requiresColdRoom: true,
   },
   {
@@ -102,7 +103,7 @@ const TIERS: TierSpec[] = [
     blastRadiusPlain: "Copies encrypted memory archive outside this computer",
     blastRadiusTech: "Exports encrypted 4-tier personal memory graph outside loopback host",
     cautionNotePlain: "Requires 5-second safety pause + your direct confirmation",
-    taintStatusTech: "CRITICAL GATE — 5s cooling-off lock + DEC-008 nonce + PIN",
+    taintStatusTech: "CRITICAL GATE: 5s cooling-off lock + DEC-008 nonce + PIN",
     requiresColdRoom: true,
   },
 ];
@@ -133,8 +134,8 @@ export function ColdRoomApprovalDemo() {
       {/* Left 5 columns: 4 Everyday Trust Levels */}
       <div className="space-y-3 lg:col-span-5">
         <div className="mb-4">
-          <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
-            {isPlain ? "4 SIMPLE TRUST LEVELS" : "DEC-003 PERMISSION MATRIX"}
+          <p className="text-el-xs font-medium text-el-accent">
+            {isPlain ? "4 simple trust levels" : "DEC-003 permission matrix"}
           </p>
           <h3 className="mt-1 text-el-xl font-medium tracking-[-0.02em] text-el-fg">
             {isPlain
@@ -143,7 +144,7 @@ export function ColdRoomApprovalDemo() {
           </h3>
           <p className="mt-2 text-el-xs leading-[1.6] text-el-fg-muted">
             {isPlain
-              ? "Click any level below to see when ELEVEN works on its own—and when it pauses to show you an honest receipt first."
+              ? "Click any level below to see when ELEVEN works on its own, and when it pauses to show you an honest receipt first."
               : "Select an authority tier to inspect how PolicyGate and Protocol D Cold-Room verification govern execution."}
           </p>
         </div>
@@ -155,19 +156,19 @@ export function ColdRoomApprovalDemo() {
               key={t.tier}
               type="button"
               onClick={() => handleSelectTier(idx)}
-              className={`relative w-full cursor-pointer rounded-sm border p-4 text-left transition-all duration-200 focus-visible:outline-2 focus-visible:outline-el-accent ${
+              className={`relative w-full cursor-pointer rounded-sm border p-4 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed ${
                 isSelected
                   ? "border-el-accent bg-el-bg-raised shadow-el-sm"
                   : "border-el-border bg-el-bg hover:border-el-border-strong hover:bg-el-bg-raised/60"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="font-mono text-el-xs font-semibold text-el-accent">
-                  {isPlain ? t.plainLevel : t.tier} ·{" "}
+                <span className="text-el-xs font-medium text-el-accent">
+                  <span className="font-mono">{isPlain ? t.plainLevel : t.tier}</span> ·{" "}
                   {isPlain ? t.labelPlain : t.labelTech}
                 </span>
                 <span
-                  className={`rounded-sm px-2 py-0.5 font-mono text-[10px] uppercase ${
+                  className={`rounded-sm px-2 py-0.5 text-[11px] font-medium ${
                     t.requiresColdRoom
                       ? "bg-[var(--el-status-warn-soft)] text-[var(--el-status-warn)]"
                       : "bg-el-accent-soft text-el-accent"
@@ -175,8 +176,8 @@ export function ColdRoomApprovalDemo() {
                 >
                   {t.requiresColdRoom
                     ? isPlain
-                      ? "Asks You First"
-                      : "Cold-Room Gate"
+                      ? "Asks you first"
+                      : "Cold-Room gate"
                     : isPlain
                     ? "Automatic"
                     : "Autonomous"}
@@ -198,17 +199,17 @@ export function ColdRoomApprovalDemo() {
         <div className="rounded-sm border border-el-border-strong bg-el-bg-raised p-6 shadow-el-md lg:p-8">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-el-border pb-4">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-el-accent">
+              <p className="text-el-xs font-medium text-el-accent">
                 {isPlain
-                  ? "HONEST SAFETY RECEIPT (TRY CLICKING THE BUTTONS BELOW)"
-                  : "PROTOCOL D · COLD-ROOM VERIFICATION SURFACE (DEC-008)"}
+                  ? "Honest safety receipt (test actions below)"
+                  : "Protocol D: Cold-Room verification surface (DEC-008)"}
               </p>
               <h4 className="mt-1 text-el-lg font-medium text-el-fg">
                 {isPlain ? activeTier.plainActionTitle : activeTier.toolName}
               </h4>
             </div>
-            <span className="rounded-sm border border-el-accent/30 bg-el-accent-soft px-2.5 py-1 font-mono text-[11px] text-el-accent">
-              {isPlain ? "AI SALES-TALK HIDDEN" : "LLM PROSE QUARANTINED"}
+            <span className="rounded-sm border border-el-accent/30 bg-el-accent-soft px-2.5 py-1 text-[11px] font-medium text-el-accent">
+              {isPlain ? "AI sales-talk stripped" : "LLM prose quarantined"}
             </span>
           </div>
 
@@ -243,8 +244,8 @@ export function ColdRoomApprovalDemo() {
               className="mt-5 space-y-3"
             >
               <div className="rounded-sm border border-el-border bg-el-bg p-3.5">
-                <span className="block font-mono text-[10px] uppercase tracking-[0.08em] text-el-fg-faint">
-                  {isPlain ? "What Will Actually Happen" : "Canonical Arguments"}
+                <span className="block text-el-xs font-medium text-el-fg-faint">
+                  {isPlain ? "What will actually happen" : "Canonical arguments"}
                 </span>
                 <p className="mt-1 text-el-sm font-medium text-el-fg">
                   {isPlain ? activeTier.plainWhatHappens : activeTier.canonicalArgs}
@@ -253,8 +254,8 @@ export function ColdRoomApprovalDemo() {
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="rounded-sm border border-el-border bg-el-bg p-3.5">
-                  <span className="block font-mono text-[10px] uppercase tracking-[0.08em] text-el-fg-faint">
-                    {isPlain ? "Real-World Impact" : "Verified Blast Radius"}
+                  <span className="block text-el-xs font-medium text-el-fg-faint">
+                    {isPlain ? "Real-world impact" : "Verified blast radius"}
                   </span>
                   <span className="mt-1 block text-el-xs text-el-fg">
                     {isPlain
@@ -264,8 +265,8 @@ export function ColdRoomApprovalDemo() {
                 </div>
 
                 <div className="rounded-sm border border-el-border bg-el-bg p-3.5">
-                  <span className="block font-mono text-[10px] uppercase tracking-[0.08em] text-el-fg-faint">
-                    {isPlain ? "Safety Source Check" : "Protocol A Taint Provenance"}
+                  <span className="block text-el-xs font-medium text-el-fg-faint">
+                    {isPlain ? "Safety source check" : "Protocol A taint provenance"}
                   </span>
                   <span
                     className={`mt-1 block text-el-xs font-medium ${
@@ -281,14 +282,14 @@ export function ColdRoomApprovalDemo() {
                 </div>
               </div>
 
-              <div className="rounded-sm border border-el-border bg-el-bg p-3.5 font-mono text-el-xs">
+              <div className="rounded-sm border border-el-border bg-el-bg p-3.5 text-el-xs">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-[10px] uppercase tracking-[0.08em] text-el-fg-faint">
+                  <span className="text-el-xs font-medium text-el-fg-faint">
                     {isPlain
-                      ? "Tamper-Proof Pass (Valid 30s, Works Once)"
-                      : "Single-Use DEC-008 Cryptographic Nonce"}
+                      ? "Tamper-proof pass (30s TTL, single-use)"
+                      : "Single-use DEC-008 cryptographic nonce"}
                   </span>
-                  <span className="text-el-accent">{activeTier.argsHash}</span>
+                  <span className="font-mono text-el-accent">{activeTier.argsHash}</span>
                 </div>
               </div>
             </motion.div>
@@ -299,32 +300,33 @@ export function ColdRoomApprovalDemo() {
             <button
               type="button"
               onClick={() => setDecision("NONCE_ISSUED")}
-              className="cursor-pointer rounded-sm bg-el-fg px-4 py-2 font-mono text-el-xs text-el-bg transition-colors hover:bg-el-accent"
+              className="cursor-pointer whitespace-nowrap rounded-sm bg-el-fg px-4 py-2 text-el-xs font-medium text-el-bg transition-colors duration-200 hover:bg-el-accent hover:text-el-fg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {activeTier.requiresColdRoom
-                ? "✓ Approve Exact Action"
-                : "✓ Run Automatically"}
+                ? "Approve exact action"
+                : "Run automatically"}
             </button>
             <button
               type="button"
               onClick={() => setDecision("AMBIGUOUS_VOICE_REJECTED")}
-              className="cursor-pointer rounded-sm border border-el-border-strong bg-el-bg px-3.5 py-2 font-mono text-el-xs text-el-fg transition-colors hover:border-el-fg"
+              className="inline-flex cursor-pointer items-center whitespace-nowrap rounded-sm border border-el-border-strong bg-el-bg px-3.5 py-2 text-el-xs font-medium text-el-fg transition-colors duration-200 hover:border-el-fg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              🎤 Try Saying Casual &ldquo;Yes&rdquo;
+              <Mic className="mr-1.5 h-3.5 w-3.5 text-el-fg-muted" aria-hidden="true" />
+              Say &apos;Yes&apos;
             </button>
             <button
               type="button"
               onClick={() => setDecision("QUARANTINED")}
-              className="cursor-pointer rounded-sm border border-el-border-strong bg-el-bg px-3.5 py-2 font-mono text-el-xs text-el-fg-muted transition-colors hover:text-el-fg"
+              className="cursor-pointer whitespace-nowrap rounded-sm border border-el-border-strong bg-el-bg px-3.5 py-2 text-el-xs font-medium text-el-fg-muted transition-colors duration-200 hover:text-el-fg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              ✕ Block It
+              Block action
             </button>
             <button
               type="button"
               onClick={() => setDecision("KILLSWITCH_HALTED")}
-              className="cursor-pointer rounded-sm border border-[var(--el-status-danger)]/40 bg-[var(--el-status-danger-soft)] px-3.5 py-2 font-mono text-el-xs text-[var(--el-status-danger)] transition-opacity hover:opacity-90"
+              className="cursor-pointer whitespace-nowrap rounded-sm border border-[var(--el-status-danger)]/40 bg-[var(--el-status-danger-soft)] px-3.5 py-2 text-el-xs font-medium text-[var(--el-status-danger)] transition-opacity duration-200 hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--el-status-danger)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              ■ Emergency Stop
+              Emergency stop
             </button>
           </div>
 
@@ -340,27 +342,27 @@ export function ColdRoomApprovalDemo() {
             >
               {decision === "AWAITING_DECISION" && (
                 <p className="text-[var(--el-status-warn)]">
-                  <strong>⏸ Waiting safely for you:</strong> Nothing has happened yet! Until you click Approve within 30 seconds, the AI cannot push or change anything.
+                  <strong>Waiting for approval:</strong> Nothing has executed yet. Until you confirm within 30 seconds, the engine cannot write or mutate state.
                 </p>
               )}
               {decision === "NONCE_ISSUED" && (
                 <p className="text-el-accent">
-                  <strong>✓ Completed safely:</strong> Your one-time pass unlocked this exact action (and expired immediately so it can never be reused). A permanent receipt was saved to your activity log.
+                  <strong>Action authorized:</strong> Single-use nonce validated and expired immediately. Execution receipt appended to local hash chain.
                 </p>
               )}
               {decision === "AMBIGUOUS_VOICE_REJECTED" && (
                 <p className="text-[var(--el-status-warn)]">
-                  <strong>🛡 Casual &ldquo;Yes&rdquo; blocked for your safety:</strong> What if two tasks asked at the same time, and you approved the wrong one by accident? For important actions, ELEVEN requires naming the specific task or clicking Approve on screen.
+                  <strong>Casual voice confirmation rejected:</strong> Spoken affirmation cannot resolve ambiguous concurrent tasks. Explicit token binding or screen approval required.
                 </p>
               )}
               {decision === "QUARANTINED" && (
                 <p className="text-el-fg-muted">
-                  <strong>✕ Blocked cleanly:</strong> Request thrown away with zero changes to your files.
+                  <strong>Action blocked:</strong> Request quarantined with zero mutations to the workspace.
                 </p>
               )}
               {decision === "KILLSWITCH_HALTED" && (
                 <p className="text-[var(--el-status-danger)]">
-                  <strong>■ Instant Emergency Stop (0.05s):</strong> Voice silenced immediately, pending passes cancelled, and all background helpers stopped!
+                  <strong>Emergency stop triggered (&lt;50ms):</strong> Audio flushed, pending nonces invalidated, and worker tasks halted.
                 </p>
               )}
             </motion.div>

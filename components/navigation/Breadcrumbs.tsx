@@ -25,11 +25,11 @@ export function Breadcrumbs({
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`font-mono text-[11px] text-el-fg-faint flex items-center gap-1.5 select-none ${className}`}
+      className={`text-xs text-el-fg-faint flex items-center gap-1.5 select-none ${className}`}
     >
       <Link
         href="/"
-        className="transition-colors duration-150 hover:text-el-fg"
+        className="transition-colors duration-150 hover:text-el-fg focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime rounded-xs"
       >
         Home
       </Link>
@@ -40,7 +40,7 @@ export function Breadcrumbs({
             <span className="text-el-border-strong select-none">/</span>
             {isLast || !item.href ? (
               <span
-                className="text-el-accent font-medium tracking-tight"
+                className="text-el-fg-muted font-medium tracking-tight"
                 aria-current="page"
               >
                 {item.label}
@@ -48,7 +48,7 @@ export function Breadcrumbs({
             ) : (
               <Link
                 href={item.href}
-                className="transition-colors duration-150 hover:text-el-fg"
+                className="transition-colors duration-150 hover:text-el-fg focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime rounded-xs"
               >
                 {item.label}
               </Link>

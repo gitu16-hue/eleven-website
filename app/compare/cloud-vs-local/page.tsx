@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { Info } from "lucide-react";
 import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
-import { Section, Container } from "@/components/ui/Section";
+import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { LocalVsCloudCalculator } from "@/components/v3/LocalVsCloudCalculator";
 import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
 import {
+  CipherText,
   ClarityTogglePill,
   DualCopy,
   SignalBeamDivider,
@@ -110,7 +112,7 @@ export default function CompareCloudVsLocalPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -121,8 +123,8 @@ export default function CompareCloudVsLocalPage() {
                 ]}
               />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                  TERMINOLOGY DEPTH:
+                <span className="text-el-xs font-medium text-el-fg-faint">
+                  Terminology depth:
                 </span>
                 <ClarityTogglePill />
               </div>
@@ -130,8 +132,8 @@ export default function CompareCloudVsLocalPage() {
 
             <div className="mt-10 max-w-4xl space-y-6">
               <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
-                <span>ARCHITECTURAL COMPARISON // SOVEREIGN RUNTIME</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+                <CipherText text="Architectural Comparison · Sovereign Runtime" />
               </div>
 
               <h1 className="el-h1">
@@ -141,30 +143,44 @@ export default function CompareCloudVsLocalPage() {
               <DualCopy
                 className="el-lead max-w-3xl"
                 plain="Cloud AI tools promise privacy through checkboxes in their settings, but your data still travels across the internet to their servers. ELEVEN runs directly on your computer so your files, passwords, and deep work never leave your physical machine."
-                technical="Why frontier reasoning models belong inside an un-bypassable local control plane on your hardware—not inside a black-box cloud. Complete separation of untrusted model reasoning from deterministic OS execution."
+                technical="Why frontier reasoning models belong inside an un-bypassable local control plane on your hardware, not inside a black-box cloud. Complete separation of untrusted model reasoning from deterministic OS execution."
               />
 
-              <div className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]">
-                <span className="rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
-                  ✓ 100% LOCAL SILICON CONFINEMENT
+              <div className="flex flex-wrap gap-2 pt-2 text-el-xs">
+                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  100% local silicon confinement
                 </span>
-                <span className="rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
-                  ✓ ZERO DATA RESIDENCY RISK
+                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  Zero data residency risk
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  ✓ FIXED WORKSTATION ECONOMICS
+                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  Fixed workstation economics
                 </span>
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <WaitlistActionButton tier="general" arrow variant="primary">
+                <WaitlistActionButton
+                  tier="general"
+                  arrow
+                  variant="primary"
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
                   Claim Your Sovereignty
                 </WaitlistActionButton>
-                <Button variant="secondary" href="/solutions/developers">
-                  Explore Developer Sandbox →
+                <Button
+                  variant="secondary"
+                  href="/solutions/developers"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
+                  Explore Developer Sandbox
                 </Button>
-                <Button variant="ghost" href="/tools/vault-calculator">
+                <Button
+                  variant="ghost"
+                  href="/tools/vault-calculator"
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
                   Estimate Storage Specs
                 </Button>
               </div>
@@ -172,17 +188,17 @@ export default function CompareCloudVsLocalPage() {
           </div>
 
           {/* ── PROMINENT DISAMBIGUATION NOTICE BANNER ── */}
-          <div className="mt-12 rounded-sm border border-el-cyan/30 bg-el-cyan/5 p-4 sm:p-5 backdrop-blur-sm">
+          <div className="mt-12 rounded-sm border border-el-border/80 bg-el-bg-raised/60 p-4 sm:p-5 backdrop-blur-sm">
             <div className="flex items-start gap-3.5">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-xs bg-el-cyan/20 font-mono text-[11px] font-bold text-el-cyan">
-                ℹ
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-xs bg-el-accent/10 text-el-accent">
+                <Info className="h-3.5 w-3.5" aria-hidden="true" />
               </span>
-              <div className="space-y-1 font-mono text-xs leading-relaxed">
-                <span className="text-el-cyan font-semibold tracking-wide uppercase">
-                  DISAMBIGUATION &amp; PRODUCT IDENTITY:
+              <div className="space-y-1 text-xs leading-relaxed">
+                <span className="text-el-accent font-medium">
+                  Product Identity Notice:
                 </span>
                 <p className="text-el-fg-muted text-[11.5px]">
-                  <strong>ELEVEN v3.1</strong> is an autonomous desktop personal AI operating system developed by <strong>GISHH Labs</strong>. It provides local process supervision, private memory drawers, and deterministic policy enforcement for your desktop workstation. It is <em>not</em> an audio generation API, voice synthesis service, or speech cloning SaaS.
+                  <strong>ELEVEN v3.1</strong> is an autonomous desktop personal AI operating system developed by <strong>GISHH Labs</strong>. It provides local process supervision, private memory drawers, and deterministic policy enforcement for your desktop workstation. It is not an audio generation API, voice synthesis service, or speech cloning SaaS.
                 </p>
               </div>
             </div>
@@ -195,10 +211,10 @@ export default function CompareCloudVsLocalPage() {
         <Section className="py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <span>{"// 01 SIX-DIMENSIONAL AUDIT"}</span>
+              <CipherText text="// 01 Six-Dimensional Audit" />
             </div>
             <h2 className="el-h2">
-              Local workstation control vs. multi-tenant cloud subscriptions.
+              <WordReveal text="Local workstation control vs. multi-tenant cloud subscriptions." />
             </h2>
             <DualCopy
               className="el-body"
@@ -209,17 +225,17 @@ export default function CompareCloudVsLocalPage() {
 
           {/* Detailed Responsive Table */}
           <div className="mt-10 overflow-x-auto rounded-sm border border-el-border bg-el-bg-raised/40">
-            <table className="w-full text-left font-mono text-el-xs">
+            <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-el-border bg-el-bg-raised/90 text-el-fg-faint">
-                  <th className="py-4 px-4 font-medium uppercase tracking-wider w-[24%]">
-                    Operational Vector
+                <tr className="border-b border-el-border bg-el-bg-raised text-el-fg-muted">
+                  <th className="py-4 px-4 font-medium text-el-fg w-[24%]">
+                    Operational vector
                   </th>
-                  <th className="py-4 px-4 font-medium uppercase tracking-wider text-el-accent w-[38%]">
-                    ELEVEN Sovereign Local Control Plane
+                  <th className="py-4 px-4 font-medium text-el-accent w-[38%]">
+                    ELEVEN sovereign local control plane
                   </th>
-                  <th className="py-4 px-4 font-medium uppercase tracking-wider text-el-fg-faint w-[38%]">
-                    Commercial Cloud Chat Assistants
+                  <th className="py-4 px-4 font-medium text-el-fg-faint w-[38%]">
+                    Commercial cloud chat assistants
                   </th>
                 </tr>
               </thead>
@@ -279,7 +295,7 @@ export default function CompareCloudVsLocalPage() {
                     Real-time audio processing directly on local NPU/GPU. Zero network round-trip delay when interrupting or speaking naturally.
                   </td>
                   <td className="py-4 px-4 text-yellow-400/90">
-                    <strong className="text-el-fg block mb-0.5">WebSocket Streaming (400–1200ms)</strong>
+                    <strong className="text-el-fg block mb-0.5">WebSocket Streaming (400 to 1200ms)</strong>
                     Subject to WiFi jitter, internet packet loss, and cloud queue backpressure. Awkward pauses and delayed barge-in detection.
                   </td>
                 </tr>
@@ -321,18 +337,18 @@ export default function CompareCloudVsLocalPage() {
         <SignalBeamDivider />
 
         {/* ── INTERACTIVE TCO & PRIVACY CALCULATOR ── */}
-        <Section className="py-16 lg:py-24 bg-[#030508]">
+        <Section className="py-16 lg:py-24 bg-el-bg">
           <div className="max-w-3xl space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="el-eyebrow">
-                <span>{"// 02 INTERACTIVE TCO &amp; PRIVACY SIMULATOR"}</span>
+                <CipherText text="// 02 Interactive TCO &amp; Privacy Simulator" />
               </div>
-              <div className="rounded-xs border border-el-border bg-[#020408] px-2.5 py-1 font-mono text-[11px] text-el-fg-faint">
-                ENGINE: <span className="text-el-mint font-semibold">LOCAL WORKSTATION SILICON</span>
+              <div className="rounded-xs border border-el-border bg-el-bg-raised px-2.5 py-1 text-xs text-el-fg-faint">
+                Engine: <span className="text-el-mint font-medium">Local Workstation Silicon</span>
               </div>
             </div>
             <h2 className="el-h2">
-              Calculate your sovereignty dividend.
+              <WordReveal text="Calculate your sovereignty dividend." />
             </h2>
             <DualCopy
               className="el-body"
@@ -352,10 +368,10 @@ export default function CompareCloudVsLocalPage() {
         <Section className="py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <span>{"// 03 HARDWARE-BACKED SOVEREIGNTY"}</span>
+              <CipherText text="// 03 Hardware-Backed Sovereignty" />
             </div>
             <h2 className="el-h2">
-              Architected to make trust verifiable.
+              <WordReveal text="Architected to make trust verifiable." />
             </h2>
             <DualCopy
               className="el-body"
@@ -366,14 +382,14 @@ export default function CompareCloudVsLocalPage() {
 
           <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
             {/* Pillar 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
               <div className="space-y-3">
-                <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
-                    PILLAR 01 // ENCLAVE
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-el-accent font-medium">
+                    01 · Enclave
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
-                    HARDWARE KEY
+                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
+                    Hardware key
                   </span>
                 </div>
                 <h3 className="text-el-lg font-medium tracking-tight text-el-fg">
@@ -386,20 +402,20 @@ export default function CompareCloudVsLocalPage() {
                 />
               </div>
 
-              <div className="mt-6 border-t border-el-border/60 pt-4 font-mono text-[10.5px] text-el-fg-faint">
-                <span className="text-el-accent">Key Derivation:</span> Argon2id / TPM 2.0 PCR
+              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+                <span className="text-el-accent">Key Derivation:</span> <code>Argon2id / TPM 2.0 PCR</code>
               </div>
             </Tilt3DCard>
 
             {/* Pillar 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
               <div className="space-y-3">
-                <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
-                    PILLAR 02 // AIR-GAP
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-el-accent font-medium">
+                    02 · Air-Gap
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
-                    OFFLINE 100%
+                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
+                    Offline 100%
                   </span>
                 </div>
                 <h3 className="text-el-lg font-medium tracking-tight text-el-fg">
@@ -412,20 +428,20 @@ export default function CompareCloudVsLocalPage() {
                 />
               </div>
 
-              <div className="mt-6 border-t border-el-border/60 pt-4 font-mono text-[10.5px] text-el-fg-faint">
-                <span className="text-el-signal-lime">Network Status:</span> Loopback Bind (127.0.0.1)
+              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+                <span className="text-el-signal-lime">Network Status:</span> <code>Loopback Bind (127.0.0.1)</code>
               </div>
             </Tilt3DCard>
 
             {/* Pillar 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-all hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
               <div className="space-y-3">
-                <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-accent font-semibold tracking-wider">
-                    PILLAR 03 // GATES
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-el-accent font-medium">
+                    03 · Policy Gates
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-purple-400">
-                    FAIL-CLOSED
+                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-fg-muted">
+                    Fail-closed
                   </span>
                 </div>
                 <h3 className="text-el-lg font-medium tracking-tight text-el-fg">
@@ -438,8 +454,8 @@ export default function CompareCloudVsLocalPage() {
                 />
               </div>
 
-              <div className="mt-6 border-t border-el-border/60 pt-4 font-mono text-[10.5px] text-el-fg-faint">
-                <span className="text-purple-400">Policy Gates:</span> 5 Checkpoints Active
+              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+                <span className="text-el-fg font-medium">Policy Gates:</span> <code>5 Checkpoints Active</code>
               </div>
             </Tilt3DCard>
           </div>
@@ -449,14 +465,14 @@ export default function CompareCloudVsLocalPage() {
 
         {/* ── FREQUENTLY ASKED QUESTIONS (GEO & SEO CITABILITY) ── */}
         <Section className="py-16">
-          <div className="max-w-[700px]">
-            <p className="el-eyebrow">
-              04 · FREQUENTLY ASKED QUESTIONS
-            </p>
-            <h2 className="mt-2 el-h2">
-              Clear answers on architecture &amp; sovereignty.
+          <div className="max-w-3xl space-y-4 mb-10">
+            <div className="el-eyebrow">
+              <CipherText text="// 04 Frequently Asked Questions" />
+            </div>
+            <h2 className="el-h2">
+              <WordReveal text="Clear answers on architecture &amp; sovereignty." />
             </h2>
-            <p className="mt-3 el-body">
+            <p className="el-body">
               Understand how ELEVEN fits into your existing computing setup and hardware requirements.
             </p>
           </div>
@@ -510,12 +526,15 @@ export default function CompareCloudVsLocalPage() {
               className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-30"
             />
             <div className="relative mx-auto max-w-[640px] space-y-4">
-              <span className="el-eyebrow">
-                SOVEREIGN ALPHA // DIRECT ACCESS
-              </span>
+              <div className="el-badge mx-auto shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+                <CipherText text="Sovereign Alpha · Direct Workstation Access" />
+              </div>
+
               <h2 className="el-h2">
-                Take back your computing sovereignty.
+                <WordReveal text="Take back your computing sovereignty." />
               </h2>
+
               <DualCopy
                 className="el-body"
                 plain="Stop renting your intelligence from cloud silos. Experience personal AI that lives on your hardware, respects your privacy, and answers only to you."
@@ -523,15 +542,24 @@ export default function CompareCloudVsLocalPage() {
               />
 
               <div className="pt-4 flex flex-wrap justify-center gap-4">
-                <WaitlistActionButton tier="general" arrow>
+                <WaitlistActionButton
+                  tier="general"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
                   Claim Your Sovereignty (Join Waitlist)
                 </WaitlistActionButton>
-                <Button variant="secondary" href="/docs">
-                  Read Technical Documentation →
+                <Button
+                  variant="secondary"
+                  href="/docs"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
+                  Read Technical Documentation
                 </Button>
               </div>
 
-              <p className="pt-2 font-mono text-[10.5px] text-el-fg-faint">
+              <p className="pt-2 text-xs text-el-fg-faint">
                 Early access invitations are dispatched weekly in verified batches.
               </p>
             </div>

@@ -16,7 +16,7 @@ export function AmbientGlow() {
   const springX = useSpring(mouseX, { stiffness: 60, damping: 22, mass: 0.6 });
   const springY = useSpring(mouseY, { stiffness: 60, damping: 22, mass: 0.6 });
 
-  const background = useMotionTemplate`radial-gradient(560px circle at ${springX}px ${springY}px, rgba(0, 240, 255, 0.055), rgba(139, 92, 246, 0.025) 40%, transparent 72%)`;
+  const background = useMotionTemplate`radial-gradient(560px circle at ${springX}px ${springY}px, rgba(184, 243, 107, 0.035), rgba(245, 245, 240, 0.015) 40%, transparent 72%)`;
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

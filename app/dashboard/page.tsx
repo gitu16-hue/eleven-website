@@ -15,7 +15,7 @@ const ElevenControlShowcase = dynamic(
     ),
   {
     loading: () => (
-      <div className="h-[650px] w-full animate-pulse rounded-sm border border-emerald-500/20 bg-el-bg-raised/40" />
+      <div className="h-[650px] w-full animate-pulse motion-reduce:animate-none rounded-sm border border-el-border bg-el-bg-raised/40" />
     ),
   }
 );
@@ -27,7 +27,7 @@ const AnimatedDashboard = dynamic(
     ),
   {
     loading: () => (
-      <div className="h-[600px] w-full animate-pulse rounded-sm border border-el-border bg-el-bg-raised/40" />
+      <div className="h-[600px] w-full animate-pulse motion-reduce:animate-none rounded-sm border border-el-border bg-el-bg-raised/40" />
     ),
   }
 );
@@ -101,7 +101,10 @@ export default function DashboardPage() {
     <>
       <Nav />
 
-      <main id="main-content">
+      <main
+        id="main-content"
+        className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -117,28 +120,31 @@ export default function DashboardPage() {
 
         {/* HERO SECTION */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/15 via-transparent to-transparent opacity-60" />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-60"
+          />
 
           <Container className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
-                  { label: "Sovereign Voyage Dashboard", href: "/dashboard" },
+                  { label: "Dashboard", href: "/dashboard" },
                 ]}
               />
 
               <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                  TERMINOLOGY DEPTH:
+                <span className="text-xs text-el-fg-faint">
+                  Terminology depth:
                 </span>
                 <ClarityTogglePill />
               </div>
             </div>
 
             <div className="mt-10 max-w-4xl space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-xs border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-400 shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <CipherText text="GSAP KINEMATICS // CURVED SVG VOYAGE STEPPER & CHOREOGRAPHY" />
+              <div className="el-badge shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime motion-reduce:animate-none" />
+                <CipherText text="GSAP Kinematics · Curved SVG Voyage Stepper" />
               </div>
 
               <h1 className="el-h1">
@@ -152,33 +158,48 @@ export default function DashboardPage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]">
-                <span className="rounded-xs border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-emerald-400">
-                  ✓ DUAL SVG PATH ARC-LENGTH REVEAL
+              <div className="flex flex-wrap gap-2 pt-2 text-xs text-el-fg-muted">
+                <span className="rounded-xs border border-el-signal-lime/40 bg-el-signal-lime/10 px-2.5 py-1 text-el-signal-lime">
+                  Dual SVG Path Arc-Length Reveal
                 </span>
-                <span className="rounded-xs border border-cyan-500/40 bg-cyan-500/10 px-2.5 py-1 text-cyan-400">
-                  ✓ TANGENT-ALIGNED DAMPED BANKING
-                </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  ✓ ANIMATED CUBIC SPLINE CHART
+                <span className="rounded-xs border border-el-signal-lime/30 bg-el-signal-lime/5 px-2.5 py-1 text-el-fg-muted">
+                  Tangent-Aligned Damped Banking
                 </span>
                 <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  ✓ FLUID GSAP VALUE TWEENING
+                  Animated Cubic Spline Chart
+                </span>
+                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                  Fluid GSAP Value Tweening
                 </span>
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <WaitlistActionButton tier="technical" arrow variant="primary">
+                <WaitlistActionButton
+                  tier="technical"
+                  arrow
+                  variant="primary"
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
                   Request Dashboard Integration
                 </WaitlistActionButton>
 
-                <Button href="/tools/dag-visualizer" variant="secondary">
-                  System 2 DAG Visualizer →
+                <Button
+                  href="/tools/dag-visualizer"
+                  variant="secondary"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
+                  System 2 DAG Visualizer
                 </Button>
 
-                <Button href="/tools/vault-calculator" variant="ghost">
-                  Vault Storage Estimator →
+                <Button
+                  href="/tools/vault-calculator"
+                  variant="ghost"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
+                  Vault Storage Estimator
                 </Button>
               </div>
             </div>
@@ -188,18 +209,18 @@ export default function DashboardPage() {
         <SignalBeamDivider />
 
         {/* INTERACTIVE ELEVEN V3 CONTROL SHOWCASE (ZERO-PROMPT TRIAD & L5 HYPERVISOR) */}
-        <Section className="py-12 lg:py-20 bg-[#020407]">
+        <Section className="py-12 lg:py-20 bg-el-bg">
           <Container>
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <span className="font-mono text-xs uppercase tracking-wider text-emerald-400">
-                  FLAGSHIP INTERACTIVE SHOWCASE // ZERO-PROMPT CONTROL PLANE
-                </span>
-                <h2 className="mt-1 text-2xl font-bold tracking-tight text-white">
-                  Zero-Prompt Cognitive Triad &amp; L5 Zero-Trust Hypervisor
+                <div className="el-eyebrow">
+                  <CipherText text="// 01 FLAGSHIP INTERACTIVE SHOWCASE" />
+                </div>
+                <h2 className="el-h2 mt-1">
+                  <WordReveal text="Zero-Prompt Cognitive Triad and L5 Zero-Trust Hypervisor" />
                 </h2>
               </div>
-              <span className="font-mono text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-xs">
+              <span className="text-xs text-el-fg-muted bg-el-bg-raised/60 border border-el-border px-3 py-1 rounded-xs">
                 Jev + CDM + F.R.I.D.A.Y.
               </span>
             </div>
@@ -211,15 +232,15 @@ export default function DashboardPage() {
         <SignalBeamDivider />
 
         {/* ACTUARIAL APPLICATION USE CASE: CAPITAL ALLOCATION & UNDERWRITING */}
-        <Section className="py-12 lg:py-20 bg-[#040609]">
+        <Section className="py-12 lg:py-20 bg-el-bg-raised/40">
           <Container>
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <span className="font-mono text-xs uppercase tracking-wider text-cyan-400">
-                  COMMERCIAL WORKFLOW DEMO // CAPITAL ALLOCATION &amp; UNDERWRITING
-                </span>
-                <h3 className="mt-1 text-xl font-bold tracking-tight text-white">
-                  Sovereign Underwriting Engine with Dynamic Premium Tweening
+                <div className="el-eyebrow">
+                  <CipherText text="// 02 COMMERCIAL WORKFLOW DEMO" />
+                </div>
+                <h3 className="mt-1 text-xl font-bold tracking-tight text-el-fg">
+                  <WordReveal text="Sovereign Underwriting Engine with Dynamic Premium Tweening" />
                 </h3>
               </div>
             </div>
@@ -234,8 +255,8 @@ export default function DashboardPage() {
         <Section className="py-16 lg:py-24">
           <Container>
             <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center gap-2 font-mono text-xs text-emerald-400">
-                <CipherText text="// 01 MATHEMATICAL & ANIMATION MECHANICS" />
+              <div className="el-eyebrow">
+                <CipherText text="// 03 MATHEMATICAL AND ANIMATION MECHANICS" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="The Mathematics of Curved Route Kinematics" />
@@ -248,13 +269,13 @@ export default function DashboardPage() {
 
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Feature 1 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 space-y-4">
-                <div className="pointer-events-none absolute top-3 right-3 font-mono text-xs text-emerald-400/40">
-                  ⌜ 01 ⌟
+              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+                <div className="pointer-events-none absolute top-3 right-3">
+                  <code className="text-el-signal-lime/50 font-mono text-xs">01</code>
                 </div>
-                <div className="flex items-center gap-2 font-mono text-xs text-emerald-400">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                  <span>DUAL-PATH ARC MAPPING</span>
+                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
+                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                  <span>Dual-path arc mapping</span>
                 </div>
                 <h3 className="text-xl font-bold text-el-fg">
                   Dynamic Stroke-Dasharray Revelation
@@ -262,19 +283,19 @@ export default function DashboardPage() {
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   Two overlaid SVG paths share the identical cubic-bezier path definition. The background path renders a muted guide, while the foreground path dynamically modulates its stroke-dasharray to exactly match the current animated arc length:
                 </p>
-                <div className="rounded-xs border border-el-border bg-[#020408] p-3 font-mono text-[11px] text-emerald-300">
+                <div className="rounded-xs border border-el-border bg-el-bg-raised/60 p-3 text-xs text-el-signal-lime font-mono text-[11px]">
                   {"done.setAttribute('stroke-dasharray', `${l} ${total}`);"}
                 </div>
               </Tilt3DCard>
 
               {/* Feature 2 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-cyan-500/40 bg-el-bg-raised/30 p-6 space-y-4 shadow-el-sm">
-                <div className="pointer-events-none absolute top-3 right-3 font-mono text-xs text-cyan-400/50">
-                  ⌜ 02 ⌟
+              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 space-y-4 shadow-el-sm transition-colors duration-200 hover:border-el-signal-lime/40">
+                <div className="pointer-events-none absolute top-3 right-3">
+                  <code className="text-el-signal-lime/50 font-mono text-xs">02</code>
                 </div>
-                <div className="flex items-center gap-2 font-mono text-xs text-cyan-400">
-                  <span className="h-2 w-2 rounded-full bg-cyan-400" />
-                  <span>TANGENT-ALIGNED BANKING</span>
+                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
+                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                  <span>Tangent-aligned banking</span>
                 </div>
                 <h3 className="text-xl font-bold text-el-fg">
                   Damped Differential Heading
@@ -282,19 +303,19 @@ export default function DashboardPage() {
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   To calculate the traveler’s orientation without high-frequency vibration, the engine samples a point 2 pixels ahead on the curve and computes the arctangent with a 0.4 damping factor:
                 </p>
-                <div className="rounded-xs border border-cyan-500/30 bg-[#020408] p-3 font-mono text-[11px] text-cyan-300">
+                <div className="rounded-xs border border-el-border bg-el-bg-raised/60 p-3 text-xs text-el-signal-lime font-mono text-[11px]">
                   ang = (atan2(q.y - p.y, q.x - p.x) * 180 / π) * 0.4;
                 </div>
               </Tilt3DCard>
 
               {/* Feature 3 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-purple-400/40 bg-el-bg-raised/30 p-6 space-y-4">
-                <div className="pointer-events-none absolute top-3 right-3 font-mono text-xs text-purple-400/40">
-                  ⌜ 03 ⌟
+              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+                <div className="pointer-events-none absolute top-3 right-3">
+                  <code className="text-el-signal-lime/50 font-mono text-xs">03</code>
                 </div>
-                <div className="flex items-center gap-2 font-mono text-xs text-purple-400">
-                  <span className="h-2 w-2 rounded-full bg-purple-400" />
-                  <span>FLUID NUMERICAL TWEENING</span>
+                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
+                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                  <span>Fluid numerical tweening</span>
                 </div>
                 <h3 className="text-xl font-bold text-el-fg">
                   Sub-Millisecond Parameter Rolling
@@ -302,7 +323,7 @@ export default function DashboardPage() {
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   Dragging interactive range sliders updates GSAP proxy values that smoothly tween the formatted currency totals on screen, avoiding abrupt jumps and delivering tactile feedback.
                 </p>
-                <div className="rounded-xs border border-el-border bg-[#020408] p-3 font-mono text-[11px] text-purple-300">
+                <div className="rounded-xs border border-el-border bg-el-bg-raised/60 p-3 text-xs text-el-signal-lime font-mono text-[11px]">
                   {"gsap.to(proxy, { val: target, ease: 'power2.out' });"}
                 </div>
               </Tilt3DCard>
@@ -311,11 +332,11 @@ export default function DashboardPage() {
         </Section>
 
         {/* BOTTOM CTA ACCESS FUNNEL */}
-        <Section className="py-16 lg:py-24 border-t border-el-border bg-gradient-to-b from-[#030508] to-[#010204]">
+        <Section className="py-16 lg:py-24 border-t border-el-border bg-gradient-to-b from-el-bg-raised/90 to-el-bg">
           <Container>
             <div className="mx-auto max-w-3xl text-center space-y-6">
-              <div className="el-badge">
-                <CipherText text="// PRODUCTION ANIMATION SUITE · VERIFIED RUNTIME" />
+              <div className="el-eyebrow">
+                <CipherText text="// 04 PRODUCTION ANIMATION SUITE" />
               </div>
 
               <h2 className="el-h2">
@@ -329,28 +350,38 @@ export default function DashboardPage() {
               />
 
               <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                <WaitlistActionButton tier="technical" arrow variant="primary">
+                <WaitlistActionButton
+                  tier="technical"
+                  arrow
+                  variant="primary"
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
                   Request Component Source Access
                 </WaitlistActionButton>
 
-                <Button href="/solutions/enterprise" variant="secondary">
-                  Enterprise Fleet Governance →
+                <Button
+                  href="/solutions/enterprise"
+                  variant="secondary"
+                  arrow
+                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
+                >
+                  Enterprise Fleet Governance
                 </Button>
               </div>
 
               {/* Cross Links to Other Deep Architecture Pages */}
-              <div className="flex flex-wrap items-center justify-center gap-6 pt-8 font-mono text-xs text-el-fg-faint">
-                <Link href="/tools/dag-visualizer" className="hover:text-emerald-400 hover:underline">
-                  → System 2 DAG Orchestrator
+              <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
+                <Link href="/tools/dag-visualizer" className="hover:text-el-signal-lime hover:underline">
+                  System 2 DAG Orchestrator
                 </Link>
-                <Link href="/hardware" className="hover:text-emerald-400 hover:underline">
-                  → Hardware Benchmarks
+                <Link href="/hardware" className="hover:text-el-signal-lime hover:underline">
+                  Hardware Benchmarks
                 </Link>
-                <Link href="/tools/vault-calculator" className="hover:text-emerald-400 hover:underline">
-                  → Vault Storage Estimator
+                <Link href="/tools/vault-calculator" className="hover:text-el-signal-lime hover:underline">
+                  Vault Storage Estimator
                 </Link>
-                <Link href="/compare/cloud-vs-local" className="hover:text-emerald-400 hover:underline">
-                  → Cloud vs Local Audit
+                <Link href="/compare/cloud-vs-local" className="hover:text-el-signal-lime hover:underline">
+                  Cloud vs Local Audit
                 </Link>
               </div>
             </div>

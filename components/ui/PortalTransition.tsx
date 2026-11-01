@@ -150,15 +150,15 @@ export function PortalTransitionProvider({
             aria-live="polite"
           >
             <div className="hud-frame relative flex flex-col items-center gap-5 rounded-sm border border-el-border-strong/70 bg-el-bg-raised/85 px-8 py-7 backdrop-blur-xl max-w-md w-full shadow-el-lg">
-              <div className="flex items-center gap-3 font-mono text-[11px] tracking-[0.18em] uppercase text-el-fg-muted">
+              <div className="flex items-center gap-3 text-xs text-el-fg-muted">
                 <span
-                  className="h-2 w-2 rounded-full animate-pulse"
+                  className="h-2 w-2 rounded-full animate-pulse motion-reduce:animate-none"
                   style={{
                     backgroundColor: currentPhase.accent,
                     boxShadow: `0 0 10px ${currentPhase.accent}`,
                   }}
                 />
-                <span>ELEVEN v3.1 // QUANTUM AIRLOCK</span>
+                <span>ELEVEN v3.1 · System airlock</span>
               </div>
 
               <div className="w-56 h-[2px] bg-el-border overflow-hidden relative rounded-full">

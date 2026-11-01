@@ -17,7 +17,7 @@ import {
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "Safety & Control — You Stay the Boss | ELEVEN v3",
+  title: "Safety & Control: You Stay in Command | ELEVEN v3",
   description:
     "See how ELEVEN keeps you in charge: four simple trust levels, honest 30-second approval receipts, automatic password protection, and a 0.05-second Emergency Stop.",
   alternates: {
@@ -46,38 +46,38 @@ const breadcrumbJsonLd = {
 
 const FOUR_SHIELDS = [
   {
-    code: "SHIELD 01",
+    code: "Shield 01",
     plainTitle: "Caution Stickers on Untrusted Web Pages",
-    techTitle: "Protocol A · Taint Tracking & Paraphrasing",
+    techTitle: "Protocol A: Taint Tracking & Paraphrasing",
     plainBody:
-      "Hidden traps inside random emails or websites can try to trick AI into running commands. ELEVEN slaps a 'Caution' sticker on outside content so it can never trigger risky actions behind your back.",
+      "Hidden traps inside random emails or websites can try to trick AI into running commands. ELEVEN marks external content with caution provenance so it can never trigger risky actions behind your back.",
     techBody:
       "External documents carry immutable TAINTED provenance tags that cannot silently escalate into Tier 2/3 tool invocations or overwrite procedural skills.",
   },
   {
-    code: "SHIELD 02",
+    code: "Shield 02",
     plainTitle: "Independent Before-and-After Check",
-    techTitle: "Protocol B · Trusted Differential Auditing",
+    techTitle: "Protocol B: Trusted Differential Auditing",
     plainBody:
-      "ELEVEN never takes an AI’s word for 'I only fixed one typo.' A separate built-in inspector compares the exact before-and-after changes before anything is saved.",
+      "ELEVEN never takes an AI's word for 'I only fixed one typo.' A separate built-in inspector compares the exact before-and-after changes before anything is saved.",
     techBody:
-      "An independent host-side AST and parameter differential analyzer inspects real file/argument diffs rather than trusting model-generated summaries.",
+      "An independent host-side AST and parameter differential analyzer inspects real file and argument diffs rather than trusting model-generated summaries.",
   },
   {
-    code: "SHIELD 03",
+    code: "Shield 03",
     plainTitle: "Locked Doors to the Internet by Default",
-    techTitle: "Protocol C · Default-Deny Egress & Byte Quotas",
+    techTitle: "Protocol C: Default-Deny Egress & Byte Quotas",
     plainBody:
-      "Background helpers work offline by default—so private files can’t be uploaded anywhere unless you’ve specifically approved that connection.",
+      "Background helpers work offline by default, so private files cannot be uploaded anywhere unless you have specifically approved that connection.",
     techBody:
       "Worker sandboxes run with default-deny outbound networking and strict per-session cumulative byte quotas to block covert exfiltration.",
   },
   {
-    code: "SHIELD 04",
+    code: "Shield 04",
     plainTitle: "Honest Receipts Without Smooth-Talking",
-    techTitle: "Protocol D · Cold-Room DEC-008 Verification",
+    techTitle: "Protocol D: Cold-Room DEC-008 Verification",
     plainBody:
-      "When asking your permission, ELEVEN hides the AI’s persuasive sales pitch and shows you a clean, plain-fact receipt—valid once for 30 seconds.",
+      "When asking your permission, ELEVEN strips the AI's persuasive prose and shows you a clean, plain-fact receipt valid once for 30 seconds.",
     techBody:
       "Strips untrusted LLM prose from approval cards, binding a 128-bit CSPRNG single-use nonce (30s TTL) to SHA-256 arguments_hash.",
   },
@@ -99,7 +99,7 @@ export default function AutonomyPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -109,8 +109,8 @@ export default function AutonomyPage() {
                 ]}
               />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                  TERMINOLOGY DEPTH:
+                <span className="text-el-xs font-medium text-el-fg-faint">
+                  Terminology depth:
                 </span>
                 <ClarityTogglePill />
               </div>
@@ -118,8 +118,8 @@ export default function AutonomyPage() {
 
             <div className="mt-10 max-w-4xl space-y-6">
               <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
-                <CipherText text="DETERMINISTIC PERMISSION CONTROL // 4-TIER GOVERNANCE" />
+                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+                <CipherText text="Deterministic Permission Control · 4-Tier Governance" />
               </div>
 
               <h1 className="el-h1">
@@ -128,37 +128,47 @@ export default function AutonomyPage() {
 
               <DualCopy
                 className="el-lead max-w-3xl"
-                plain="Nobody wants an AI that interrupts you every 10 seconds to read a note—and nobody wants an AI that deletes files or sends emails without asking! ELEVEN gives you the sweet spot: effortless flow for safe tasks, and rock-solid permission checks when it counts."
+                plain="Nobody wants an AI that interrupts you every 10 seconds to read a note, and nobody wants an AI that deletes files or sends emails without asking. ELEVEN gives you the sweet spot: effortless flow for safe tasks, and rock-solid permission checks when it counts."
                 technical="Graduated DEC-003 4-tier authority enables zero-friction Tier 0/1 local workflows while enforcing cryptographic Cold-Room DEC-008 nonces on Tier 2/3 boundaries."
               />
 
               <ScrollReveal
                 stagger={0.08}
-                className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]"
+                className="flex flex-wrap gap-2 pt-2 text-[11px] font-medium"
               >
                 <RevealItem>
-                  <span className="inline-block rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
-                    ✓ 4-TIER AUTHORITY (DEC-003)
+                  <span className="inline-block rounded-xs border border-el-accent/30 bg-el-accent-soft px-2.5 py-1 text-el-accent">
+                    4-Tier Authority (DEC-003)
                   </span>
                 </RevealItem>
                 <RevealItem>
-                  <span className="inline-block rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
-                    ✓ 30S CRYPTOGRAPHIC NONCE (DEC-008)
+                  <span className="inline-block rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg">
+                    30s Cryptographic Nonce (DEC-008)
                   </span>
                 </RevealItem>
                 <RevealItem>
                   <span className="inline-block rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                    ✓ HARDWARE EMERGENCY STOP (&lt;50MS)
+                    Hardware Emergency Stop (&lt;50ms)
                   </span>
                 </RevealItem>
               </ScrollReveal>
 
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <Button href="/security" variant="primary" arrow>
+                <Button
+                  href="/security"
+                  variant="primary"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
                   Inspect Zero-Trust Architecture
                 </Button>
-                <Button href="/tools/inspector" variant="secondary">
-                  Launch ActionProposal Playground →
+                <Button
+                  href="/tools/inspector"
+                  variant="secondary"
+                  arrow
+                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                >
+                  Launch ActionProposal Playground
                 </Button>
               </div>
             </div>
@@ -171,7 +181,7 @@ export default function AutonomyPage() {
         <Section id="killswitch" className="relative py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <CipherText text="// 01 THREE INVARIANT LAWS" />
+              <CipherText text="// 01 Three Invariant Laws" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="The three golden rules of safe AI autonomy." />
@@ -190,15 +200,15 @@ export default function AutonomyPage() {
           >
             <RevealItem className="h-full">
               <Tilt3DCard className="p-6">
-                <span className="font-mono text-xs font-semibold text-el-cyan">
-                  RULE 01 · CLEAR LIMITS FIRST
+                <span className="text-xs font-semibold text-el-accent">
+                  Rule 01: Clear limits first
                 </span>
                 <h3 className="mt-2.5 text-base font-semibold text-el-fg">
                   AI Can Never Promote Itself
                 </h3>
                 <DualCopy
                   className="mt-2 text-xs leading-relaxed text-el-fg-muted"
-                  plain="If you ask ELEVEN to read a folder, deleting and emailing stay locked off from the start—the AI can’t change its own rules midway."
+                  plain="If you ask ELEVEN to read a folder, deleting and emailing stay locked off from the start: the AI cannot change its own rules midway."
                   technical="TaskCompiler stamps immutable maximum authority tiers and canonical root scopes prior to model invocation."
                 />
               </Tilt3DCard>
@@ -206,15 +216,15 @@ export default function AutonomyPage() {
 
             <RevealItem className="h-full">
               <Tilt3DCard className="p-6">
-                <span className="font-mono text-xs font-semibold text-el-cyan">
-                  RULE 02 · ONE-TIME PASSES
+                <span className="text-xs font-semibold text-el-accent">
+                  Rule 02: Single-use passes
                 </span>
                 <h3 className="mt-2.5 text-base font-semibold text-el-fg">
                   30-Second Exact Permission
                 </h3>
                 <DualCopy
                   className="mt-2 text-xs leading-relaxed text-el-fg-muted"
-                  plain="Approving one action doesn’t give a blank check—your click unlocks that exact step once for 30 seconds, then locks right back up."
+                  plain="Approving one action does not give a blank check: your confirmation unlocks that exact step once for 30 seconds, then locks right back up."
                   technical="Single-use 128-bit DEC-008 nonces bind cryptographically to SHA-256 arguments_hash and expire after 30s."
                 />
               </Tilt3DCard>
@@ -222,8 +232,8 @@ export default function AutonomyPage() {
 
             <RevealItem className="h-full">
               <Tilt3DCard className="p-6">
-                <span className="font-mono text-xs font-semibold text-el-cyan">
-                  RULE 03 · INSTANT BRAKES
+                <span className="text-xs font-semibold text-el-accent">
+                  Rule 03: Instant brakes
                 </span>
                 <h3 className="mt-2.5 text-base font-semibold text-el-fg">
                   0.05-Second Emergency Stop
@@ -244,7 +254,7 @@ export default function AutonomyPage() {
         <Section id="policy-gates" className="relative py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <CipherText text="// 02 COLD-ROOM APPROVAL DEMO" />
+              <CipherText text="// 02 Cold-Room Approval Demo" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Experience the 4 graduated trust tiers firsthand." />
@@ -266,7 +276,7 @@ export default function AutonomyPage() {
         <Section className="py-16 lg:py-24 bg-el-bg-raised/45">
           <div className="max-w-3xl space-y-4 mb-10">
             <div className="el-eyebrow">
-              <CipherText text="// 03 ADVERSARIAL DEFENSE" />
+              <CipherText text="// 03 Adversarial Defense" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Protected even if a tricky webpage tries to fool the AI." />
@@ -285,7 +295,7 @@ export default function AutonomyPage() {
             {FOUR_SHIELDS.map((p) => (
               <RevealItem key={p.code} className="h-full">
                 <Tilt3DCard className="p-6 lg:p-7">
-                  <span className="font-mono text-el-xs font-semibold text-el-accent">
+                  <span className="text-el-xs font-semibold text-el-accent">
                     {p.code}
                   </span>
                   <DualCopy
@@ -315,15 +325,15 @@ export default function AutonomyPage() {
           >
             <RevealItem className="lg:col-span-6">
               <Tilt3DCard className="p-7">
-                <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
-                  ACCIDENT PREVENTION
+                <p className="text-el-xs font-medium text-el-accent">
+                  Accident prevention
                 </p>
                 <h3 className="mt-2 text-el-xl font-medium text-el-fg">
                   Why blurting out &ldquo;Yes&rdquo; can never approve the wrong thing.
                 </h3>
                 <DualCopy
                   className="mt-3 text-el-xs leading-[1.65] text-el-fg-muted"
-                  plain="Suppose two tasks finish at the same moment—one harmless, one deleting old files—and you say 'Yes!' out loud. Ordinary voice assistants might delete your files by mistake! Whenever there’s any ambiguity, ELEVEN asks you to name the specific action or click the clear button on screen."
+                  plain="Suppose two tasks finish at the same moment (one harmless, one deleting old files) and you say 'Yes' out loud. Ordinary voice assistants might delete your files by mistake. Whenever there is any ambiguity, ELEVEN asks you to name the specific action or click the clear button on screen."
                   technical="When concurrent Tier 2/3 approval gates or taint warnings exist, generic spoken affirmation is deterministically rejected in favor of explicit correlation-token binding or Cold-Room UI signature."
                 />
               </Tilt3DCard>
@@ -331,22 +341,27 @@ export default function AutonomyPage() {
 
             <RevealItem className="lg:col-span-6">
               <Tilt3DCard className="p-7">
-                <p className="font-mono text-el-xs uppercase tracking-[0.1em] text-el-accent">
-                  COMPLETE TRANSPARENCY
+                <p className="text-el-xs font-medium text-el-accent">
+                  Complete transparency
                 </p>
                 <h3 className="mt-2 text-el-xl font-medium text-el-fg">
                   An uneditable activity log right on your computer.
                 </h3>
                 <DualCopy
                   className="mt-3 text-el-xs leading-[1.65] text-el-fg-muted"
-                  plain="Every single step ELEVEN takes is written into a permanent local diary where entries are linked like chain links—nothing can ever be secretly erased or altered behind your back."
+                  plain="Every single step ELEVEN takes is written into a permanent local diary where entries are linked like chain links: nothing can ever be secretly erased or altered behind your back."
                   technical="Every TaskSpec, policy verdict, issued DEC-008 nonce, and execution receipt appends to a SHA-256 hash chain: entry_hash = SHA256(prev_hash || canonical_record)."
                 />
                 <div className="mt-6 flex flex-wrap gap-3">
                   <PortalActionButton variant="primary" arrow>
                     Test Approval Card in 3D Orb
                   </PortalActionButton>
-                  <Button href="/research" variant="secondary">
+                  <Button
+                    href="/research"
+                    variant="secondary"
+                    arrow
+                    className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                  >
                     Read Our 15 Promises
                   </Button>
                 </div>

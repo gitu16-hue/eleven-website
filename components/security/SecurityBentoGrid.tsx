@@ -225,7 +225,7 @@ export function SecurityBentoGrid({
     <div
       ref={gridRef}
       onMouseMove={handleMouseMove}
-      className="relative rounded-2xl border border-[#17232d] bg-[#070d12] p-5 sm:p-7 lg:p-9 shadow-2xl overflow-hidden"
+      className="relative rounded-2xl border border-white/10 bg-el-sec-graphite-deep p-5 sm:p-7 lg:p-9 shadow-lg overflow-hidden"
       style={
         {
           "--mouse-x": `${mousePos.x}px`,
@@ -237,37 +237,37 @@ export function SecurityBentoGrid({
       <div
         className="pointer-events-none absolute inset-0 opacity-40 transition-opacity duration-300"
         style={{
-          background: `radial-gradient(650px circle at var(--mouse-x, 200px) var(--mouse-y, 200px), rgba(16, 185, 129, 0.07), transparent 70%)`,
+          background: `radial-gradient(650px circle at var(--mouse-x, 200px) var(--mouse-y, 200px), rgba(184, 243, 107, 0.05), transparent 70%)`,
         }}
       />
 
       {/* Top Banner with Architecture Context */}
-      <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 border-b border-[#17232d] pb-6 mb-8">
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6 mb-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xs border border-emerald-500/30 bg-emerald-950/40 text-emerald-400">
-            <ShieldCheck className="h-4 w-4" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xs border border-el-sec-lime/30 bg-el-sec-lime/10 text-el-sec-lime">
+            <ShieldCheck className="h-4 w-4" aria-hidden="true" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs uppercase tracking-[0.14em] text-emerald-400 font-semibold">
-                ELEVEN L5 HYPERVISOR MATRIX
+              <span className="text-xs font-semibold text-el-sec-lime">
+                Eleven L5 Hypervisor Matrix
               </span>
-              <span className="rounded-xs border border-[#1c2d3a] bg-[#0a141d] px-1.5 py-0.5 font-mono text-[9.5px] text-slate-400">
-                ZERO-TRUST RUNTIME
+              <span className="rounded-xs border border-white/10 bg-el-sec-graphite-raised px-1.5 py-0.5 text-[10px] text-el-sec-sage-light">
+                Zero-Trust Runtime
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-el-sec-sage-light mt-0.5">
               Live Threat Interception Bento · 4 Isolated Boundary Controllers
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-950/30 px-3 py-1 font-mono text-[10px] text-emerald-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            4 ENCLAVES ACTIVE
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-el-sec-lime/30 bg-el-sec-lime/10 px-3 py-1 text-[11px] text-el-sec-lime">
+            <span className="h-1.5 w-1.5 rounded-full bg-el-sec-lime animate-pulse motion-reduce:animate-none" />
+            4 Enclaves Active
           </span>
-          <span className="font-mono text-[10px] text-slate-500 hidden sm:inline">
+          <span className="font-mono text-[10px] text-el-sec-sage hidden sm:inline">
             POLICY_VER: 3.1-DEC008
           </span>
         </div>
@@ -278,14 +278,14 @@ export function SecurityBentoGrid({
         {/* ========================================================= */}
         {/* CARD 1: Outbound Privacy Scrubber (Span 7 cols)          */}
         {/* ========================================================= */}
-        <div className="group relative overflow-hidden rounded-xl border border-[#17232d] bg-[#091118]/80 p-5 lg:p-6 transition-all duration-300 hover:border-emerald-500/40 xl:col-span-7 flex flex-col justify-between">
+        <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-el-sec-graphite/90 p-5 lg:p-6 transition-colors duration-300 hover:border-el-sec-lime/40 xl:col-span-7 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-[#17232d]/80 pb-3 mb-4">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-400">
-                  CARD 01 · OUTBOUND PRIVACY SCRUBBER
+                <span className="text-[11px] font-semibold text-el-sec-lime">
+                  Card 01: Outbound Privacy Scrubber
                 </span>
-                <span className="rounded-xs bg-[#0f1d27] px-1.5 py-0.5 font-mono text-[9px] text-slate-400">
+                <span className="rounded-xs bg-el-sec-graphite-raised px-1.5 py-0.5 font-mono text-[9px] text-el-sec-sage-light">
                   SPEC INV-05
                 </span>
               </div>
@@ -293,20 +293,20 @@ export function SecurityBentoGrid({
                 type="button"
                 onClick={runScrubberScan}
                 disabled={isScanning}
-                className="cursor-pointer flex items-center gap-1.5 rounded-xs border border-emerald-500/30 bg-emerald-950/40 px-2.5 py-1 font-mono text-[10px] text-emerald-300 hover:bg-emerald-900/50 transition-colors disabled:opacity-50"
+                className="cursor-pointer flex items-center gap-1.5 rounded-xs border border-el-sec-lime/30 bg-el-sec-lime/10 px-2.5 py-1 text-[11px] text-el-sec-lime hover:bg-el-sec-lime/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] transition-colors disabled:opacity-50"
               >
-                <Zap className="h-3 w-3" />
-                {isScanning ? "Scrubbing..." : "Force Scan"}
+                <Zap className="h-3 w-3" aria-hidden="true" />
+                {isScanning ? "Scrubbing…" : "Force Scan"}
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 mb-3 leading-relaxed">
+            <p className="text-xs text-el-sec-sage-light mb-3 leading-relaxed">
               Before prompt fragments leave the device, zero-knowledge regex sweeps redact keys,
               personal identities, and financial figures into reversible local tokens.
             </p>
 
             {/* Prompt Code Box with Animated Emerald Laser Scanline */}
-            <div className="relative overflow-hidden rounded-md border border-[#17232d] bg-[#04080c] p-4 font-mono text-xs text-slate-300">
+            <div className="relative overflow-hidden rounded-md border border-white/10 bg-el-sec-graphite-deep p-4 font-mono text-xs text-el-sec-porcelain">
               {/* Animated Laser Bar */}
               <AnimatePresence>
                 {isScanning && (
@@ -315,18 +315,18 @@ export function SecurityBentoGrid({
                     animate={{ top: "110%" }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.45, ease: "easeInOut" }}
-                    className="pointer-events-none absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_12px_#10b981] z-20"
+                    className="pointer-events-none absolute left-0 right-0 h-0.5 bg-el-sec-lime shadow-sm z-20 motion-reduce:opacity-0"
                   />
                 )}
               </AnimatePresence>
 
               <div className="space-y-2 text-[11.5px] leading-relaxed">
-                <p className="text-slate-400">
-                  <span className="text-slate-500">USER_PROMPT &gt;</span> Analyze balance sheet for{" "}
+                <p className="text-el-sec-sage-light">
+                  <span className="text-el-sec-sage">USER_PROMPT &gt;</span> Analyze balance sheet for{" "}
                   <span
                     className={`inline-block font-semibold px-1.5 py-0.5 rounded-xs transition-colors duration-200 ${
                       isScrubbed
-                        ? "bg-emerald-950/70 border border-emerald-500/50 text-emerald-300"
+                        ? "bg-el-sec-lime/15 border border-el-sec-lime/40 text-el-sec-lime"
                         : "bg-amber-950/70 border border-amber-500/50 text-amber-200"
                     }`}
                   >
@@ -336,7 +336,7 @@ export function SecurityBentoGrid({
                   <span
                     className={`inline-block font-semibold px-1.5 py-0.5 rounded-xs transition-colors duration-200 ${
                       isScrubbed
-                        ? "bg-emerald-950/70 border border-emerald-500/50 text-emerald-300"
+                        ? "bg-el-sec-lime/15 border border-el-sec-lime/40 text-el-sec-lime"
                         : "bg-amber-950/70 border border-amber-500/50 text-amber-200"
                     }`}
                   >
@@ -346,7 +346,7 @@ export function SecurityBentoGrid({
                   <span
                     className={`inline-block font-semibold px-1.5 py-0.5 rounded-xs transition-colors duration-200 ${
                       isScrubbed
-                        ? "bg-emerald-950/70 border border-emerald-500/50 text-emerald-300"
+                        ? "bg-el-sec-lime/15 border border-el-sec-lime/40 text-el-sec-lime"
                         : "bg-rose-950/70 border border-rose-500/50 text-rose-200"
                     }`}
                   >
@@ -358,23 +358,25 @@ export function SecurityBentoGrid({
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#17232d]/60 font-mono text-[10px]">
-            <div className="flex items-center gap-2 text-slate-400">
-              <KeyRound className="h-3 w-3 text-emerald-400" />
-              <span>Token Vault: sha256:7c9e...38b (Encrypted in DPAPI)</span>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/10 font-mono text-[10px]">
+            <div className="flex items-center gap-2 text-el-sec-sage-light">
+              <KeyRound className="h-3 w-3 text-el-sec-lime" aria-hidden="true" />
+              <span>Token Vault: sha256:7c9e…38b (Encrypted in DPAPI)</span>
             </div>
             <button
               type="button"
               onClick={() => setIsScrubbed((v) => !v)}
-              className="cursor-pointer text-slate-400 hover:text-emerald-300 transition-colors flex items-center gap-1"
+              className="cursor-pointer text-el-sec-sage-light hover:text-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] transition-colors flex items-center gap-1 font-sans text-xs whitespace-nowrap"
             >
               {isScrubbed ? (
                 <>
-                  <Eye className="h-3 w-3" /> Reveal Raw Payload
+                  <Eye className="h-3 w-3" aria-hidden="true" />
+                  <span className="whitespace-nowrap">Reveal Payload</span>
                 </>
               ) : (
                 <>
-                  <EyeOff className="h-3 w-3" /> Redact with Local Tokens
+                  <EyeOff className="h-3 w-3" aria-hidden="true" />
+                  <span className="whitespace-nowrap">Redact Tokens</span>
                 </>
               )}
             </button>
@@ -384,32 +386,32 @@ export function SecurityBentoGrid({
         {/* ========================================================= */}
         {/* CARD 2: Default-Deny Network Egress Shield (Span 5 cols)  */}
         {/* ========================================================= */}
-        <div className="group relative overflow-hidden rounded-xl border border-[#17232d] bg-[#091118]/80 p-5 lg:p-6 transition-all duration-300 hover:border-cyan-500/40 xl:col-span-5 flex flex-col justify-between">
+        <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-el-sec-graphite/90 p-5 lg:p-6 transition-colors duration-300 hover:border-white/20 xl:col-span-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-[#17232d]/80 pb-3 mb-4">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-400">
-                  CARD 02 · DEFAULT-DENY EGRESS SHIELD
+                <span className="text-[11px] font-semibold text-el-sec-porcelain">
+                  Card 02: Default-Deny Egress Shield
                 </span>
               </div>
-              <span className="rounded-xs bg-cyan-950/50 border border-cyan-500/30 px-1.5 py-0.5 font-mono text-[9px] text-cyan-300">
+              <span className="rounded-xs bg-el-sec-graphite-raised border border-white/10 px-1.5 py-0.5 font-mono text-[9px] text-el-sec-sage-light">
                 INV-02 GATE
               </span>
             </div>
 
-            <p className="text-xs text-slate-300 mb-3 leading-relaxed">
+            <p className="text-xs text-el-sec-sage-light mb-3 leading-relaxed">
               Worker processes cannot touch external IP addresses. Green authorized GETs pass, while
               covert POST/DNS exfiltrations trigger an immediate L5 firewall ripple.
             </p>
 
             {/* SVG Bezier Stream Animation */}
-            <div className="relative h-28 w-full rounded-md border border-[#17232d] bg-[#04080c] p-2 flex items-center justify-center overflow-hidden">
-              <svg className="w-full h-full" viewBox="0 0 300 90">
+            <div className="relative h-28 w-full rounded-md border border-white/10 bg-el-sec-graphite-deep p-2 flex items-center justify-center overflow-hidden">
+              <svg className="w-full h-full" viewBox="0 0 300 90" aria-hidden="true" role="img">
                 <defs>
                   <linearGradient id="gridGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.1" />
-                    <stop offset="50%" stopColor="#10b981" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#ef4444" stopOpacity="0.1" />
+                    <stop offset="0%" stopColor="#647A6A" stopOpacity="0.2" />
+                    <stop offset="50%" stopColor="#B8F36B" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#ef4444" stopOpacity="0.2" />
                   </linearGradient>
                 </defs>
 
@@ -417,14 +419,14 @@ export function SecurityBentoGrid({
                 <path
                   d="M 20 45 C 90 20, 120 45, 150 45 C 180 45, 210 20, 280 20"
                   fill="none"
-                  stroke="#17232d"
+                  stroke="#28302A"
                   strokeWidth="2"
                   strokeDasharray="4 4"
                 />
                 <path
                   d="M 20 45 C 90 70, 120 45, 150 45 C 180 45, 210 70, 280 70"
                   fill="none"
-                  stroke="#17232d"
+                  stroke="#28302A"
                   strokeWidth="2"
                   strokeDasharray="4 4"
                 />
@@ -433,8 +435,8 @@ export function SecurityBentoGrid({
                 <g transform="translate(150, 45)">
                   <polygon
                     points="0,-16 14,-8 14,8 0,16 -14,8 -14,-8"
-                    fill="#0a141d"
-                    stroke={forcefieldRipple ? "#ef4444" : "#10b981"}
+                    fill="#1F2421"
+                    stroke={forcefieldRipple ? "#ef4444" : "#B8F36B"}
                     strokeWidth="2"
                     className="transition-colors duration-200"
                   />
@@ -457,7 +459,7 @@ export function SecurityBentoGrid({
                       fill="none"
                       stroke="#ef4444"
                       strokeWidth="2"
-                      className="animate-ping opacity-75"
+                      className="animate-ping motion-reduce:animate-none opacity-75"
                     />
                   )}
                 </g>
@@ -466,7 +468,7 @@ export function SecurityBentoGrid({
                 <text x="15" y="48" fill="#647A6A" fontSize="7" fontFamily="monospace">
                   PROCESS
                 </text>
-                <text x="250" y="23" fill="#10b981" fontSize="7" fontFamily="monospace">
+                <text x="250" y="23" fill="#B8F36B" fontSize="7" fontFamily="monospace">
                   ALLOWED GET
                 </text>
                 <text x="245" y="73" fill="#ef4444" fontSize="7" fontFamily="monospace">
@@ -487,7 +489,7 @@ export function SecurityBentoGrid({
                       cx={cx}
                       cy={cy}
                       r={isSafe ? 3.5 : 4}
-                      fill={isSafe ? "#10b981" : "#ef4444"}
+                      fill={isSafe ? "#B8F36B" : "#ef4444"}
                       className="shadow-sm"
                     />
                   );
@@ -497,38 +499,38 @@ export function SecurityBentoGrid({
           </div>
 
           {/* Morph 2 Trigger Badge */}
-          <div className="mt-4 pt-3 border-t border-[#17232d]/60">
+          <div className="mt-4 pt-3 border-t border-white/10">
             {!isDec008Open && blockedAlertVisible ? (
               <motion.button
                 layoutId="dec008-morph-card"
                 onClick={() => onOpenDec008Modal?.("#trace_8f2a")}
-                className="w-full cursor-pointer flex items-center justify-between rounded-lg border border-rose-500/40 bg-rose-950/30 px-3.5 py-2.5 text-left transition-all hover:border-rose-400 hover:bg-rose-950/50 shadow-md group"
+                className="w-full cursor-pointer flex items-center justify-between rounded-lg border border-rose-500/40 bg-rose-950/30 px-3.5 py-2.5 text-left transition-colors hover:border-rose-400 hover:bg-rose-950/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-rose-400 active:scale-[0.98] shadow-sm group"
               >
                 <div className="flex items-center gap-2.5">
                   <motion.div
                     layoutId="dec008-lock-icon"
                     className="flex h-5 w-5 items-center justify-center rounded-xs bg-rose-500/20 text-rose-300"
                   >
-                    <Lock className="h-3.5 w-3.5" />
+                    <Lock className="h-3.5 w-3.5" aria-hidden="true" />
                   </motion.div>
                   <motion.span
                     layout="position"
-                    className="font-mono text-xs text-rose-200 font-medium"
+                    className="text-xs text-rose-200 font-medium"
                   >
-                    🔒 Halted by L5: #trace_8f2a
+                    Halted by L5: <span className="font-mono">#trace_8f2a</span>
                   </motion.span>
                 </div>
                 <motion.span
                   layout="position"
-                  className="font-mono text-[10px] text-rose-400 group-hover:translate-x-0.5 transition-transform"
+                  className="text-[11px] text-rose-400 group-hover:translate-x-0.5 transition-transform"
                 >
-                  Inspect Authority Gate →
+                  Inspect Authority Gate
                 </motion.span>
               </motion.button>
             ) : (
-              <div className="font-mono text-[10px] text-slate-500 flex items-center justify-between py-1">
+              <div className="text-[11px] text-el-sec-sage flex items-center justify-between py-1">
                 <span>Egress Firewall Nominal</span>
-                <span className="text-emerald-400">0 Leaks Detected</span>
+                <span className="text-el-sec-lime font-medium">0 Leaks Detected</span>
               </div>
             )}
           </div>
@@ -537,52 +539,52 @@ export function SecurityBentoGrid({
         {/* ========================================================= */}
         {/* CARD 3: Cold-Room DEC-008 Trigger & Hash Lock (Span 5 col)*/}
         {/* ========================================================= */}
-        <div className="group relative overflow-hidden rounded-xl border border-[#17232d] bg-[#091118]/80 p-5 lg:p-6 transition-all duration-300 hover:border-violet-500/40 xl:col-span-5 flex flex-col justify-between">
+        <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-el-sec-graphite/90 p-5 lg:p-6 transition-colors duration-300 hover:border-white/20 xl:col-span-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-[#17232d]/80 pb-3 mb-4">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-violet-400">
-                  CARD 03 · COLD-ROOM DEC-008 HASH GATE
+                <span className="text-[11px] font-semibold text-el-sec-porcelain">
+                  Card 03: Cold-Room DEC-008 Hash Gate
                 </span>
               </div>
-              <span className="rounded-xs bg-violet-950/50 border border-violet-500/30 px-1.5 py-0.5 font-mono text-[9px] text-violet-300">
-                TIER 3 ESCALATION
+              <span className="rounded-xs bg-el-sec-graphite-raised border border-white/10 px-1.5 py-0.5 text-[10px] text-el-sec-sage-light">
+                Tier 3 Escalation
               </span>
             </div>
 
-            <p className="text-xs text-slate-300 mb-3 leading-relaxed">
+            <p className="text-xs text-el-sec-sage-light mb-3 leading-relaxed">
               When an agent requests a system daemon change, execution pauses instantly. No script
               runs until verified by cryptographic hash on a physical bound device.
             </p>
 
             {/* Proposal Spec Box */}
-            <div className="rounded-md border border-[#17232d] bg-[#04080c] p-3 font-mono text-[11px] text-slate-300 space-y-1.5">
-              <div className="flex items-center justify-between text-slate-500 text-[10px]">
+            <div className="rounded-md border border-white/10 bg-el-sec-graphite-deep p-3 font-mono text-[11px] text-el-sec-porcelain space-y-1.5">
+              <div className="flex items-center justify-between text-el-sec-sage text-[10px]">
                 <span>ACTION_PROPOSAL_STAGED</span>
                 <span className="text-amber-400">STATUS: AWAITING_NONCE</span>
               </div>
-              <p className="text-slate-200 font-semibold">
+              <p className="text-el-sec-porcelain font-semibold">
                 Target: /etc/systemd/system/agent.service
               </p>
-              <p className="text-slate-400 text-[10px] break-all">
-                args_sha256: 7e9a2b84f046200ab4376c991823d4310d7e5...
+              <p className="text-el-sec-sage-light text-[10px] break-all">
+                args_sha256: 7e9a2b84f046200ab4376c991823d4310d7e5…
               </p>
-              <div className="flex items-center gap-2 pt-1 text-[9.5px] text-slate-500">
-                <FileCode className="h-3 w-3 text-violet-400" />
+              <div className="flex items-center gap-2 pt-1 text-[9.5px] text-el-sec-sage">
+                <FileCode className="h-3 w-3 text-el-sec-sage-light" aria-hidden="true" />
                 <span>Blast Radius: 1 system service (Local Host Daemon)</span>
               </div>
             </div>
           </div>
 
           {/* Morph 2 Trigger Button (Alternative Entry) */}
-          <div className="mt-4 pt-3 border-t border-[#17232d]/60">
+          <div className="mt-4 pt-3 border-t border-white/10">
             <button
               type="button"
               onClick={() => onOpenDec008Modal?.("#trace_8f2a")}
-              className="w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg border border-violet-500/30 bg-violet-950/30 px-3.5 py-2.5 font-mono text-xs text-violet-200 transition-all hover:bg-violet-900/40 hover:border-violet-400"
+              className="w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-el-sec-graphite-raised px-3.5 py-2.5 text-xs text-el-sec-porcelain transition-colors hover:bg-white/10 hover:border-white/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] whitespace-nowrap"
             >
-              <Lock className="h-3.5 w-3.5 text-violet-400" />
-              <span>Click to Open Cold-Room Authorization Sheet</span>
+              <Lock className="h-3.5 w-3.5 text-el-sec-lime" aria-hidden="true" />
+              <span className="whitespace-nowrap">Open Authorization Sheet</span>
             </button>
           </div>
         </div>
@@ -590,112 +592,113 @@ export function SecurityBentoGrid({
         {/* ========================================================= */}
         {/* CARD 4: Out-of-Process Watchdog Kill Switch (Span 7 col) */}
         {/* ========================================================= */}
-        <div className="group relative overflow-hidden rounded-xl border border-[#17232d] bg-[#091118]/80 p-5 lg:p-6 transition-all duration-300 hover:border-rose-500/40 xl:col-span-7 flex flex-col justify-between">
+        <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-el-sec-graphite/90 p-5 lg:p-6 transition-colors duration-300 hover:border-rose-500/40 xl:col-span-7 flex flex-col justify-between">
           {/* Shockwave Radial Wave on Trigger */}
           {shockwave && (
             <motion.div
               initial={{ scale: 0.1, opacity: 1 }}
               animate={{ scale: 3.5, opacity: 0 }}
               transition={{ duration: 0.55, ease: "easeOut" }}
-              className="pointer-events-none absolute inset-0 m-auto h-40 w-40 rounded-full border-2 border-rose-500 bg-rose-500/20 z-30"
+              className="pointer-events-none absolute inset-0 m-auto h-40 w-40 rounded-full border-2 border-rose-500 bg-rose-500/20 z-30 motion-reduce:opacity-0"
             />
           )}
 
           <div>
-            <div className="flex items-center justify-between border-b border-[#17232d]/80 pb-3 mb-4">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-rose-400">
-                  CARD 04 · OUT-OF-PROCESS WATCHDOG KILL SWITCH
+                <span className="text-[11px] font-semibold text-rose-400">
+                  Card 04: Out-of-Process Watchdog Kill Switch
                 </span>
-                <span className="rounded-xs bg-[#0f1d27] px-1.5 py-0.5 font-mono text-[9px] text-slate-400">
+                <span className="rounded-xs bg-el-sec-graphite-raised px-1.5 py-0.5 font-mono text-[9px] text-el-sec-sage-light">
                   SPEC INV-12
                 </span>
               </div>
               <span
                 className={`rounded-xs px-2 py-0.5 font-mono text-[9.5px] font-semibold ${
                   isSevered
-                    ? "bg-rose-950 border border-rose-500 text-rose-300"
-                    : "bg-emerald-950 border border-emerald-500/40 text-emerald-300"
+                    ? "bg-rose-950/80 border border-rose-500/50 text-rose-300"
+                    : "bg-el-sec-lime/10 border border-el-sec-lime/30 text-el-sec-lime"
                 }`}
               >
                 {isSevered ? "SEVERED (SIGKILL)" : "WATCHDOG NOMINAL"}
               </span>
             </div>
 
-            <p className="text-xs text-slate-300 mb-4 leading-relaxed">
+            <p className="text-xs text-el-sec-sage-light mb-4 leading-relaxed">
               If an agent loop ever diverges or hangs, an out-of-process OS watchdog cuts socket IPC
               and sends SIGKILL directly through OS kernel primitives in &lt;25 milliseconds.
             </p>
 
             {/* Radar Ring with 3 Orbiting Hive Drones */}
-            <div className="relative h-32 w-full rounded-md border border-[#17232d] bg-[#04080c] flex items-center justify-center overflow-hidden">
+            <div className="relative h-32 w-full rounded-md border border-white/10 bg-el-sec-graphite-deep flex items-center justify-center overflow-hidden">
               {/* Radar Rings */}
-              <div className="absolute h-24 w-24 rounded-full border border-slate-800/80" />
-              <div className="absolute h-16 w-16 rounded-full border border-slate-800/60" />
+              <div className="absolute h-24 w-24 rounded-full border border-white/5" />
+              <div className="absolute h-16 w-16 rounded-full border border-white/5" />
 
               {/* Central Watchdog Kernel */}
-              <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border border-rose-500/50 bg-[#0a141d] shadow-[0_0_12px_rgba(244,63,94,0.3)]">
+              <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border border-rose-500/40 bg-el-sec-graphite shadow-sm">
                 <Radio
-                  className={`h-4 w-4 ${isSevered ? "text-slate-600" : "text-rose-400 animate-pulse"}`}
+                  className={`h-4 w-4 ${isSevered ? "text-el-sec-sage" : "text-rose-400 animate-pulse motion-reduce:animate-none"}`}
+                  aria-hidden="true"
                 />
               </div>
 
               {/* 3 Orbiting Drone Nodes */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                {/* Drone 1: GROK_PULSE (Cyan) */}
+                {/* Drone 1: GROK_PULSE */}
                 <div
-                  className="absolute flex items-center gap-1.5 transition-all duration-300"
+                  className="absolute flex items-center gap-1.5 transition-transform duration-300"
                   style={{ transform: "translate(-85px, -24px)" }}
                 >
                   <div
-                    className={`h-3 w-3 rounded-full border transition-colors ${
+                    className={`h-2.5 w-2.5 rounded-full border transition-colors ${
                       isSevered
-                        ? "bg-slate-800 border-slate-700"
-                        : "bg-cyan-400 border-cyan-200 shadow-[0_0_8px_#06b6d4]"
+                        ? "bg-el-sec-graphite-raised border-white/10"
+                        : "bg-el-sec-lime border-el-sec-lime/60 shadow-sm"
                     }`}
                   />
-                  <span className="font-mono text-[9px] text-slate-400">GROK_PULSE</span>
+                  <span className="font-mono text-[9px] text-el-sec-sage-light">GROK_PULSE</span>
                 </div>
 
-                {/* Drone 2: VOICESTUDIO_AGENT (Amber) */}
+                {/* Drone 2: VOICE_STUDIO */}
                 <div
-                  className="absolute flex items-center gap-1.5 transition-all duration-300"
+                  className="absolute flex items-center gap-1.5 transition-transform duration-300"
                   style={{ transform: "translate(75px, -28px)" }}
                 >
                   <div
-                    className={`h-3 w-3 rounded-full border transition-colors ${
+                    className={`h-2.5 w-2.5 rounded-full border transition-colors ${
                       isSevered
-                        ? "bg-slate-800 border-slate-700"
-                        : "bg-amber-400 border-amber-200 shadow-[0_0_8px_#f59e0b]"
+                        ? "bg-el-sec-graphite-raised border-white/10"
+                        : "bg-amber-400 border-amber-300 shadow-sm"
                     }`}
                   />
-                  <span className="font-mono text-[9px] text-slate-400">VOICE_STUDIO</span>
+                  <span className="font-mono text-[9px] text-el-sec-sage-light">VOICE_STUDIO</span>
                 </div>
 
-                {/* Drone 3: AST_AUDITOR (Emerald) */}
+                {/* Drone 3: AST_AUDITOR */}
                 <div
-                  className="absolute flex items-center gap-1.5 transition-all duration-300"
+                  className="absolute flex items-center gap-1.5 transition-transform duration-300"
                   style={{ transform: "translate(0px, 42px)" }}
                 >
                   <div
-                    className={`h-3 w-3 rounded-full border transition-colors ${
+                    className={`h-2.5 w-2.5 rounded-full border transition-colors ${
                       isSevered
-                        ? "bg-slate-800 border-slate-700"
-                        : "bg-emerald-400 border-emerald-200 shadow-[0_0_8px_#10b981]"
+                        ? "bg-el-sec-graphite-raised border-white/10"
+                        : "bg-el-sec-sage-light border-white/20 shadow-sm"
                     }`}
                   />
-                  <span className="font-mono text-[9px] text-slate-400">AST_AUDITOR</span>
+                  <span className="font-mono text-[9px] text-el-sec-sage-light">AST_AUDITOR</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Interactive Trigger Controls */}
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#17232d]/60 font-mono text-[10px]">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/10 font-mono text-[10px]">
             {isSevered ? (
               <>
                 <div className="flex items-center gap-2 text-rose-300">
-                  <AlertTriangle className="h-3.5 w-3.5 text-rose-400" />
+                  <AlertTriangle className="h-3.5 w-3.5 text-rose-400" aria-hidden="true" />
                   <span>
                     ALL FILAMENTS SEVERED IN {severDuration ?? 14.2}ms (TARGET &lt;25ms)
                   </span>
@@ -703,24 +706,24 @@ export function SecurityBentoGrid({
                 <button
                   type="button"
                   onClick={rearmWatchdog}
-                  className="cursor-pointer flex items-center gap-1.5 rounded-xs border border-emerald-500/40 bg-emerald-950/40 px-3 py-1.5 text-emerald-300 hover:bg-emerald-900/50 transition-colors"
+                  className="cursor-pointer flex items-center gap-1.5 rounded-xs border border-el-sec-lime/40 bg-el-sec-lime/10 px-3 py-1.5 text-el-sec-lime hover:bg-el-sec-lime/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] transition-colors"
                 >
-                  <RotateCcw className="h-3 w-3" />
+                  <RotateCcw className="h-3 w-3" aria-hidden="true" />
                   Re-arm Watchdog
                 </button>
               </>
             ) : (
               <>
-                <div className="flex items-center gap-2 text-slate-400">
-                  <Activity className="h-3 w-3 text-emerald-400" />
+                <div className="flex items-center gap-2 text-el-sec-sage-light">
+                  <Activity className="h-3 w-3 text-el-sec-lime" aria-hidden="true" />
                   <span>Kernel Hardware Timer: 50ms heartbeat nominal</span>
                 </div>
                 <button
                   type="button"
                   onClick={triggerKillswitch}
-                  className="cursor-pointer flex items-center gap-1.5 rounded-xs border border-rose-500/60 bg-rose-950/50 px-3 py-1.5 font-semibold text-rose-200 hover:bg-rose-900/70 hover:border-rose-400 transition-all shadow-[0_0_10px_rgba(244,63,94,0.2)]"
+                  className="cursor-pointer flex items-center gap-1.5 rounded-xs border border-rose-500/50 bg-rose-950/40 px-3 py-1.5 font-semibold text-rose-200 hover:bg-rose-900/60 hover:border-rose-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-rose-400 active:scale-[0.98] transition-colors shadow-sm"
                 >
-                  <AlertTriangle className="h-3 w-3 text-rose-400" />
+                  <AlertTriangle className="h-3 w-3 text-rose-400" aria-hidden="true" />
                   Trigger Emergency Stop
                 </button>
               </>

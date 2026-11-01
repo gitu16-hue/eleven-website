@@ -9,7 +9,6 @@ import { ControlPlaneInteractive } from "@/components/v3/ControlPlaneInteractive
 import { PortalActionButton } from "@/components/v3/PortalActionButton";
 import { ExplodedLayerStack3D } from "@/components/security/ExplodedLayerStack3D";
 import {
-  CipherText,
   ClarityTogglePill,
   DualCopy,
   SignalBeamDivider,
@@ -48,7 +47,7 @@ const breadcrumbJsonLd = {
 
 const FOUR_ROOMS = [
   {
-    room: "ROOM 1 · SAFETY WATCHDOG",
+    room: "Room 01 · Safety Watchdog",
     proc: "eleven_supervisor",
     plainRole: "The Building Security Guard",
     plainDesc:
@@ -57,7 +56,7 @@ const FOUR_ROOMS = [
       "Privileged host coordinator managing child lifecycles, global Ctrl+Alt+Shift+K hardware interrupts (<50ms), and SHA-256 hash-chained audit logs.",
   },
   {
-    room: "ROOM 2 · VOICE STUDIO",
+    room: "Room 02 · Voice Studio",
     proc: "eleven_voice",
     plainRole: "Dedicated Soundproof Microphone Room",
     plainDesc:
@@ -66,7 +65,7 @@ const FOUR_ROOMS = [
       "Dedicated 16kHz PCM ring buffer, >30dB echo cancellation, Silero VAD, bounded candidate ASR worker, and low-jitter WASAPI output.",
   },
   {
-    room: "ROOM 3 · PLANNING WORKSHOP",
+    room: "Room 03 · Planning Workshop",
     proc: "eleven_deep",
     plainRole: "The Locked Research & Tool Room",
     plainDesc:
@@ -75,7 +74,7 @@ const FOUR_ROOMS = [
       "Hosts TaskCompiler, DataMinimizer, ModelRouter, PolicyGate, GovernedTaskEngine DAG scheduler, and SwarmTournamentGate.",
   },
   {
-    room: "ROOM 4 · YOUR CONTROL SCREEN",
+    room: "Room 04 · Your Control Screen",
     proc: "eleven_hud",
     plainRole: "Your Honest Dashboard & 3D Orb",
     plainDesc:
@@ -101,18 +100,18 @@ export default function ArchitecturePage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-el-cyan/10 via-transparent to-transparent opacity-60"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
           />
           <div className="relative">
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border">
               <Breadcrumbs
                 items={[
                   { label: "How It Works", href: "/architecture" },
                 ]}
               />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
-                  TERMINOLOGY DEPTH:
+                <span className="text-xs text-el-fg-faint font-sans">
+                  Terminology depth:
                 </span>
                 <ClarityTogglePill />
               </div>
@@ -120,9 +119,9 @@ export default function ArchitecturePage() {
 
             <div className="mt-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
               <div className="lg:col-span-7 space-y-6">
-                <div className="el-badge shadow-el-xs">
-                  <span className="h-1.5 w-1.5 rounded-full bg-el-cyan animate-pulse" />
-                  <CipherText text="FAULT-ISOLATED ARCHITECTURE // 4 OS PROCESS DOMAINS" />
+                <div className="inline-flex items-center gap-2 rounded-full border border-el-border bg-el-sec-graphite-deep px-3.5 py-1 text-xs font-medium text-el-sec-porcelain">
+                  <span className="h-1.5 w-1.5 rounded-full bg-el-sec-lime motion-safe:animate-pulse motion-reduce:animate-none" />
+                  <span>Fault-Isolated Architecture · 4 OS Process Domains</span>
                 </div>
 
                 <h1 className="el-h1">
@@ -137,21 +136,21 @@ export default function ArchitecturePage() {
 
                 <ScrollReveal
                   stagger={0.08}
-                  className="flex flex-wrap gap-2 pt-2 font-mono text-[11px]"
+                  className="flex flex-wrap gap-2 pt-2 text-xs"
                 >
                   <RevealItem>
-                    <span className="inline-block rounded-xs border border-el-mint/40 bg-el-mint/10 px-2.5 py-1 text-el-mint">
-                      ✓ 4 OS PROCESS ROOMS (INV-01)
+                    <span className="inline-block rounded-sm border border-el-sec-lime/30 bg-el-sec-lime/10 px-2.5 py-1 text-el-sec-lime font-medium">
+                      4 OS process rooms (INV-01)
                     </span>
                   </RevealItem>
                   <RevealItem>
-                    <span className="inline-block rounded-xs border border-el-cyan/40 bg-el-cyan/10 px-2.5 py-1 text-el-cyan">
-                      ✓ 5 SAFETY CHECKPOINTS (INV-04)
+                    <span className="inline-block rounded-sm border border-el-border bg-el-sec-graphite-deep px-2.5 py-1 text-el-fg-muted">
+                      5 safety checkpoints (INV-04)
                     </span>
                   </RevealItem>
                   <RevealItem>
-                    <span className="inline-block rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                      ✓ LOOPBACK-ONLY MEMORY (127.0.0.1)
+                    <span className="inline-block rounded-sm border border-el-border bg-el-sec-graphite-deep px-2.5 py-1 text-el-fg-muted">
+                      Loopback-only memory (127.0.0.1)
                     </span>
                   </RevealItem>
                 </ScrollReveal>
@@ -160,8 +159,8 @@ export default function ArchitecturePage() {
                   <PortalActionButton variant="primary" arrow>
                     Explore Live 3D Orb
                   </PortalActionButton>
-                  <Button href="/autonomy" variant="secondary">
-                    See Approval Controls →
+                  <Button href="/autonomy" variant="secondary" arrow className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.99] disabled:opacity-50">
+                    See Approval Controls
                   </Button>
                 </div>
               </div>
@@ -176,10 +175,10 @@ export default function ArchitecturePage() {
         <SignalBeamDivider />
 
         {/* ── FOUR SEPARATE ROOMS (PROCESS ISOLATION) ── */}
-        <Section id="rooms" className="relative py-16 lg:py-24 bg-el-bg-raised/45">
+        <Section id="rooms" className="relative py-16 lg:py-24 bg-el-sec-graphite-deep/60">
           <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 01 PROCESS ISOLATION" />
+            <div className="text-xs font-medium text-el-sec-lime">
+              01 · Process isolation & memory zoning
             </div>
             <h2 className="el-h2">
               <WordReveal text="Why one busy task can never freeze or hijack ELEVEN." />
@@ -197,16 +196,16 @@ export default function ArchitecturePage() {
           >
             {FOUR_ROOMS.map((p) => (
               <RevealItem key={p.proc} className="h-full">
-                <Tilt3DCard className="p-6">
+                <Tilt3DCard className="p-6 rounded-md border border-el-border bg-el-sec-graphite/80 shadow-sm transition-colors duration-200 hover:border-el-border-strong">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-el-border pb-3">
-                    <span className="font-mono text-xs font-semibold text-el-cyan">
+                    <span className="text-xs font-medium text-el-sec-lime">
                       {p.room}
                     </span>
-                    <code className="font-mono text-[11px] text-el-fg-faint">
+                    <code className="font-mono text-xs text-el-fg-faint">
                       {p.proc}
                     </code>
                   </div>
-                  <h3 className="mt-3.5 text-base font-semibold text-el-fg">
+                  <h3 className="mt-3.5 text-base font-semibold text-el-sec-porcelain">
                     {p.plainRole}
                   </h3>
                   <DualCopy
@@ -225,8 +224,8 @@ export default function ArchitecturePage() {
         {/* ── INTERACTIVE 5 SAFETY CHECKPOINTS ── */}
         <Section className="py-16 lg:py-24">
           <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 02 5-STAGE CONTROL PLANE" />
+            <div className="text-xs font-medium text-el-sec-lime">
+              02 · Five-stage control plane
             </div>
             <h2 className="el-h2">
               <WordReveal text="Five deterministic gates between AI ideas and your computer." />
@@ -248,8 +247,8 @@ export default function ArchitecturePage() {
         <Section id="exploded-layer-stack" className="py-16 lg:py-24">
           <div className="flex flex-col justify-between gap-6 mb-10 lg:flex-row lg:items-end">
             <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="03 · TOP-TO-BOTTOM STACK" />
+              <div className="text-xs font-medium text-el-sec-lime">
+                03 · Top-to-bottom stack
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Seven layers from your microphone down to your private vault." />
@@ -262,7 +261,7 @@ export default function ArchitecturePage() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button href="/security#flagship-security-showcase" variant="secondary" arrow>
+              <Button href="/security#flagship-security-showcase" variant="secondary" arrow className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime">
                 Interactive Security Simulation
               </Button>
             </div>

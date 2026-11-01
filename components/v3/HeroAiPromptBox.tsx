@@ -104,14 +104,14 @@ export function HeroAiPromptBox() {
 
   return (
     <div className="w-full max-w-[520px]">
-      {/* Outer Tactical HUD & Spatial Glass Enclosure */}
-      <div className="el-orbit-border ai-native-prompt-container rounded-md p-3.5 sm:p-4 font-mono">
+      {/* Outer Tactical HUD & Spatial Panel Enclosure */}
+      <div className="ai-native-prompt-container rounded-md p-3.5 sm:p-4 font-sans">
         {/* Top Header Tag */}
-        <div className="flex items-center justify-between text-[9.5px] text-el-fg-faint uppercase tracking-wider border-b border-el-border/60 pb-1.5">
+        <div className="flex items-center justify-between text-xs text-el-fg-faint border-b border-el-border pb-2">
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse" />
-            <span className="text-el-accent font-semibold">
-              INTERACTIVE PREVIEW · SIMULATED RESPONSES
+            <span className="h-1.5 w-1.5 rounded-full bg-el-accent motion-safe:animate-pulse" />
+            <span className="text-el-accent font-medium">
+              Interactive preview · Simulated responses
             </span>
           </div>
           <AnimatePresence mode="wait" initial={false}>
@@ -126,7 +126,7 @@ export function HeroAiPromptBox() {
               }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: reduced ? 0 : 0.22 }}
-              className="text-el-fg-muted"
+              className="text-el-fg-muted font-mono text-[10px]"
             >
               {activePreset.badge}
             </motion.span>
@@ -148,7 +148,7 @@ export function HeroAiPromptBox() {
           />
           <button
             type="submit"
-            className="cursor-pointer shrink-0 rounded-xs bg-el-accent px-3 py-1.5 sm:px-2.5 sm:py-1 font-mono text-[11px] sm:text-[10px] font-semibold text-[#04060A] hover:bg-el-signal-lime transition-colors active:scale-95 shadow-xs"
+            className="cursor-pointer shrink-0 rounded-xs bg-el-accent px-3 py-1.5 sm:px-2.5 sm:py-1 font-sans text-xs font-semibold text-el-sec-graphite-deep hover:bg-el-signal-lime transition-colors active:scale-95 shadow-xs"
           >
             {isProcessing ? "Simulating…" : "Simulate"}
           </button>
@@ -156,7 +156,7 @@ export function HeroAiPromptBox() {
 
         {/* Preset Action Chips with Spring-Gliding Pill */}
         <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-          <span className="text-[9px] uppercase tracking-wider text-el-fg-faint mr-1">
+          <span className="text-xs text-el-fg-faint mr-1 font-sans">
             Presets:
           </span>
           {PRESETS.map((p) => {
@@ -166,10 +166,10 @@ export function HeroAiPromptBox() {
                 key={p.id}
                 type="button"
                 onClick={() => handleSelectPreset(p)}
-                className={`relative cursor-pointer rounded-xs px-2 py-0.5 text-[9.5px] transition-colors ${
+                className={`relative cursor-pointer rounded-xs px-2.5 py-1 text-xs transition-colors font-sans ${
                   isSelected
                     ? "text-el-accent font-medium"
-                    : "border border-el-border/80 bg-el-bg/50 text-el-fg-muted hover:border-el-border-strong hover:text-el-fg"
+                    : "border border-el-border bg-el-bg/50 text-el-fg-muted hover:border-el-border-strong hover:text-el-fg"
                 }`}
               >
                 {isSelected && (
@@ -210,20 +210,20 @@ export function HeroAiPromptBox() {
                 />
               )}
 
-              <div className="flex items-center gap-2 text-[9.5px]">
-                <span className="text-el-fg-faint">{activePreset.intent}</span>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="font-mono text-[10px] text-el-fg-faint">{activePreset.intent}</span>
                 <span className="text-el-border-strong">|</span>
-                <span className="text-el-signal-lime">SIMULATION</span>
+                <span className="text-el-signal-lime font-sans text-xs">Simulation</span>
               </div>
 
               {isProcessing ? (
-                <p className="mt-1 ai-shimmer-text text-[11px] font-mono">
-                  Synthesizing candidate ActionProposal & evaluating safety invariants…
+                <p className="mt-1.5 text-xs font-sans text-el-accent">
+                  Synthesizing candidate ActionProposal and evaluating safety invariants…
                 </p>
               ) : (
                 <p
                   key={streamSeq}
-                  className="mt-1 text-[11px] font-mono text-el-fg-muted leading-relaxed"
+                  className="mt-1.5 text-xs font-sans text-el-fg-muted leading-relaxed"
                 >
                   {feedbackWords.map((word, idx) => (
                     <React.Fragment key={`${streamSeq}-${idx}-${word}`}>
@@ -249,7 +249,7 @@ export function HeroAiPromptBox() {
                   ))}
                   <span
                     aria-hidden="true"
-                    className="ml-1 inline-block text-el-accent animate-pulse"
+                    className="ml-1 inline-block text-el-accent motion-safe:animate-pulse"
                   >
                     ▍
                   </span>
