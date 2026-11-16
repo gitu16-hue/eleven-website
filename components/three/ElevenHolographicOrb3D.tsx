@@ -285,10 +285,12 @@ export function ElevenHolographicOrb3D({
   state,
   bargeInSignal = 0,
   satellites = [],
+  fullHeight = false,
 }: {
   state: OrbRuntimeState;
   bargeInSignal?: number;
   satellites?: WorkerSatelliteSpec[];
+  fullHeight?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [webglOk] = useState(() => checkWebGL());
@@ -340,7 +342,15 @@ export function ElevenHolographicOrb3D({
     scene.fog = new THREE.FogExp2(0x000205, 0.042);
 
     const camera = new THREE.PerspectiveCamera(44, width / height, 0.1, 100);
-    camera.position.set(0, 0.28, 7.9);
+    // Start zoomed back on non-reduced-motion so the core sweeps cleanly in like homepage globe
+    camera.position.set(
+      0,
+      reducedMotion ? 0.28 : 0.62,
+      reducedMotion ? 7.9 : 11.4
+    );
+
+    const assemblyGroup = new THREE.Group();
+    scene.add(assemblyGroup);
 
     // Disable renderer antialiasing when EffectComposer post-processing is active (premium-3d-website best practice)
     const renderer = new THREE.WebGLRenderer({
@@ -375,6 +385,12 @@ export function ElevenHolographicOrb3D({
     controls.dampingFactor = 0.035;
     controls.autoRotate = !reducedMotion;
     controls.autoRotateSpeed = 0.42;
+
+    let userInteracted = false;
+    const onControlStart = () => {
+      userInteracted = true;
+    };
+    controls.addEventListener("start", onControlStart);
 
     if (isMobile) {
       // On mobile devices, disable touch rotation so single-finger swipe scrolls the webpage naturally
@@ -412,7 +428,7 @@ export function ElevenHolographicOrb3D({
       depthWrite: false,
     });
     const plasmaCore = new THREE.Mesh(coreGeo, coreMat);
-    scene.add(plasmaCore);
+    assemblyGroup.add(plasmaCore);
     disposables.push(coreGeo, coreMat);
 
     const wireGeo = new THREE.IcosahedronGeometry(1.24, 4);
@@ -425,13 +441,13 @@ export function ElevenHolographicOrb3D({
       depthWrite: false,
     });
     const wireShell = new THREE.Mesh(wireGeo, wireMat);
-    scene.add(wireShell);
+    assemblyGroup.add(wireShell);
     disposables.push(wireGeo, wireMat);
 
     // 2. 9 Dynamic Light Filaments
     const filAmp = { value: 0.05 };
     const filaments = new THREE.Group();
-    scene.add(filaments);
+    assemblyGroup.add(filaments);
     const FIL_N = 9;
     const FIL_SEG = isMobile ? 240 : 420;
     const filDefs: {
@@ -594,7 +610,7 @@ export function ElevenHolographicOrb3D({
     });
     const particleCloud = new THREE.Points(pGeo, pMat);
     particleCloud.frustumCulled = false;
-    scene.add(particleCloud);
+    assemblyGroup.add(particleCloud);
     disposables.push(pGeo, pMat);
 
     // 4. Inner 3D Particle Vortex
@@ -670,12 +686,12 @@ export function ElevenHolographicOrb3D({
     });
     const innerCloud = new THREE.Points(iGeo, iMat);
     innerCloud.frustumCulled = false;
-    scene.add(innerCloud);
+    assemblyGroup.add(innerCloud);
     disposables.push(iGeo, iMat);
 
     // 5. 4 Segmented 3D Gyroscopic Gimbal Rings
     const gimbalGroup = new THREE.Group();
-    scene.add(gimbalGroup);
+    assemblyGroup.add(gimbalGroup);
     const gyroMats: THREE.MeshBasicMaterial[] = [];
 
     const createGyroRing = (
@@ -715,24 +731,56 @@ export function ElevenHolographicOrb3D({
     const ring3 = createGyroRing(2.42, 0.0045, 2, 0.6, 1.08, -0.28, 0.15);
     const ring4 = createGyroRing(2.76, 0.003, 6, 0.3, -0.18, 0.88, 0.1);
 
+    // 5a. Visible Dual Sonic Shockwave Pulse Rings (triggered on mount, state change, click, barge-in)
+    const shockGeo1 = new THREE.TorusGeometry(1.0, 0.014, 12, 96);
+    const shockMat1 = new THREE.MeshBasicMaterial({
+      color: initCfg.pri,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const shockRing1 = new THREE.Mesh(shockGeo1, shockMat1);
+    shockRing1.rotation.x = Math.PI * 0.36;
+    assemblyGroup.add(shockRing1);
+    disposables.push(shockGeo1, shockMat1);
+
+    const shockGeo2 = new THREE.TorusGeometry(1.0, 0.009, 12, 96);
+    const shockMat2 = new THREE.MeshBasicMaterial({
+      color: initCfg.pri,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const shockRing2 = new THREE.Mesh(shockGeo2, shockMat2);
+    shockRing2.rotation.x = -Math.PI * 0.28;
+    shockRing2.rotation.y = Math.PI * 0.18;
+    assemblyGroup.add(shockRing2);
+    disposables.push(shockGeo2, shockMat2);
+
     // 5b. GenesisFX Water Mirror Reflection Plane beneath the 3D Core
     const waterGeo = new THREE.PlaneGeometry(14, 10, 48, 48);
+    const waterRippleBoost = { value: 0.0 };
     const waterMat = new THREE.ShaderMaterial({
       uniforms: {
         uTime: uniforms.uTime,
         uColor: uniforms.uColorPrimary,
+        uRippleBoost: waterRippleBoost,
       },
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       vertexShader: `
         uniform float uTime;
+        uniform float uRippleBoost;
         varying vec2 vUv;
         varying float vWave;
         void main() {
           vUv = uv;
           vec3 p = position;
-          float w = sin(p.x * 2.2 + uTime * 1.4) * cos(p.y * 2.6 - uTime * 1.1) * 0.08;
+          float amp = 0.08 + uRippleBoost * 0.09;
+          float w = sin(p.x * 2.2 + uTime * 1.4) * cos(p.y * 2.6 - uTime * 1.1) * amp;
           p.z += w;
           vWave = w;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
@@ -740,6 +788,7 @@ export function ElevenHolographicOrb3D({
       `,
       fragmentShader: `
         uniform vec3 uColor;
+        uniform float uRippleBoost;
         varying vec2 vUv;
         varying float vWave;
         void main() {
@@ -747,8 +796,8 @@ export function ElevenHolographicOrb3D({
           float dist = length(centered * vec2(1.0, 1.45));
           float radial = smoothstep(0.48, 0.0, dist);
           float ripple = 0.5 + 0.5 * sin(dist * 42.0 - vWave * 28.0);
-          float alpha = radial * radial * (0.14 + 0.16 * ripple);
-          gl_FragColor = vec4(uColor * (0.75 + 0.45 * ripple), alpha);
+          float alpha = radial * radial * (0.14 + 0.16 * ripple + uRippleBoost * 0.14);
+          gl_FragColor = vec4(uColor * (0.75 + 0.45 * ripple + uRippleBoost * 0.35), alpha);
         }
       `,
     });
@@ -760,7 +809,7 @@ export function ElevenHolographicOrb3D({
 
     // 6. Phase 4D.3 Orbiting Worker Satellites Group
     const satelliteGroup = new THREE.Group();
-    scene.add(satelliteGroup);
+    assemblyGroup.add(satelliteGroup);
 
     interface SatMeshEntry {
       mesh: THREE.Mesh;
@@ -850,13 +899,44 @@ export function ElevenHolographicOrb3D({
 
     let lastTime = performance.now();
     let elapsed = 0;
-    let curScale = reducedMotion ? 1.0 : 0.82;
+    let curScale = reducedMotion ? 1.0 : 0.62;
+    let assemblyScale = reducedMotion ? 1.0 : 0.68;
     let curPulse = 0.0;
     let smoothBass = 0;
     let smoothMid = 0;
     let smoothHigh = 0;
     let lastWaveTrigger = waveTriggerRef.current;
     let lastBargeTrigger = bargeTriggerRef.current;
+
+    // Dual expanding 3D shockwave animation state (0 -> 1)
+    let shock1 = reducedMotion ? 1.0 : 0.0;
+    let shock2 = reducedMotion ? 1.0 : -0.18;
+    if (!reducedMotion) {
+      pU.uWave.value = 1.05;
+      pU.uWaveAmp.value = 0.92;
+      waterRippleBoost.value = 0.75;
+    }
+
+    let pointerTargetX = 0;
+    let pointerTargetY = 0;
+    let pointerSmoothX = 0;
+    let pointerSmoothY = 0;
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (reducedMotion) return;
+      const rect = container.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const ny = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      pointerTargetX = Math.max(-1, Math.min(1, nx));
+      pointerTargetY = Math.max(-1, Math.min(1, ny));
+    };
+    const onPointerLeave = () => {
+      pointerTargetX = 0;
+      pointerTargetY = 0;
+    };
+    container.addEventListener("pointermove", onPointerMove, { passive: true });
+    container.addEventListener("pointerleave", onPointerLeave, { passive: true });
 
     const targetPri = new THREE.Color(initCfg.pri);
     const targetSec = new THREE.Color(initCfg.sec);
@@ -872,6 +952,12 @@ export function ElevenHolographicOrb3D({
       pU.uPx.value = (dpr * h) / 900;
     };
     window.addEventListener("resize", onResize);
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(() => onResize());
+      ro.observe(container);
+    }
 
     const onVisibility = () => {
       if (!document.hidden) lastTime = performance.now();
@@ -894,6 +980,12 @@ export function ElevenHolographicOrb3D({
       io.observe(container);
     }
 
+    const triggerShockRings = (boostWater = 0.85) => {
+      shock1 = 0.0;
+      shock2 = -0.14;
+      waterRippleBoost.value = Math.max(waterRippleBoost.value, boostWater);
+    };
+
     const animate = () => {
       if (disposed) return;
       animId = requestAnimationFrame(animate);
@@ -907,12 +999,29 @@ export function ElevenHolographicOrb3D({
       const activeKey = stateRef.current;
       const cfg = ORB_STATE_CONFIGS[activeKey];
 
+      // GenesisFX smooth camera dolly-in & assembly scale rise on first launch
+      if (!reducedMotion && !userInteracted && elapsed < 1.35) {
+        const t = Math.min(1, elapsed / 1.25);
+        const easeOut = 1 - Math.pow(1 - t, 3);
+        camera.position.z = 11.4 + (7.9 - 11.4) * easeOut;
+        camera.position.y = 0.62 + (0.28 - 0.62) * easeOut;
+      }
+      assemblyScale += (1.0 - assemblyScale) * 0.09;
+      assemblyGroup.scale.setScalar(assemblyScale);
+
+      // Subtle pointer parallax sway on entire holographic assembly
+      pointerSmoothX += (pointerTargetX - pointerSmoothX) * 0.07;
+      pointerSmoothY += (pointerTargetY - pointerSmoothY) * 0.07;
+      assemblyGroup.rotation.y = pointerSmoothX * 0.16;
+      assemblyGroup.rotation.x = -pointerSmoothY * 0.11;
+
       // State transition shockwave
       if (waveTriggerRef.current !== lastWaveTrigger) {
         lastWaveTrigger = waveTriggerRef.current;
         curPulse -= 0.1;
         pU.uWave.value = 1.25;
         pU.uWaveAmp.value = 0.95;
+        triggerShockRings(0.85);
         canvas.setAttribute(
           "aria-label",
           `ELEVEN v3 Authoritative Holographic Visualizer - State: ${cfg.badgeText}`
@@ -927,6 +1036,7 @@ export function ElevenHolographicOrb3D({
         uniforms.uNoiseAmp.value = 0.52;
         pU.uWave.value = 1.1;
         pU.uWaveAmp.value = 1.25;
+        triggerShockRings(1.25);
       }
 
       targetPri.setHex(cfg.pri);
@@ -1014,6 +1124,32 @@ export function ElevenHolographicOrb3D({
         pU.uWaveAmp.value *= Math.pow(0.18, dt);
       }
 
+      // Expand visible dual shockwave pulse rings
+      if (shock1 < 1.0) {
+        shock1 = Math.min(1.0, shock1 + dt * 1.15);
+        const s1 = 1.05 + shock1 * 2.95;
+        shockRing1.scale.setScalar(s1);
+        shockMat1.color.copy(uniforms.uColorPrimary.value);
+        shockMat1.opacity = Math.sin(shock1 * Math.PI) * 0.52;
+      } else {
+        shockMat1.opacity = 0;
+      }
+      if (shock2 < 1.0) {
+        shock2 = Math.min(1.0, shock2 + dt * 1.05);
+        if (shock2 > 0) {
+          const s2 = 0.95 + shock2 * 2.7;
+          shockRing2.scale.setScalar(s2);
+          shockMat2.color.copy(uniforms.uColorPrimary.value);
+          shockMat2.opacity = Math.sin(shock2 * Math.PI) * 0.38;
+        } else {
+          shockMat2.opacity = 0;
+        }
+      } else {
+        shockMat2.opacity = 0;
+      }
+
+      waterRippleBoost.value *= Math.pow(0.16, dt);
+
       particleCloud.rotation.z = Math.sin(elapsed * 0.25) * 0.05;
       particleCloud.rotation.x = Math.cos(elapsed * 0.18) * 0.04;
       innerCloud.rotation.y += dt * 0.05;
@@ -1042,7 +1178,11 @@ export function ElevenHolographicOrb3D({
     return () => {
       disposed = true;
       if (io) io.disconnect();
+      if (ro) ro.disconnect();
       if (animId) cancelAnimationFrame(animId);
+      controls.removeEventListener("start", onControlStart);
+      container.removeEventListener("pointermove", onPointerMove);
+      container.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
 
@@ -1067,7 +1207,13 @@ export function ElevenHolographicOrb3D({
   const cfg = ORB_STATE_CONFIGS[state];
 
   return (
-    <div className="relative flex h-[430px] w-full flex-col items-center justify-center sm:h-[520px]">
+    <div
+      className={`relative flex w-full flex-col items-center justify-center ${
+        fullHeight
+          ? "h-full min-h-[430px] sm:min-h-[540px]"
+          : "h-[430px] sm:h-[520px]"
+      }`}
+    >
       {/* Loading indicator per 3d-web-experience HIGH validation check */}
       {!loaded && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-2xl border border-[#10bc83]/25 bg-[#05070d]/90 backdrop-blur-md">

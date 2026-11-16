@@ -3,6 +3,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type {
   OrbRuntimeState,
   WorkerSatelliteSpec,
@@ -11,11 +13,19 @@ import { ORB_STATE_CONFIGS } from "@/components/three/ElevenHolographicOrb3D";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
 import { WaitlistModal } from "@/components/v3/WaitlistModal";
 import { Button } from "@/components/ui/Button";
-import {
-  GenesisHeroIntro,
-  GenesisShowcaseFrame,
-  GenesisSparkles,
-} from "@/components/motion/GenesisMotionEngine";
+import { GenesisSparkles } from "@/components/motion/GenesisMotionEngine";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const EnterAmbientBackdrop = dynamic(
+  () =>
+    import("@/components/three/EnterAmbientBackdrop").then(
+      (mod) => mod.EnterAmbientBackdrop
+    ),
+  { ssr: false }
+);
 
 const ElevenHolographicOrb3D = dynamic(
   () =>
@@ -25,7 +35,7 @@ const ElevenHolographicOrb3D = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-full min-h-[420px] w-full flex-col items-center justify-center">
+      <div className="flex h-full min-h-[430px] sm:min-h-[520px] w-full flex-col items-center justify-center">
         <div className="h-9 w-9 animate-spin rounded-full border-2 border-[#062118] border-t-[#10bc83]" />
         <p className="mt-4 font-mono text-xs tracking-[0.18em] text-[#38ffbd]">
           PREPARING LIVE 3D HOLOGRAPHIC ORB…
@@ -40,49 +50,104 @@ const STATE_ORDER: {
   keyHint: string;
   friendlyLabel: string;
   friendlySub: string;
+  energy: number;
+  waveSpeed: number;
 }[] = [
   {
     id: "IDLE",
     keyHint: "1",
     friendlyLabel: "Resting Ready",
     friendlySub: "Calmly waiting for you on your computer",
+    energy: 0.25,
+    waveSpeed: 1.8,
   },
   {
     id: "LISTENING",
     keyHint: "2",
     friendlyLabel: "Listening to You",
     friendlySub: "Hearing your voice naturally in real time",
+    energy: 0.58,
+    waveSpeed: 0.72,
   },
   {
     id: "THINKING",
     keyHint: "3",
     friendlyLabel: "Deep Thinking",
     friendlySub: "Background mind planning a complex job",
+    energy: 0.68,
+    waveSpeed: 0.62,
   },
   {
     id: "SPEAKING",
     keyHint: "4",
     friendlyLabel: "Speaking Back",
     friendlySub: "Talking with you—interrupt anytime",
+    energy: 0.78,
+    waveSpeed: 0.48,
   },
   {
     id: "EXECUTING",
     keyHint: "5",
     friendlyLabel: "Doing the Task",
     friendlySub: "Working safely inside a locked workspace",
+    energy: 0.82,
+    waveSpeed: 0.52,
   },
   {
     id: "VERIFYING",
     keyHint: "6",
     friendlyLabel: "Fact-Checking Proof",
     friendlySub: "Making sure helper results actually match",
+    energy: 0.52,
+    waveSpeed: 0.85,
   },
   {
     id: "AUTHORITY_REQUIRED",
     keyHint: "7",
     friendlyLabel: "Waiting for Your OK",
     friendlySub: "Paused! Showing an honest approval card",
+    energy: 0.9,
+    waveSpeed: 1.4,
   },
+];
+
+const OS_PROCESS_ROOMS = [
+  {
+    id: "ROOM 01 · VOICE & INTENT",
+    name: "F.R.I.D.A.Y. System 1",
+    detail: "Full-duplex 16kHz PCM perception & <50ms barge-in hardware interrupt.",
+    metric: "0.42s p50",
+    tone: "emerald",
+  },
+  {
+    id: "ROOM 02 · DAG COMPILER",
+    name: "J.A.R.V.I.S. System 2",
+    detail: "Compiles complex coding and research into parallel, budget-capped execution graphs.",
+    metric: "Async DAG",
+    tone: "emerald",
+  },
+  {
+    id: "ROOM 03 · ACTIONGATE",
+    name: "L5 Constitutional Guard",
+    detail: "5-stage pre-execution policy verification + 30s Ed25519 human consent leases.",
+    metric: "INV-04",
+    tone: "amber",
+  },
+  {
+    id: "ROOM 04 · LOCAL VAULT",
+    name: "127.0.0.1 Memory Vault",
+    detail: "Qdrant semantic vectors + SQLite WAL timeline bound strictly to local loopback.",
+    metric: "AES-256",
+    tone: "blue",
+  },
+];
+
+const ACTION_GATE_STAGES = [
+  { step: "01", title: "Intent Parse", desc: "Classify privilege & blast radius" },
+  { step: "02", title: "Workspace Scope", desc: "Pin to isolated git worktree" },
+  { step: "03", title: "Policy Firewall", desc: "Verify 12 constitutional invariants" },
+  { step: "04", title: "Human Lease", desc: "Ed25519 30-second one-time pass" },
+  { step: "05", title: "WAL Receipt", desc: "Immutable rollback log on PC" },
 ];
 
 interface AuditLogEntry {
@@ -103,6 +168,8 @@ function nowStamp(): string {
 
 export function EnterHudConsole() {
   const { exitToInstitutionalMode } = usePortalTransition();
+  const rootRef = useRef<HTMLDivElement>(null);
+
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [waitlistTier, setWaitlistTier] = useState<"general" | "technical">("general");
 
@@ -111,6 +178,7 @@ export function EnterHudConsole() {
   const [satellites, setSatellites] = useState<WorkerSatelliteSpec[]>([]);
   const [swarmActive, setSwarmActive] = useState<boolean>(false);
   const [nonceTtl, setNonceTtl] = useState<number>(30.0);
+  const [transientFlash, setTransientFlash] = useState<string | null>(null);
 
   const [logs, setLogs] = useState<AuditLogEntry[]>([
     {
@@ -137,6 +205,15 @@ export function EnterHudConsole() {
   ]);
 
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const flashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const triggerTransientFlash = useCallback((label: string) => {
+    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    setTransientFlash(label);
+    flashTimerRef.current = setTimeout(() => {
+      setTransientFlash(null);
+    }, 1850);
+  }, []);
 
   const pushLog = useCallback(
     (module: string, msg: string, tone: AuditLogEntry["tone"] = "cyan") => {
@@ -160,8 +237,198 @@ export function EnterHudConsole() {
   }, []);
 
   useEffect(() => {
-    return () => clearScheduledTimers();
+    return () => {
+      clearScheduledTimers();
+      if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    };
   }, [clearScheduledTimers]);
+
+  // Orchestrated GenesisFX Entrance & ScrollTrigger Choreography (homepage parity)
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const ctx = gsap.context(() => {
+        const glowImgs = gsap.utils.toArray<HTMLElement>(".enter-glow-img", root);
+        const header = root.querySelector<HTMLElement>(".enter-header");
+        const banner = root.querySelector<HTMLElement>(".enter-banner");
+        const centerStage = root.querySelector<HTMLElement>(".enter-center-stage");
+        const topBeam = root.querySelector<HTMLElement>(".enter-top-beam");
+        const leftCards = gsap.utils.toArray<HTMLElement>(".enter-left-card", root);
+        const rightCards = gsap.utils.toArray<HTMLElement>(".enter-right-card", root);
+
+        const introTl = gsap.timeline({ delay: 0.14 });
+
+        if (glowImgs.length) {
+          introTl.fromTo(
+            glowImgs,
+            { autoAlpha: 0, scale: 0.78 },
+            { autoAlpha: 1, scale: 1, duration: 1.05, ease: "power2.out" },
+            0
+          );
+        }
+
+        if (header) {
+          introTl.fromTo(
+            header,
+            { autoAlpha: 0, y: -24 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.65,
+              ease: "power3.out",
+              clearProps: "transform",
+            },
+            0.04
+          );
+        }
+
+        if (banner) {
+          introTl.fromTo(
+            banner,
+            { autoAlpha: 0, y: 22 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.7,
+              ease: "power3.out",
+              clearProps: "transform",
+            },
+            0.12
+          );
+        }
+
+        if (centerStage) {
+          introTl.fromTo(
+            centerStage,
+            { autoAlpha: 0, y: 44, scale: 0.96 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.85,
+              ease: "power3.out",
+              clearProps: "transform",
+            },
+            0.18
+          );
+        }
+
+        if (topBeam) {
+          introTl.fromTo(
+            topBeam,
+            { scaleX: 0, autoAlpha: 0 },
+            { scaleX: 1, autoAlpha: 1, duration: 0.85, ease: "power2.out" },
+            0.34
+          );
+        }
+
+        if (leftCards.length) {
+          introTl.fromTo(
+            leftCards,
+            { autoAlpha: 0, x: -42 },
+            {
+              autoAlpha: 1,
+              x: 0,
+              duration: 0.72,
+              stagger: 0.09,
+              ease: "power3.out",
+              clearProps: "transform",
+            },
+            0.22
+          );
+        }
+
+        if (rightCards.length) {
+          introTl.fromTo(
+            rightCards,
+            { autoAlpha: 0, x: 42 },
+            {
+              autoAlpha: 1,
+              x: 0,
+              duration: 0.72,
+              stagger: 0.09,
+              ease: "power3.out",
+              clearProps: "transform",
+            },
+            0.24
+          );
+        }
+
+        // ScrollTrigger reveals for L5 Constitutional Architecture band below cockpit
+        const archIntro = root.querySelector<HTMLElement>(".enter-arch-intro");
+        if (archIntro) {
+          gsap.fromTo(
+            archIntro.children,
+            { autoAlpha: 0, y: 36 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.75,
+              stagger: 0.08,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: {
+                trigger: archIntro,
+                start: "top 88%",
+                once: true,
+              },
+            }
+          );
+        }
+
+        const roomCards = gsap.utils.toArray<HTMLElement>(".enter-room-card", root);
+        if (roomCards.length) {
+          gsap.fromTo(
+            roomCards,
+            { autoAlpha: 0, y: 34, scale: 0.97 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.72,
+              stagger: 0.08,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: {
+                trigger: roomCards[0],
+                start: "top 88%",
+                once: true,
+              },
+            }
+          );
+        }
+
+        const gateSteps = gsap.utils.toArray<HTMLElement>(".enter-gate-step", root);
+        if (gateSteps.length) {
+          gsap.fromTo(
+            gateSteps,
+            { autoAlpha: 0, x: -24 },
+            {
+              autoAlpha: 1,
+              x: 0,
+              duration: 0.65,
+              stagger: 0.07,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: {
+                trigger: gateSteps[0],
+                start: "top 90%",
+                once: true,
+              },
+            }
+          );
+        }
+      }, root);
+
+      return () => ctx.revert();
+    });
+
+    return () => mm.revert();
+  }, []);
 
   useEffect(() => {
     if (orbState !== "AUTHORITY_REQUIRED") {
@@ -193,13 +460,14 @@ export function EnterHudConsole() {
         setNonceTtl(30.0);
       }
       const found = STATE_ORDER.find((s) => s.id === next);
+      triggerTransientFlash(`STATE LOCKED // ${found?.friendlyLabel.toUpperCase() ?? next}`);
       pushLog(
         "ORB STATE",
         `Switched to "${found?.friendlyLabel ?? next}" — ${found?.friendlySub ?? ""}`,
         next === "AUTHORITY_REQUIRED" ? "danger" : "cyan"
       );
     },
-    [clearScheduledTimers, pushLog]
+    [clearScheduledTimers, pushLog, triggerTransientFlash]
   );
 
   const triggerBargeIn = useCallback(() => {
@@ -208,17 +476,19 @@ export function EnterHudConsole() {
     setSatellites([]);
     setBargeInSignal((n) => n + 1);
     setOrbState("LISTENING");
+    triggerTransientFlash("⚡ BARGE-IN EXECUTED · 0.014s (<50ms)");
     pushLog(
       "INSTANT INTERRUPT",
       "You spoke mid-sentence! ELEVEN stopped talking in 0.014 seconds (<0.05s) and started listening immediately.",
       "warn"
     );
-  }, [clearScheduledTimers, pushLog]);
+  }, [clearScheduledTimers, pushLog, triggerTransientFlash]);
 
   const dispatchSwarmTournament = useCallback(() => {
     clearScheduledTimers();
     setSwarmActive(true);
     setOrbState("THINKING");
+    triggerTransientFlash("▶ 4 ORBITING HELPERS DISPATCHED");
     pushLog(
       "DEEP PLANNER",
       "Launching 4 orbiting AI helper satellites to inspect code, privacy, memory, and tests…",
@@ -292,6 +562,7 @@ export function EnterHudConsole() {
           evidenceStatus: "ACCEPTED",
         },
       ]);
+      triggerTransientFlash("⚠ ADJUDICATION: 3 VERIFIED · 1 WARNING");
       pushLog(
         "FACT CHECK",
         "3 helpers passed (Green), 1 spotted a hidden internet call (Amber). Instead of majority-voting, ELEVEN flagged the warning for you!",
@@ -304,10 +575,11 @@ export function EnterHudConsole() {
     }, 3600);
 
     timersRef.current.push(t1, t2, t3);
-  }, [clearScheduledTimers, pushLog]);
+  }, [clearScheduledTimers, pushLog, triggerTransientFlash]);
 
   const approveColdRoomNonce = useCallback(() => {
     clearScheduledTimers();
+    triggerTransientFlash("✓ ED25519 ONE-TIME LEASE VERIFIED");
     pushLog(
       "APPROVED",
       "One-time 30-second pass confirmed! Completing the approved GitHub publish safely.",
@@ -326,21 +598,25 @@ export function EnterHudConsole() {
       setOrbState("IDLE");
     }, 2200);
     timersRef.current.push(t1, t2);
-  }, [clearScheduledTimers, pushLog]);
+  }, [clearScheduledTimers, pushLog, triggerTransientFlash]);
 
   const quarantineColdRoom = useCallback(() => {
     clearScheduledTimers();
     setOrbState("IDLE");
+    triggerTransientFlash("✕ ACTION QUARANTINED SAFELY");
     pushLog(
       "BLOCKED",
       "You cancelled the request. Zero files were changed or uploaded.",
       "warn"
     );
-  }, [clearScheduledTimers, pushLog]);
+  }, [clearScheduledTimers, pushLog, triggerTransientFlash]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
         return;
       }
       if (e.key >= "1" && e.key <= "7") {
@@ -364,19 +640,29 @@ export function EnterHudConsole() {
   ]);
 
   const activeConfig = ORB_STATE_CONFIGS[orbState];
-  const activeFriendly = STATE_ORDER.find((s) => s.id === orbState);
+  const activeFriendly =
+    STATE_ORDER.find((s) => s.id === orbState) ?? STATE_ORDER[0];
 
   return (
-    <div className="mode-dark relative min-h-screen w-full overflow-x-hidden bg-[#05070d] text-[#e8ecf5] selection:bg-[#10bc83]/30 selection:text-[#38ffbd] el-aurora bg-grid-scifi">
-      {/* GenesisFX Top Dual Emerald HeroGlow Ellipses */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed -top-44 left-1/2 -translate-x-1/2 z-0 h-[520px] w-[960px] rounded-full bg-[radial-gradient(closest-side,rgba(0,179,140,0.22),rgba(16,188,131,0.06)_55%,transparent_100%)] blur-[90px]"
+    <div
+      ref={rootRef}
+      className="mode-dark relative min-h-screen w-full overflow-x-hidden bg-[#05070d] text-[#e8ecf5] selection:bg-[#10bc83]/30 selection:text-[#38ffbd]"
+    >
+      {/* Full-Viewport GenesisFX WebGL Ambient Horizon + 4 Vertical Frosted Bars */}
+      <EnterAmbientBackdrop
+        accentHex={activeConfig.hex}
+        energy={activeFriendly.energy}
       />
 
+      {/* Dual Radial Emerald HeroGlow Ellipses (Matching Homepage Phase 1) */}
+      <div className="hero-glow" aria-hidden="true">
+        <div className="hero-glow__img enter-glow-img" />
+        <div className="hero-glow__img hero-glow__img--lg enter-glow-img" />
+      </div>
+
       {/* Top GenesisFX Floating Command Header */}
-      <header className="sticky top-0 z-30 border-b border-white/[0.07] bg-[#05070d]/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 py-3.5 lg:px-8">
+      <header className="enter-header sticky top-0 z-30 border-b border-white/[0.07] bg-[#05070d]/82 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-5 py-2.5 lg:px-8">
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2.5">
               <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#10bc83]/45 bg-[#062118]/85 font-mono text-[11px] text-[#38ffbd] shadow-[0_0_16px_rgba(16,188,131,0.3)]">
@@ -386,7 +672,7 @@ export function EnterHudConsole() {
                 ELEVEN v3.1 · LIVE INTERACTIVE 3D CORE
               </span>
             </div>
-            <span className="gfx-badge !py-1 !px-3 !text-[11px]">
+            <span className="gfx-badge !py-1 !px-3 !text-[11px] whitespace-nowrap">
               <span
                 className="h-2 w-2 rounded-full animate-pulse"
                 style={{
@@ -394,12 +680,12 @@ export function EnterHudConsole() {
                   boxShadow: `0 0 10px ${activeConfig.hex}`,
                 }}
               />
-              <span>{activeFriendly?.friendlyLabel}</span>
+              <span>{activeFriendly.friendlyLabel}</span>
             </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="hidden font-mono text-[11px] text-[#a0a0a0] xl:inline mr-2">
+            <span className="hidden font-mono text-[11px] text-[#a0a0a0] 2xl:inline mr-2">
               SHORTCUTS: <span className="text-[#38ffbd]">[1–7]</span> STATE ·{" "}
               <span className="text-[#38ffbd]">[S]</span> 4 HELPERS ·{" "}
               <span className="text-[#38ffbd]">[B]</span> INTERRUPT
@@ -435,49 +721,49 @@ export function EnterHudConsole() {
       </header>
 
       {/* Main 3-Column GenesisFX Interactive Cockpit */}
-      <GenesisHeroIntro className="relative z-10 mx-auto max-w-[1440px] px-5 py-6 lg:px-8 lg:py-8">
+      <div className="relative z-10 mx-auto max-w-[1440px] px-5 py-4 lg:px-8 lg:py-5">
         {/* Top Cockpit Intro Banner */}
-        <div className="mb-6 flex flex-col justify-between gap-4 rounded-[1.35rem] border border-white/[0.08] bg-[#062118]/25 px-6 py-4 backdrop-blur-xl sm:flex-row sm:items-center">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-mono text-[#38ffbd]">
+        <div className="enter-banner mb-4 flex flex-col justify-between gap-3 rounded-[1.35rem] border border-white/[0.08] bg-[#062118]/25 px-5 py-3 backdrop-blur-xl sm:flex-row sm:items-center">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2 text-[11px] font-mono text-[#38ffbd]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse" />
               <span>COMPUTATIONAL CONTROL PLANE // GENESIS HOLOGRAPHIC STAGE</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-normal heading-gradient">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-normal heading-gradient">
               Inspect how ELEVEN thinks, listens, and enforces constitutional boundaries in real time.
             </h1>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <span className="gfx-bubble !py-1 !px-3 !text-[11px]">
+          <div className="flex flex-wrap gap-2 shrink-0">
+            <span className="gfx-bubble !h-8 !py-1 !px-3 !text-[11px] whitespace-nowrap">
               <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
               54K GPU Particles
             </span>
-            <span className="gfx-bubble !py-1 !px-3 !text-[11px]">
+            <span className="gfx-bubble !h-8 !py-1 !px-3 !text-[11px] whitespace-nowrap">
               <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
               5-Stage ActionGate
             </span>
-            <span className="gfx-bubble !py-1 !px-3 !text-[11px]">
+            <span className="gfx-bubble !h-8 !py-1 !px-3 !text-[11px] whitespace-nowrap hidden xl:inline-flex">
               <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
               127.0.0.1 Loopback
             </span>
           </div>
         </div>
 
-        <main className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <main className="grid grid-cols-1 gap-5 lg:grid-cols-12">
           {/* Left Column: 7 Cognitive States + 2 Live Demos + Private Memory */}
           <section className="flex flex-col justify-between gap-4 lg:col-span-3">
-            <div className="gfx-card p-4 sm:p-5">
+            <div className="enter-left-card gfx-card p-4">
               <span className="gfx-card__border" aria-hidden="true" />
-              <div className="relative z-10 flex items-center justify-between border-b border-white/[0.07] pb-2.5">
+              <div className="relative z-10 flex items-center justify-between gap-2 border-b border-white/[0.07] pb-2">
                 <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
                   01 · Click Any AI State
                 </span>
-                <span className="rounded-full border border-[#10bc83]/35 bg-[#062118]/75 px-2.5 py-0.5 font-mono text-[10px] text-[#38ffbd]">
+                <span className="shrink-0 whitespace-nowrap rounded-full border border-[#10bc83]/35 bg-[#062118]/75 px-2.5 py-0.5 font-mono text-[10px] text-[#38ffbd]">
                   LIVE 3D
                 </span>
               </div>
 
-              <div className="relative z-10 mt-3 space-y-1.5">
+              <div className="relative z-10 mt-2.5 space-y-1.5">
                 {STATE_ORDER.map((item) => {
                   const active = orbState === item.id;
                   const cfg = ORB_STATE_CONFIGS[item.id];
@@ -486,27 +772,32 @@ export function EnterHudConsole() {
                       key={item.id}
                       type="button"
                       onClick={() => selectState(item.id)}
-                      style={{
-                        background: active
-                          ? "radial-gradient(120% 90% at 50% 0%, rgba(16, 188, 131, 0.24), rgba(6, 33, 24, 0.78))"
-                          : "rgba(5, 7, 13, 0.78)",
-                        borderColor: active
-                          ? "rgba(16, 188, 131, 0.65)"
-                          : "rgba(255, 255, 255, 0.08)",
-                      }}
-                      className={`flex w-full cursor-pointer items-center justify-between rounded-xl border px-3 py-2 text-left transition-all duration-200 ${
+                      className={`relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-xl border px-3 py-1.5 text-left transition-colors duration-200 ${
                         active
-                          ? "text-white shadow-[0_0_24px_rgba(16,188,131,0.16)]"
-                          : "text-[#a0a0a0] hover:text-white"
+                          ? "border-[#10bc83]/60 text-white shadow-[0_0_24px_rgba(16,188,131,0.16)]"
+                          : "border-white/[0.08] bg-[#05070d]/78 text-[#a0a0a0] hover:border-[#10bc83]/35 hover:text-white"
                       }`}
                     >
-                      <span className="flex items-center gap-2.5">
+                      {active && (
+                        <motion.span
+                          layoutId="enter-active-state-beam"
+                          transition={{
+                            type: "spring",
+                            stiffness: 380,
+                            damping: 32,
+                          }}
+                          aria-hidden="true"
+                          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_0%,rgba(16,188,131,0.24),rgba(6,33,24,0.82))]"
+                        />
+                      )}
+                      <span className="relative z-10 flex items-center gap-2.5">
                         <span
-                          className="h-2.5 w-2.5 shrink-0 rounded-full"
+                          className="h-2.5 w-2.5 shrink-0 rounded-full transition-transform duration-200"
                           style={{
                             backgroundColor: cfg.hex,
                             boxShadow: active ? `0 0 10px ${cfg.hex}` : undefined,
                             opacity: active ? 1 : 0.65,
+                            transform: active ? "scale(1.15)" : "scale(1)",
                           }}
                         />
                         <span className="block">
@@ -518,7 +809,7 @@ export function EnterHudConsole() {
                           </span>
                         </span>
                       </span>
-                      <kbd className="rounded-full border border-white/[0.12] bg-black/50 px-2 py-0.5 font-mono text-[10px] text-[#38ffbd]">
+                      <kbd className="relative z-10 rounded-full border border-white/[0.12] bg-black/50 px-2 py-0.5 font-mono text-[10px] text-[#38ffbd]">
                         {item.keyHint}
                       </kbd>
                     </button>
@@ -528,28 +819,30 @@ export function EnterHudConsole() {
             </div>
 
             {/* 2 Fun Live Demos */}
-            <div className="gfx-card p-4 sm:p-5">
+            <div className="enter-left-card gfx-card p-4">
               <span className="gfx-card__border" aria-hidden="true" />
-              <div className="flex items-center justify-between border-b border-white/[0.07] pb-2.5">
+              <div className="relative z-10 flex items-center justify-between gap-2 border-b border-white/[0.07] pb-2">
                 <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
                   02 · Try Live Action Demos
                 </p>
-                <span className="font-mono text-[10px] text-[#10bc83]">INTERACTIVE</span>
+                <span className="shrink-0 whitespace-nowrap font-mono text-[10px] text-[#10bc83]">
+                  INTERACTIVE
+                </span>
               </div>
-              <div className="mt-3.5 space-y-2.5">
+              <div className="relative z-10 mt-3 space-y-2.5">
                 <button
                   type="button"
                   onClick={dispatchSwarmTournament}
-                  className="group relative w-full cursor-pointer overflow-hidden rounded-xl border border-[#10bc83]/45 bg-[radial-gradient(120%_90%_at_50%_0%,rgba(16,188,131,0.22),rgba(6,33,24,0.85))] px-4 py-3 text-left text-xs text-[#38ffbd] transition-all hover:border-[#38ffbd] hover:shadow-[0_0_26px_rgba(16,188,131,0.24)]"
+                  className="group relative w-full cursor-pointer overflow-hidden rounded-xl border border-[#10bc83]/45 bg-[radial-gradient(120%_90%_at_50%_0%,rgba(16,188,131,0.22),rgba(6,33,24,0.85))] px-3.5 py-2.5 text-left text-xs text-[#38ffbd] transition-all hover:border-[#38ffbd] hover:shadow-[0_0_26px_rgba(16,188,131,0.24)]"
                 >
                   <GenesisSparkles />
-                  <span className="flex items-center justify-between font-mono font-normal text-white">
+                  <span className="relative z-10 flex items-center justify-between font-mono font-normal text-white">
                     <span className="text-[#38ffbd]">▶ Launch 4 Helper Satellites</span>
                     <span className="rounded-full border border-[#10bc83]/40 bg-[#05070d]/70 px-2 py-0.5 text-[10px]">
                       [S]
                     </span>
                   </span>
-                  <span className="mt-1.5 block text-[11px] text-[#a0a0a0]">
+                  <span className="relative z-10 mt-1 block text-[11px] text-[#a0a0a0]">
                     Watch 4 3D helpers orbit the Orb &amp; catch a hidden warning
                   </span>
                 </button>
@@ -557,7 +850,7 @@ export function EnterHudConsole() {
                 <button
                   type="button"
                   onClick={triggerBargeIn}
-                  className="w-full cursor-pointer rounded-xl border border-[#e29d58]/45 bg-[radial-gradient(120%_90%_at_50%_100%,rgba(226,157,88,0.2),rgba(20,14,6,0.88))] px-4 py-3 text-left text-xs text-[#e29d58] transition-all hover:border-[#e29d58]/80"
+                  className="w-full cursor-pointer rounded-xl border border-[#e29d58]/45 bg-[radial-gradient(120%_90%_at_50%_100%,rgba(226,157,88,0.2),rgba(20,14,6,0.88))] px-3.5 py-2.5 text-left text-xs text-[#e29d58] transition-all hover:border-[#e29d58]/80 hover:shadow-[0_0_24px_rgba(226,157,88,0.2)]"
                 >
                   <span className="flex items-center justify-between font-mono font-normal">
                     <span>⚡ Interrupt Mid-Sentence</span>
@@ -565,7 +858,7 @@ export function EnterHudConsole() {
                       [B]
                     </span>
                   </span>
-                  <span className="mt-1.5 block text-[11px] text-[#d6b883]">
+                  <span className="mt-1 block text-[11px] text-[#d6b883]">
                     See how ELEVEN stops talking in 0.05s the moment you speak
                   </span>
                 </button>
@@ -587,65 +880,114 @@ export function EnterHudConsole() {
             </div>
 
             {/* Private Local Memory Status */}
-            <div className="gfx-card !p-5 text-[11.5px]">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0] border-b border-white/[0.07] pb-2.5">
-                03 · Private Memory (On Your PC)
-              </p>
-              <div className="mt-3 space-y-2.5 text-[#a0a0a0]">
-                <div className="flex justify-between">
-                  <span>Right-Now Memory</span>
-                  <span className="font-mono text-[#10bc83]">READY (&lt;5ms)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Past Conversations</span>
-                  <span className="font-mono text-[#10bc83]">TIMELINE SAVED</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Smart File Search</span>
-                  <span className="font-mono text-[#38ffbd]">EXACT + MEANING</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Encryption Lock</span>
-                  <span className="font-mono text-white">AES-256 LOCKED</span>
+            <div className="enter-left-card gfx-card p-4 text-[11.5px]">
+              <span className="gfx-card__border" aria-hidden="true" />
+              <div className="relative z-10">
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0] border-b border-white/[0.07] pb-2">
+                  03 · Private Memory (On Your PC)
+                </p>
+                <div className="mt-2.5 space-y-2 text-[#a0a0a0]">
+                  <div className="flex justify-between">
+                    <span>Right-Now Memory</span>
+                    <span className="font-mono text-[#10bc83]">READY (&lt;5ms)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Past Conversations</span>
+                    <span className="font-mono text-[#10bc83]">TIMELINE SAVED</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Smart File Search</span>
+                    <span className="font-mono text-[#38ffbd]">EXACT + MEANING</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Encryption Lock</span>
+                    <span className="font-mono text-white">AES-256 LOCKED</span>
+                  </div>
                 </div>
               </div>
             </div>
           </section>
 
           {/* Center Column: Interactive 3D WebGL Holographic Orb in GenesisShowcaseFrame */}
-          <section className="lg:col-span-6 flex flex-col">
-            <GenesisShowcaseFrame className="flex-1 flex flex-col">
-              <div className="relative flex min-h-[520px] flex-1 flex-col justify-between overflow-hidden rounded-[1.05rem] bg-[#05070d] lg:min-h-[660px]">
-                <div className="pointer-events-none relative z-10 flex items-start justify-between border-b border-white/[0.06] bg-[#05070d]/70 px-5 py-3.5 font-mono text-[11px] backdrop-blur-md">
+          <section className="enter-center-stage lg:col-span-6 flex flex-col">
+            <div className="gfx-frame flex-1 flex flex-col">
+              <div className="gfx-frame__highlight" aria-hidden="true">
+                <div className="gfx-frame__highlight-glow" />
+              </div>
+              <span className="gfx-frame__top-beam enter-top-beam origin-center" aria-hidden="true" />
+
+              <div className="relative z-[1] flex min-h-[500px] flex-1 flex-col justify-between overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/92">
+                <div className="pointer-events-none relative z-10 flex items-center justify-between gap-3 border-b border-white/[0.06] bg-[#05070d]/75 px-5 py-3 font-mono text-[11px] backdrop-blur-md">
                   <div>
                     <p className="flex items-center gap-2 text-[#38ffbd]">
                       <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
                       <span>DRAG TO SPIN IN 3D · CLICK TO PULSE</span>
                     </p>
-                    <p className="mt-1 text-[10.5px] text-[#a0a0a0]">
-                      {activeFriendly?.friendlySub}
+                    <p className="mt-0.5 text-[10.5px] text-[#a0a0a0]">
+                      {activeFriendly.friendlySub}
                     </p>
                   </div>
-                  <div className="text-right">
-                    <p style={{ color: activeConfig.hex }} className="font-normal">
-                      {activeFriendly?.friendlyLabel.toUpperCase()}
-                    </p>
-                    <p className="mt-1 text-[10px] text-[#a0a0a0]">
-                      {swarmActive
-                        ? "4 HELPERS WORKING…"
-                        : satellites.length > 0
-                        ? "4 HELPERS FACT-CHECKED"
-                        : "PROTECTED BY 5 SAFETY GATES"}
-                    </p>
+
+                  {/* Live State-Coupled Acoustic / Cognitive Waveform Bars */}
+                  <div className="flex items-center gap-4">
+                    <div
+                      aria-hidden="true"
+                      className="hidden sm:flex h-6 items-end gap-1 rounded-full border border-white/[0.07] bg-black/40 px-2.5 py-1.5"
+                    >
+                      {[0.1, 0.35, 0.18, 0.45, 0.25, 0.52, 0.14].map((delay, idx) => (
+                        <span
+                          key={idx}
+                          className="enter-wave-bar w-[2.5px] h-full rounded-full"
+                          style={
+                            {
+                              backgroundColor: activeConfig.hex,
+                              "--wave-dur": `${activeFriendly.waveSpeed + idx * 0.08}s`,
+                              "--wave-delay": `${delay}s`,
+                            } as React.CSSProperties
+                          }
+                        />
+                      ))}
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <p style={{ color: activeConfig.hex }} className="font-normal">
+                        {activeFriendly.friendlyLabel.toUpperCase()}
+                      </p>
+                      <p className="mt-0.5 text-[10px] text-[#a0a0a0]">
+                        {swarmActive
+                          ? "4 HELPERS WORKING…"
+                          : satellites.length > 0
+                          ? "4 HELPERS FACT-CHECKED"
+                          : "PROTECTED BY 5 SAFETY GATES"}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="relative min-h-[420px] w-full flex-1">
+                {/* Live 3D WebGL Holographic Orb Viewport (fullHeight edge-to-edge fill) */}
+                <div className="relative min-h-[430px] sm:min-h-[540px] w-full flex-1 flex bg-[radial-gradient(circle_at_50%_46%,rgba(16,188,131,0.08),transparent_68%)]">
                   <ElevenHolographicOrb3D
                     state={orbState}
                     bargeInSignal={bargeInSignal}
                     satellites={satellites}
+                    fullHeight
                   />
+
+                  {/* Transient State / Barge-In Telemetry Flash Pill */}
+                  <AnimatePresence>
+                    {transientFlash && (
+                      <motion.div
+                        key={transientFlash}
+                        initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -6, scale: 0.96 }}
+                        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                        className="pointer-events-none absolute top-3.5 left-4 z-20 rounded-full border border-[#38ffbd]/40 bg-[#062118]/85 px-3.5 py-1 font-mono text-[10px] tracking-[0.12em] text-[#38ffbd] backdrop-blur-md shadow-[0_0_20px_rgba(16,188,131,0.28)]"
+                      >
+                        {transientFlash}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 {/* Friendly Approval Card Popup when State 7 ("Waiting for Your OK") is active */}
@@ -694,7 +1036,7 @@ export function EnterHudConsole() {
                       key="status-bar"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.06] bg-[#05070d]/90 px-5 py-3 font-mono text-[10px] text-[#a0a0a0]"
+                      className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.06] bg-[#05070d]/90 px-5 py-2.5 font-mono text-[10px] text-[#a0a0a0]"
                     >
                       <span className="text-[#10bc83]">● VOICE REPLY GOAL: &lt;0.5 SECONDS</span>
                       <span>PASSWORDS &amp; FILES: PROTECTED</span>
@@ -703,106 +1045,206 @@ export function EnterHudConsole() {
                   )}
                 </AnimatePresence>
               </div>
-            </GenesisShowcaseFrame>
+            </div>
           </section>
 
           {/* Right Column: Orbiting Helpers Status + Plain-English Activity Feed */}
-          <section className="flex flex-col justify-between gap-5 lg:col-span-3">
-            <div className="gfx-card !p-5">
-              <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
-                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
-                  Orbiting AI Helpers
-                </span>
-                <span className="rounded-full border border-[#10bc83]/35 bg-[#062118]/75 px-2.5 py-0.5 font-mono text-[10px] text-[#38ffbd]">
-                  PROOF CHECK
-                </span>
-              </div>
+          <section className="flex flex-col justify-between gap-4 lg:col-span-3">
+            <div className="enter-right-card gfx-card p-4">
+              <span className="gfx-card__border" aria-hidden="true" />
+              <div className="relative z-10">
+                <div className="flex items-center justify-between gap-2 border-b border-white/[0.07] pb-2.5">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
+                    Orbiting AI Helpers
+                  </span>
+                  <span className="shrink-0 whitespace-nowrap rounded-full border border-[#10bc83]/35 bg-[#062118]/75 px-2.5 py-0.5 font-mono text-[10px] text-[#38ffbd]">
+                    PROOF CHECK
+                  </span>
+                </div>
 
-              {satellites.length === 0 ? (
-                <div className="py-6 text-center text-xs text-[#a0a0a0]">
-                  <p className="font-normal text-sm heading-gradient">No helpers orbiting yet</p>
-                  <p className="mt-2 text-[11.5px] leading-relaxed text-[#a0a0a0]">
-                    Click <strong className="text-[#38ffbd] font-normal">&ldquo;Launch 4 Helper Satellites&rdquo;</strong> on the left to watch 4 3D spheres orbit the core and fact-check a job!
-                  </p>
-                </div>
-              ) : (
-                <div className="mt-3.5 space-y-2.5 text-xs">
-                  {satellites.map((sat) => (
-                    <div
-                      key={sat.stepId}
-                      className="rounded-xl border border-white/[0.07] bg-[#05070d]/85 p-3"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-normal text-white">
-                          {sat.stepId}
-                        </span>
-                        <span
-                          className={`rounded-full px-2 py-0.5 font-mono text-[10px] ${
-                            sat.evidenceStatus === "ACCEPTED"
-                              ? "border border-[#10bc83]/35 bg-[#062118] text-[#38ffbd]"
+                {satellites.length === 0 ? (
+                  <div className="py-6 text-center text-xs text-[#a0a0a0]">
+                    <p className="font-normal text-sm heading-gradient">No helpers orbiting yet</p>
+                    <p className="mt-2 text-[11.5px] leading-relaxed text-[#a0a0a0]">
+                      Click{" "}
+                      <strong className="text-[#38ffbd] font-normal">
+                        &ldquo;Launch 4 Helper Satellites&rdquo;
+                      </strong>{" "}
+                      on the left to watch 4 3D spheres orbit the core and fact-check a job!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mt-3.5 space-y-2.5 text-xs">
+                    {satellites.map((sat) => (
+                      <motion.div
+                        key={sat.stepId}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="rounded-xl border border-white/[0.07] bg-[#05070d]/85 p-3"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-normal text-white">{sat.stepId}</span>
+                          <span
+                            className={`rounded-full px-2 py-0.5 font-mono text-[10px] ${
+                              sat.evidenceStatus === "ACCEPTED"
+                                ? "border border-[#10bc83]/35 bg-[#062118] text-[#38ffbd]"
+                                : sat.evidenceStatus === "UNRESOLVED"
+                                ? "border border-[#e29d58]/40 bg-[#e29d58]/15 text-[#e29d58]"
+                                : "border border-white/10 bg-white/5 text-[#a0a0a0]"
+                            }`}
+                          >
+                            {sat.evidenceStatus === "ACCEPTED"
+                              ? "✓ Verified"
                               : sat.evidenceStatus === "UNRESOLVED"
-                              ? "border border-[#e29d58]/40 bg-[#e29d58]/15 text-[#e29d58]"
-                              : "border border-white/10 bg-white/5 text-[#a0a0a0]"
-                          }`}
-                        >
-                          {sat.evidenceStatus === "ACCEPTED"
-                            ? "✓ Verified"
-                            : sat.evidenceStatus === "UNRESOLVED"
-                            ? "⚠ Warning"
-                            : "Working…"}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-[11px] text-[#a0a0a0]">{sat.toolName}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
+                              ? "⚠ Warning"
+                              : "Working…"}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-[11px] text-[#a0a0a0]">{sat.toolName}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Live Plain-English Activity Stream */}
-            <div className="gfx-card !p-5 flex-1">
-              <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
-                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
-                  Live Activity Feed
-                </span>
-                <span className="flex items-center gap-1.5 font-mono text-[10px] text-[#10bc83]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse" />
-                  REAL-TIME
-                </span>
-              </div>
+            <div className="enter-right-card gfx-card p-5 flex-1">
+              <span className="gfx-card__border" aria-hidden="true" />
+              <div className="relative z-10">
+                <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
+                    Live Activity Feed
+                  </span>
+                  <span className="flex items-center gap-1.5 font-mono text-[10px] text-[#10bc83]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse" />
+                    REAL-TIME
+                  </span>
+                </div>
 
-              <div className="mt-3.5 space-y-2.5 text-xs">
-                {logs.map((entry) => (
-                  <motion.div
-                    key={entry.id}
-                    initial={{ opacity: 0, x: 8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="rounded-xl border border-white/[0.07] bg-[#05070d]/85 p-3"
-                  >
-                    <div className="flex items-center justify-between font-mono text-[10px] text-[#686868]">
-                      <span
-                        className={
-                          entry.tone === "danger"
-                            ? "text-[#ef4444]"
-                            : entry.tone === "warn"
-                            ? "text-[#e29d58]"
-                            : entry.tone === "nominal"
-                            ? "text-[#10bc83]"
-                            : "text-[#38ffbd]"
-                        }
-                      >
-                        {entry.module}
-                      </span>
-                      <span>{entry.ts}</span>
-                    </div>
-                    <p className="mt-1.5 leading-[1.5] text-[#e8ecf5]">{entry.msg}</p>
-                  </motion.div>
-                ))}
+                <div className="mt-3.5 space-y-2.5 text-xs">
+                  {logs.map((entry) => (
+                    <motion.div
+                      key={entry.id}
+                      initial={{ opacity: 0, x: 8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="rounded-xl border border-white/[0.07] bg-[#05070d]/85 p-3"
+                    >
+                      <div className="flex items-center justify-between font-mono text-[10px] text-[#686868]">
+                        <span
+                          className={
+                            entry.tone === "danger"
+                              ? "text-[#ef4444]"
+                              : entry.tone === "warn"
+                              ? "text-[#e29d58]"
+                              : entry.tone === "nominal"
+                              ? "text-[#10bc83]"
+                              : "text-[#38ffbd]"
+                          }
+                        >
+                          {entry.module}
+                        </span>
+                        <span>{entry.ts}</span>
+                      </div>
+                      <p className="mt-1.5 leading-[1.5] text-[#e8ecf5]">{entry.msg}</p>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
         </main>
-      </GenesisHeroIntro>
+
+        {/* Scroll-Triggered Below-the-Fold L5 Constitutional Architecture Telemetry Band */}
+        <section
+          id="enter-telemetry-band"
+          className="mt-12 border-t border-white/[0.07] pt-12 pb-8"
+        >
+          <div className="enter-arch-intro flex flex-col justify-between gap-6 md:flex-row md:items-end mb-8">
+            <div className="space-y-3 max-w-2xl">
+              <span className="gfx-badge">
+                <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
+                <span>UNDER THE HOLOGRAPHIC SHELL · INV-01 &amp; INV-04</span>
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-normal leading-tight heading-gradient">
+                Four isolated OS process rooms behind one real-time 3D membrane.
+              </h2>
+              <p className="text-sm text-[#a0a0a0] leading-relaxed">
+                Every orb transition above mirrors real runtime state transitions across isolated local processes—never shared cloud memory.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Button href="/architecture" variant="secondary" arrow>
+                Explore Architecture
+              </Button>
+              <Button href="/autonomy" variant="ghost">
+                Inspect Autonomy Spec
+              </Button>
+            </div>
+          </div>
+
+          {/* 4 Isolated Process Room Cards */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {OS_PROCESS_ROOMS.map((room) => (
+              <div
+                key={room.id}
+                className="enter-room-card gfx-card p-5 flex flex-col justify-between gap-4"
+              >
+                <span className="gfx-card__border" aria-hidden="true" />
+                <div className="relative z-10 flex items-start gap-3">
+                  <span className="gfx-feature-bar" aria-hidden="true" />
+                  <div>
+                    <p className="font-mono text-[10px] tracking-[0.12em] text-[#38ffbd]">
+                      {room.id}
+                    </p>
+                    <h3 className="mt-1 text-base font-normal text-white">
+                      {room.name}
+                    </h3>
+                  </div>
+                </div>
+                <p className="relative z-10 text-xs text-[#a0a0a0] leading-relaxed">
+                  {room.detail}
+                </p>
+                <div className="relative z-10 flex items-center justify-between border-t border-white/[0.06] pt-3 font-mono text-[10.5px]">
+                  <span className="text-[#686868]">ENFORCEMENT</span>
+                  <span className="text-[#10bc83]">{room.metric}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 5-Stage ActionGate Verification Pipeline */}
+          <div className="mt-8 gfx-card p-5 sm:p-6">
+            <span className="gfx-card__border" aria-hidden="true" />
+            <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.07] pb-3.5 mb-5">
+              <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#38ffbd]">
+                5-STAGE PRE-EXECUTION ACTIONGATE PIPELINE (INV-04)
+              </span>
+              <span className="font-mono text-[10.5px] text-[#a0a0a0]">
+                MANDATORY BEFORE EVERY FILE WRITE OR SHELL EXECUTION
+              </span>
+            </div>
+            <div className="relative z-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              {ACTION_GATE_STAGES.map((stage) => (
+                <div
+                  key={stage.step}
+                  className="enter-gate-step rounded-xl border border-white/[0.07] bg-[#05070d]/85 p-3.5"
+                >
+                  <div className="flex items-center justify-between font-mono text-[10px]">
+                    <span className="text-[#10bc83]">GATE {stage.step}</span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
+                  </div>
+                  <p className="mt-1.5 text-sm font-normal text-white">{stage.title}</p>
+                  <p className="mt-1 text-[11px] text-[#a0a0a0] leading-snug">
+                    {stage.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+
       <WaitlistModal
         isOpen={isWaitlistOpen}
         onClose={() => setIsWaitlistOpen(false)}

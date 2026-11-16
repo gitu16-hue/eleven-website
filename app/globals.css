@@ -1108,7 +1108,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .el-rise, .el-float, .el-breathe, .el-orbit-border::after, .site-nav__glow, .sparkles .sparkle, .hero-dashboard, #globe-canvas.is-entering {
+  .el-rise, .el-float, .el-breathe, .el-orbit-border::after, .site-nav__glow, .sparkles .sparkle, .hero-dashboard, #globe-canvas.is-entering, .enter-wave-bar {
     animation: none !important;
   }
   .el-link-laser::after, .site-header, .site-header__brand, .site-header__actions, .site-nav, .glow-btn__ring, .glow-btn__light {
@@ -1290,3 +1290,18 @@ body {
   background: radial-gradient(120% 90% at 50% 130%, rgba(76, 110, 245, 0.22), rgba(76, 110, 245, 0) 60%), rgba(12, 16, 15, 0.78);
 }
 
+@keyframes enter-wave-pulse {
+  0%, 100% {
+    transform: scaleY(0.28);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.enter-wave-bar {
+  transform-origin: center bottom;
+  animation: enter-wave-pulse var(--wave-dur, 1.15s) ease-in-out var(--wave-delay, 0s) infinite;
+}
