@@ -277,9 +277,7 @@ export default function ArchitecturePage() {
             </div>
           </div>
 
-          <GenesisShowcaseFrame>
-            <ExplodedLayerStack3D />
-          </GenesisShowcaseFrame>
+          <ExplodedLayerStack3D />
         </Section>
 
         <SignalBeamDivider />

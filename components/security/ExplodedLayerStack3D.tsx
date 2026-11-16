@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import { Layers, RotateCcw, SlidersHorizontal, Shield, Cpu } from "lucide-react";
 import { useClarityMode } from "@/components/motion/PremiumMotion";
+import { GenesisShowcaseFrame } from "@/components/motion/GenesisMotionEngine";
 import {
   usePrefersReducedMotion,
   useWebGLAvailable,
@@ -771,7 +772,8 @@ export function ExplodedLayerStack3D() {
             : "relative lg:sticky lg:top-20 lg:py-2"
         }
       >
-        <div className="overflow-hidden rounded-sm border border-el-sec-sage/45 bg-el-sec-graphite text-el-sec-porcelain shadow-el-lg">
+        <GenesisShowcaseFrame>
+          <div className="overflow-hidden rounded-sm border border-el-sec-sage/45 bg-el-sec-graphite text-el-sec-porcelain shadow-el-lg">
           {/* Top Control & Telemetry Strip */}
           <div className="flex flex-col gap-3 border-b border-el-sec-sage/35 bg-el-sec-graphite-deep px-4 py-3.5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap items-center gap-2.5">
@@ -972,7 +974,8 @@ export function ExplodedLayerStack3D() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
+        </GenesisShowcaseFrame>
       </div>
     </div>
   );
