@@ -16,9 +16,13 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -115,15 +119,8 @@ export default function CompareCloudVsLocalPage() {
 
         {/* ── HERO SECTION ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
-          />
-          <div className="relative">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -141,7 +138,7 @@ export default function CompareCloudVsLocalPage() {
 
             <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
               <div className="gfx-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] motion-safe:animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Architectural Comparison · Sovereign Runtime" />
               </div>
 
@@ -155,20 +152,20 @@ export default function CompareCloudVsLocalPage() {
                 technical="Why frontier reasoning models belong inside an un-bypassable local control plane on your hardware, not inside a black-box cloud. Complete separation of untrusted model reasoning from deterministic OS execution."
               />
 
-              <div className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  100% local silicon confinement
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>100% local silicon confinement</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                  Zero data residency risk
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>Zero data residency risk</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  Fixed workstation economics
-                </span>
-              </div>
+                  <span>Fixed workstation economics</span>
+                </li>
+              </GenesisBubbleRow>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -194,21 +191,21 @@ export default function CompareCloudVsLocalPage() {
                 </Button>
               </div>
             </GenesisHeroIntro>
-          </div>
 
-          {/* ── PROMINENT DISAMBIGUATION NOTICE BANNER ── */}
-          <div className="mt-12 rounded-[1rem] border border-white/[0.1] bg-[#08090a]/80 p-4 sm:p-5 backdrop-blur-sm">
-            <div className="flex items-start gap-3.5">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10bc83]/15 text-[#38ffbd]">
-                <Info className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
-              <div className="space-y-1 text-xs leading-relaxed">
-                <span className="text-[#38ffbd] font-medium">
-                  Product Identity Notice:
+            {/* ── PROMINENT DISAMBIGUATION NOTICE BANNER ── */}
+            <div className="mt-12 rounded-[1rem] border border-white/[0.1] bg-[#08090a]/80 p-4 sm:p-5 backdrop-blur-sm">
+              <div className="flex items-start gap-3.5">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10bc83]/15 text-[#38ffbd]">
+                  <Info className="h-3.5 w-3.5" aria-hidden="true" />
                 </span>
-                <p className="text-el-fg-muted text-[11.5px]">
-                  <strong>ELEVEN v3.1</strong> is an autonomous desktop personal AI operating system developed by <strong>GISHH Labs</strong>. It provides local process supervision, private memory drawers, and deterministic policy enforcement for your desktop workstation. It is not an audio generation API, voice synthesis service, or speech cloning SaaS.
-                </p>
+                <div className="space-y-1 text-xs leading-relaxed">
+                  <span className="text-[#38ffbd] font-medium">
+                    Product Identity Notice:
+                  </span>
+                  <p className="text-el-fg-muted text-[11.5px]">
+                    <strong>ELEVEN v3.1</strong> is an autonomous desktop personal AI operating system developed by <strong>GISHH Labs</strong>. It provides local process supervision, private memory drawers, and deterministic policy enforcement for your desktop workstation. It is not an audio generation API, voice synthesis service, or speech cloning SaaS.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -234,113 +231,115 @@ export default function CompareCloudVsLocalPage() {
           </GenesisSectionIntro>
 
           {/* Detailed Responsive Table */}
-          <GenesisShowcaseFrame className="mt-10 overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-white/[0.08] bg-[#08090a] text-el-fg-muted">
-                  <th className="py-4 px-4 font-medium text-el-fg w-[24%]">
-                    Operational vector
-                  </th>
-                  <th className="py-4 px-4 font-medium text-[#10bc83] w-[38%]">
-                    ELEVEN sovereign local control plane
-                  </th>
-                  <th className="py-4 px-4 font-medium text-el-fg-faint w-[38%]">
-                    Commercial cloud chat assistants
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/[0.07] text-el-fg-muted">
-                {/* Vector 1 */}
-                <tr className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-4 px-4 font-semibold text-el-fg">
-                    1. Data Ownership &amp; Storage
-                  </td>
-                  <td className="py-4 px-4 text-[#10bc83]">
-                    <strong className="text-el-fg block mb-0.5">100% Local AES-256 Storage</strong>
-                    Stored in private SQLite drawers on your physical disk. Zero cloud telemetry, zero model retraining on your private files.
-                  </td>
-                  <td className="py-4 px-4 text-red-400/90">
-                    <strong className="text-el-fg block mb-0.5">Remote Cloud Multi-Tenant DBs</strong>
-                    All queries, attachments, and audio samples stream to external cloud servers. Subject to provider data policies and legal subpoenas.
-                  </td>
-                </tr>
+          <GenesisShowcaseFrame className="mt-10">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-white/[0.08] bg-[#08090a] text-el-fg-muted">
+                    <th className="py-4 px-4 font-medium text-el-fg w-[24%]">
+                      Operational vector
+                    </th>
+                    <th className="py-4 px-4 font-medium text-[#10bc83] w-[38%]">
+                      ELEVEN sovereign local control plane
+                    </th>
+                    <th className="py-4 px-4 font-medium text-el-fg-faint w-[38%]">
+                      Commercial cloud chat assistants
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/[0.07] text-el-fg-muted">
+                  {/* Vector 1 */}
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="py-4 px-4 font-semibold text-el-fg">
+                      1. Data Ownership &amp; Storage
+                    </td>
+                    <td className="py-4 px-4 text-[#10bc83]">
+                      <strong className="text-el-fg block mb-0.5">100% Local AES-256 Storage</strong>
+                      Stored in private SQLite drawers on your physical disk. Zero cloud telemetry, zero model retraining on your private files.
+                    </td>
+                    <td className="py-4 px-4 text-red-400/90">
+                      <strong className="text-el-fg block mb-0.5">Remote Cloud Multi-Tenant DBs</strong>
+                      All queries, attachments, and audio samples stream to external cloud servers. Subject to provider data policies and legal subpoenas.
+                    </td>
+                  </tr>
 
-                {/* Vector 2 */}
-                <tr className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-4 px-4 font-semibold text-el-fg">
-                    2. Process Sandboxing &amp; Execution
-                  </td>
-                  <td className="py-4 px-4 text-[#10bc83]">
-                    <strong className="text-el-fg block mb-0.5">Quarantined OS Namespaces</strong>
-                    Code runs in low-integrity jailed worktrees with read-only root mounts. Ephemeral test environments isolated from personal files.
-                  </td>
-                  <td className="py-4 px-4 text-yellow-400/90">
-                    <strong className="text-el-fg block mb-0.5">Un-Jailed or Remote VMs</strong>
-                    Either cannot interact with your local files at all, or requires un-sandboxed terminal bridges that execute arbitrary commands.
-                  </td>
-                </tr>
+                  {/* Vector 2 */}
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="py-4 px-4 font-semibold text-el-fg">
+                      2. Process Sandboxing &amp; Execution
+                    </td>
+                    <td className="py-4 px-4 text-[#10bc83]">
+                      <strong className="text-el-fg block mb-0.5">Quarantined OS Namespaces</strong>
+                      Code runs in low-integrity jailed worktrees with read-only root mounts. Ephemeral test environments isolated from personal files.
+                    </td>
+                    <td className="py-4 px-4 text-yellow-400/90">
+                      <strong className="text-el-fg block mb-0.5">Un-Jailed or Remote VMs</strong>
+                      Either cannot interact with your local files at all, or requires un-sandboxed terminal bridges that execute arbitrary commands.
+                    </td>
+                  </tr>
 
-                {/* Vector 3 */}
-                <tr className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-4 px-4 font-semibold text-el-fg">
-                    3. Emergency Killswitch
-                  </td>
-                  <td className="py-4 px-4 text-[#10bc83]">
-                    <strong className="text-el-fg block mb-0.5">Ring-0 Hardware Watchdog (&lt;0.05s)</strong>
-                    Dedicated hardware listener instantly terminates spawned threads and isolates sockets on physical gesture or hotkey.
-                  </td>
-                  <td className="py-4 px-4 text-red-400/90">
-                    <strong className="text-el-fg block mb-0.5">HTTP Cancel (Unreliable)</strong>
-                    Pressing &quot;Stop&quot; sends a network packet over the web. Actions already triggered on cloud nodes cannot be rolled back.
-                  </td>
-                </tr>
+                  {/* Vector 3 */}
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="py-4 px-4 font-semibold text-el-fg">
+                      3. Emergency Killswitch
+                    </td>
+                    <td className="py-4 px-4 text-[#10bc83]">
+                      <strong className="text-el-fg block mb-0.5">Ring-0 Hardware Watchdog (&lt;0.05s)</strong>
+                      Dedicated hardware listener instantly terminates spawned threads and isolates sockets on physical gesture or hotkey.
+                    </td>
+                    <td className="py-4 px-4 text-red-400/90">
+                      <strong className="text-el-fg block mb-0.5">HTTP Cancel (Unreliable)</strong>
+                      Pressing &quot;Stop&quot; sends a network packet over the web. Actions already triggered on cloud nodes cannot be rolled back.
+                    </td>
+                  </tr>
 
-                {/* Vector 4 */}
-                <tr className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-4 px-4 font-semibold text-el-fg">
-                    4. Voice Perception &amp; Barge-In
-                  </td>
-                  <td className="py-4 px-4 text-[#10bc83]">
-                    <strong className="text-el-fg block mb-0.5">16kHz Local Buffer (&lt;50ms Barge-In)</strong>
-                    Real-time audio processing directly on local NPU/GPU. Zero network round-trip delay when interrupting or speaking naturally.
-                  </td>
-                  <td className="py-4 px-4 text-yellow-400/90">
-                    <strong className="text-el-fg block mb-0.5">WebSocket Streaming (400 to 1200ms)</strong>
-                    Subject to WiFi jitter, internet packet loss, and cloud queue backpressure. Awkward pauses and delayed barge-in detection.
-                  </td>
-                </tr>
+                  {/* Vector 4 */}
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="py-4 px-4 font-semibold text-el-fg">
+                      4. Voice Perception &amp; Barge-In
+                    </td>
+                    <td className="py-4 px-4 text-[#10bc83]">
+                      <strong className="text-el-fg block mb-0.5">16kHz Local Buffer (&lt;50ms Barge-In)</strong>
+                      Real-time audio processing directly on local NPU/GPU. Zero network round-trip delay when interrupting or speaking naturally.
+                    </td>
+                    <td className="py-4 px-4 text-yellow-400/90">
+                      <strong className="text-el-fg block mb-0.5">WebSocket Streaming (400 to 1200ms)</strong>
+                      Subject to WiFi jitter, internet packet loss, and cloud queue backpressure. Awkward pauses and delayed barge-in detection.
+                    </td>
+                  </tr>
 
-                {/* Vector 5 */}
-                <tr className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-4 px-4 font-semibold text-el-fg">
-                    5. Economics &amp; Pricing Model
-                  </td>
-                  <td className="py-4 px-4 text-[#10bc83]">
-                    <strong className="text-el-fg block mb-0.5">Fixed Workstation License ($0 per-token)</strong>
-                    Run billions of tokens on your own silicon for zero marginal cost. Predictable budgeting with no sudden rate-limit throttling.
-                  </td>
-                  <td className="py-4 px-4 text-red-400/90">
-                    <strong className="text-el-fg block mb-0.5">Monthly Seats + Metered Token API Bills</strong>
-                    Expensive monthly subscriptions plus compounding token overages for long context monorepos or multi-agent swarms.
-                  </td>
-                </tr>
+                  {/* Vector 5 */}
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="py-4 px-4 font-semibold text-el-fg">
+                      5. Economics &amp; Pricing Model
+                    </td>
+                    <td className="py-4 px-4 text-[#10bc83]">
+                      <strong className="text-el-fg block mb-0.5">Fixed Workstation License ($0 per-token)</strong>
+                      Run billions of tokens on your own silicon for zero marginal cost. Predictable budgeting with no sudden rate-limit throttling.
+                    </td>
+                    <td className="py-4 px-4 text-red-400/90">
+                      <strong className="text-el-fg block mb-0.5">Monthly Seats + Metered Token API Bills</strong>
+                      Expensive monthly subscriptions plus compounding token overages for long context monorepos or multi-agent swarms.
+                    </td>
+                  </tr>
 
-                {/* Vector 6 */}
-                <tr className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-4 px-4 font-semibold text-el-fg">
-                    6. Auditability &amp; Invariants
-                  </td>
-                  <td className="py-4 px-4 text-[#10bc83]">
-                    <strong className="text-el-fg block mb-0.5">Cryptographic Ed25519 Receipts</strong>
-                    Every action proposal creates an immutable SHA-256 hash receipt with a 30s TTL nonce for mathematical proof of execution.
-                  </td>
-                  <td className="py-4 px-4 text-el-fg-faint">
-                    <strong className="text-el-fg block mb-0.5">Ephemeral Web Logs</strong>
-                    Closed proprietary logs stored inside the vendor&apos;s cloud, unverified by cryptographic signatures and subject to deletion.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  {/* Vector 6 */}
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="py-4 px-4 font-semibold text-el-fg">
+                      6. Auditability &amp; Invariants
+                    </td>
+                    <td className="py-4 px-4 text-[#10bc83]">
+                      <strong className="text-el-fg block mb-0.5">Cryptographic Ed25519 Receipts</strong>
+                      Every action proposal creates an immutable SHA-256 hash receipt with a 30s TTL nonce for mathematical proof of execution.
+                    </td>
+                    <td className="py-4 px-4 text-el-fg-faint">
+                      <strong className="text-el-fg block mb-0.5">Ephemeral Web Logs</strong>
+                      Closed proprietary logs stored inside the vendor&apos;s cloud, unverified by cryptographic signatures and subject to deletion.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </GenesisShowcaseFrame>
         </Section>
 
@@ -393,9 +392,13 @@ export default function CompareCloudVsLocalPage() {
             />
           </GenesisSectionIntro>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.09}
+            className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3"
+          >
             {/* Pillar 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -421,7 +424,7 @@ export default function CompareCloudVsLocalPage() {
             </Tilt3DCard>
 
             {/* Pillar 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -447,7 +450,7 @@ export default function CompareCloudVsLocalPage() {
             </Tilt3DCard>
 
             {/* Pillar 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -471,7 +474,7 @@ export default function CompareCloudVsLocalPage() {
                 <span className="text-el-fg font-medium">Policy Gates:</span> <code>5 Checkpoints Active</code>
               </div>
             </Tilt3DCard>
-          </div>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
@@ -484,15 +487,19 @@ export default function CompareCloudVsLocalPage() {
               <CipherText text="04 · Frequently Asked Questions" />
             </div>
             <h2 className="el-h2">
-              <WordReveal text="Clear answers on architecture &amp; sovereignty." />
+              <WordReveal text="Clear answers on architecture & sovereignty." />
             </h2>
             <p className="el-body">
               Understand how ELEVEN fits into your existing computing setup and hardware requirements.
             </p>
           </GenesisSectionIntro>
 
-          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Tilt3DCard className="p-6 space-y-2.5">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.09}
+            className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2"
+          >
+            <Tilt3DCard className="p-6 space-y-2.5 h-full">
               <h3 className="text-el-base font-normal heading-gradient">
                 What hardware is needed to run ELEVEN locally?
               </h3>
@@ -501,7 +508,7 @@ export default function CompareCloudVsLocalPage() {
               </p>
             </Tilt3DCard>
 
-            <Tilt3DCard className="p-6 space-y-2.5">
+            <Tilt3DCard className="p-6 space-y-2.5 h-full">
               <h3 className="text-el-base font-normal heading-gradient">
                 Can I still connect frontier cloud models if I want to?
               </h3>
@@ -510,7 +517,7 @@ export default function CompareCloudVsLocalPage() {
               </p>
             </Tilt3DCard>
 
-            <Tilt3DCard className="p-6 space-y-2.5">
+            <Tilt3DCard className="p-6 space-y-2.5 h-full">
               <h3 className="text-el-base font-normal heading-gradient">
                 How does ELEVEN differ from cloud voice APIs?
               </h3>
@@ -519,7 +526,7 @@ export default function CompareCloudVsLocalPage() {
               </p>
             </Tilt3DCard>
 
-            <Tilt3DCard className="p-6 space-y-2.5">
+            <Tilt3DCard className="p-6 space-y-2.5 h-full">
               <h3 className="text-el-base font-normal heading-gradient">
                 How does the Emergency Stop killswitch work?
               </h3>
@@ -527,38 +534,23 @@ export default function CompareCloudVsLocalPage() {
                 The killswitch is implemented at the un-sandboxed host supervisor level (outside model control). Pressing the physical shortcut or double-tapping the desktop widget halts all spawned worker threads and tears down network sockets in under 0.05 seconds.
               </p>
             </Tilt3DCard>
-          </div>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── HIGH CONVERTING SOVEREIGN WAITLIST CTA ── */}
         <Section className="py-20">
-          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-            />
-            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="gfx-badge mx-auto">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
-                <CipherText text="Sovereign Alpha · Direct Workstation Access" />
-              </div>
-
-              <h2 className="el-h2">
-                <WordReveal text="Take back your computing sovereignty." />
-              </h2>
-
-              <DualCopy
-                className="el-body"
-                plain="Stop renting your intelligence from cloud silos. Experience personal AI that lives on your hardware, respects your privacy, and answers only to you."
-                technical="Deploy frontier reasoning inside a provably secure, local-first control plane. Zero telemetry, zero token subscriptions, mathematical invariant guarantees."
-              />
-
-              <div className="pt-4 flex flex-wrap justify-center gap-4">
+          <GenesisCtaStage
+            badge="Sovereign Alpha · Direct Workstation Access"
+            title="Take back your computing sovereignty."
+            description="Stop renting your intelligence from cloud silos. Experience personal AI that lives on your hardware, respects your privacy, and answers only to you."
+            actions={
+              <>
                 <WaitlistActionButton
                   tier="general"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Claim Your Sovereignty (Join Waitlist)
                 </WaitlistActionButton>
@@ -566,16 +558,17 @@ export default function CompareCloudVsLocalPage() {
                   variant="secondary"
                   href="/docs"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Read Technical Documentation
                 </Button>
-              </div>
-
-              <p className="pt-2 text-xs text-el-fg-faint">
-                Early access invitations are dispatched weekly in verified batches.
-              </p>
-            </GenesisSectionIntro>
-          </div>
+              </>
+            }
+          >
+            <p className="pt-4 text-xs text-el-fg-faint">
+              Early access invitations are dispatched weekly in verified batches.
+            </p>
+          </GenesisCtaStage>
         </Section>
       </main>
 

@@ -1,8 +1,11 @@
 "use client";
 
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Container } from "@/components/ui/Section";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
 import {
@@ -10,6 +13,10 @@ import {
   useClarityMode,
 } from "@/components/motion/PremiumMotion";
 import { Button } from "@/components/ui/Button";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const columns = [
   {
@@ -67,6 +74,117 @@ export function Footer() {
   const pathname = usePathname();
   const isPlain = mode === "plain";
 
+  const footerRef = useRef<HTMLElement>(null);
+  const topRowRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const watermarkRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const footerEl = footerRef.current;
+    if (!footerEl) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cols = topRowRef.current
+      ? [
+          topRowRef.current.children[0] as HTMLElement,
+          ...(topRowRef.current.children[1]
+            ? Array.from(topRowRef.current.children[1].children) as HTMLElement[]
+            : []),
+        ].filter(Boolean)
+      : [];
+    const cards = cardsRef.current
+      ? (Array.from(cardsRef.current.children) as HTMLElement[])
+      : [];
+    const watermark = watermarkRef.current;
+
+    if (reduced) {
+      if (cols.length) gsap.set(cols, { autoAlpha: 1, y: 0 });
+      if (cards.length) gsap.set(cards, { autoAlpha: 1, y: 0, scale: 1 });
+      if (watermark) gsap.set(watermark, { autoAlpha: 1, y: 0 });
+      return;
+    }
+
+    const timelines: gsap.core.Timeline[] = [];
+
+    if (cols.length && topRowRef.current) {
+      const tlCols = gsap.timeline({
+        scrollTrigger: {
+          trigger: topRowRef.current,
+          start: "top 92%",
+          end: "bottom top",
+          toggleActions: "play none none reverse",
+        },
+      });
+      tlCols.fromTo(
+        cols,
+        { autoAlpha: 0, y: 40 },
+        { autoAlpha: 1, y: 0, duration: 0.78, stagger: 0.08, ease: "power3.out" }
+      );
+      timelines.push(tlCols);
+    }
+
+    if (cards.length && cardsRef.current) {
+      const tlCards = gsap.timeline({
+        scrollTrigger: {
+          trigger: cardsRef.current,
+          start: "top 94%",
+          end: "bottom top",
+          toggleActions: "play none none reverse",
+        },
+      });
+      tlCards.fromTo(
+        cards,
+        { autoAlpha: 0, y: 34, scale: 0.97 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.72,
+          stagger: { each: 0.1, from: "center" },
+          ease: "power2.out",
+        }
+      );
+      timelines.push(tlCards);
+    }
+
+    if (watermark) {
+      const tlWatermark = gsap.timeline({
+        scrollTrigger: {
+          trigger: watermark,
+          start: "top 96%",
+          end: "bottom top",
+          toggleActions: "play none none reverse",
+        },
+      });
+      tlWatermark.fromTo(
+        watermark,
+        { autoAlpha: 0, y: 52 },
+        { autoAlpha: 1, y: 0, duration: 1.0, ease: "power2.out" }
+      );
+      timelines.push(tlWatermark);
+    }
+
+    const syncVisible = () => {
+      for (const tl of timelines) {
+        const triggerEl = tl.scrollTrigger?.trigger as HTMLElement | undefined;
+        if (triggerEl && triggerEl.getBoundingClientRect().top <= window.innerHeight * 0.96) {
+          tl.progress(1);
+        }
+      }
+    };
+    const raf = requestAnimationFrame(syncVisible);
+    ScrollTrigger.addEventListener("refresh", syncVisible);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ScrollTrigger.removeEventListener("refresh", syncVisible);
+      for (const tl of timelines) {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      }
+    };
+  }, [pathname]);
+
   const handleFooterLinkClick = (href: string, e: React.MouseEvent) => {
     if (pathname === href) {
       e.preventDefault();
@@ -98,7 +216,10 @@ export function Footer() {
   ];
 
   return (
-    <footer className="site-footer relative w-full overflow-hidden border-t border-white/[0.07] bg-[#05070d] text-[#e8ecf5]">
+    <footer
+      ref={footerRef}
+      className="site-footer relative w-full overflow-hidden border-t border-white/[0.07] bg-[#05070d] text-[#e8ecf5]"
+    >
       {/* GenesisFX Centered Emerald Ambient Glow */}
       <div
         aria-hidden="true"
@@ -111,7 +232,10 @@ export function Footer() {
 
       <Container className="relative z-10 pt-20 pb-10 lg:pt-24">
         {/* Top Row: Brand Left + Columns Right */}
-        <div className="flex flex-col justify-between gap-14 lg:flex-row lg:gap-12">
+        <div
+          ref={topRowRef}
+          className="flex flex-col justify-between gap-14 lg:flex-row lg:gap-12"
+        >
           {/* Brand Column */}
           <div className="max-w-[380px]">
             <div className="flex items-center gap-3">
@@ -179,7 +303,10 @@ export function Footer() {
         </div>
 
         {/* GenesisFX Platform Cards Row */}
-        <div className="mt-14 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          ref={cardsRef}
+          className="mt-14 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
+        >
           {platformSpecs.map((spec) => (
             <div key={spec.kicker} className="platform-card">
               <span className="platform-card__fill" aria-hidden="true" />
@@ -200,6 +327,7 @@ export function Footer() {
 
         {/* Giant Full-Width Edge-to-Edge GenesisFX Typographic Watermark */}
         <div
+          ref={watermarkRef}
           aria-hidden="true"
           className="pointer-events-none select-none mt-12 -mb-4 flex justify-center overflow-hidden"
         >

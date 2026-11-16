@@ -28,9 +28,13 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -115,16 +119,9 @@ export default function DagVisualizerPage() {
 
         {/* HERO SECTION */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
-          />
+          <GenesisSubpageHeroBackdrop />
 
-          <Container className="relative">
+          <Container className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -143,7 +140,7 @@ export default function DagVisualizerPage() {
 
             <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
               <div className="gfx-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] motion-safe:animate-pulse motion-reduce:animate-none" />
                 <CipherText text="System 2 Async Reasoning · Quarantined Git Worktrees" />
               </div>
 
@@ -158,24 +155,24 @@ export default function DagVisualizerPage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2.5 pt-2 text-xs text-el-fg-muted">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-xs text-el-fg-muted">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  Isolated Git Worktrees (<code>INV-09</code>)
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>Isolated Git Worktrees (<code>INV-09</code>)</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                  Static AST Audit Gates (<code>INV-10</code>)
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>Static AST Audit Gates (<code>INV-10</code>)</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  Human Sovereign Veto (<code>INV-02</code>)
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>Human Sovereign Veto (<code>INV-02</code>)</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                  Atomic Merkle Rollback (<code>INV-05</code>)
-                </span>
-              </div>
+                  <span>Atomic Merkle Rollback (<code>INV-05</code>)</span>
+                </li>
+              </GenesisBubbleRow>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -249,9 +246,13 @@ export default function DagVisualizerPage() {
               </p>
             </GenesisSectionIntro>
 
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <GenesisStaggerGrid
+              from="center"
+              stagger={0.09}
+              className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6"
+            >
               {/* Invariant 1 */}
-              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 space-y-4">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-4 right-5">
                   <code className="text-[#10bc83]/60 font-mono text-xs">INV-09</code>
                 </div>
@@ -274,7 +275,7 @@ export default function DagVisualizerPage() {
               </Tilt3DCard>
 
               {/* Invariant 2 */}
-              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 space-y-4">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-4 right-5">
                   <code className="text-[#10bc83]/60 font-mono text-xs">INV-10</code>
                 </div>
@@ -297,7 +298,7 @@ export default function DagVisualizerPage() {
               </Tilt3DCard>
 
               {/* Invariant 3 */}
-              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 space-y-4">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-4 right-5">
                   <code className="text-[#10bc83]/60 font-mono text-xs">INV-02</code>
                 </div>
@@ -320,7 +321,7 @@ export default function DagVisualizerPage() {
               </Tilt3DCard>
 
               {/* Invariant 4 */}
-              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 space-y-4">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-4 right-5">
                   <code className="text-[#10bc83]/60 font-mono text-xs">INV-05</code>
                 </div>
@@ -341,7 +342,7 @@ export default function DagVisualizerPage() {
                   <code className="text-[#10bc83] text-[11px]">Atomic Transaction Ledger</code>
                 </div>
               </Tilt3DCard>
-            </div>
+            </GenesisStaggerGrid>
           </Container>
         </Section>
 
@@ -365,8 +366,12 @@ export default function DagVisualizerPage() {
               />
             </GenesisSectionIntro>
 
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-              <Tilt3DCard className="p-6 space-y-3">
+            <GenesisStaggerGrid
+              from="center"
+              stagger={0.1}
+              className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs"
+            >
+              <Tilt3DCard className="p-6 space-y-3 h-full">
                 <div className="flex items-center justify-between text-[#10bc83] border-b border-white/[0.07] pb-2">
                   <span className="font-normal text-sm heading-gradient">System 1 (Instant Voice)</span>
                   <span className="text-[10px]">Sub-50ms barge-in</span>
@@ -378,7 +383,7 @@ export default function DagVisualizerPage() {
                 </ul>
               </Tilt3DCard>
 
-              <Tilt3DCard className="p-6 space-y-3">
+              <Tilt3DCard className="p-6 space-y-3 h-full">
                 <div className="flex items-center justify-between text-[#10bc83] border-b border-white/[0.07] pb-2">
                   <span className="font-normal text-sm heading-gradient">System 2 (Async DAG Planner)</span>
                   <span className="text-[10px]">Parallel execution</span>
@@ -389,7 +394,7 @@ export default function DagVisualizerPage() {
                   <li>• Reports live milestone progress back to System 1 for conversational speech updates.</li>
                 </ul>
               </Tilt3DCard>
-            </div>
+            </GenesisStaggerGrid>
           </Container>
         </Section>
 
@@ -411,7 +416,10 @@ export default function DagVisualizerPage() {
               </p>
             </GenesisSectionIntro>
 
-            <div className="mt-10 max-w-4xl space-y-4">
+            <GenesisStaggerGrid
+              stagger={0.08}
+              className="mt-10 max-w-4xl space-y-4"
+            >
               {[
                 {
                   q: "How does ELEVEN prevent git merge conflicts between parallel worktrees?",
@@ -439,39 +447,26 @@ export default function DagVisualizerPage() {
                   </p>
                 </Tilt3DCard>
               ))}
-            </div>
+            </GenesisStaggerGrid>
           </Container>
         </Section>
+
+        <SignalBeamDivider />
 
         {/* BOTTOM CTA ACCESS FUNNEL */}
         <Section className="py-20">
           <Container>
-            <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-              />
-              <GenesisSectionIntro className="relative mx-auto max-w-3xl text-center space-y-6">
-                <div className="gfx-badge mx-auto">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
-                  <CipherText text="05 · Asynchronous System 2 Engine" />
-                </div>
-
-                <h2 className="el-h2">
-                  <WordReveal text="Ready to build with supervised multi-agent graphs?" />
-                </h2>
-
-                <DualCopy
-                  className="mx-auto max-w-2xl el-body"
-                  plain="Join the early access program to test ELEVEN's DAG execution engine and worktree sandboxing on your local repositories."
-                  technical="Request access to the ELEVEN Developer Preview. Includes eleven-cli, System 2 DAG orchestrator binaries, and native git worktree bridges."
-                />
-
-                <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <GenesisCtaStage
+              badge="05 · Asynchronous System 2 Engine"
+              title="Ready to build with supervised multi-agent graphs?"
+              description="Join the early access program to test ELEVEN's DAG execution engine and worktree sandboxing on your local repositories."
+              actions={
+                <>
                   <WaitlistActionButton
                     tier="technical"
                     arrow
                     variant="primary"
+                    className="w-full sm:w-auto"
                   >
                     Request DAG Orchestrator Preview
                   </WaitlistActionButton>
@@ -480,28 +475,29 @@ export default function DagVisualizerPage() {
                     href="/solutions/developers"
                     variant="secondary"
                     arrow
+                    className="w-full sm:w-auto"
                   >
                     Developer Diff Review Console
                   </Button>
-                </div>
-
-                {/* Cross Links to Other Deep Architecture Pages */}
-                <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
-                  <Link href="/tools/inspector" className="hover:text-[#38ffbd] transition-colors">
-                    ActionProposal Inspector
-                  </Link>
-                  <Link href="/hardware" className="hover:text-[#38ffbd] transition-colors">
-                    Hardware Compatibility
-                  </Link>
-                  <Link href="/security" className="hover:text-[#38ffbd] transition-colors">
-                    Security Architecture
-                  </Link>
-                  <Link href="/solutions/enterprise" className="hover:text-[#38ffbd] transition-colors">
-                    Enterprise Fleet Governance
-                  </Link>
-                </div>
-              </GenesisSectionIntro>
-            </div>
+                </>
+              }
+            >
+              {/* Cross Links to Other Deep Architecture Pages */}
+              <div className="flex flex-wrap items-center gap-6 pt-6 text-xs text-el-fg-faint">
+                <Link href="/tools/inspector" className="hover:text-[#38ffbd] transition-colors">
+                  ActionProposal Inspector
+                </Link>
+                <Link href="/hardware" className="hover:text-[#38ffbd] transition-colors">
+                  Hardware Compatibility
+                </Link>
+                <Link href="/security" className="hover:text-[#38ffbd] transition-colors">
+                  Security Architecture
+                </Link>
+                <Link href="/solutions/enterprise" className="hover:text-[#38ffbd] transition-colors">
+                  Enterprise Fleet Governance
+                </Link>
+              </div>
+            </GenesisCtaStage>
           </Container>
         </Section>
       </main>

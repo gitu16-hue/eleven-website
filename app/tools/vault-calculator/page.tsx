@@ -27,9 +27,15 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisSplitReveal,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
+  GenesisTimelineList,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -103,16 +109,9 @@ export default function VaultCalculatorPage() {
 
         {/* ── HERO SECTION ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
-          />
+          <GenesisSubpageHeroBackdrop />
 
-          <div className="relative">
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -131,7 +130,7 @@ export default function VaultCalculatorPage() {
 
             <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
               <div className="gfx-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] motion-safe:animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Storage Calculator · Encrypted Local Memory" />
               </div>
 
@@ -146,24 +145,24 @@ export default function VaultCalculatorPage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2.5 pt-2 text-xs text-el-fg-muted">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-xs text-el-fg-muted">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  <code>AES-256-GCM</code> / <code>Argon2id</code>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span><code>AES-256-GCM</code> / <code>Argon2id</code></span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                  Dense HNSW (M=16, EF=64)
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>Dense HNSW (M=16, EF=64)</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  SQLite 3 WAL Mode
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>SQLite 3 WAL Mode</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                  127.0.0.1 Loopback Only
-                </span>
-              </div>
+                  <span>127.0.0.1 Loopback Only</span>
+                </li>
+              </GenesisBubbleRow>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -242,9 +241,13 @@ export default function VaultCalculatorPage() {
             />
           </GenesisSectionIntro>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.09}
+            className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          >
             {/* Drawer 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -269,7 +272,7 @@ export default function VaultCalculatorPage() {
             </Tilt3DCard>
 
             {/* Drawer 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -294,7 +297,7 @@ export default function VaultCalculatorPage() {
             </Tilt3DCard>
 
             {/* Drawer 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -319,7 +322,7 @@ export default function VaultCalculatorPage() {
             </Tilt3DCard>
 
             {/* Drawer 4 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -342,46 +345,52 @@ export default function VaultCalculatorPage() {
                 <span className="text-[#10bc83]">Index:</span> <code className="text-[10px]">/vault/knowledge.qdrant</code>
               </div>
             </Tilt3DCard>
-          </div>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── CRYPTOGRAPHIC SPEED & KEY DERIVATION ── */}
         <Section className="py-16 lg:py-24">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-            <GenesisSectionIntro className="lg:col-span-6 space-y-4">
-              <div className="gfx-badge">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                <CipherText text="03 · Cryptographic Throughput" />
+          <GenesisSplitReveal
+            className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center"
+            leftClassName="lg:col-span-6 space-y-4"
+            rightClassName="lg:col-span-6"
+            offset={64}
+            left={
+              <div>
+                <GenesisSectionIntro className="space-y-4">
+                  <div className="gfx-badge">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                    <CipherText text="03 · Cryptographic Throughput" />
+                  </div>
+                  <h2 className="el-h2">
+                    <WordReveal text="Faster than your NVMe SSD." />
+                  </h2>
+                  <DualCopy
+                    className="el-body"
+                    plain="Security does not slow you down. Because ELEVEN uses your processor's built-in cryptographic hardware, reading your private vault is as fast as opening any ordinary file."
+                    technical="Hardware-accelerated AES-256-GCM utilizes Intel AES-NI, AMD-V, and Apple Crypto Engine instructions, delivering over 3.8 GB/second decryption throughput."
+                  />
+                </GenesisSectionIntro>
+
+                <GenesisTimelineList mode="feature-bars" className="mt-6 space-y-4 text-xs text-el-fg-muted">
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Hardware enclave binding:</strong> Keys reside in Apple Secure Enclave or Windows TPM 2.0; master keys never exist in plaintext on disk.</span>
+                  </li>
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Argon2id memory hardening:</strong> Protects against brute-force password cracking using 64MB RAM and 4 parallel hashing lanes.</span>
+                  </li>
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Zero cloud keys:</strong> GISHH Labs has no escrow keys, no recovery servers, and no backdoor into your memory drawers.</span>
+                  </li>
+                </GenesisTimelineList>
               </div>
-              <h2 className="el-h2">
-                <WordReveal text="Faster than your NVMe SSD." />
-              </h2>
-              <DualCopy
-                className="el-body"
-                plain="Security does not slow you down. Because ELEVEN uses your processor's built-in cryptographic hardware, reading your private vault is as fast as opening any ordinary file."
-                technical="Hardware-accelerated AES-256-GCM utilizes Intel AES-NI, AMD-V, and Apple Crypto Engine instructions, delivering over 3.8 GB/second decryption throughput."
-              />
-
-              <ul className="space-y-3 pt-2 text-xs text-el-fg-muted">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#10bc83] font-bold">▸</span>
-                  <span><strong className="text-el-fg">Hardware enclave binding:</strong> Keys reside in Apple Secure Enclave or Windows TPM 2.0; master keys never exist in plaintext on disk.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#10bc83] font-bold">▸</span>
-                  <span><strong className="text-el-fg">Argon2id memory hardening:</strong> Protects against brute-force password cracking using 64MB RAM and 4 parallel hashing lanes.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#10bc83] font-bold">▸</span>
-                  <span><strong className="text-el-fg">Zero cloud keys:</strong> GISHH Labs has no escrow keys, no recovery servers, and no backdoor into your memory drawers.</span>
-                </li>
-              </ul>
-            </GenesisSectionIntro>
-
-            {/* Benchmark Code Box */}
-            <div className="lg:col-span-6">
+            }
+            right={
               <GenesisShowcaseFrame className="overflow-hidden font-mono text-[11.5px]">
                 <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#08090a] px-4 py-2.5 text-xs">
                   <span className="text-el-fg-faint">terminal // bench</span>
@@ -409,37 +418,24 @@ export default function VaultCalculatorPage() {
                   </div>
                 </div>
               </GenesisShowcaseFrame>
-            </div>
-          </div>
+            }
+          />
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── ACCESS FUNNEL & WAITLIST CTA ── */}
         <Section className="py-20 lg:py-28">
-          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-            />
-            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="gfx-badge mx-auto">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
-                <CipherText text="04 · Sovereign Storage and SDK Preview" />
-              </div>
-              <h2 className="el-h2">
-                <WordReveal text="Keep your intelligence on your own hardware." />
-              </h2>
-              <DualCopy
-                className="el-body"
-                plain="Join the early access program to deploy sovereign memory drawers on your desktop or laptop."
-                technical="Request access to the ELEVEN Sovereign Vault SDK. Includes local SQLite schemas, Qdrant/HNSW vector indices, and TPM 2.0 key derivation modules."
-              />
-
-              <div className="pt-4 flex flex-wrap justify-center gap-4">
+          <GenesisCtaStage
+            badge="04 · Sovereign Storage and SDK Preview"
+            title="Keep your intelligence on your own hardware."
+            description="Join the early access program to deploy sovereign memory drawers on your desktop or laptop."
+            actions={
+              <>
                 <WaitlistActionButton
                   tier="technical"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Download Sovereign Vault SDK
                 </WaitlistActionButton>
@@ -447,6 +443,7 @@ export default function VaultCalculatorPage() {
                   variant="secondary"
                   href="/benchmarks/voice-latency"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Inspect Voice Pipeline Benchmarks
                 </Button>
@@ -454,16 +451,17 @@ export default function VaultCalculatorPage() {
                   variant="ghost"
                   href="/hardware"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Verify Hardware Sizing
                 </Button>
-              </div>
-
-              <p className="pt-2 text-xs text-el-fg-faint">
-                Requires minimum 16GB RAM for local 768-d embedding index operations.
-              </p>
-            </GenesisSectionIntro>
-          </div>
+              </>
+            }
+          >
+            <p className="pt-4 text-xs text-el-fg-faint">
+              Requires minimum 16GB RAM for local 768-d embedding index operations.
+            </p>
+          </GenesisCtaStage>
         </Section>
       </main>
 

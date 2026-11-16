@@ -88,17 +88,17 @@ export function AmbientSpatialField3D() {
     const sizes = new Float32Array(NODE_COUNT);
 
     const palette = [
-      new THREE.Color(0x00f0ff), // Hologram Cyan
-      new THREE.Color(0x94a3b8), // Titanium Starlight
-      new THREE.Color(0x8b5cf6), // Singularity Violet
-      new THREE.Color(0x00ff9d), // Signal Mint
+      new THREE.Color(0x10bc83), // Genesis Emerald
+      new THREE.Color(0xa6fff0), // Cool Starlight White-Mint
+      new THREE.Color(0x00b38c), // Deep Institutional Emerald
+      new THREE.Color(0x8260cf), // Subtle AI Core Violet
     ];
 
     const rawPts: THREE.Vector3[] = [];
     for (let i = 0; i < NODE_COUNT; i++) {
-      const x = (rand() - 0.5) * 22;
-      const y = (rand() - 0.5) * 16;
-      const z = (rand() - 0.5) * 11 - 2.5;
+      const x = (rand() - 0.5) * 24;
+      const y = (rand() - 0.5) * 18;
+      const z = (rand() - 0.5) * 12 - 2.2;
 
       positions[i * 3] = x;
       positions[i * 3 + 1] = y;
@@ -107,13 +107,13 @@ export function AmbientSpatialField3D() {
 
       const rPick = rand();
       const c =
-        palette[rPick < 0.44 ? 1 : rPick < 0.68 ? 0 : rPick < 0.86 ? 2 : 3];
+        palette[rPick < 0.42 ? 1 : rPick < 0.72 ? 0 : rPick < 0.9 ? 2 : 3];
       colors[i * 3] = c.r;
       colors[i * 3 + 1] = c.g;
       colors[i * 3 + 2] = c.b;
 
       phases[i] = rand() * Math.PI * 2;
-      sizes[i] = (1.5 + rand() * 2.2) * dpr;
+      sizes[i] = (1.8 + rand() * 2.5) * dpr;
     }
 
     const pointsGeo = new THREE.BufferGeometry();
@@ -141,25 +141,25 @@ export function AmbientSpatialField3D() {
 
         void main() {
           vec3 pos = position;
-          pos.y += sin(uTime * 0.32 + aPhase) * 0.20;
-          pos.x += cos(uTime * 0.24 + aPhase * 1.3) * 0.15;
+          pos.y += sin(uTime * 0.34 + aPhase) * 0.22;
+          pos.x += cos(uTime * 0.24 + aPhase * 1.3) * 0.16;
 
           // Subtle 3D cursor magnetic parting + click gravity ripple
           vec2 ptrWorld = vec2(uPointer.x * 7.5, -uPointer.y * 5.2 - uScroll * 2.1);
           vec2 delta = pos.xy - ptrWorld;
           float d = length(delta) + 0.001;
-          float influence = smoothstep(3.8, 0.0, d);
-          pos.xy += (delta / d) * influence * (0.38 + uShockwave * 0.85);
-          pos.z += influence * (0.28 + uShockwave * 0.55);
+          float influence = smoothstep(4.2, 0.0, d);
+          pos.xy += (delta / d) * influence * (0.42 + uShockwave * 0.9);
+          pos.z += influence * (0.3 + uShockwave * 0.6);
 
           vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
           float dist = max(-mvPosition.z, 1.5);
-          gl_PointSize = clamp(aSize * (8.8 / dist) * (1.0 + influence * 0.35), 1.5, 10.0);
+          gl_PointSize = clamp(aSize * (9.5 / dist) * (1.0 + influence * 0.38), 1.6, 11.0);
 
-          float pulse = 0.62 + 0.38 * sin(uTime * 0.88 + aPhase);
-          float depthFade = smoothstep(16.5, 3.2, dist);
-          vColor = mix(color, vec3(0.0, 0.94, 1.0), influence * 0.45);
-          vAlpha = (0.28 + influence * 0.16) * pulse * depthFade;
+          float pulse = 0.68 + 0.32 * sin(uTime * 0.92 + aPhase);
+          float depthFade = smoothstep(17.5, 3.0, dist);
+          vColor = mix(color, vec3(0.22, 1.0, 0.745), influence * 0.55);
+          vAlpha = (0.38 + influence * 0.2) * pulse * depthFade;
 
           gl_Position = projectionMatrix * mvPosition;
         }
@@ -173,7 +173,7 @@ export function AmbientSpatialField3D() {
           float r2 = dot(uv, uv);
           if (r2 > 0.25) discard;
           float core = exp(-r2 * 22.0);
-          float halo = exp(-r2 * 8.5) * 0.45;
+          float halo = exp(-r2 * 8.5) * 0.52;
           gl_FragColor = vec4(vColor, vAlpha * (core + halo));
         }
       `,
@@ -184,12 +184,12 @@ export function AmbientSpatialField3D() {
     rootGroup.add(pointsMesh);
 
     // -------------------------------------------------------------------------
-    // 2. Sparse Architectural Constellation Filaments
+    // 2. Sparse Architectural Constellation Filaments (Genesis Emerald)
     // -------------------------------------------------------------------------
     const lineVerts: number[] = [];
-    const maxDistSq = isMobile ? 9.5 : 11.5;
+    const maxDistSq = isMobile ? 9.5 : 11.8;
     let edgeCount = 0;
-    const maxEdges = isMobile ? 34 : 76;
+    const maxEdges = isMobile ? 38 : 82;
 
     for (let i = 0; i < NODE_COUNT && edgeCount < maxEdges; i++) {
       let connectionsForNode = 0;
@@ -216,9 +216,9 @@ export function AmbientSpatialField3D() {
       new THREE.Float32BufferAttribute(lineVerts, 3)
     );
     const lineMat = new THREE.LineBasicMaterial({
-      color: 0x00f0ff,
+      color: 0x10bc83,
       transparent: true,
-      opacity: 0.042,
+      opacity: 0.068,
       blending: THREE.AdditiveBlending,
     });
     disposables.push(lineGeo, lineMat);
@@ -277,7 +277,7 @@ export function AmbientSpatialField3D() {
             float head = fract(uTime * uSpeed);
             float dist = abs(vArc - head);
             dist = min(dist, 1.0 - dist);
-            float packet = exp(-dist * 26.0) * 0.14;
+            float packet = exp(-dist * 24.0) * 0.2;
             gl_FragColor = vec4(uColor, uBaseAlpha + packet);
           }
         `,
@@ -286,23 +286,23 @@ export function AmbientSpatialField3D() {
       return new THREE.Line(geo, mat);
     };
 
-    const outerOrbit = createPhotonOrbit(7.4, 112, 0x00f0ff, 0.036, 0.085);
+    const outerOrbit = createPhotonOrbit(7.4, 112, 0x10bc83, 0.055, 0.085);
     outerOrbit.rotation.set(1.12, 0.24, 0.15);
     outerOrbit.position.set(0, -0.4, -3.5);
     scene.add(outerOrbit);
 
-    const innerOrbit = createPhotonOrbit(5.1, 96, 0x8b5cf6, 0.032, -0.11);
+    const innerOrbit = createPhotonOrbit(5.1, 96, 0x8260cf, 0.045, -0.11);
     innerOrbit.rotation.set(-0.95, -0.32, 0.4);
     innerOrbit.position.set(0, 0.3, -4.2);
     scene.add(innerOrbit);
 
     // Distant Geodesic Polyhedron
-    const icoGeo = new THREE.IcosahedronGeometry(3.35, 1);
+    const icoGeo = new THREE.IcosahedronGeometry(3.45, 1);
     const icoEdges = new THREE.EdgesGeometry(icoGeo);
     const icoMat = new THREE.LineBasicMaterial({
-      color: 0x00ff9d,
+      color: 0x38ffbd,
       transparent: true,
-      opacity: 0.026,
+      opacity: 0.042,
       blending: THREE.AdditiveBlending,
     });
     disposables.push(icoGeo, icoEdges, icoMat);
@@ -348,15 +348,15 @@ export function AmbientSpatialField3D() {
           vec2 centered = (vUv - vec2(0.5)) * vec2(2.0, 2.0);
           float vignette = 1.0 - smoothstep(0.25, 0.98, length(centered));
 
-          vec3 cyan = vec3(0.0, 0.94, 1.0);
-          vec3 violet = vec3(0.545, 0.36, 0.965);
-          vec3 mint = vec3(0.0, 1.0, 0.616);
+          vec3 emerald = vec3(0.063, 0.737, 0.514);
+          vec3 mint = vec3(0.22, 1.0, 0.745);
+          vec3 violet = vec3(0.51, 0.376, 0.812);
 
-          vec3 scrollTint = mix(cyan, violet, smoothstep(0.15, 0.65, uScroll));
-          scrollTint = mix(scrollTint, mint, smoothstep(0.65, 1.0, uScroll) * 0.65);
-          vec3 col = mix(scrollTint, vec3(1.0), vElev * 0.22);
+          vec3 scrollTint = mix(emerald, mint, smoothstep(0.15, 0.65, uScroll));
+          scrollTint = mix(scrollTint, violet, smoothstep(0.65, 1.0, uScroll) * 0.48);
+          vec3 col = mix(scrollTint, vec3(0.85, 1.0, 0.95), vElev * 0.22);
 
-          gl_FragColor = vec4(col, vignette * (0.022 + vElev * 0.028));
+          gl_FragColor = vec4(col, vignette * (0.036 + vElev * 0.044));
         }
       `,
     });

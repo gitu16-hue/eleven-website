@@ -17,9 +17,13 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -104,16 +108,9 @@ export default function EnterpriseSolutionPage() {
 
         {/* HERO SECTION */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
-          />
+          <GenesisSubpageHeroBackdrop />
 
-          <Container className="relative">
+          <Container className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -147,24 +144,24 @@ export default function EnterpriseSolutionPage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Zero cloud exfiltration
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   MDM / Jamf / Intune ready
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   FIDO2 hardware-bound
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Merkle WORM audit trail
-                </span>
-              </div>
+                </li>
+              </GenesisBubbleRow>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -214,9 +211,13 @@ export default function EnterpriseSolutionPage() {
               </p>
             </GenesisSectionIntro>
 
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <GenesisStaggerGrid
+              from="center"
+              stagger={0.09}
+              className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6"
+            >
               {/* Pillar 01 */}
-              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 h-full">
                 <div className="pointer-events-none absolute top-4 right-5 text-xs text-el-fg-faint font-mono">
                   01
                 </div>
@@ -245,7 +246,7 @@ export default function EnterpriseSolutionPage() {
               </Tilt3DCard>
 
               {/* Pillar 02 */}
-              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 h-full">
                 <div className="pointer-events-none absolute top-4 right-5 text-xs text-el-fg-faint font-mono">
                   02
                 </div>
@@ -274,7 +275,7 @@ export default function EnterpriseSolutionPage() {
               </Tilt3DCard>
 
               {/* Pillar 03 */}
-              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 h-full">
                 <div className="pointer-events-none absolute top-4 right-5 text-xs text-el-fg-faint font-mono">
                   03
                 </div>
@@ -303,7 +304,7 @@ export default function EnterpriseSolutionPage() {
               </Tilt3DCard>
 
               {/* Pillar 04 */}
-              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8 h-full">
                 <div className="pointer-events-none absolute top-4 right-5 text-xs text-el-fg-faint font-mono">
                   04
                 </div>
@@ -330,7 +331,7 @@ export default function EnterpriseSolutionPage() {
                   </div>
                 </div>
               </Tilt3DCard>
-            </div>
+            </GenesisStaggerGrid>
           </Container>
         </Section>
 
@@ -345,7 +346,7 @@ export default function EnterpriseSolutionPage() {
                 <CipherText text="02 · Interactive Fleet Simulator" />
               </div>
               <h2 className="el-h2">
-                <WordReveal text="Simulate Fleet Governance &amp; Telemetry" />
+                <WordReveal text="Simulate Fleet Governance & Telemetry" />
               </h2>
               <p className="el-body">
                 Model enterprise workstation deployments from 25-seat pilot programs to 2,500-seat global rollouts. Calculate avoided cloud data exposure, annual licensing savings, and inspect generated MDM configuration manifests.
@@ -401,9 +402,13 @@ export default function EnterpriseSolutionPage() {
             </GenesisSectionIntro>
 
             {/* Architecture Diagram Grid */}
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+            <GenesisStaggerGrid
+              from="center"
+              stagger={0.1}
+              className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs"
+            >
               {/* Layer 1: Managed Endpoint */}
-              <Tilt3DCard className="relative p-6 space-y-4">
+              <Tilt3DCard className="relative p-6 space-y-4 h-full">
                 <div className="flex items-center justify-between text-el-accent">
                   <span className="font-medium">Layer 1: Workstation Endpoint</span>
                   <span className="text-[10px] text-el-fg-faint">100% private</span>
@@ -428,7 +433,7 @@ export default function EnterpriseSolutionPage() {
               </Tilt3DCard>
 
               {/* Layer 2: Ring-0 Supervisor */}
-              <Tilt3DCard className="relative p-6 space-y-4">
+              <Tilt3DCard className="relative p-6 space-y-4 h-full">
                 <div className="flex items-center justify-between text-[#10bc83]">
                   <span className="font-medium">Layer 2: Kernel Supervisor</span>
                   <span className="text-[10px] text-el-fg-faint">Hard boundary</span>
@@ -453,7 +458,7 @@ export default function EnterpriseSolutionPage() {
               </Tilt3DCard>
 
               {/* Layer 3: Centralized SIEM / MDM */}
-              <Tilt3DCard className="relative p-6 space-y-4">
+              <Tilt3DCard className="relative p-6 space-y-4 h-full">
                 <div className="flex items-center justify-between text-el-accent">
                   <span className="font-medium">Layer 3: SIEM &amp; MDM Sync</span>
                   <span className="text-[10px] text-el-fg-faint">Audit only</span>
@@ -476,7 +481,7 @@ export default function EnterpriseSolutionPage() {
                   Zero-knowledge proofs with verifiable visibility
                 </div>
               </Tilt3DCard>
-            </div>
+            </GenesisStaggerGrid>
           </Container>
         </Section>
 
@@ -498,7 +503,10 @@ export default function EnterpriseSolutionPage() {
               </p>
             </GenesisSectionIntro>
 
-            <div className="mt-10 max-w-4xl space-y-4">
+            <GenesisStaggerGrid
+              stagger={0.08}
+              className="mt-10 max-w-4xl space-y-4"
+            >
               {[
                 {
                   q: "How does ELEVEN distribute to 1,000+ developer laptops without manual configuration?",
@@ -530,39 +538,26 @@ export default function EnterpriseSolutionPage() {
                   </p>
                 </Tilt3DCard>
               ))}
-            </div>
+            </GenesisStaggerGrid>
           </Container>
         </Section>
+
+        <SignalBeamDivider />
 
         {/* BOTTOM CTA ACCESS FUNNEL */}
         <Section className="py-20">
           <Container>
-            <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-              />
-              <GenesisSectionIntro className="relative mx-auto max-w-3xl text-center space-y-6">
-                <div className="gfx-badge mx-auto">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
-                  <CipherText text="Enterprise Pilot Program · 25 to 2,500 Seats" />
-                </div>
-
-                <h2 className="el-h2">
-                  <WordReveal text="Ready to deploy sovereign AI across your fleet?" />
-                </h2>
-
-                <DualCopy
-                  className="mx-auto max-w-2xl el-body"
-                  plain="Contact GISHH Labs to schedule an architecture consultation, pilot deployment, and security review for your organization."
-                  technical="Engage with our core systems engineering team for air-gapped pilot deployment, custom MDM policy synthesis, and compliance integration."
-                />
-
-                <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <GenesisCtaStage
+              badge="Enterprise Pilot Program · 25 to 2,500 Seats"
+              title="Ready to deploy sovereign AI across your fleet?"
+              description="Contact GISHH Labs to schedule an architecture consultation, pilot deployment, and security review for your organization."
+              actions={
+                <>
                   <WaitlistActionButton
                     tier="technical"
                     arrow
                     variant="primary"
+                    className="w-full sm:w-auto"
                   >
                     Schedule Architecture Consultation
                   </WaitlistActionButton>
@@ -571,28 +566,29 @@ export default function EnterpriseSolutionPage() {
                     href="/security"
                     variant="secondary"
                     arrow
+                    className="w-full sm:w-auto"
                   >
                     Security Architecture &amp; Threat Model
                   </Button>
-                </div>
-
-                {/* Cross Links to Other Deep Architecture Pages */}
-                <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
-                  <Link href="/solutions/developers" className="hover:text-[#38ffbd] transition-colors">
-                    For Software Engineers
-                  </Link>
-                  <Link href="/tools/vault-calculator" className="hover:text-[#38ffbd] transition-colors">
-                    Vault Storage Estimator
-                  </Link>
-                  <Link href="/compare/cloud-vs-local" className="hover:text-[#38ffbd] transition-colors">
-                    Cloud vs Local Audit
-                  </Link>
-                  <Link href="/docs" className="hover:text-[#38ffbd] transition-colors">
-                    Developer Documentation Hub
-                  </Link>
-                </div>
-              </GenesisSectionIntro>
-            </div>
+                </>
+              }
+            >
+              {/* Cross Links to Other Deep Architecture Pages */}
+              <div className="flex flex-wrap items-center gap-6 pt-6 text-xs text-el-fg-faint">
+                <Link href="/solutions/developers" className="hover:text-[#38ffbd] transition-colors">
+                  For Software Engineers
+                </Link>
+                <Link href="/tools/vault-calculator" className="hover:text-[#38ffbd] transition-colors">
+                  Vault Storage Estimator
+                </Link>
+                <Link href="/compare/cloud-vs-local" className="hover:text-[#38ffbd] transition-colors">
+                  Cloud vs Local Audit
+                </Link>
+                <Link href="/docs" className="hover:text-[#38ffbd] transition-colors">
+                  Developer Documentation Hub
+                </Link>
+              </div>
+            </GenesisCtaStage>
           </Container>
         </Section>
       </main>

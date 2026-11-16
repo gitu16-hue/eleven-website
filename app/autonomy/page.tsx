@@ -3,9 +3,9 @@ import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { ScrollReveal, RevealItem } from "@/components/ui/ScrollReveal";
 import { ColdRoomApprovalDemo } from "@/components/v3/ColdRoomApprovalDemo";
 import { PortalActionButton } from "@/components/v3/PortalActionButton";
+import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
 import {
   CipherText,
   ClarityTogglePill,
@@ -15,9 +15,14 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisSplitReveal,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
 } from "@/components/motion/GenesisMotionEngine";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
@@ -102,15 +107,8 @@ export default function AutonomyPage() {
         />
         {/* ── HERO ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 el-aurora"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
-          />
-          <div className="relative">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -141,20 +139,20 @@ export default function AutonomyPage() {
                 technical="Graduated DEC-003 4-tier authority enables zero-friction Tier 0/1 local workflows while enforcing cryptographic Cold-Room DEC-008 nonces on Tier 2/3 boundaries."
               />
 
-              <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   <span>4-Tier Authority (DEC-003)</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   <span>30s Cryptographic Nonce (DEC-008)</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
                   <span>Hardware Emergency Stop (&lt;50ms)</span>
-                </span>
-              </div>
+                </li>
+              </GenesisBubbleRow>
 
               <div className="flex flex-wrap items-center gap-4 pt-4">
                 <Button href="/security" variant="primary" arrow>
@@ -188,58 +186,53 @@ export default function AutonomyPage() {
           </GenesisSectionIntro>
 
           {/* 3 Simple Rules */}
-          <ScrollReveal
+          <GenesisStaggerGrid
+            from="center"
             stagger={0.1}
             className="grid grid-cols-1 gap-4 md:grid-cols-3"
           >
-            <RevealItem className="h-full">
-              <Tilt3DCard className="p-6 h-full">
-                <span className="text-xs font-medium text-[#10bc83]">
-                  Rule 01: Clear limits first
-                </span>
-                <h3 className="mt-2.5 text-lg font-normal heading-gradient">
-                  AI Can Never Promote Itself
-                </h3>
-                <DualCopy
-                  className="mt-2 text-xs leading-relaxed text-el-fg-muted"
-                  plain="If you ask ELEVEN to read a folder, deleting and emailing stay locked off from the start: the AI cannot change its own rules midway."
-                  technical="TaskCompiler stamps immutable maximum authority tiers and canonical root scopes prior to model invocation."
-                />
-              </Tilt3DCard>
-            </RevealItem>
+            <Tilt3DCard className="p-6 h-full">
+              <span className="text-xs font-medium text-[#10bc83]">
+                Rule 01: Clear limits first
+              </span>
+              <h3 className="mt-2.5 text-lg font-normal heading-gradient">
+                AI Can Never Promote Itself
+              </h3>
+              <DualCopy
+                className="mt-2 text-xs leading-relaxed text-el-fg-muted"
+                plain="If you ask ELEVEN to read a folder, deleting and emailing stay locked off from the start: the AI cannot change its own rules midway."
+                technical="TaskCompiler stamps immutable maximum authority tiers and canonical root scopes prior to model invocation."
+              />
+            </Tilt3DCard>
 
-            <RevealItem className="h-full">
-              <Tilt3DCard className="p-6 h-full">
-                <span className="text-xs font-medium text-[#10bc83]">
-                  Rule 02: Single-use passes
-                </span>
-                <h3 className="mt-2.5 text-lg font-normal heading-gradient">
-                  30-Second Exact Permission
-                </h3>
-                <DualCopy
-                  className="mt-2 text-xs leading-relaxed text-el-fg-muted"
-                  plain="Approving one action does not give a blank check: your confirmation unlocks that exact step once for 30 seconds, then locks right back up."
-                  technical="Single-use 128-bit DEC-008 nonces bind cryptographically to SHA-256 arguments_hash and expire after 30s."
-                />
-              </Tilt3DCard>
-            </RevealItem>
+            <Tilt3DCard className="p-6 h-full">
+              <span className="text-xs font-medium text-[#10bc83]">
+                Rule 02: Single-use passes
+              </span>
+              <h3 className="mt-2.5 text-lg font-normal heading-gradient">
+                30-Second Exact Permission
+              </h3>
+              <DualCopy
+                className="mt-2 text-xs leading-relaxed text-el-fg-muted"
+                plain="Approving one action does not give a blank check: your confirmation unlocks that exact step once for 30 seconds, then locks right back up."
+                technical="Single-use 128-bit DEC-008 nonces bind cryptographically to SHA-256 arguments_hash and expire after 30s."
+              />
+            </Tilt3DCard>
 
-            <RevealItem className="h-full">
-              <Tilt3DCard className="p-6 h-full">
-                <span className="text-xs font-medium text-[#10bc83]">
-                  Rule 03: Instant brakes
-                </span>
-                <h3 className="mt-2.5 text-lg font-normal heading-gradient">
-                  0.05-Second Emergency Stop
-                </h3>
-                <DualCopy
-                  className="mt-2 text-xs leading-relaxed text-el-fg-muted"
-                  plain="Press Ctrl+Alt+Shift+K (or say 'Eleven, stop everything') anytime to freeze speech and cancel tasks in the blink of an eye."
-                  technical="Hardware-priority supervisor interrupt flushes DAC audio, revokes active nonces, and halts worker subprocess trees in <50ms."
-                />
-              </Tilt3DCard>
-            </RevealItem>
-          </ScrollReveal>
+            <Tilt3DCard className="p-6 h-full">
+              <span className="text-xs font-medium text-[#10bc83]">
+                Rule 03: Instant brakes
+              </span>
+              <h3 className="mt-2.5 text-lg font-normal heading-gradient">
+                0.05-Second Emergency Stop
+              </h3>
+              <DualCopy
+                className="mt-2 text-xs leading-relaxed text-el-fg-muted"
+                plain="Press Ctrl+Alt+Shift+K (or say 'Eleven, stop everything') anytime to freeze speech and cancel tasks in the blink of an eye."
+                technical="Hardware-priority supervisor interrupt flushes DAC audio, revokes active nonces, and halts worker subprocess trees in <50ms."
+              />
+            </Tilt3DCard>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
@@ -284,42 +277,42 @@ export default function AutonomyPage() {
             />
           </GenesisSectionIntro>
 
-          <ScrollReveal
+          <GenesisStaggerGrid
+            from="center"
             stagger={0.09}
             className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2"
           >
             {FOUR_SHIELDS.map((p) => (
-              <RevealItem key={p.code} className="h-full">
-                <Tilt3DCard className="p-6 lg:p-7 h-full">
-                  <span className="text-el-xs font-medium text-[#10bc83]">
-                    {p.code}
-                  </span>
-                  <DualCopy
-                    as="div"
-                    className="mt-2.5 text-el-lg font-normal heading-gradient tracking-[-0.015em]"
-                    plain={p.plainTitle}
-                    technical={p.techTitle}
-                  />
-                  <DualCopy
-                    className="mt-2.5 text-el-xs leading-[1.65] text-el-fg-muted"
-                    plain={p.plainBody}
-                    technical={p.techBody}
-                  />
-                </Tilt3DCard>
-              </RevealItem>
+              <Tilt3DCard key={p.code} className="p-6 lg:p-7 h-full">
+                <span className="text-el-xs font-medium text-[#10bc83]">
+                  {p.code}
+                </span>
+                <DualCopy
+                  as="div"
+                  className="mt-2.5 text-el-lg font-normal heading-gradient tracking-[-0.015em]"
+                  plain={p.plainTitle}
+                  technical={p.techTitle}
+                />
+                <DualCopy
+                  className="mt-2.5 text-el-xs leading-[1.65] text-el-fg-muted"
+                  plain={p.plainBody}
+                  technical={p.techBody}
+                />
+              </Tilt3DCard>
             ))}
-          </ScrollReveal>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── WHY CASUAL "YES" IS PROTECTED + UNEDITABLE LOGS ── */}
         <Section className="py-16 lg:py-24">
-          <ScrollReveal
-            stagger={0.1}
+          <GenesisSplitReveal
             className="grid grid-cols-1 gap-6 lg:grid-cols-12"
-          >
-            <RevealItem className="lg:col-span-6 h-full">
+            leftClassName="lg:col-span-6 h-full"
+            rightClassName="lg:col-span-6 h-full"
+            offset={64}
+            left={
               <Tilt3DCard className="p-7 h-full">
                 <p className="text-el-xs font-medium text-[#10bc83]">
                   Accident prevention
@@ -333,9 +326,8 @@ export default function AutonomyPage() {
                   technical="When concurrent Tier 2/3 approval gates or taint warnings exist, generic spoken affirmation is deterministically rejected in favor of explicit correlation-token binding or Cold-Room UI signature."
                 />
               </Tilt3DCard>
-            </RevealItem>
-
-            <RevealItem className="lg:col-span-6 h-full">
+            }
+            right={
               <Tilt3DCard className="p-7 h-full">
                 <p className="text-el-xs font-medium text-[#10bc83]">
                   Complete transparency
@@ -357,8 +349,29 @@ export default function AutonomyPage() {
                   </Button>
                 </div>
               </Tilt3DCard>
-            </RevealItem>
-          </ScrollReveal>
+            }
+          />
+        </Section>
+
+        <SignalBeamDivider />
+
+        {/* ── CLOSING CTA STAGE ── */}
+        <Section className="py-16 lg:py-24">
+          <GenesisCtaStage
+            badge="Deterministic Human Authority"
+            title="Test graduated autonomy on your workflow."
+            description="Inspect live ActionProposal schemas or sign up for early access to local-first T0–T3 control gates."
+            actions={
+              <>
+                <WaitlistActionButton variant="primary" arrow tier="general" className="w-full sm:w-auto">
+                  Join Early Access
+                </WaitlistActionButton>
+                <Button href="/tools/inspector" variant="secondary" arrow className="w-full sm:w-auto">
+                  Inspect ActionProposals
+                </Button>
+              </>
+            }
+          />
         </Section>
       </main>
 

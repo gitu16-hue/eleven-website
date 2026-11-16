@@ -16,9 +16,13 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -97,16 +101,9 @@ export default function HardwarePage() {
 
         {/* HERO SECTION */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 el-aurora"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
-          />
+          <GenesisSubpageHeroBackdrop />
 
-          <Container className="relative">
+          <Container className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -125,7 +122,7 @@ export default function HardwarePage() {
 
             <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
               <div className="gfx-badge">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] motion-safe:animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
                 <CipherText text="Hardware Benchmark · Local Inference Compatibility" />
               </div>
 
@@ -140,24 +137,24 @@ export default function HardwarePage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   <span>Sub-50ms Voice Ready (16GB+ RAM)</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   <span>Metal, CUDA, ONNX Native</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
                   <span>100% Air-Gappable Runtime</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   <span>Zero GPU Cloud Rental</span>
-                </span>
-              </div>
+                </li>
+              </GenesisBubbleRow>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -221,7 +218,11 @@ export default function HardwarePage() {
               </p>
             </GenesisSectionIntro>
 
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <GenesisStaggerGrid
+              from="center"
+              stagger={0.09}
+              className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
               {/* Tier 1 */}
               <Tilt3DCard className="p-6 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-3 right-3">
@@ -342,7 +343,7 @@ export default function HardwarePage() {
                   </div>
                 </div>
               </Tilt3DCard>
-            </div>
+            </GenesisStaggerGrid>
           </Container>
         </Section>
 
@@ -366,7 +367,11 @@ export default function HardwarePage() {
               />
             </GenesisSectionIntro>
 
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+            <GenesisStaggerGrid
+              from="center"
+              stagger={0.09}
+              className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs"
+            >
               <Tilt3DCard className="p-6 space-y-3 h-full">
                 <div className="flex items-center gap-2 text-[#10bc83]">
                   <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
@@ -418,7 +423,7 @@ export default function HardwarePage() {
                   Benefit: Zero voice stutter or frame dropping even under 100% CPU/GPU loads.
                 </div>
               </Tilt3DCard>
-            </div>
+            </GenesisStaggerGrid>
           </Container>
         </Section>
 
@@ -440,7 +445,10 @@ export default function HardwarePage() {
               </p>
             </GenesisSectionIntro>
 
-            <div className="mt-10 max-w-4xl space-y-4">
+            <GenesisStaggerGrid
+              stagger={0.08}
+              className="mt-10 max-w-4xl space-y-4"
+            >
               {[
                 {
                   q: "Can I run ELEVEN on a base 16GB MacBook Air?",
@@ -468,61 +476,47 @@ export default function HardwarePage() {
                   </p>
                 </Tilt3DCard>
               ))}
-            </div>
+            </GenesisStaggerGrid>
           </Container>
         </Section>
+
+        <SignalBeamDivider />
 
         {/* BOTTOM CTA ACCESS FUNNEL */}
         <Section className="py-16 lg:py-24">
           <Container>
-            <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[32rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-              />
-              <div className="relative mx-auto max-w-3xl space-y-6">
-                <div className="gfx-badge mx-auto">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  <CipherText text="05 · Runtime Sizing Verified" />
-                </div>
-
-                <h2 className="el-h2">
-                  <WordReveal text="Ready to experience sovereign intelligence on your hardware?" />
-                </h2>
-
-                <DualCopy
-                  className="mx-auto max-w-2xl el-body"
-                  plain="Join the early access program to receive the ELEVEN installer binary and test local execution on your machine."
-                  technical="Request access to the ELEVEN Technical Preview. Includes hardware benchmarking utilities, quantized model packs, and Ring-0 supervisory daemon."
-                />
-
-                <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                  <WaitlistActionButton tier="technical" arrow variant="primary">
+            <GenesisCtaStage
+              badge="05 · Runtime Sizing Verified"
+              title="Ready to experience sovereign intelligence on your hardware?"
+              description="Join the early access program to receive the ELEVEN installer binary and test local execution on your machine."
+              actions={
+                <>
+                  <WaitlistActionButton tier="technical" arrow variant="primary" className="w-full sm:w-auto">
                     Request Hardware Testing Access
                   </WaitlistActionButton>
 
-                  <Button href="/solutions/developers" variant="secondary" arrow>
+                  <Button href="/solutions/developers" variant="secondary" arrow className="w-full sm:w-auto">
                     Explore Developer Solutions
                   </Button>
-                </div>
-
-                {/* Cross Links to Other Deep Architecture Pages */}
-                <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
-                  <Link href="/benchmarks/voice-latency" className="hover:text-[#10bc83] hover:underline">
-                    Voice Latency Benchmark
-                  </Link>
-                  <Link href="/tools/vault-calculator" className="hover:text-[#10bc83] hover:underline">
-                    Vault Storage Estimator
-                  </Link>
-                  <Link href="/solutions/enterprise" className="hover:text-[#10bc83] hover:underline">
-                    Enterprise Fleet Governance
-                  </Link>
-                  <Link href="/compare/cloud-vs-local" className="hover:text-[#10bc83] hover:underline">
-                    Local vs Cloud Audit
-                  </Link>
-                </div>
+                </>
+              }
+            >
+              {/* Cross Links to Other Deep Architecture Pages */}
+              <div className="flex flex-wrap items-center gap-6 pt-6 text-xs text-el-fg-faint">
+                <Link href="/benchmarks/voice-latency" className="hover:text-[#38ffbd] transition-colors">
+                  Voice Latency Benchmark
+                </Link>
+                <Link href="/tools/vault-calculator" className="hover:text-[#38ffbd] transition-colors">
+                  Vault Storage Estimator
+                </Link>
+                <Link href="/solutions/enterprise" className="hover:text-[#38ffbd] transition-colors">
+                  Enterprise Fleet Governance
+                </Link>
+                <Link href="/compare/cloud-vs-local" className="hover:text-[#38ffbd] transition-colors">
+                  Local vs Cloud Audit
+                </Link>
               </div>
-            </div>
+            </GenesisCtaStage>
           </Container>
         </Section>
       </main>

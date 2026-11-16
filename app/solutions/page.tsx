@@ -14,8 +14,13 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
+  GenesisSplitReveal,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -112,15 +117,8 @@ export default function SolutionsOverviewPage() {
 
         {/* ── HERO SECTION ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
-          />
-          <div className="relative">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -151,20 +149,20 @@ export default function SolutionsOverviewPage() {
                 technical="Deterministic control plane decoupling model reasoning from host OS mutation. Eliminates data exfiltration vectors, prompt injection privilege escalation, and un-sandboxed terminal execution."
               />
 
-              <div className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Jailed git worktrees
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Zero-trust fleet governance
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Sub-50ms hardware watchdog
-                </span>
-              </div>
+                </li>
+              </GenesisBubbleRow>
 
               <div className="flex flex-wrap items-center gap-4 pt-4">
                 <WaitlistActionButton
@@ -212,46 +210,82 @@ export default function SolutionsOverviewPage() {
             />
           </GenesisSectionIntro>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {SOVEREIGN_PATHS.map((path) => (
-              <Tilt3DCard
-                key={path.title}
-                className="relative flex flex-col justify-between p-7"
-              >
+          <GenesisSplitReveal
+            className="grid grid-cols-1 gap-6 md:grid-cols-2"
+            leftClassName="h-full"
+            rightClassName="h-full"
+            offset={60}
+            left={
+              <Tilt3DCard className="relative flex flex-col justify-between p-7 h-full">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-medium text-el-accent">
-                      {path.badge}
+                      {SOVEREIGN_PATHS[0].badge}
                     </span>
                     <span className="rounded-full border border-white/[0.1] bg-[#08090a] px-2.5 py-0.5 text-[10px] text-el-fg-muted">
-                      {path.metricLabel}: <strong className="text-[#10bc83]">{path.metricValue}</strong>
+                      {SOVEREIGN_PATHS[0].metricLabel}: <strong className="text-[#10bc83]">{SOVEREIGN_PATHS[0].metricValue}</strong>
                     </span>
                   </div>
 
                   <h3 className="text-el-xl font-normal tracking-tight heading-gradient">
-                    {path.title}
+                    {SOVEREIGN_PATHS[0].title}
                   </h3>
 
                   <DualCopy
                     className="text-el-sm leading-relaxed text-el-fg-muted"
-                    plain={path.descriptionPlain}
-                    technical={path.descriptionTech}
+                    plain={SOVEREIGN_PATHS[0].descriptionPlain}
+                    technical={SOVEREIGN_PATHS[0].descriptionTech}
                   />
                 </div>
 
                 <div className="mt-8 border-t border-white/[0.07] pt-5">
                   <Button
                     variant="secondary"
-                    href={path.href}
+                    href={SOVEREIGN_PATHS[0].href}
                     arrow
                     className="w-full justify-center"
                   >
-                    {path.cta}
+                    {SOVEREIGN_PATHS[0].cta}
                   </Button>
                 </div>
               </Tilt3DCard>
-            ))}
-          </div>
+            }
+            right={
+              <Tilt3DCard className="relative flex flex-col justify-between p-7 h-full">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-el-accent">
+                      {SOVEREIGN_PATHS[1].badge}
+                    </span>
+                    <span className="rounded-full border border-white/[0.1] bg-[#08090a] px-2.5 py-0.5 text-[10px] text-el-fg-muted">
+                      {SOVEREIGN_PATHS[1].metricLabel}: <strong className="text-[#10bc83]">{SOVEREIGN_PATHS[1].metricValue}</strong>
+                    </span>
+                  </div>
+
+                  <h3 className="text-el-xl font-normal tracking-tight heading-gradient">
+                    {SOVEREIGN_PATHS[1].title}
+                  </h3>
+
+                  <DualCopy
+                    className="text-el-sm leading-relaxed text-el-fg-muted"
+                    plain={SOVEREIGN_PATHS[1].descriptionPlain}
+                    technical={SOVEREIGN_PATHS[1].descriptionTech}
+                  />
+                </div>
+
+                <div className="mt-8 border-t border-white/[0.07] pt-5">
+                  <Button
+                    variant="secondary"
+                    href={SOVEREIGN_PATHS[1].href}
+                    arrow
+                    className="w-full justify-center"
+                  >
+                    {SOVEREIGN_PATHS[1].cta}
+                  </Button>
+                </div>
+              </Tilt3DCard>
+            }
+          />
         </Section>
 
         <SignalBeamDivider />
@@ -273,9 +307,13 @@ export default function SolutionsOverviewPage() {
             />
           </GenesisSectionIntro>
 
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.1}
+            className="grid grid-cols-1 gap-5 md:grid-cols-3"
+          >
             {CORE_PROBLEMS_SOLUTIONS.map((item) => (
-              <Tilt3DCard key={item.category} className="p-6">
+              <Tilt3DCard key={item.category} className="p-6 h-full">
                 <span className="text-xs font-medium text-el-accent">
                   {item.category}
                 </span>
@@ -305,7 +343,7 @@ export default function SolutionsOverviewPage() {
                 </div>
               </Tilt3DCard>
             ))}
-          </div>
+          </GenesisStaggerGrid>
 
           <div className="mt-8 flex justify-end">
             <Button
@@ -322,31 +360,16 @@ export default function SolutionsOverviewPage() {
 
         {/* ── CALL TO ACTION SECTION ── */}
         <Section className="py-20">
-          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-            />
-            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="gfx-badge mx-auto">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
-                <CipherText text="Sovereign Deployment Program · Ring 1" />
-              </div>
-
-              <h2 className="el-h2">
-                <WordReveal text="Deploy sovereign intelligence today." />
-              </h2>
-
-              <DualCopy
-                className="el-body"
-                plain="Join the early access program for developers and enterprise teams. Experience personal AI that executes locally and answers strictly to your rules."
-                technical="Request provisioning access for local developer runtimes and enterprise fleet controllers. Guaranteed zero cloud data exposure and hardware-enforced policy gates."
-              />
-
-              <div className="pt-4 flex flex-wrap justify-center gap-4">
+          <GenesisCtaStage
+            badge="Sovereign Deployment Program · Ring 1"
+            title="Deploy sovereign intelligence today."
+            description="Join the early access program for developers and enterprise teams. Experience personal AI that executes locally and answers strictly to your rules."
+            actions={
+              <>
                 <WaitlistActionButton
                   tier="general"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Request Technical Access
                 </WaitlistActionButton>
@@ -354,6 +377,7 @@ export default function SolutionsOverviewPage() {
                   variant="secondary"
                   href="/solutions/developers"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Developer Architecture
                 </Button>
@@ -361,16 +385,17 @@ export default function SolutionsOverviewPage() {
                   variant="ghost"
                   href="/solutions/enterprise"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Enterprise Architecture
                 </Button>
-              </div>
-
-              <p className="pt-2 text-xs text-el-fg-faint">
-                Supports macOS (Apple Silicon M-series), Windows 11 (Hyper-V / WSL2), and Ubuntu 22.04+ LTS.
-              </p>
-            </GenesisSectionIntro>
-          </div>
+              </>
+            }
+          >
+            <p className="pt-4 text-xs text-el-fg-faint">
+              Supports macOS (Apple Silicon), Windows 11 (Hyper-V / WSL2), and Ubuntu 22.04+ LTS.
+            </p>
+          </GenesisCtaStage>
         </Section>
       </main>
 

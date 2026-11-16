@@ -27,9 +27,15 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisSplitReveal,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
+  GenesisTimelineList,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -103,15 +109,8 @@ export default function ActionProposalInspectorPage() {
 
         {/* ── HERO SECTION ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
-          />
-          <div className="relative">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -129,7 +128,7 @@ export default function ActionProposalInspectorPage() {
 
             <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
               <div className="gfx-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] motion-safe:animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Developer Tooling · Protocol Playground" />
               </div>
 
@@ -143,24 +142,24 @@ export default function ActionProposalInspectorPage() {
                 technical="Interactive simulator for the ELEVEN ActionProposal JSON-RPC protocol. Compose, inspect, and evaluate agent tool calls against static AST bounds, path containment, monotonic privilege barriers, and Ed25519 cryptographic receipts."
               />
 
-              <div className="flex flex-wrap gap-2.5 pt-2 text-xs text-el-fg-muted">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-xs text-el-fg-muted">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  JSON-RPC 2.0 Loopback
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>JSON-RPC 2.0 Loopback</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                  5 Fail-Closed Gates
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>5 Fail-Closed Gates</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  <code>Ed25519</code> 30s TTL
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span><code>Ed25519</code> 30s TTL</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                  Ring-0 Preemption
-                </span>
-              </div>
+                  <span>Ring-0 Preemption</span>
+                </li>
+              </GenesisBubbleRow>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -238,9 +237,13 @@ export default function ActionProposalInspectorPage() {
             />
           </GenesisSectionIntro>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.08}
+            className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {/* Gate 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -265,7 +268,7 @@ export default function ActionProposalInspectorPage() {
             </Tilt3DCard>
 
             {/* Gate 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -290,7 +293,7 @@ export default function ActionProposalInspectorPage() {
             </Tilt3DCard>
 
             {/* Gate 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -315,7 +318,7 @@ export default function ActionProposalInspectorPage() {
             </Tilt3DCard>
 
             {/* Gate 4 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -340,7 +343,7 @@ export default function ActionProposalInspectorPage() {
             </Tilt3DCard>
 
             {/* Gate 5 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -365,7 +368,7 @@ export default function ActionProposalInspectorPage() {
             </Tilt3DCard>
 
             {/* Total Pipeline */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
                   <span className="text-[#10bc83] font-semibold tracking-wider">
@@ -388,46 +391,52 @@ export default function ActionProposalInspectorPage() {
                 <span className="text-[#10bc83]">Watchdog preemption:</span> <code className="text-[10.5px]">&lt;0.05s Target</code>
               </div>
             </Tilt3DCard>
-          </div>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── CLI & DEVELOPER INTEGRATION ── */}
         <Section className="py-16">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-            <GenesisSectionIntro className="lg:col-span-6 space-y-5">
-              <div className="gfx-badge">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                <CipherText text="03 · CLI and Daemon Integration" />
+          <GenesisSplitReveal
+            className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center"
+            leftClassName="lg:col-span-6 space-y-5"
+            rightClassName="lg:col-span-6"
+            offset={64}
+            left={
+              <div>
+                <GenesisSectionIntro className="space-y-5">
+                  <div className="gfx-badge">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                    <CipherText text="03 · CLI and Daemon Integration" />
+                  </div>
+                  <h2 className="el-h2">
+                    <WordReveal text="Run the inspector locally on port 9099." />
+                  </h2>
+                  <DualCopy
+                    className="el-body"
+                    plain="You can run this exact inspector on your own PC to audit third-party AI agents, inspect tool payloads, and verify sandbox policies."
+                    technical="The `eleven-cli inspector` binary exposes an authenticated local JSON-RPC socket on 127.0.0.1:9099. Connect your MCP servers and watch live ActionProposal telemetry in your terminal."
+                  />
+                </GenesisSectionIntro>
+
+                <GenesisTimelineList mode="feature-bars" className="mt-6 space-y-4 text-xs text-el-fg-muted">
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Interactive terminal TUI:</strong> Inspect live proposals with curses/ratatui terminal dashboards.</span>
+                  </li>
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Automated CI/CD verification:</strong> Run `eleven test --gates all` in your git pre-commit hooks to block unsafe AI code.</span>
+                  </li>
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Local JSON-RPC bridges:</strong> Compatible with Model Context Protocol (MCP) clients and standard LSP servers.</span>
+                  </li>
+                </GenesisTimelineList>
               </div>
-              <h2 className="el-h2">
-                <WordReveal text="Run the inspector locally on port 9099." />
-              </h2>
-              <DualCopy
-                className="el-body"
-                plain="You can run this exact inspector on your own PC to audit third-party AI agents, inspect tool payloads, and verify sandbox policies."
-                technical="The `eleven-cli inspector` binary exposes an authenticated local JSON-RPC socket on 127.0.0.1:9099. Connect your MCP servers and watch live ActionProposal telemetry in your terminal."
-              />
-
-              <ul className="space-y-3 text-xs text-el-fg-muted">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#10bc83]">▸</span>
-                  <span><strong className="text-el-fg">Interactive terminal TUI:</strong> Inspect live proposals with curses/ratatui terminal dashboards.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#10bc83]">▸</span>
-                  <span><strong className="text-el-fg">Automated CI/CD verification:</strong> Run `eleven test --gates all` in your git pre-commit hooks to block unsafe AI code.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#10bc83]">▸</span>
-                  <span><strong className="text-el-fg">Local JSON-RPC bridges:</strong> Compatible with Model Context Protocol (MCP) clients and standard LSP servers.</span>
-                </li>
-              </ul>
-            </GenesisSectionIntro>
-
-            {/* Terminal Preview */}
-            <div className="lg:col-span-6">
+            }
+            right={
               <GenesisShowcaseFrame className="overflow-hidden font-mono text-[11.5px]">
                 <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#08090a] px-4 py-2.5 text-el-xs">
                   <span className="text-el-fg-faint">terminal // zsh</span>
@@ -456,37 +465,24 @@ export default function ActionProposalInspectorPage() {
                   </div>
                 </div>
               </GenesisShowcaseFrame>
-            </div>
-          </div>
+            }
+          />
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── PRE-QUALIFIED TECHNICAL WAITLIST CTA ── */}
         <Section className="py-20">
-          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-            />
-            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="gfx-badge mx-auto">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
-                <CipherText text="04 · Developer Tooling and SDK" />
-              </div>
-              <h2 className="el-h2">
-                <WordReveal text="Integrate ELEVEN into your local workflow." />
-              </h2>
-              <DualCopy
-                className="el-body"
-                plain="Get early access to eleven-cli, local sandbox runtimes, and the complete JSON-RPC ActionProposal protocol SDK."
-                technical="Request access to the developer preview. Includes `eleven-cli`, local MCP server bridges, and the Rust/TypeScript protocol SDK."
-              />
-
-              <div className="pt-4 flex flex-wrap justify-center gap-4">
+          <GenesisCtaStage
+            badge="04 · Developer Tooling and SDK"
+            title="Integrate ELEVEN into your local workflow."
+            description="Get early access to eleven-cli, local sandbox runtimes, and the complete JSON-RPC ActionProposal protocol SDK."
+            actions={
+              <>
                 <WaitlistActionButton
                   tier="technical"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Request CLI &amp; SDK Access
                 </WaitlistActionButton>
@@ -494,6 +490,7 @@ export default function ActionProposalInspectorPage() {
                   variant="secondary"
                   href="/security"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   View Threat Model &amp; Invariants
                 </Button>
@@ -501,16 +498,17 @@ export default function ActionProposalInspectorPage() {
                   variant="ghost"
                   href="/tools/dag-visualizer"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   DAG Orchestrator
                 </Button>
-              </div>
-
-              <p className="pt-2 text-xs text-el-fg-faint">
-                Compatible with Neovim, VS Code, Zed, and custom terminal environments.
-              </p>
-            </GenesisSectionIntro>
-          </div>
+              </>
+            }
+          >
+            <p className="pt-4 text-xs text-el-fg-faint">
+              Compatible with Neovim, VS Code, Zed, and custom terminal environments.
+            </p>
+          </GenesisCtaStage>
         </Section>
       </main>
 

@@ -3,6 +3,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useInView } from "framer-motion";
 import { DualCopy, Tilt3DCard } from "@/components/motion/PremiumMotion";
+import {
+  GenesisShowcaseFrame,
+  GenesisStaggerGrid,
+} from "@/components/motion/GenesisMotionEngine";
 
 const TIERS = [
   {
@@ -62,7 +66,7 @@ function ReceiptSimulatorCard() {
   return (
     <div
       ref={simRef}
-      className="hud-frame rounded-sm border border-el-border-strong bg-el-bg-raised p-6 shadow-el-md sm:p-8 lg:p-10"
+      className="p-6 sm:p-8 lg:p-10"
     >
       <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center border-b border-el-border pb-6">
         <div>
@@ -168,7 +172,11 @@ export function AutonomyControlSection() {
   return (
     <div className="mt-12 space-y-12">
       {/* 4 Autonomy Tiers Grid */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <GenesisStaggerGrid
+        from="center"
+        stagger={0.1}
+        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+      >
         {TIERS.map((t) => (
           <Tilt3DCard key={t.tier}>
             <div className="flex h-full flex-col justify-between p-6">
@@ -194,13 +202,15 @@ export function AutonomyControlSection() {
             </div>
           </Tilt3DCard>
         ))}
-      </div>
+      </GenesisStaggerGrid>
 
       {/* Isolated 30-Second Receipt Simulator (zero sibling re-renders) */}
-      <ReceiptSimulatorCard />
+      <GenesisShowcaseFrame>
+        <ReceiptSimulatorCard />
+      </GenesisShowcaseFrame>
 
       {/* Simple Comparison Table */}
-      <div className="overflow-x-auto rounded-sm border border-el-border bg-el-bg-raised shadow-el-sm">
+      <GenesisShowcaseFrame innerClassName="overflow-x-auto">
         <table className="w-full min-w-[720px] border-collapse text-left text-el-xs">
           <thead>
             <tr className="border-b border-el-border bg-el-bg font-mono text-[11px] uppercase tracking-[0.07em] text-el-fg-faint">
@@ -242,7 +252,7 @@ export function AutonomyControlSection() {
             </tr>
           </tbody>
         </table>
-      </div>
+      </GenesisShowcaseFrame>
     </div>
   );
 }

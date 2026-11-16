@@ -48,7 +48,7 @@ const PRESETS: PromptPreset[] = [
   },
 ];
 
-export function HeroAiPromptBox() {
+export function HeroAiPromptBox({ className = "max-w-full" }: { className?: string } = {}) {
   const [activePreset, setActivePreset] = useState<PromptPreset>(PRESETS[0]);
   const [inputValue, setInputValue] = useState(PRESETS[0].prompt);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -103,7 +103,7 @@ export function HeroAiPromptBox() {
   const feedbackWords = feedback ? feedback.trim().split(/\s+/) : [];
 
   return (
-    <div className="w-full max-w-[520px]">
+    <div className={`w-full ${className}`}>
       {/* Outer Tactical HUD & Spatial Panel Enclosure */}
       <div className="ai-native-prompt-container rounded-md p-3.5 sm:p-4 font-sans">
         {/* Top Header Tag */}

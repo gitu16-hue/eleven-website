@@ -3,10 +3,10 @@ import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { ScrollReveal, RevealItem } from "@/components/ui/ScrollReveal";
 import { Gyro3DEmbed } from "@/components/v3/Gyro3DEmbed";
 import { ControlPlaneInteractive } from "@/components/v3/ControlPlaneInteractive";
 import { PortalActionButton } from "@/components/v3/PortalActionButton";
+import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
 import { ExplodedLayerStack3D } from "@/components/security/ExplodedLayerStack3D";
 import {
   ClarityTogglePill,
@@ -16,9 +16,14 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisSplitReveal,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
 } from "@/components/motion/GenesisMotionEngine";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
@@ -103,15 +108,8 @@ export default function ArchitecturePage() {
         />
         {/* ── HERO + COMPACT 3D MODEL ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 el-aurora"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
-          />
-          <div className="relative">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border">
               <Breadcrumbs
                 items={[
@@ -126,54 +124,59 @@ export default function ArchitecturePage() {
               </div>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-              <GenesisHeroIntro className="lg:col-span-7 space-y-6">
-                <div className="gfx-badge">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] motion-safe:animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
-                  <span>Fault-Isolated Architecture · 4 OS Process Domains</span>
-                </div>
+            <GenesisSplitReveal
+              className="mt-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-12"
+              leftClassName="lg:col-span-7"
+              rightClassName="lg:col-span-5"
+              offset={64}
+              left={
+                <GenesisHeroIntro className="space-y-6">
+                  <div className="gfx-badge">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] motion-safe:animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
+                    <span>Fault-Isolated Architecture · 4 OS Process Domains</span>
+                  </div>
 
-                <h1 className="el-h1">
-                  <WordReveal text="Built like a vault. Effortless like a conversation." />
-                </h1>
+                  <h1 className="el-h1">
+                    <WordReveal text="Built like a vault. Effortless like a conversation." />
+                  </h1>
 
-                <DualCopy
-                  className="el-lead max-w-3xl"
-                  plain="Most AI apps are just a chat box connected directly to your data—if the AI gets confused, everything is at risk. ELEVEN separates voice, thinking, safety checks, and memory into independent protected rooms on your computer."
-                  technical="ELEVEN v3 isolates acoustic capture, untrusted model reasoning, deterministic policy verification, and loopback memory into separate OS fault domains with fail-closed contracts."
-                />
+                  <DualCopy
+                    className="el-lead max-w-3xl"
+                    plain="Most AI apps are just a chat box connected directly to your data—if the AI gets confused, everything is at risk. ELEVEN separates voice, thinking, safety checks, and memory into independent protected rooms on your computer."
+                    technical="ELEVEN v3 isolates acoustic capture, untrusted model reasoning, deterministic policy verification, and loopback memory into separate OS fault domains with fail-closed contracts."
+                  />
 
-                <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
-                  <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                    <span>4 OS process rooms (INV-01)</span>
-                  </span>
-                  <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                    <span>5 safety checkpoints (INV-04)</span>
-                  </span>
-                  <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
-                    <span>Loopback-only memory (127.0.0.1)</span>
-                  </span>
-                </div>
+                  <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                    <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
+                      <span>4 OS process rooms (INV-01)</span>
+                    </li>
+                    <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                      <span>5 safety checkpoints (INV-04)</span>
+                    </li>
+                    <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
+                      <span>Loopback-only memory (127.0.0.1)</span>
+                    </li>
+                  </GenesisBubbleRow>
 
-                <div className="pt-2 flex flex-wrap gap-4">
-                  <PortalActionButton variant="primary" arrow>
-                    Explore Live 3D Orb
-                  </PortalActionButton>
-                  <Button href="/autonomy" variant="secondary" arrow>
-                    See Approval Controls
-                  </Button>
-                </div>
-              </GenesisHeroIntro>
-
-              <div className="lg:col-span-5">
+                  <div className="pt-2 flex flex-wrap gap-4">
+                    <PortalActionButton variant="primary" arrow>
+                      Explore Live 3D Orb
+                    </PortalActionButton>
+                    <Button href="/autonomy" variant="secondary" arrow>
+                      See Approval Controls
+                    </Button>
+                  </div>
+                </GenesisHeroIntro>
+              }
+              right={
                 <GenesisShowcaseFrame>
                   <Gyro3DEmbed compact />
                 </GenesisShowcaseFrame>
-              </div>
-            </div>
+              }
+            />
           </div>
         </Section>
 
@@ -196,33 +199,32 @@ export default function ArchitecturePage() {
             />
           </GenesisSectionIntro>
 
-          <ScrollReveal
-            stagger={0.08}
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.09}
             className="grid grid-cols-1 gap-5 md:grid-cols-2"
           >
             {FOUR_ROOMS.map((p) => (
-              <RevealItem key={p.proc} className="h-full">
-                <Tilt3DCard className="p-6 lg:p-7 h-full">
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-el-border pb-3">
-                    <span className="text-xs font-medium text-[#10bc83]">
-                      {p.room}
-                    </span>
-                    <code className="font-mono text-xs text-el-fg-faint">
-                      {p.proc}
-                    </code>
-                  </div>
-                  <h3 className="mt-3.5 text-lg font-normal heading-gradient">
-                    {p.plainRole}
-                  </h3>
-                  <DualCopy
-                    className="mt-2 text-xs leading-relaxed text-el-fg-muted"
-                    plain={p.plainDesc}
-                    technical={p.techDesc}
-                  />
-                </Tilt3DCard>
-              </RevealItem>
+              <Tilt3DCard key={p.proc} className="p-6 lg:p-7 h-full">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-el-border pb-3">
+                  <span className="text-xs font-medium text-[#10bc83]">
+                    {p.room}
+                  </span>
+                  <code className="font-mono text-xs text-el-fg-faint">
+                    {p.proc}
+                  </code>
+                </div>
+                <h3 className="mt-3.5 text-lg font-normal heading-gradient">
+                  {p.plainRole}
+                </h3>
+                <DualCopy
+                  className="mt-2 text-xs leading-relaxed text-el-fg-muted"
+                  plain={p.plainDesc}
+                  technical={p.techDesc}
+                />
+              </Tilt3DCard>
             ))}
-          </ScrollReveal>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
@@ -278,6 +280,27 @@ export default function ArchitecturePage() {
           <GenesisShowcaseFrame>
             <ExplodedLayerStack3D />
           </GenesisShowcaseFrame>
+        </Section>
+
+        <SignalBeamDivider />
+
+        {/* ── CLOSING CTA STAGE ── */}
+        <Section className="py-16 lg:py-24">
+          <GenesisCtaStage
+            badge="Architecture & Fault Isolation"
+            title="Inspect the fault domains firsthand."
+            description="Step into the 3D Control Plane core or review the complete 15 mathematical invariants governing execution."
+            actions={
+              <>
+                <WaitlistActionButton variant="primary" arrow tier="technical" className="w-full sm:w-auto">
+                  Request Technical Preview
+                </WaitlistActionButton>
+                <Button href="/security" variant="secondary" arrow className="w-full sm:w-auto">
+                  Read Security Proofs
+                </Button>
+              </>
+            }
+          />
         </Section>
       </main>
 

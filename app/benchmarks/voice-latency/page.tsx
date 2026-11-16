@@ -15,9 +15,13 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -94,15 +98,8 @@ export default function VoiceLatencyBenchmarkPage() {
 
         {/* ── HERO SECTION ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
-          />
-          <div className="relative">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -120,7 +117,7 @@ export default function VoiceLatencyBenchmarkPage() {
 
             <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
               <div className="gfx-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] motion-safe:animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Empirical Benchmarks · 16kHz Audio Runtime" />
               </div>
 
@@ -134,24 +131,24 @@ export default function VoiceLatencyBenchmarkPage() {
                 technical="How ELEVEN achieves sub-50ms speech barge-in and <500ms conversational turns using a 16kHz lockless local PCM ring, turn-epoch invalidation, and direct WASAPI/CoreAudio low-latency host bindings."
               />
 
-              <div className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  Sub-50ms barge-in target
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>Sub-50ms barge-in target</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                  16kHz lockless ring buffer
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>16kHz lockless ring buffer</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                  WASAPI / CoreAudio exclusive
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span>WASAPI / CoreAudio exclusive</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
-                  Zero cloud audio streams
-                </span>
-              </div>
+                  <span>Zero cloud audio streams</span>
+                </li>
+              </GenesisBubbleRow>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -229,9 +226,13 @@ export default function VoiceLatencyBenchmarkPage() {
             />
           </GenesisSectionIntro>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.09}
+            className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          >
             {/* Stage 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -256,7 +257,7 @@ export default function VoiceLatencyBenchmarkPage() {
             </Tilt3DCard>
 
             {/* Stage 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -281,7 +282,7 @@ export default function VoiceLatencyBenchmarkPage() {
             </Tilt3DCard>
 
             {/* Stage 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -306,7 +307,7 @@ export default function VoiceLatencyBenchmarkPage() {
             </Tilt3DCard>
 
             {/* Stage 4 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -329,7 +330,7 @@ export default function VoiceLatencyBenchmarkPage() {
                 <span className="text-[#10bc83]">Mute Delay:</span> <code>6ms Direct DAC</code>
               </div>
             </Tilt3DCard>
-          </div>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
@@ -351,43 +352,45 @@ export default function VoiceLatencyBenchmarkPage() {
             />
           </GenesisSectionIntro>
 
-          <GenesisShowcaseFrame className="mt-10 overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-white/[0.08] bg-[#08090a] text-el-fg-muted">
-                  <th className="py-3.5 px-4 font-medium text-el-fg">Hardware / architecture</th>
-                  <th className="py-3.5 px-4 font-medium text-[#38ffbd]">Barge-in interruption</th>
-                  <th className="py-3.5 px-4 font-medium text-[#10bc83]">Turn latency (ASR+LLM+TTS)</th>
-                  <th className="py-3.5 px-4 font-medium text-el-fg-faint">Network dependency</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/[0.07] text-el-fg-muted">
-                <tr>
-                  <td className="py-3.5 px-4 font-semibold text-el-fg">Apple Silicon M3/M4 Max (CoreAudio)</td>
-                  <td className="py-3.5 px-4 text-[#10bc83] font-medium">28ms (&lt;0.03s)</td>
-                  <td className="py-3.5 px-4 text-[#10bc83] font-medium">380ms (&lt;0.4s)</td>
-                  <td className="py-3.5 px-4 text-[#10bc83] font-medium">100% offline (0 bytes egress)</td>
-                </tr>
-                <tr>
-                  <td className="py-3.5 px-4 font-semibold text-el-fg">Windows 11 (WASAPI + RTX 4080)</td>
-                  <td className="py-3.5 px-4 text-[#10bc83] font-medium">32ms (&lt;0.05s)</td>
-                  <td className="py-3.5 px-4 text-[#10bc83] font-medium">420ms (&lt;0.5s)</td>
-                  <td className="py-3.5 px-4 text-[#10bc83] font-medium">100% offline (0 bytes egress)</td>
-                </tr>
-                <tr>
-                  <td className="py-3.5 px-4 font-semibold text-el-fg">Linux Workstation (ALSA + RTX 3080)</td>
-                  <td className="py-3.5 px-4 text-[#10bc83] font-medium">34ms (&lt;0.05s)</td>
-                  <td className="py-3.5 px-4 text-[#10bc83] font-medium">450ms (&lt;0.5s)</td>
-                  <td className="py-3.5 px-4 text-[#10bc83] font-medium">100% offline (0 bytes egress)</td>
-                </tr>
-                <tr>
-                  <td className="py-3.5 px-4 font-semibold text-red-400">Commercial Cloud Voice Assistant (WiFi)</td>
-                  <td className="py-3.5 px-4 text-red-400 font-medium">920ms to 1,280ms (~1.1s)</td>
-                  <td className="py-3.5 px-4 text-red-400 font-medium">1,600ms to 2,400ms (~2.0s)</td>
-                  <td className="py-3.5 px-4 text-red-400 font-medium">High (Opus WebSockets to US-East)</td>
-                </tr>
-              </tbody>
-            </table>
+          <GenesisShowcaseFrame className="mt-10">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-white/[0.08] bg-[#08090a] text-el-fg-muted">
+                    <th className="py-3.5 px-4 font-medium text-el-fg">Hardware / architecture</th>
+                    <th className="py-3.5 px-4 font-medium text-[#38ffbd]">Barge-in interruption</th>
+                    <th className="py-3.5 px-4 font-medium text-[#10bc83]">Turn latency (ASR+LLM+TTS)</th>
+                    <th className="py-3.5 px-4 font-medium text-el-fg-faint">Network dependency</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/[0.07] text-el-fg-muted">
+                  <tr>
+                    <td className="py-3.5 px-4 font-semibold text-el-fg">Apple Silicon M3/M4 Max (CoreAudio)</td>
+                    <td className="py-3.5 px-4 text-[#10bc83] font-medium">28ms (&lt;0.03s)</td>
+                    <td className="py-3.5 px-4 text-[#10bc83] font-medium">380ms (&lt;0.4s)</td>
+                    <td className="py-3.5 px-4 text-[#10bc83] font-medium">100% offline (0 bytes egress)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3.5 px-4 font-semibold text-el-fg">Windows 11 (WASAPI + RTX 4080)</td>
+                    <td className="py-3.5 px-4 text-[#10bc83] font-medium">32ms (&lt;0.05s)</td>
+                    <td className="py-3.5 px-4 text-[#10bc83] font-medium">420ms (&lt;0.5s)</td>
+                    <td className="py-3.5 px-4 text-[#10bc83] font-medium">100% offline (0 bytes egress)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3.5 px-4 font-semibold text-el-fg">Linux Workstation (ALSA + RTX 3080)</td>
+                    <td className="py-3.5 px-4 text-[#10bc83] font-medium">34ms (&lt;0.05s)</td>
+                    <td className="py-3.5 px-4 text-[#10bc83] font-medium">450ms (&lt;0.5s)</td>
+                    <td className="py-3.5 px-4 text-[#10bc83] font-medium">100% offline (0 bytes egress)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3.5 px-4 font-semibold text-red-400">Commercial Cloud Voice Assistant (WiFi)</td>
+                    <td className="py-3.5 px-4 text-red-400 font-medium">920ms to 1,280ms (~1.1s)</td>
+                    <td className="py-3.5 px-4 text-red-400 font-medium">1,600ms to 2,400ms (~2.0s)</td>
+                    <td className="py-3.5 px-4 text-red-400 font-medium">High (Opus WebSockets to US-East)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </GenesisShowcaseFrame>
         </Section>
 
@@ -395,31 +398,16 @@ export default function VoiceLatencyBenchmarkPage() {
 
         {/* ── ACCESS FUNNEL & VOICE PREVIEW CTA ── */}
         <Section className="py-20">
-          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-            />
-            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="gfx-badge mx-auto">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
-                <CipherText text="System 1 Audio · Direct Preview" />
-              </div>
-
-              <h2 className="el-h2">
-                <WordReveal text="Ready for conversation that feels human?" />
-              </h2>
-
-              <DualCopy
-                className="el-body"
-                plain="Join the early access program to test the 16kHz local audio engine directly on your laptop or workstation."
-                technical="Request access to the ELEVEN System 1 SpeechPipeline runtime binaries. Includes WASAPI/CoreAudio direct HAL drivers and local quantized ASR models."
-              />
-
-              <div className="pt-4 flex flex-wrap justify-center gap-4">
+          <GenesisCtaStage
+            badge="System 1 Audio · Direct Preview"
+            title="Ready for conversation that feels human?"
+            description="Join the early access program to test the 16kHz local audio engine directly on your laptop or workstation."
+            actions={
+              <>
                 <WaitlistActionButton
                   tier="technical"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Test Local Voice Pipeline (Join Waitlist)
                 </WaitlistActionButton>
@@ -427,6 +415,7 @@ export default function VoiceLatencyBenchmarkPage() {
                   variant="secondary"
                   href="/tools/inspector"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Inspect Policy Sandbox
                 </Button>
@@ -434,16 +423,17 @@ export default function VoiceLatencyBenchmarkPage() {
                   variant="ghost"
                   href="/hardware"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Verify Hardware Sizing
                 </Button>
-              </div>
-
-              <p className="pt-2 text-xs text-el-fg-faint">
-                Supports standard USB microphones, laptop mic arrays, and Bluetooth headset profiles.
-              </p>
-            </GenesisSectionIntro>
-          </div>
+              </>
+            }
+          >
+            <p className="pt-4 text-xs text-el-fg-faint">
+              Supports standard USB microphones, laptop mic arrays, and Bluetooth headset profiles.
+            </p>
+          </GenesisCtaStage>
         </Section>
       </main>
 

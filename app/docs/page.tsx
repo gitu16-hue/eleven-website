@@ -3,7 +3,6 @@ import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { ScrollReveal, RevealItem } from "@/components/ui/ScrollReveal";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import dynamic from "next/dynamic";
 import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
@@ -28,9 +27,13 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -101,21 +104,14 @@ export default function DocsPage() {
 
         {/* ── HERO SECTION ── */}
         <Section className="relative overflow-hidden pt-10 pb-16">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 el-aurora"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
-          />
-          <div className="relative flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <GenesisHeroIntro className="max-w-[780px] space-y-4">
               <div className="mb-3.5">
                 <Breadcrumbs items={[{ label: "Documentation", href: "/docs" }]} />
               </div>
               <div className="gfx-badge">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] motion-safe:animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
                 <CipherText text="Technical Specifications & API Reference" />
               </div>
               <WordReveal
@@ -129,6 +125,20 @@ export default function DocsPage() {
                 plain="Explore the technical blueprints of ELEVEN: how it runs on your PC, keeps untrusted code jailed in locked sandboxes, and guarantees your personal files never leave your computer."
                 technical="Complete architectural reference covering Host Supervisor Ring-0 isolation, Quarantine Sanctum low-integrity process boundaries, the Dual-Mind Async Event Bus, and AES-256 encrypted storage schemas."
               />
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
+                  <span>Ring-0 Host Supervisor</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <span>Quarantine Sanctum Jails</span>
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
+                  <span>AES-256-GCM Loopback</span>
+                </li>
+              </GenesisBubbleRow>
             </GenesisHeroIntro>
             <ClarityTogglePill />
           </div>
@@ -178,62 +188,72 @@ export default function DocsPage() {
             />
           </GenesisSectionIntro>
 
-          <ScrollReveal
+          <GenesisStaggerGrid
+            from="center"
             stagger={0.1}
             className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3"
           >
-            <RevealItem className="h-full">
-              <Tilt3DCard className="p-6 h-full">
-                <span className="text-xs text-[#10bc83] font-medium">
-                  Guarantee 01
-                </span>
-                <h3 className="mt-2 text-el-lg font-normal heading-gradient">
-                  Default-Deny Egress
-                </h3>
-                <p className="mt-2 text-el-sm text-el-fg-muted leading-relaxed">
-                  Subprocess socket creation is intercepted at the OS packet filter. Untrusted model workers cannot make external telemetry pings without Ed25519-signed operator consent.
-                </p>
-              </Tilt3DCard>
-            </RevealItem>
-
-            <RevealItem className="h-full">
-              <Tilt3DCard className="p-6 h-full">
-                <span className="text-xs text-[#10bc83] font-medium">
-                  Guarantee 02
-                </span>
-                <h3 className="mt-2 text-el-lg font-normal heading-gradient">
-                  Sub-50ms Killswitch
-                </h3>
-                <p className="mt-2 text-el-sm text-el-fg-muted leading-relaxed">
-                  The global emergency stop listener resides in the un-sandboxed host supervisor. It operates outside model control and guarantees hardware termination in under 0.05s.
-                </p>
-              </Tilt3DCard>
-            </RevealItem>
-
-            <RevealItem className="h-full">
-              <Tilt3DCard className="p-6 h-full">
-                <span className="text-xs text-[#10bc83] font-medium">
-                  Guarantee 03
-                </span>
-                <h3 className="mt-2 text-el-lg font-normal heading-gradient">
-                  Loopback Encryption
-                </h3>
-                <p className="mt-2 text-el-sm text-el-fg-muted leading-relaxed">
-                  All memory drawers are bound to 127.0.0.1 and encrypted with AES-256-GCM. Master key material is generated on-device with Argon2id and never uploaded to remote servers.
-                </p>
-              </Tilt3DCard>
-            </RevealItem>
-          </ScrollReveal>
-
-          {/* Cross-Link Actions */}
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-el-border pt-6">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="text-xs text-el-fg-faint">
-                Explore architecture:
+            <Tilt3DCard className="p-6 h-full">
+              <span className="text-xs text-[#10bc83] font-medium">
+                Guarantee 01
               </span>
-              <Button href="/solutions/developers" variant="ghost" arrow>
-                For Developers
-              </Button>
+              <h3 className="mt-2 text-el-lg font-normal heading-gradient">
+                Default-Deny Egress
+              </h3>
+              <p className="mt-2 text-el-sm text-el-fg-muted leading-relaxed">
+                Subprocess socket creation is intercepted at the OS packet filter. Untrusted model workers cannot make external telemetry pings without Ed25519-signed operator consent.
+              </p>
+            </Tilt3DCard>
+
+            <Tilt3DCard className="p-6 h-full">
+              <span className="text-xs text-[#10bc83] font-medium">
+                Guarantee 02
+              </span>
+              <h3 className="mt-2 text-el-lg font-normal heading-gradient">
+                Sub-50ms Killswitch
+              </h3>
+              <p className="mt-2 text-el-sm text-el-fg-muted leading-relaxed">
+                The global emergency stop listener resides in the un-sandboxed host supervisor. It operates outside model control and guarantees hardware termination in under 0.05s.
+              </p>
+            </Tilt3DCard>
+
+            <Tilt3DCard className="p-6 h-full">
+              <span className="text-xs text-[#10bc83] font-medium">
+                Guarantee 03
+              </span>
+              <h3 className="mt-2 text-el-lg font-normal heading-gradient">
+                Loopback Encryption
+              </h3>
+              <p className="mt-2 text-el-sm text-el-fg-muted leading-relaxed">
+                All memory drawers are bound to 127.0.0.1 and encrypted with AES-256-GCM. Master key material is generated on-device with Argon2id and never uploaded to remote servers.
+              </p>
+            </Tilt3DCard>
+          </GenesisStaggerGrid>
+        </Section>
+
+        <SignalBeamDivider />
+
+        {/* ── DEVELOPER ACCESS STAGE ── */}
+        <Section className="py-20">
+          <GenesisCtaStage
+            badge="03 · Architecture & SDK Access"
+            title="Inspect the full runtime specification."
+            description="Request technical preview access for local Ring-0 host supervision, ActionProposal CLI harnesses, and sandboxed worktree tooling."
+            actions={
+              <>
+                <WaitlistActionButton variant="primary" arrow tier="technical" className="w-full sm:w-auto">
+                  Request Technical Access
+                </WaitlistActionButton>
+                <Button href="/solutions/developers" variant="secondary" arrow className="w-full sm:w-auto">
+                  For Developers
+                </Button>
+                <Button href="/tools/inspector" variant="ghost" arrow className="w-full sm:w-auto">
+                  Interactive Inspector
+                </Button>
+              </>
+            }
+          >
+            <div className="mt-6 flex flex-wrap items-center gap-3">
               <Button href="/architecture" variant="ghost" arrow>
                 Execution Rooms
               </Button>
@@ -244,11 +264,7 @@ export default function DocsPage() {
                 15 Invariant Rules
               </Button>
             </div>
-
-            <WaitlistActionButton variant="primary" arrow tier="technical">
-              Request Technical Access
-            </WaitlistActionButton>
-          </div>
+          </GenesisCtaStage>
         </Section>
       </main>
 

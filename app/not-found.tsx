@@ -4,22 +4,18 @@ import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { GenesisHeroIntro } from "@/components/motion/GenesisMotionEngine";
+import {
+  GenesisHeroIntro,
+  GenesisSubpageHeroBackdrop,
+} from "@/components/motion/GenesisMotionEngine";
 
 export default function NotFound() {
   return (
     <div className="bg-el-bg text-el-fg min-h-[100dvh] flex flex-col justify-between relative overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="el-aurora pointer-events-none absolute inset-0 opacity-85"
-      />
-      <div
-        aria-hidden="true"
-        className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_60%_at_50%_40%,#000,transparent)]"
-      />
+      <GenesisSubpageHeroBackdrop />
       <Nav />
 
-      <main id="main-content" className="relative">
+      <main id="main-content" className="relative z-10">
         <Section className="py-24 text-center">
           <GenesisHeroIntro className="mx-auto max-w-xl space-y-6">
             <div className="gfx-badge mx-auto">

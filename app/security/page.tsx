@@ -17,9 +17,15 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisSplitReveal,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
+  GenesisTimelineList,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -90,15 +96,8 @@ export default function SecurityCenterPage() {
 
         {/* ── HERO SECTION ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 el-aurora"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
-          />
-          <div className="relative">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border">
               <Breadcrumbs
                 items={[
@@ -130,24 +129,24 @@ export default function SecurityCenterPage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   <span>Web layer: CSP + HSTS + rate-limited API verified</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   <span>OS specification: AES-256-GCM loopback vault</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
                   <span>OS specification: SHA-256 Merkle receipts</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   <span>OS specification: Default-deny worker sockets</span>
-                </span>
-              </div>
+                </li>
+              </GenesisBubbleRow>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -184,7 +183,11 @@ export default function SecurityCenterPage() {
             />
           </GenesisSectionIntro>
 
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.08}
+            className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {/* Vector 1 */}
             <Tilt3DCard className="p-6 flex flex-col justify-between h-full">
               <div className="space-y-3">
@@ -334,7 +337,7 @@ export default function SecurityCenterPage() {
                 Mitigation: Host Supervisor Watchdog Spec <span className="font-mono text-[11px] text-el-fg-faint">(INV-10/15)</span>
               </div>
             </Tilt3DCard>
-          </div>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
@@ -421,39 +424,45 @@ export default function SecurityCenterPage() {
 
         {/* ── CRYPTOGRAPHIC RECEIPTS & MERKLE AUDIT LEDGER ── */}
         <Section className="py-16 lg:py-24">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-            <GenesisSectionIntro className="lg:col-span-6 space-y-4">
-              <div className="gfx-badge">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                <span>03 · Cryptographic verification</span>
+          <GenesisSplitReveal
+            className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center"
+            leftClassName="lg:col-span-6 space-y-4"
+            rightClassName="lg:col-span-6"
+            offset={64}
+            left={
+              <div>
+                <GenesisSectionIntro className="space-y-4">
+                  <div className="gfx-badge">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                    <span>03 · Cryptographic verification</span>
+                  </div>
+                  <h2 className="el-h2">
+                    <WordReveal text="Every action is signed. Every decision is provable." />
+                  </h2>
+                  <DualCopy
+                    className="el-body"
+                    plain="ELEVEN never makes changes in secret. Whenever an action is approved, your computer generates a cryptographic receipt that proves exactly what was changed, when it happened, and who authorized it."
+                    technical="All ActionProposals bind canonical parameter hashes to single-use Ed25519 digital signatures. Receipts append to a local Merkle-chained SQLite ledger that makes unauthorized retroactive edits mathematically impossible."
+                  />
+                </GenesisSectionIntro>
+
+                <GenesisTimelineList mode="feature-bars" className="mt-6 space-y-4 text-xs leading-relaxed text-el-fg-muted">
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">SHA-256 parameter digests:</strong> Prevents time-of-check to time-of-use (TOCTOU) race condition vulnerabilities.</span>
+                  </li>
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Ephemeral 30s nonce TTL:</strong> Approvals expire automatically if not signed within 30 seconds; expired nonces cannot be replayed.</span>
+                  </li>
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Cold-Room diff presentation:</strong> Approval UI strips all conversational prose; you review only raw parameter structures and code diffs.</span>
+                  </li>
+                </GenesisTimelineList>
               </div>
-              <h2 className="el-h2">
-                <WordReveal text="Every action is signed. Every decision is provable." />
-              </h2>
-              <DualCopy
-                className="el-body"
-                plain="ELEVEN never makes changes in secret. Whenever an action is approved, your computer generates a cryptographic receipt that proves exactly what was changed, when it happened, and who authorized it."
-                technical="All ActionProposals bind canonical parameter hashes to single-use Ed25519 digital signatures. Receipts append to a local Merkle-chained SQLite ledger that makes unauthorized retroactive edits mathematically impossible."
-              />
-
-              <ul className="space-y-3 text-xs leading-relaxed text-el-fg-muted">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#10bc83]">▸</span>
-                  <span><strong className="text-el-fg">SHA-256 parameter digests:</strong> Prevents time-of-check to time-of-use (TOCTOU) race condition vulnerabilities.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#10bc83]">▸</span>
-                  <span><strong className="text-el-fg">Ephemeral 30s nonce TTL:</strong> Approvals expire automatically if not signed within 30 seconds; expired nonces cannot be replayed.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#10bc83]">▸</span>
-                  <span><strong className="text-el-fg">Cold-Room diff presentation:</strong> Approval UI strips all conversational prose; you review only raw parameter structures and code diffs.</span>
-                </li>
-              </ul>
-            </GenesisSectionIntro>
-
-            {/* Cryptographic Receipt Box */}
-            <div className="lg:col-span-6">
+            }
+            right={
               <GenesisShowcaseFrame>
                 <div className="overflow-hidden rounded-[1.15rem] border border-el-border bg-[#05070d]">
                   <div className="flex items-center justify-between border-b border-el-border bg-el-sec-graphite px-4 py-2.5 text-xs">
@@ -472,8 +481,8 @@ export default function SecurityCenterPage() {
                   </pre>
                 </div>
               </GenesisShowcaseFrame>
-            </div>
-          </div>
+            }
+          />
         </Section>
 
         <SignalBeamDivider />
@@ -494,7 +503,11 @@ export default function SecurityCenterPage() {
             />
           </GenesisSectionIntro>
 
-          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 text-xs">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.1}
+            className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 text-xs"
+          >
             {/* GPG Key Information */}
             <Tilt3DCard className="p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-el-border pb-3">
@@ -529,49 +542,35 @@ export default function SecurityCenterPage() {
                 <li>✓ Provide sufficient technical details to reproduce findings.</li>
               </ul>
             </Tilt3DCard>
-          </div>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── ACCESS FUNNEL & SECURITY BRIEFING CTA ── */}
         <Section className="py-20">
-          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[32rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-            />
-            <div className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="gfx-badge mx-auto">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                <span>Enterprise &amp; research briefings</span>
-              </div>
-              <h2 className="el-h2">
-                <WordReveal text="Ready to review our formal threat model?" />
-              </h2>
-              <DualCopy
-                className="el-body"
-                plain="Request a technical security walkthrough with our engineering team, or join the developer alpha to inspect the sandbox yourself."
-                technical="Schedule an institutional security architecture briefing with the GISHH Labs engineering team, or join the Technical Preview ring."
-              />
-
-              <div className="pt-4 flex flex-wrap justify-center gap-4">
-                <WaitlistActionButton tier="technical" arrow>
+          <GenesisCtaStage
+            badge="Enterprise & Research Briefings"
+            title="Ready to review our formal threat model?"
+            description="Request a technical security walkthrough with our engineering team, or join the developer alpha to inspect the sandbox yourself."
+            actions={
+              <>
+                <WaitlistActionButton tier="technical" arrow className="w-full sm:w-auto">
                   Request Security Briefing (Technical Ring)
                 </WaitlistActionButton>
-                <Button variant="secondary" href="/solutions/developers" arrow>
+                <Button variant="secondary" href="/solutions/developers" arrow className="w-full sm:w-auto">
                   Explore Developer Solution
                 </Button>
-                <Button variant="ghost" href="/solutions/enterprise" arrow>
+                <Button variant="ghost" href="/solutions/enterprise" arrow className="w-full sm:w-auto">
                   Enterprise Fleet Governance
                 </Button>
-              </div>
-
-              <p className="pt-2 text-xs text-el-fg-faint font-sans">
-                Verification whitepapers and architecture threat matrices provided under NDA.
-              </p>
-            </div>
-          </div>
+              </>
+            }
+          >
+            <p className="pt-4 text-xs text-el-fg-faint font-sans">
+              Verification whitepapers and architecture threat matrices provided under NDA.
+            </p>
+          </GenesisCtaStage>
         </Section>
       </main>
 

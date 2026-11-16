@@ -3,9 +3,9 @@ import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { ScrollReveal, RevealItem } from "@/components/ui/ScrollReveal";
 import { DualMindSynchronizer } from "@/components/v3/DualMindSynchronizer";
 import { PortalActionButton } from "@/components/v3/PortalActionButton";
+import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
 import {
   CipherText,
   ClarityTogglePill,
@@ -15,9 +15,15 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisSplitReveal,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
+  GenesisTimelineList,
 } from "@/components/motion/GenesisMotionEngine";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
@@ -147,15 +153,8 @@ export default function ElevenIntelligencePage() {
         />
         {/* ── HERO ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 el-aurora"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
-          />
-          <div className="relative">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -186,20 +185,20 @@ export default function ElevenIntelligencePage() {
                 technical="ELEVEN v3 bifurcates runtime cognition into two OS processes: System 1 (eleven_voice) and System 2 (eleven_deep), synchronized across a non-blocking Async Mind Event Bus."
               />
 
-              <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   <span>Dual-Mind Architecture (INV-01)</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   <span>Sub-50ms Barge-In Target</span>
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
                   <span>Zero Model Vendor Lock-In</span>
-                </span>
-              </div>
+                </li>
+              </GenesisBubbleRow>
 
               <div className="flex flex-wrap items-center gap-4 pt-4">
                 <Button
@@ -239,11 +238,11 @@ export default function ElevenIntelligencePage() {
               technical="Dual OS-level fault domains decouple real-time 16kHz audio sampling loops from deep DAG execution trees."
             />
           </GenesisSectionIntro>
-          <ScrollReveal
-            stagger={0.12}
+          <GenesisSplitReveal
             className="grid grid-cols-1 gap-6 lg:grid-cols-2"
-          >
-            <RevealItem className="h-full">
+            leftClassName="h-full"
+            rightClassName="h-full"
+            left={
               <Tilt3DCard className="p-7 lg:p-9 h-full">
                 <div className="flex h-full flex-col justify-between">
                   <div>
@@ -294,9 +293,8 @@ export default function ElevenIntelligencePage() {
                   </div>
                 </div>
               </Tilt3DCard>
-            </RevealItem>
-
-            <RevealItem className="h-full">
+            }
+            right={
               <Tilt3DCard className="p-7 lg:p-9 h-full">
                 <div className="flex h-full flex-col justify-between">
                   <div>
@@ -339,8 +337,8 @@ export default function ElevenIntelligencePage() {
                   </div>
                 </div>
               </Tilt3DCard>
-            </RevealItem>
-          </ScrollReveal>
+            }
+          />
         </Section>
 
         <SignalBeamDivider />
@@ -362,31 +360,30 @@ export default function ElevenIntelligencePage() {
             />
           </GenesisSectionIntro>
 
-          <ScrollReveal
+          <GenesisStaggerGrid
+            from="center"
             stagger={0.07}
             className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
             {VOICE_STEPS.map((item) => (
-              <RevealItem key={item.step} className="h-full">
-                <Tilt3DCard className="p-6 h-full">
-                  <span className="text-xs font-medium text-[#10bc83]">
-                    Step {item.step}
-                  </span>
-                  <DualCopy
-                    as="div"
-                    className="mt-2.5 text-base font-normal heading-gradient"
-                    plain={item.plainTitle}
-                    technical={item.techTitle}
-                  />
-                  <DualCopy
-                    className="mt-2 text-xs leading-relaxed text-el-fg-muted"
-                    plain={item.plainDesc}
-                    technical={item.techDesc}
-                  />
-                </Tilt3DCard>
-              </RevealItem>
+              <Tilt3DCard key={item.step} className="p-6 h-full">
+                <span className="text-xs font-medium text-[#10bc83]">
+                  Step {item.step}
+                </span>
+                <DualCopy
+                  as="div"
+                  className="mt-2.5 text-base font-normal heading-gradient"
+                  plain={item.plainTitle}
+                  technical={item.techTitle}
+                />
+                <DualCopy
+                  className="mt-2 text-xs leading-relaxed text-el-fg-muted"
+                  plain={item.plainDesc}
+                  technical={item.techDesc}
+                />
+              </Tilt3DCard>
             ))}
-          </ScrollReveal>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
@@ -416,65 +413,90 @@ export default function ElevenIntelligencePage() {
 
         {/* ── FREEDOM TO SWITCH AI BRAINS ── */}
         <Section id="memory-drawers" className="relative py-16 lg:py-24">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
-            <GenesisSectionIntro className="lg:col-span-5 space-y-4">
-              <div className="gfx-badge">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                <CipherText text="04 · Model Agnostic Routing" />
-              </div>
-              <h2 className="el-h2">
-                <WordReveal text="Swap AI brains anytime. Keep all your memories." />
-              </h2>
-              <DualCopy
-                className="el-body"
-                plain="If a smarter AI comes out next month, or if your internet goes down, you don’t lose a thing. ELEVEN can use offline AI on your computer or top cloud models interchangeably."
-                technical="Because memory, policy, and tool authority reside in the local Control Plane, ModelRouter switches dynamically across Ollama, NIM, Claude, GPT, and DeepSeek without session loss."
-              />
-              <div className="pt-4 flex flex-wrap gap-3">
-                <PortalActionButton variant="primary" arrow>
-                  Try Live 3D Orb
-                </PortalActionButton>
-                <Button
-                  href="/tools/vault-calculator"
-                  variant="secondary"
-                  arrow
-                >
-                  Estimate Memory Storage
-                </Button>
-                <Button
-                  href="/architecture"
-                  variant="ghost"
-                >
-                  See How It’s Built
-                </Button>
-              </div>
-            </GenesisSectionIntro>
+          <GenesisSplitReveal
+            className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start"
+            leftClassName="lg:col-span-5"
+            rightClassName="lg:col-span-7"
+            offset={64}
+            left={
+              <GenesisSectionIntro className="space-y-4">
+                <div className="gfx-badge">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <CipherText text="04 · Model Agnostic Routing" />
+                </div>
+                <h2 className="el-h2">
+                  <WordReveal text="Swap AI brains anytime. Keep all your memories." />
+                </h2>
+                <DualCopy
+                  className="el-body"
+                  plain="If a smarter AI comes out next month, or if your internet goes down, you don’t lose a thing. ELEVEN can use offline AI on your computer or top cloud models interchangeably."
+                  technical="Because memory, policy, and tool authority reside in the local Control Plane, ModelRouter switches dynamically across Ollama, NIM, Claude, GPT, and DeepSeek without session loss."
+                />
+                <div className="pt-4 flex flex-wrap gap-3">
+                  <PortalActionButton variant="primary" arrow>
+                    Try Live 3D Orb
+                  </PortalActionButton>
+                  <Button
+                    href="/tools/vault-calculator"
+                    variant="secondary"
+                    arrow
+                  >
+                    Estimate Memory Storage
+                  </Button>
+                  <Button
+                    href="/architecture"
+                    variant="ghost"
+                  >
+                    See How It’s Built
+                  </Button>
+                </div>
+              </GenesisSectionIntro>
+            }
+            right={
+              <GenesisTimelineList mode="timeline" className="space-y-4">
+                {AI_LANES.map((tier) => (
+                  <li key={tier.lane} className="gfx-feature-item">
+                    <Tilt3DCard className="p-6">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-el-xs font-medium text-[#10bc83]">
+                          {tier.lane}
+                        </span>
+                        <span className="font-mono text-el-xs text-el-fg">
+                          {tier.providers}
+                        </span>
+                      </div>
+                      <DualCopy
+                        className="mt-2.5 text-el-xs leading-[1.65] text-el-fg-muted"
+                        plain={tier.plainRole}
+                        technical={tier.techRole}
+                      />
+                    </Tilt3DCard>
+                  </li>
+                ))}
+              </GenesisTimelineList>
+            }
+          />
+        </Section>
 
-            <ScrollReveal
-              stagger={0.09}
-              className="space-y-4 lg:col-span-7"
-            >
-              {AI_LANES.map((tier) => (
-                <RevealItem key={tier.lane}>
-                  <Tilt3DCard className="p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="text-el-xs font-medium text-[#10bc83]">
-                        {tier.lane}
-                      </span>
-                      <span className="font-mono text-el-xs text-el-fg">
-                        {tier.providers}
-                      </span>
-                    </div>
-                    <DualCopy
-                      className="mt-2.5 text-el-xs leading-[1.65] text-el-fg-muted"
-                      plain={tier.plainRole}
-                      technical={tier.techRole}
-                    />
-                  </Tilt3DCard>
-                </RevealItem>
-              ))}
-            </ScrollReveal>
-          </div>
+        <SignalBeamDivider />
+
+        {/* ── CLOSING CTA STAGE ── */}
+        <Section className="py-16 lg:py-24">
+          <GenesisCtaStage
+            badge="Dual-Mind Execution Preview"
+            title="Hear low-latency voice paired with deep planning."
+            description="Request access to benchmark full-duplex 16kHz barge-in and local ModelRouter failover on your own machine."
+            actions={
+              <>
+                <WaitlistActionButton variant="primary" arrow tier="general" className="w-full sm:w-auto">
+                  Join Early Access
+                </WaitlistActionButton>
+                <PortalActionButton variant="secondary" className="w-full sm:w-auto">
+                  Enter ELEVEN 3D Core
+                </PortalActionButton>
+              </>
+            }
+          />
         </Section>
       </main>
 

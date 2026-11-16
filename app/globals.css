@@ -1305,3 +1305,199 @@ body {
   transform-origin: center bottom;
   animation: enter-wave-pulse var(--wave-dur, 1.15s) ease-in-out var(--wave-delay, 0s) infinite;
 }
+
+/* ============================================================
+   GENESIS FX PAGE-WIDE VISUAL & MOTION LAYERS
+   (Subpage Hero Bars, Border Shadow Sweep, Timeline Rail,
+    AI Core Halo SVG, Bubble Float & CtaInstance Glow Blobs)
+   ============================================================ */
+
+/* Animated specular conic border beam (GlowImage / DataSection / Showcase) */
+.border-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.border-shadow__glow {
+  position: absolute;
+  inset: -45%;
+  background: conic-gradient(
+    from var(--el-orbit-angle),
+    transparent 0deg,
+    rgba(16, 188, 131, 0.55) 48deg,
+    rgba(56, 255, 189, 0.85) 72deg,
+    rgba(16, 188, 131, 0.4) 96deg,
+    transparent 145deg,
+    transparent 360deg
+  );
+  animation: el-border-orbit 8.5s linear infinite;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* Subpage atmospheric stage matching / Hero vertical glass columns & radial glow */
+.subpage-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: calc(var(--fs) * 1.5);
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.55) 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.55) 55%, transparent 100%);
+}
+
+/* GenesisFX vertical timeline (--rail-flow animated by GSAP ScrollTrigger scrub) */
+.gfx-timeline {
+  --rail-flow: -20%;
+  position: relative;
+  padding-left: 2.25rem;
+}
+
+.gfx-timeline::before {
+  content: "";
+  position: absolute;
+  left: 0.72rem;
+  top: 0.45rem;
+  bottom: 0.45rem;
+  width: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+}
+
+.gfx-timeline::after {
+  content: "";
+  position: absolute;
+  left: 0.72rem;
+  top: 0.45rem;
+  bottom: 0.45rem;
+  width: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    transparent calc(var(--rail-flow) - 18%),
+    rgba(16, 188, 131, 0.35) calc(var(--rail-flow) - 6%),
+    #38ffbd var(--rail-flow),
+    rgba(16, 188, 131, 0.35) calc(var(--rail-flow) + 6%),
+    transparent calc(var(--rail-flow) + 18%)
+  );
+  filter: drop-shadow(0 0 8px rgba(16, 188, 131, 0.75));
+  pointer-events: none;
+}
+
+/* Animated SVG organic curved aura behind AI / Architecture section */
+.ai-coach-svg-aura {
+  position: absolute;
+  left: 50%;
+  top: -3.5rem;
+  width: min(92vw, 920px);
+  height: 360px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+  filter: blur(68px);
+}
+
+.ai-coach-svg-aura path {
+  fill: url(#el-ai-aura-grad);
+}
+
+/* Subtle organic ambient float for frosted telemetry pills */
+@keyframes gfx-bubble-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+.gfx-bubble--float {
+  animation: gfx-bubble-drift 5.6s ease-in-out var(--bubble-delay, 0s) infinite;
+}
+
+/* Active highlight intensification for .gfx-feature-bar inside scrubbed lists */
+.gfx-feature-item.is-active .gfx-feature-bar {
+  background: linear-gradient(180deg, rgba(16, 188, 131, 0.35) 0%, #38ffbd 50%, rgba(16, 188, 131, 0.35) 100%);
+  box-shadow: 0 0 18px 2px rgba(56, 255, 189, 0.65);
+  height: 28px;
+  transition: height 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* CtaInstance Obsidian + Animated Emerald Blobs */
+@keyframes cta-blob-pulse {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.42;
+  }
+  50% {
+    transform: translate3d(18px, -10px, 0) scale(1.08);
+    opacity: 0.62;
+  }
+}
+
+.cta-instance-box {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: radial-gradient(110% 100% at 50% 0%, rgba(0, 179, 140, 0.08), rgba(5, 7, 13, 0.96) 55%), #05070d;
+  box-shadow: 0 32px 90px -24px rgba(0, 0, 0, 0.85), 0 0 60px -24px rgba(0, 179, 140, 0.25);
+}
+
+.cta-instance-glow {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cta-instance-glow--top {
+  top: -8.5rem;
+  left: -6.5rem;
+  width: 28rem;
+  height: 24rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 179, 140, 0.38), rgba(16, 188, 131, 0.08) 55%, transparent 100%);
+  filter: blur(88px);
+  animation: cta-blob-pulse 8.5s ease-in-out infinite;
+}
+
+.cta-instance-glow--bottom {
+  bottom: -10rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 38rem;
+  height: 24rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(64, 201, 156, 0.34), rgba(130, 96, 207, 0.1) 58%, transparent 100%);
+  filter: blur(96px);
+  animation: cta-blob-pulse 10s ease-in-out -3.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .border-shadow__glow,
+  .gfx-bubble--float,
+  .cta-instance-glow--top,
+  .cta-instance-glow--bottom,
+  .enter-wave-bar {
+    animation: none !important;
+  }
+}
+

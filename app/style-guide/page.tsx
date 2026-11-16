@@ -5,7 +5,15 @@ import { Nav } from "@/components/navigation/Nav";
 import { Footer } from "@/components/navigation/Footer";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { GenesisShowcaseFrame } from "@/components/motion/GenesisMotionEngine";
+import {
+  GenesisCtaStage,
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
+  GenesisTimelineList,
+} from "@/components/motion/GenesisMotionEngine";
 
 const swatches = [
   { name: "--bg (Obsidian Void)", hex: "#05070d", value: "#05070d" },
@@ -37,14 +45,9 @@ export default function StyleGuide() {
       <Nav />
 
       <Section className="relative overflow-hidden py-14 lg:py-20">
-        {ambientBoost && (
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-x-0 -top-24 h-[420px]"
-          />
-        )}
-        <div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <div>
+        {ambientBoost && <GenesisSubpageHeroBackdrop />}
+        <div className="relative z-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+          <GenesisHeroIntro>
             <span className="gfx-badge">Design System · GenesisFX Obsidian + Emerald</span>
             <h1 className="mt-5 el-h1 heading-gradient">
               ELEVEN Design System
@@ -52,7 +55,7 @@ export default function StyleGuide() {
             <p className="mt-4 max-w-[60ch] el-body">
               Obsidian void canvas, regular-weight (400) fluid geometric typography with radial silver gradient ink, emerald spotlight buttons, and GSAP + Lenis smooth choreography.
             </p>
-          </div>
+          </GenesisHeroIntro>
           <Button
             variant="secondary"
             onClick={() => setAmbientBoost((b) => !b)}
@@ -64,7 +67,9 @@ export default function StyleGuide() {
 
       {/* Type scale */}
       <Section className="border-t border-white/[0.07]">
-        <h2 className="mb-10 el-h3 heading-gradient">Typography Scale (--fs Fluid Viewport System)</h2>
+        <GenesisSectionIntro>
+          <h2 className="mb-10 el-h3 heading-gradient">Typography Scale (--fs Fluid Viewport System)</h2>
+        </GenesisSectionIntro>
         <div className="space-y-7">
           {typeScale.map((t) => (
             <div
@@ -95,8 +100,14 @@ export default function StyleGuide() {
 
       {/* Color tokens */}
       <Section className="border-t border-white/[0.07]">
-        <h2 className="mb-10 el-h3 heading-gradient">Obsidian & Emerald Color Tokens</h2>
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+        <GenesisSectionIntro>
+          <h2 className="mb-10 el-h3 heading-gradient">Obsidian & Emerald Color Tokens</h2>
+        </GenesisSectionIntro>
+        <GenesisStaggerGrid
+          from="center"
+          stagger={0.05}
+          className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5"
+        >
           {swatches.map((s) => (
             <div key={s.name} className="gfx-card p-3">
               <span className="gfx-card__border" aria-hidden="true" />
@@ -112,12 +123,14 @@ export default function StyleGuide() {
               </p>
             </div>
           ))}
-        </div>
+        </GenesisStaggerGrid>
       </Section>
 
-      {/* Interactive Surface & Buttons */}
+      {/* Interactive Surface, Choreography & Buttons */}
       <Section className="border-t border-white/[0.07]">
-        <h2 className="mb-10 el-h3 heading-gradient">Interactive Buttons, Badges & Frames</h2>
+        <GenesisSectionIntro>
+          <h2 className="mb-10 el-h3 heading-gradient">Interactive Buttons, Choreography &amp; Frames</h2>
+        </GenesisSectionIntro>
 
         <div className="flex flex-wrap items-center gap-4">
           <Button variant="primary" arrow>
@@ -147,23 +160,40 @@ export default function StyleGuide() {
           <div className="gfx-card p-6">
             <span className="gfx-card__border" aria-hidden="true" />
             <span className="gfx-card__bloom" aria-hidden="true" />
-            <div className="relative z-10 flex items-start gap-4">
-              <span className="gfx-feature-bar" aria-hidden="true" />
-              <div>
-                <h3 className="text-xl font-normal heading-gradient">Chamfered Glass Card + Feature Bar</h3>
-                <p className="mt-2 text-sm text-[#a0a0a0]">
-                  Uses mask-composite perimeter borders, backdrop blur, corner bloom, and glowing vertical feature indicators.
-                </p>
-              </div>
+            <div className="relative z-10 space-y-4">
+              <h3 className="text-xl font-normal heading-gradient">Timeline Rail + Active Feature Bars</h3>
+              <GenesisTimelineList mode="feature-bars" className="space-y-3 text-sm text-[#a0a0a0]">
+                <li className="gfx-feature-item flex items-start gap-3">
+                  <span className="gfx-feature-bar" aria-hidden="true" />
+                  <span>Scrubbed vertical rail illumination and scroll-synchronized feature indicators.</span>
+                </li>
+                <li className="gfx-feature-item flex items-start gap-3">
+                  <span className="gfx-feature-bar" aria-hidden="true" />
+                  <span>Reduced-motion fallback sets every indicator active at full contrast.</span>
+                </li>
+              </GenesisTimelineList>
             </div>
           </div>
 
           <GenesisShowcaseFrame innerClassName="p-6">
             <h3 className="text-xl font-normal heading-gradient">Showcase Frame</h3>
             <p className="mt-2 text-sm text-[#a0a0a0]">
-              Centered emerald top beam and masked rim highlight rising smoothly on ScrollTrigger entry.
+              Centered emerald top beam, animated conic `.border-shadow` sweep, and masked rim highlight rising smoothly on ScrollTrigger entry.
             </p>
           </GenesisShowcaseFrame>
+        </div>
+
+        <div className="mt-14">
+          <GenesisCtaStage
+            badge="GenesisCtaStage · Obsidian Finale"
+            title="Unified closing rhythm across every route."
+            description="Every subpage shares the atmospheric top backdrop, bidirectional GSAP choreography, and canvas-illuminated closing stage."
+            actions={
+              <Button href="/" variant="primary" arrow className="w-full sm:w-auto">
+                Return to Homepage
+              </Button>
+            }
+          />
         </div>
       </Section>
 

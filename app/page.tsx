@@ -12,13 +12,17 @@ import {
   CipherText,
   ClarityTogglePill,
   DualCopy,
-  ParagraphReveal,
   SignalBeamDivider,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisSplitReveal,
+  GenesisStaggerGrid,
+  GenesisTimelineList,
 } from "@/components/motion/GenesisMotionEngine";
 import { GenesisHeroStage } from "@/components/motion/GenesisHeroStage";
 import { HeroAiPromptBox } from "@/components/v3/HeroAiPromptBox";
@@ -149,6 +153,25 @@ const ARCHITECTURE_BUBBLES = [
   { label: "Zero Cloud Lock-In", tint: "56, 255, 189" },
 ];
 
+const RUNTIME_DECK_TELEMETRY = [
+  {
+    label: "16kHz Voice Duplex Loop",
+    value: "0.42s median · <50ms halt",
+  },
+  {
+    label: "Untrusted Quarantine Gate",
+    value: "INV-01 Path Confined · Zero Shell",
+  },
+  {
+    label: "Host Verification Quorum",
+    value: "5 Checkpoints · 15 Strict Invariants",
+  },
+  {
+    label: "Cold-Room Cryptographic Pass",
+    value: "Ed25519 Nonce · 30.0s Auto-Expire",
+  },
+];
+
 export default function HomePage() {
   return (
     <>
@@ -176,9 +199,70 @@ export default function HomePage() {
           <div id="solutions" className="absolute -top-24 left-0 pointer-events-none" aria-hidden="true" />
           <div id="how-it-works" className="absolute -top-24 left-0 pointer-events-none" aria-hidden="true" />
 
-          <div className="mb-10">
-            <HeroAiPromptBox />
-          </div>
+          {/* Paired Command Deck fixing orphaned prompt box & echoing #hero-section spatial luminance */}
+          <GenesisShowcaseFrame className="mb-14" innerClassName="relative p-5 sm:p-7 lg:p-8">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-24 right-0 h-[280px] w-[360px] rounded-full opacity-40 blur-[90px]"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(16, 188, 131, 0.35), rgba(130, 96, 207, 0.14) 55%, transparent)",
+              }}
+            />
+            <GenesisSplitReveal
+              className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12"
+              leftClassName="lg:col-span-7"
+              rightClassName="lg:col-span-5"
+              offset={56}
+              left={
+                <div>
+                  <div className="mb-3 flex items-center justify-between gap-2">
+                    <span className="gfx-badge">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd] motion-safe:animate-pulse" />
+                      Interactive Command Simulation
+                    </span>
+                    <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-[0.12em] text-[#686868]">
+                      Host Policy · Fail-Closed
+                    </span>
+                  </div>
+                  <HeroAiPromptBox />
+                </div>
+              }
+              right={
+                <div className="rounded-xl border border-white/[0.08] bg-[#080d0b]/85 p-5 sm:p-6">
+                  <div className="flex items-center justify-between border-b border-white/[0.07] pb-3.5">
+                    <div>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#10bc83]">
+                        CONTROL PLANE GUARDRAILS
+                      </p>
+                      <h3 className="mt-1 text-lg font-normal tracking-[-0.02em] heading-gradient">
+                        Every prompt enters quarantine first.
+                      </h3>
+                    </div>
+                    <span className="shrink-0 whitespace-nowrap rounded-full border border-[#00b38c]/35 bg-[#021b13] px-2.5 py-1 font-mono text-[10px] text-[#38ffbd]">
+                      RING 0–4
+                    </span>
+                  </div>
+
+                  <ul className="mt-4 space-y-3.5">
+                    {RUNTIME_DECK_TELEMETRY.map((item) => (
+                      <li key={item.label} className="gfx-feature-item is-active flex items-start gap-3">
+                        <span className="gfx-feature-bar" aria-hidden="true" />
+                        <div className="min-w-0">
+                          <p className="text-[13px] font-medium text-[#e8ecf5]">
+                            {item.label}
+                          </p>
+                          <p className="font-mono text-[11px] text-[#8a9490]">
+                            {item.value}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              }
+            />
+          </GenesisShowcaseFrame>
 
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <GenesisSectionIntro className="max-w-[700px]">
@@ -209,28 +293,37 @@ export default function HomePage() {
           </div>
 
           {/* GenesisFX Chamfered Glass Gateway Cards */}
-          <div id="gateway-pillars" className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {GATEWAY_PILLARS.map((pillar) => (
-              <article key={pillar.code} className="gfx-card p-6 flex flex-col justify-between">
-                <span className="gfx-card__border" aria-hidden="true" />
-                <span
-                  className="gfx-card__bloom"
-                  style={{ background: pillar.tint }}
-                  aria-hidden="true"
-                />
-                <div className="relative z-10">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-[#021b13]/80 font-mono text-[11px] text-[#10bc83]">
-                    {pillar.code}
+          <div id="gateway-pillars">
+            <GenesisStaggerGrid
+              from="center"
+              stagger={0.11}
+              className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+            >
+              {GATEWAY_PILLARS.map((pillar) => (
+                <article key={pillar.code} className="gfx-card p-6 flex flex-col justify-between">
+                  <span className="gfx-card__border" aria-hidden="true" />
+                  <span className="border-shadow" aria-hidden="true">
+                    <span className="border-shadow__glow" />
                   </span>
-                  <h3 className="mt-5 text-[1.25rem] font-normal tracking-[-0.02em] heading-gradient">
-                    {pillar.title}
-                  </h3>
-                  <p className="mt-2.5 text-[14px] leading-[1.55] text-[#a0a0a0]">
-                    {pillar.desc}
-                  </p>
-                </div>
-              </article>
-            ))}
+                  <span
+                    className="gfx-card__bloom"
+                    style={{ background: pillar.tint }}
+                    aria-hidden="true"
+                  />
+                  <div className="relative z-10">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-[#021b13]/80 font-mono text-[11px] text-[#10bc83]">
+                      {pillar.code}
+                    </span>
+                    <h3 className="mt-5 text-[1.25rem] font-normal tracking-[-0.02em] heading-gradient">
+                      {pillar.title}
+                    </h3>
+                    <p className="mt-2.5 text-[14px] leading-[1.55] text-[#a0a0a0]">
+                      {pillar.desc}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </GenesisStaggerGrid>
           </div>
 
           <div className="mt-12">
@@ -300,103 +393,118 @@ export default function HomePage() {
             id="genesis-social-section"
             className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-10"
           >
-            <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-              {/* Left 6 Columns: GenesisFX .genesis-feature list with .gfx-feature-bar */}
-              <div className="lg:col-span-6">
-                <GenesisSectionIntro>
-                  <div>
-                    <span className="gfx-badge">
-                      <span className="h-2 w-2 rounded-full bg-[#10bc83] motion-safe:animate-pulse" />
-                      <CipherText text="03 · Concentric safety rings" />
-                    </span>
+            <GenesisSplitReveal
+              className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14"
+              leftClassName="lg:col-span-6"
+              rightClassName="lg:col-span-6"
+              offset={84}
+              left={
+                <div>
+                  <GenesisSectionIntro>
+                    <div>
+                      <span className="gfx-badge">
+                        <span className="h-2 w-2 rounded-full bg-[#10bc83] motion-safe:animate-pulse" />
+                        <CipherText text="03 · Concentric safety rings" />
+                      </span>
+                    </div>
+
+                    <WordReveal
+                      as="h2"
+                      text="Five concentric safety rings."
+                      mutedText="Deterministic host policy."
+                      className="mt-5 el-h2"
+                    />
+
+                    <DualCopy
+                      className="mt-4 el-body"
+                      plain="Most AI agents run loose on your computer with complete control over your files and terminal. ELEVEN encloses models within 5 protective concentric rings: every proposed action must be inspected, verified against strict safety rules, and approved before anything executes."
+                      technical="DEC-008 unidirectional Control Plane topology. Models operate strictly inside untrusted reasoning quarantine; candidate ActionProposals flow inward across 5 deterministic PolicyGate checkpoints; emergency hardware stop interrupts execution in <0.05s."
+                    />
+                  </GenesisSectionIntro>
+
+                  {/* Signature GenesisFX Glowing Vertical Feature Bars with Scrub Illumination */}
+                  <GenesisTimelineList
+                    mode="feature-bars"
+                    className="mt-10 space-y-6 border-t border-white/[0.07] pt-8"
+                  >
+                    {SAFETY_RING_FEATURES.map((feat) => (
+                      <li key={feat.title} className="gfx-feature-item flex items-start gap-4">
+                        <span className="gfx-feature-bar" aria-hidden="true" />
+                        <div>
+                          <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-[#10bc83]">
+                            {feat.tag}
+                          </span>
+                          <h3 className="mt-1 text-[1.25rem] font-normal tracking-[-0.02em] heading-gradient">
+                            {feat.title}
+                          </h3>
+                          <p className="mt-1.5 text-[14.5px] leading-[1.55] text-[#a0a0a0]">
+                            {feat.desc}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </GenesisTimelineList>
+
+                  <div className="mt-9 flex flex-wrap items-center gap-3.5">
+                    <Button href="/architecture" variant="primary" arrow>
+                      Inspect Complete Architecture
+                    </Button>
+                    <Button href="/security" variant="secondary">
+                      Review Security Proofs
+                    </Button>
                   </div>
-
-                  <WordReveal
-                    as="h2"
-                    text="Five concentric safety rings."
-                    mutedText="Deterministic host policy."
-                    className="mt-5 el-h2"
-                  />
-
-                  <DualCopy
-                    className="mt-4 el-body"
-                    plain="Most AI agents run loose on your computer with complete control over your files and terminal. ELEVEN encloses models within 5 protective concentric rings: every proposed action must be inspected, verified against strict safety rules, and approved before anything executes."
-                    technical="DEC-008 unidirectional Control Plane topology. Models operate strictly inside untrusted reasoning quarantine; candidate ActionProposals flow inward across 5 deterministic PolicyGate checkpoints; emergency hardware stop interrupts execution in <0.05s."
-                  />
-                </GenesisSectionIntro>
-
-                {/* Signature GenesisFX Glowing Vertical Feature Bars */}
-                <ul className="mt-10 space-y-6 border-t border-white/[0.07] pt-8">
-                  {SAFETY_RING_FEATURES.map((feat) => (
-                    <li key={feat.title} className="flex items-start gap-4">
-                      <span className="gfx-feature-bar" aria-hidden="true" />
-                      <div>
-                        <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-[#10bc83]">
-                          {feat.tag}
-                        </span>
-                        <h3 className="mt-1 text-[1.25rem] font-normal tracking-[-0.02em] heading-gradient">
-                          {feat.title}
-                        </h3>
-                        <p className="mt-1.5 text-[14.5px] leading-[1.55] text-[#a0a0a0]">
-                          {feat.desc}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-9 flex flex-wrap items-center gap-3.5">
-                  <Button href="/architecture" variant="primary" arrow>
-                    Inspect Complete Architecture
-                  </Button>
-                  <Button href="/security" variant="secondary">
-                    Review Security Proofs
-                  </Button>
                 </div>
-              </div>
-
-              {/* Right 6 Columns: GenesisShowcaseFrame wrapping 3D Control Plane Gyroscope */}
-              <div className="lg:col-span-6">
-                <div className="mb-3 flex items-center justify-between px-2">
-                  <div className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] motion-safe:animate-pulse" />
+              }
+              right={
+                <div>
+                  <div className="mb-3 flex items-center justify-between px-2">
+                    <div className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] motion-safe:animate-pulse" />
+                      <span className="font-sans text-xs text-[#686868]">
+                        Topology simulator · Specification v3.1
+                      </span>
+                    </div>
                     <span className="font-sans text-xs text-[#686868]">
-                      Topology simulator · Specification v3.1
+                      Drag to rotate 3D view
                     </span>
                   </div>
-                  <span className="font-sans text-xs text-[#686868]">
-                    Drag to rotate 3D view
-                  </span>
-                </div>
 
-                <GenesisShowcaseFrame>
-                  <Gyro3DEmbed theme="dark" />
-                </GenesisShowcaseFrame>
-              </div>
-            </div>
+                  <GenesisShowcaseFrame>
+                    <Gyro3DEmbed theme="dark" />
+                  </GenesisShowcaseFrame>
+                </div>
+              }
+            />
           </div>
         </section>
 
         <SignalBeamDivider />
 
-        {/* ── 05. #ai-coach-section: VIOLET/EMERALD HALO + FLOATING BUBBLES + ARCHITECTURE ── */}
+        {/* ── 05. #ai-coach-section: VIOLET/EMERALD SVG HALO + FLOATING BUBBLES + ARCHITECTURE ── */}
         <section
           id="architecture-visualization"
           className="relative overflow-hidden py-16 lg:py-[var(--el-space-section)]"
         >
-          {/* Centered GenesisFX AI Core Violet-Emerald Halo */}
-          <div
+          {/* GenesisFX Organic Curved AI Coach SVG Aura */}
+          <svg
+            className="ai-coach-svg-aura"
+            viewBox="306.829 -219 935.5 437.5"
+            fill="none"
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-24 h-[340px] w-[min(90vw,780px)] -translate-x-1/2 rounded-full opacity-55 blur-[110px]"
-            style={{
-              background:
-                "radial-gradient(ellipse at center, rgba(130, 96, 207, 0.32), rgba(0, 179, 140, 0.18) 52%, transparent 74%)",
-            }}
-          />
+          >
+            <defs>
+              <linearGradient id="el-ai-aura-grad" x1="306.8" y1="-219" x2="1242.3" y2="218.5" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#8260cf" />
+                <stop offset="52%" stopColor="#00b38c" />
+                <stop offset="100%" stopColor="#38ffbd" />
+              </linearGradient>
+            </defs>
+            <path d="M419.829 -112C292.229 -110.4 291.329 -182.667 306.829 -219H1242.33C1253.13 -143.4 1173.83 -116.167 1132.83 -112C961.829 -112 991.829 10.5 991.829 47.5C991.829 84.5 970.329 218.5 781.829 218.5C631.029 218.5 576.329 104.5 567.829 47.5C571.663 -6.33333 547.429 -113.6 419.829 -112Z" />
+          </svg>
 
           <div
             id="ai-coach-section"
-            className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-10"
+            className="relative z-10 mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-10"
           >
             <GenesisSectionIntro className="mx-auto max-w-[760px] text-center flex flex-col items-center">
               <div>
@@ -419,7 +527,7 @@ export default function HomePage() {
               />
 
               {/* Floating Frosted .gfx-bubble Telemetry Pills */}
-              <ul className="mt-7 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+              <GenesisBubbleRow className="mt-7 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
                 {ARCHITECTURE_BUBBLES.map((b) => (
                   <li
                     key={b.label}
@@ -430,7 +538,7 @@ export default function HomePage() {
                     <span>{b.label}</span>
                   </li>
                 ))}
-              </ul>
+              </GenesisBubbleRow>
 
               <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
                 <Button href="/architecture#exploded-layer-stack" variant="secondary">
@@ -483,71 +591,37 @@ export default function HomePage() {
 
         {/* ── 07. #cta-instance-section: OBSIDIAN + EMERALD CLOSING CTA BOX ── */}
         <Section id="early-access">
-          <div id="cta-instance-section">
-            <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-12 lg:p-16">
-              {/* Top-left & Bottom Ambient Emerald Blobs (GenesisFX CtaInstance) */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-28 -left-24 h-[360px] w-[420px] rounded-full opacity-40 blur-[95px]"
-                style={{
-                  background:
-                    "radial-gradient(closest-side, #00b38c, transparent 72%)",
-                }}
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -bottom-36 left-1/2 h-[380px] w-[540px] -translate-x-1/2 rounded-full opacity-35 blur-[110px]"
-                style={{
-                  background:
-                    "radial-gradient(closest-side, #40c99c, transparent 72%)",
-                }}
-              />
-
-              <div className="relative z-10 grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
-                <div className="lg:col-span-8">
-                  <span className="gfx-badge">
-                    <span className="h-2 w-2 rounded-full bg-[#10bc83] motion-safe:animate-pulse" />
-                    <CipherText text="Early Access Invitation" />
-                  </span>
-
-                  <WordReveal
-                    as="h2"
-                    text="Ready for personal AI that stays on your computer?"
-                    className="mt-5 el-h2"
-                  />
-
-                  <ParagraphReveal
-                    className="mt-4 max-w-[600px] el-body"
-                    text="Join the early access program to experience fast voice conversation, background project planning, private encrypted memory, and deterministic safety checkpoints—running entirely under your control."
-                  />
-
-                  <div className="mt-7 flex flex-wrap items-center gap-5 font-sans text-xs text-[#a0a0a0]">
-                    <span className="flex items-center gap-1.5">
-                      <span className="text-[#10bc83] font-semibold">✓</span> Local-First Architecture
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <span className="text-[#10bc83] font-semibold">✓</span> Zero Cloud Memory Lock-In
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <span className="text-[#10bc83] font-semibold">✓</span> 5-Checkpoint Safety Policy
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-3.5 lg:col-span-4 lg:items-end">
-                  <WaitlistActionButton variant="primary" arrow tier="general" className="w-full sm:w-auto">
-                    Join Early Access
-                  </WaitlistActionButton>
-                  <WaitlistActionButton variant="secondary" tier="technical" className="w-full sm:w-auto">
-                    Request Technical Access
-                  </WaitlistActionButton>
-                  <PortalActionButton variant="ghost" className="w-full sm:w-auto">
-                    Open Live 3D Orb
-                  </PortalActionButton>
-                </div>
-              </div>
+          <GenesisCtaStage
+            id="cta-instance-section"
+            badge="Early Access Invitation"
+            title="Ready for personal AI that stays on your computer?"
+            description="Join the early access program to experience fast voice conversation, background project planning, private encrypted memory, and deterministic safety checkpoints—running entirely under your control."
+            actions={
+              <>
+                <WaitlistActionButton variant="primary" arrow tier="general" className="w-full sm:w-auto">
+                  Join Early Access
+                </WaitlistActionButton>
+                <WaitlistActionButton variant="secondary" tier="technical" className="w-full sm:w-auto">
+                  Request Technical Access
+                </WaitlistActionButton>
+                <PortalActionButton variant="ghost" className="w-full sm:w-auto">
+                  Open Live 3D Orb
+                </PortalActionButton>
+              </>
+            }
+          >
+            <div className="mt-7 flex flex-wrap items-center gap-5 font-sans text-xs text-[#a0a0a0]">
+              <span className="flex items-center gap-1.5">
+                <span className="text-[#10bc83] font-semibold">✓</span> Local-First Architecture
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="text-[#10bc83] font-semibold">✓</span> Zero Cloud Memory Lock-In
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="text-[#10bc83] font-semibold">✓</span> 5-Checkpoint Safety Policy
+              </span>
             </div>
-          </div>
+          </GenesisCtaStage>
         </Section>
       </main>
 

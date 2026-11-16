@@ -15,9 +15,15 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
+  GenesisBubbleRow,
+  GenesisCtaStage,
   GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
+  GenesisSplitReveal,
+  GenesisStaggerGrid,
+  GenesisSubpageHeroBackdrop,
+  GenesisTimelineList,
 } from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
@@ -94,15 +100,8 @@ export default function DevelopersSolutionPage() {
 
         {/* ── HERO SECTION ── */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
-          />
-          <div className="relative">
+          <GenesisSubpageHeroBackdrop />
+          <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
@@ -134,24 +133,24 @@ export default function DevelopersSolutionPage() {
                 technical="Run autonomous agents against your codebase with deterministic diff approvals, jailed git worktrees, low-integrity OS tokens, static AST safety audits, and zero cloud IP exposure."
               />
 
-              <div className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+              <GenesisBubbleRow className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Git worktree isolation (INV-09)
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Default-deny egress (INV-12)
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Ed25519 30s TTL (DEC-008)
-                </span>
-                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                </li>
+                <li className="gfx-bubble !h-9 !px-3.5 !text-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Ring-0 watchdog (&lt;0.05s)
-                </span>
-              </div>
+                </li>
+              </GenesisBubbleRow>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -199,9 +198,13 @@ export default function DevelopersSolutionPage() {
             />
           </GenesisSectionIntro>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.1}
+            className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3"
+          >
             {/* Superpower 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -227,7 +230,7 @@ export default function DevelopersSolutionPage() {
             </Tilt3DCard>
 
             {/* Superpower 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -253,7 +256,7 @@ export default function DevelopersSolutionPage() {
             </Tilt3DCard>
 
             {/* Superpower 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between p-6">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6 h-full">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
@@ -277,7 +280,7 @@ export default function DevelopersSolutionPage() {
                 <span className="text-el-accent">Receipt:</span> <code>Ed25519 / Nonce SHA-256</code>
               </div>
             </Tilt3DCard>
-          </div>
+          </GenesisStaggerGrid>
         </Section>
 
         <SignalBeamDivider />
@@ -310,26 +313,30 @@ export default function DevelopersSolutionPage() {
           </GenesisShowcaseFrame>
 
           {/* Under-Console Architecture Details */}
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3 text-xs">
-            <Tilt3DCard className="p-5">
+          <GenesisStaggerGrid
+            from="center"
+            stagger={0.09}
+            className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3 text-xs"
+          >
+            <Tilt3DCard className="p-5 h-full">
               <span className="text-el-accent font-medium">AST Confinement:</span>
               <p className="mt-1.5 text-el-fg-muted text-[11px] leading-relaxed">
                 Static syntax analysis blocks arbitrary execution, eval calls, and directory traversal beyond targeted workspace boundaries.
               </p>
             </Tilt3DCard>
-            <Tilt3DCard className="p-5">
+            <Tilt3DCard className="p-5 h-full">
               <span className="text-[#10bc83] font-medium">Isolated Git Trees:</span>
               <p className="mt-1.5 text-el-fg-muted text-[11px] leading-relaxed">
                 Agents operate in transient memory-backed worktrees (<code>git worktree add</code>). Untrusted code is never checkout-linked to your main working tree.
               </p>
             </Tilt3DCard>
-            <Tilt3DCard className="p-5">
+            <Tilt3DCard className="p-5 h-full">
               <span className="text-el-fg font-medium">Ring-0 E-Stop:</span>
               <p className="mt-1.5 text-el-fg-muted text-[11px] leading-relaxed">
                 If an agent triggers unexpected CPU spikes or network egress attempts, the hardware supervisor terminates the process in under 50ms.
               </p>
             </Tilt3DCard>
-          </div>
+          </GenesisStaggerGrid>
 
           <div className="mt-6 flex justify-end">
             <Button
@@ -346,39 +353,45 @@ export default function DevelopersSolutionPage() {
 
         {/* ── DEVELOPER CLI WORKFLOW & ERGONOMICS ── */}
         <Section className="py-16 lg:py-24">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-            <GenesisSectionIntro className="lg:col-span-6 space-y-4">
-              <div className="gfx-badge">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-                <CipherText text="03 · Ergonomics & Workflow" />
+          <GenesisSplitReveal
+            className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center"
+            leftClassName="lg:col-span-6 space-y-4"
+            rightClassName="lg:col-span-6"
+            offset={64}
+            left={
+              <div>
+                <GenesisSectionIntro className="space-y-4">
+                  <div className="gfx-badge">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                    <CipherText text="03 · Ergonomics & Workflow" />
+                  </div>
+                  <h2 className="el-h2">
+                    <WordReveal text="Fits inside your terminal. Never alters your muscle memory." />
+                  </h2>
+                  <DualCopy
+                    className="el-body"
+                    plain="You do not need to learn an entirely new editor. ELEVEN integrates directly with your existing terminal, favorite shell, and IDE via standard protocols like LSP and MCP."
+                    technical="ELEVEN interfaces seamlessly via the eleven-cli binary and standard Model Context Protocol (MCP) server sockets. Works out-of-the-box with Neovim, VS Code, tmux, and custom CI pipelines."
+                  />
+                </GenesisSectionIntro>
+
+                <GenesisTimelineList mode="feature-bars" className="mt-6 space-y-4 text-xs text-el-fg-muted">
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Local AST Semantic Search:</strong> Vector embeddings are indexed locally with SQLite &amp; fast HNSW without sending code to third-party endpoints.</span>
+                  </li>
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Custom Policy Whitelists:</strong> Define allowed write paths, prohibited packages, and required linting rules in <code>.eleven/policy.yaml</code>.</span>
+                  </li>
+                  <li className="gfx-feature-item flex items-start gap-3">
+                    <span className="gfx-feature-bar" aria-hidden="true" />
+                    <span><strong className="text-el-fg">Multi-Branch Parallelism:</strong> Spawn up to 8 isolated worktrees simultaneously to explore parallel refactoring strategies.</span>
+                  </li>
+                </GenesisTimelineList>
               </div>
-              <h2 className="el-h2">
-                <WordReveal text="Fits inside your terminal. Never alters your muscle memory." />
-              </h2>
-              <DualCopy
-                className="el-body"
-                plain="You do not need to learn an entirely new editor. ELEVEN integrates directly with your existing terminal, favorite shell, and IDE via standard protocols like LSP and MCP."
-                technical="ELEVEN interfaces seamlessly via the eleven-cli binary and standard Model Context Protocol (MCP) server sockets. Works out-of-the-box with Neovim, VS Code, tmux, and custom CI pipelines."
-              />
-
-              <ul className="space-y-3 text-xs text-el-fg-muted">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-el-accent">▸</span>
-                  <span><strong className="text-el-fg">Local AST Semantic Search:</strong> Vector embeddings are indexed locally with SQLite &amp; fast HNSW without sending code to third-party endpoints.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-el-accent">▸</span>
-                  <span><strong className="text-el-fg">Custom Policy Whitelists:</strong> Define allowed write paths, prohibited packages, and required linting rules in <code>.eleven/policy.yaml</code>.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-el-accent">▸</span>
-                  <span><strong className="text-el-fg">Multi-Branch Parallelism:</strong> Spawn up to 8 isolated worktrees simultaneously to explore parallel refactoring strategies.</span>
-                </li>
-              </ul>
-            </GenesisSectionIntro>
-
-            {/* CLI Code Snippet Box */}
-            <div className="lg:col-span-6">
+            }
+            right={
               <GenesisShowcaseFrame className="overflow-hidden font-mono text-[11.5px]">
                 <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#08090a] px-4 py-2.5 text-el-xs">
                   <span className="text-el-fg-faint">terminal // zsh</span>
@@ -408,8 +421,8 @@ export default function DevelopersSolutionPage() {
                   </div>
                 </div>
               </GenesisShowcaseFrame>
-            </div>
-          </div>
+            }
+          />
         </Section>
 
         <SignalBeamDivider />
@@ -485,31 +498,16 @@ export default function DevelopersSolutionPage() {
 
         {/* ── PRE-QUALIFIED TECHNICAL WAITLIST CTA ── */}
         <Section className="py-20">
-          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
-            />
-            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="gfx-badge mx-auto">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
-                <CipherText text="Technical Alpha Program · Ring 1 Access" />
-              </div>
-
-              <h2 className="el-h2">
-                <WordReveal text="Ready to build with supervised autonomy?" />
-              </h2>
-
-              <DualCopy
-                className="el-body"
-                plain="Join the early access program for developers. Get direct access to the CLI binaries, sandbox runtimes, and local model bindings."
-                technical="Request access to the ELEVEN Developer Preview. Includes eleven-cli, Quarantine Sanctum container runtimes, and native MCP protocol bridges."
-              />
-
-              <div className="pt-4 flex flex-wrap justify-center gap-4">
+          <GenesisCtaStage
+            badge="Technical Alpha Program · Ring 1 Access"
+            title="Ready to build with supervised autonomy?"
+            description="Join the early access program for developers. Get direct access to the CLI binaries, sandbox runtimes, and local model bindings."
+            actions={
+              <>
                 <WaitlistActionButton
                   tier="technical"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Request Technical Access (Developer Ring)
                 </WaitlistActionButton>
@@ -517,6 +515,7 @@ export default function DevelopersSolutionPage() {
                   variant="secondary"
                   href="/architecture"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Explore Execution Rooms
                 </Button>
@@ -524,16 +523,17 @@ export default function DevelopersSolutionPage() {
                   variant="ghost"
                   href="/solutions/enterprise"
                   arrow
+                  className="w-full sm:w-auto"
                 >
                   Enterprise Fleet Governance
                 </Button>
-              </div>
-
-              <p className="pt-2 text-xs text-el-fg-faint">
-                Supports macOS (Apple Silicon), Windows 11 (WSL2/Hyper-V), and Ubuntu 22.04+ LTS.
-              </p>
-            </GenesisSectionIntro>
-          </div>
+              </>
+            }
+          >
+            <p className="pt-4 text-xs text-el-fg-faint">
+              Supports macOS (Apple Silicon), Windows 11 (WSL2/Hyper-V), and Ubuntu 22.04+ LTS.
+            </p>
+          </GenesisCtaStage>
         </Section>
       </main>
 
