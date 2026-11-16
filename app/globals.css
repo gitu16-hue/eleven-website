@@ -1510,6 +1510,74 @@ body {
     width: min(460px, 100%);
   }
 
+  .gateway-deck-stage {
+    position: relative;
+    perspective: 1100px;
+    transform-style: preserve-3d;
+  }
+
+  .gateway-deck-watermark {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(4rem, 19vw, 6.5rem);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.085);
+    user-select: none;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .gateway-deck-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 82%;
+    max-width: 304px;
+    border-radius: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background:
+      radial-gradient(90% 95% at 88% 12%, rgba(16, 188, 131, 0.24), transparent 62%),
+      rgba(7, 13, 21, 0.88);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    box-shadow:
+      0 26px 56px -18px rgba(0, 0, 0, 0.85),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transform-origin: center center;
+    transition:
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.6s ease,
+      border-color 0.45s ease,
+      box-shadow 0.55s ease;
+    will-change: transform, opacity;
+  }
+
+  .gateway-deck-card--amber {
+    background:
+      radial-gradient(90% 95% at 88% 12%, rgba(226, 157, 88, 0.22), transparent 62%),
+      rgba(11, 12, 18, 0.9);
+  }
+
+  .gateway-deck-card--blue {
+    background:
+      radial-gradient(90% 95% at 88% 12%, rgba(76, 110, 245, 0.24), transparent 62%),
+      rgba(8, 12, 23, 0.9);
+  }
+
+  .gateway-deck-card--active {
+    border-color: rgba(56, 255, 189, 0.36);
+    box-shadow:
+      0 28px 64px -16px rgba(0, 0, 0, 0.92),
+      0 0 36px -14px rgba(16, 188, 131, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
+
   .carousel-progress {
     position: relative;
     height: 0.375rem;

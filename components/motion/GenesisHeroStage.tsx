@@ -218,8 +218,56 @@ const ALL_GATEWAY_CARDS: GatewayCardSpec[] = [
   ...RIGHT_GATEWAY_CARDS,
 ];
 
-function MobileGatewayCarousel() {
-  const [activeIdx, setActiveIdx] = React.useState(0);
+const MOBILE_DECK_ICONS: Record<string, React.ReactNode> = {
+  voice: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+      <path d="M12 4v16M8 8v8M4 11v2M16 8v8M20 11v2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  ),
+  dag: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+      <circle cx="6" cy="12" r="2.2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="17.5" cy="7" r="2.2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="17.5" cy="17" r="2.2" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M8.1 11.1L15.4 7.9M8.1 12.9l7.3 3.2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  gate: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+      <path d="M12 3.5l6.5 2.8v5.4c0 4.2-2.7 7.6-6.5 8.8-3.8-1.2-6.5-4.6-6.5-8.8V6.3L12 3.5z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M9.5 12l1.8 1.8 3.4-3.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  vault: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+      <ellipse cx="12" cy="6.5" rx="6.5" ry="2.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M5.5 6.5v5.5c0 1.38 2.91 2.5 6.5 2.5s6.5-1.12 6.5-2.5V6.5M5.5 12v5.5c0 1.38 2.91 2.5 6.5 2.5s6.5-1.12 6.5-2.5V12" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  ),
+  worktree: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+      <circle cx="7" cy="6.5" r="2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="7" cy="17.5" r="2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="17" cy="10" r="2" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M7 8.5v7M7 14c0-2.2 2-3.5 5.5-3.8L15 10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  ),
+  cockpit: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
+      <ellipse cx="12" cy="12" rx="8.5" ry="3.4" transform="rotate(-24 12 12)" stroke="currentColor" strokeWidth="1.4" />
+      <ellipse cx="12" cy="12" rx="8.5" ry="3.4" transform="rotate(24 12 12)" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  ),
+};
+
+function MobileGatewayCarousel({
+  activeIdx,
+  onSelectIdx,
+}: {
+  activeIdx: number;
+  onSelectIdx: React.Dispatch<React.SetStateAction<number>>;
+}) {
   const [isPaused, setIsPaused] = React.useState(false);
   const touchStartX = React.useRef<number | null>(null);
   const total = ALL_GATEWAY_CARDS.length;
@@ -229,10 +277,10 @@ function MobileGatewayCarousel() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
     const id = window.setInterval(() => {
-      setActiveIdx((prev) => (prev + 1) % total);
-    }, 3200);
+      onSelectIdx((prev) => (prev + 1) % total);
+    }, 3600);
     return () => window.clearInterval(id);
-  }, [isPaused, total]);
+  }, [isPaused, onSelectIdx, total]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0]?.clientX ?? null;
@@ -244,8 +292,8 @@ function MobileGatewayCarousel() {
     const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
     const delta = touchStartX.current - endX;
     touchStartX.current = null;
-    if (Math.abs(delta) > 36) {
-      setActiveIdx((prev) =>
+    if (Math.abs(delta) > 32) {
+      onSelectIdx((prev) =>
         delta > 0 ? (prev + 1) % total : (prev - 1 + total) % total
       );
     }
@@ -259,65 +307,124 @@ function MobileGatewayCarousel() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="overflow-hidden">
-        <div
-          className="flex transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-          style={{ transform: `translate3d(-${activeIdx * 100}%, 0, 0)` }}
-        >
-          {ALL_GATEWAY_CARDS.map((card) => (
-            <div key={card.key} className="w-full shrink-0 px-1">
-              <article
-                className={`gateway-card gateway-card--${card.tone} mx-auto w-full max-w-[360px]`}
-              >
-                <div className="flex items-center justify-between gap-2 w-full">
-                  <div
-                    className={`flex h-7 w-auto px-2.5 shrink-0 flex-row items-center justify-center gap-1.5 rounded-full border font-mono text-[10px] ${
-                      card.tone === "amber"
-                        ? "border-[#e29d58]/40 bg-gradient-to-br from-[#3d2e0d] to-[#1f1606] text-[#e29d58]"
-                        : card.tone === "blue"
-                        ? "border-[#4c6ef5]/45 bg-gradient-to-br from-[#0d152e] to-[#28429e] text-[#9eb4ff]"
-                        : "border-[#10bc83]/40 bg-gradient-to-br from-[#0d3d28] to-[#061f16] text-[#38ffbd]"
-                    }`}
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-current opacity-85" />
-                    <span className="whitespace-nowrap">{card.badge}</span>
-                  </div>
-                  <span className="font-mono text-[10px] tracking-[0.12em] text-[#6e857b]">
-                    0{ALL_GATEWAY_CARDS.indexOf(card) + 1} / 0{total}
-                  </span>
-                </div>
-                <div className="flex w-full flex-col items-start gap-1">
-                  <h3 className="text-[1.05rem] font-normal text-[#e8ecf5] leading-snug">
+      {/* 3D Perspective Diagonal Card Deck (Mobile-Only) */}
+      <div className="gateway-deck-stage mx-auto h-[282px] w-full max-w-[360px]">
+        <div className="gateway-deck-watermark" aria-hidden="true">
+          ELEVEN
+        </div>
+
+        {ALL_GATEWAY_CARDS.map((card, i) => {
+          const rel = (i - activeIdx + total) % total;
+          const isFront = rel === 0;
+          const isSecond = rel === 1;
+          const isThird = rel === 2;
+          const isExiting = rel === total - 1;
+
+          let transform = "translate3d(84px, 88px, -200px) rotateY(-10deg) scale(0.76)";
+          let opacity = 0;
+          let zIndex = 10;
+          let pointerEvents: "auto" | "none" = "none";
+
+          if (isFront) {
+            transform = "translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg) scale(1)";
+            opacity = 1;
+            zIndex = 40;
+            pointerEvents = "auto";
+          } else if (isSecond) {
+            transform = "translate3d(34px, 34px, -70px) rotateY(-5deg) rotateX(2deg) scale(0.92)";
+            opacity = 0.78;
+            zIndex = 30;
+            pointerEvents = "auto";
+          } else if (isThird) {
+            transform = "translate3d(62px, 64px, -140px) rotateY(-8deg) rotateX(3deg) scale(0.84)";
+            opacity = 0.42;
+            zIndex = 20;
+            pointerEvents = "auto";
+          } else if (isExiting) {
+            transform = "translate3d(-52px, -22px, 60px) rotateY(7deg) rotateZ(-2deg) scale(1.03)";
+            opacity = 0;
+            zIndex = 50;
+            pointerEvents = "none";
+          }
+
+          const accentClass =
+            card.tone === "amber"
+              ? "text-[#e29d58]"
+              : card.tone === "blue"
+              ? "text-[#9eb4ff]"
+              : "text-[#38ffbd]";
+
+          return (
+            <article
+              key={card.key}
+              onClick={
+                !isFront && (isSecond || isThird)
+                  ? () => {
+                      setIsPaused(true);
+                      onSelectIdx(i);
+                    }
+                  : undefined
+              }
+              aria-hidden={!isFront && !isSecond && !isThird}
+              className={`gateway-deck-card gateway-deck-card--${card.tone} ${
+                isFront ? "gateway-deck-card--active" : "cursor-pointer"
+              } flex flex-col justify-between p-4`}
+              style={{
+                transform,
+                opacity,
+                zIndex,
+                pointerEvents,
+              }}
+            >
+              {/* Top Tag + Top-Right Square Icon Chip */}
+              <div className="flex items-start justify-between gap-2">
+                <span className={`font-mono text-[10px] uppercase tracking-[0.14em] ${accentClass}`}>
+                  0{i + 1} / {card.badge}
+                </span>
+                <span
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] ${accentClass}`}
+                >
+                  {MOBILE_DECK_ICONS[card.key]}
+                </span>
+              </div>
+
+              {/* Card Body: Title + Description + Direct Arrow CTA */}
+              <div className="mt-3 flex flex-col gap-1.5">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="text-[1.08rem] font-normal uppercase tracking-[0.01em] text-white leading-tight">
                     {card.title}
                   </h3>
-                  <p className="text-[11.5px] text-[#a0a0a0] leading-snug line-clamp-2">
-                    {card.desc}
-                  </p>
-                  <div className="mt-1.5 w-full">
-                    <Button
-                      href={card.href}
-                      variant={card.fill ? "secondary" : "ghost"}
-                      arrow={card.fill}
-                      className="w-full"
-                    >
-                      {card.btn}
-                    </Button>
-                  </div>
+                  <span className={`shrink-0 text-sm leading-none pt-0.5 ${accentClass}`} aria-hidden="true">
+                    ↗
+                  </span>
                 </div>
-              </article>
-            </div>
-          ))}
-        </div>
+                <p className="text-[11.5px] text-[#a0b0ac] leading-[1.45] line-clamp-3">
+                  {card.desc}
+                </p>
+                <div className="mt-2 pt-2 border-t border-white/[0.08]">
+                  <Button
+                    href={card.href}
+                    variant={card.fill ? "secondary" : "ghost"}
+                    arrow={card.fill}
+                    className="w-full"
+                  >
+                    {card.btn}
+                  </Button>
+                </div>
+              </div>
+            </article>
+          );
+        })}
       </div>
 
-      {/* GenesisFX Emerald Progress Bar + Prev/Next Controls */}
-      <div className="mx-auto mt-3 flex max-w-[360px] items-center gap-3 px-1">
+      {/* Emerald Progress Bar + Prev/Next Controls */}
+      <div className="mx-auto mt-2.5 flex max-w-[360px] items-center gap-3 px-1">
         <button
           type="button"
           aria-label="Previous capability"
           onClick={() => {
             setIsPaused(true);
-            setActiveIdx((prev) => (prev - 1 + total) % total);
+            onSelectIdx((prev) => (prev - 1 + total) % total);
           }}
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#05070d]/80 text-xs text-[#cff2e6] transition-colors hover:border-[#10bc83]/60"
         >
@@ -338,7 +445,7 @@ function MobileGatewayCarousel() {
           aria-label="Next capability"
           onClick={() => {
             setIsPaused(true);
-            setActiveIdx((prev) => (prev + 1) % total);
+            onSelectIdx((prev) => (prev + 1) % total);
           }}
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#05070d]/80 text-xs text-[#cff2e6] transition-colors hover:border-[#10bc83]/60"
         >
@@ -350,6 +457,7 @@ function MobileGatewayCarousel() {
 }
 
 export function GenesisHeroStage() {
+  const [mobileDeckStep, setMobileDeckStep] = React.useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -939,6 +1047,7 @@ export function GenesisHeroStage() {
         const heroContent = heroContentRef.current;
         const statsSection = statsSectionRef.current;
         const gatewaySection = gatewaySectionRef.current;
+        let lastDeckStep = -1;
 
         const mobileMasterTl = gsap.timeline({
           scrollTrigger: {
@@ -946,6 +1055,22 @@ export function GenesisHeroStage() {
             start: "top top",
             end: "bottom bottom",
             scrub: 0.55,
+            onUpdate: (self) => {
+              if (self.progress >= 0.62 && self.progress <= 0.92) {
+                const frac = Math.min(0.999, Math.max(0, (self.progress - 0.62) / 0.28));
+                const step = Math.min(
+                  ALL_GATEWAY_CARDS.length - 1,
+                  Math.max(0, Math.floor(frac * ALL_GATEWAY_CARDS.length))
+                );
+                if (step !== lastDeckStep) {
+                  lastDeckStep = step;
+                  setMobileDeckStep(step);
+                }
+              } else if (self.progress < 0.62 && lastDeckStep !== 0) {
+                lastDeckStep = 0;
+                setMobileDeckStep(0);
+              }
+            },
           },
         });
 
@@ -1032,16 +1157,16 @@ export function GenesisHeroStage() {
           );
         }
 
-        // Phase 3 (0.52 -> 0.92): 3D Globe morphs to Emerald Hologram Core + #gateway-section carousel reveals
+        // Phase 3 (0.52 -> 0.92): 3D Globe morphs to Emerald Hologram Core + #gateway-section 3D stacked deck reveals
         mobileMasterTl.to(
           sceneState,
           {
             morph: 1.0,
             colorMix: 1.0,
-            globeScale: 0.78,
-            globeY: 0.04,
+            globeScale: 0.72,
+            globeY: 0.2,
             waterAlpha: 0.35,
-            duration: 0.22,
+            duration: 0.18,
             ease: "power2.inOut",
           },
           0.52
@@ -1053,34 +1178,34 @@ export function GenesisHeroStage() {
           const gwCarousel = gatewaySection.querySelector(".gateway-carousel");
 
           gsap.set(gatewaySection, { autoAlpha: 0 });
-          if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 36 });
+          if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 32 });
           if (gwCenterTag) gsap.set(gwCenterTag, { opacity: 0, scale: 0.92 });
-          if (gwCarousel) gsap.set(gwCarousel, { opacity: 0, y: 40 });
+          if (gwCarousel) gsap.set(gwCarousel, { opacity: 0, y: 34 });
 
           mobileMasterTl.to(
             gatewaySection,
-            { autoAlpha: 1, duration: 0.04, ease: "none" },
-            0.56
+            { autoAlpha: 1, duration: 0.03, ease: "none" },
+            0.55
           );
           if (gwHeading) {
             mobileMasterTl.to(
               gwHeading,
-              { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" },
-              0.58
+              { opacity: 1, y: 0, duration: 0.07, ease: "power2.out" },
+              0.56
             );
           }
           if (gwCenterTag) {
             mobileMasterTl.to(
               gwCenterTag,
-              { opacity: 1, scale: 1, duration: 0.1, ease: "power2.out" },
-              0.60
+              { opacity: 1, scale: 1, duration: 0.06, ease: "power2.out" },
+              0.57
             );
           }
           if (gwCarousel) {
             mobileMasterTl.to(
               gwCarousel,
-              { opacity: 1, y: 0, duration: 0.14, ease: "power2.out" },
-              0.62
+              { opacity: 1, y: 0, duration: 0.07, ease: "power2.out" },
+              0.57
             );
           }
         }
@@ -1369,8 +1494,11 @@ export function GenesisHeroStage() {
               </div>
             </div>
 
-            {/* Mobile GenesisFX Horizontal Auto/Swipe Carousel + Emerald Progress Bar */}
-            <MobileGatewayCarousel />
+            {/* Mobile 3D Perspective Diagonal Card Deck + Emerald Progress Bar */}
+            <MobileGatewayCarousel
+              activeIdx={mobileDeckStep}
+              onSelectIdx={setMobileDeckStep}
+            />
 
             {/* Desktop Split 3-Column Grid Around Morphed 3D Hologram */}
             <div className="pointer-events-auto hidden lg:grid lg:grid-cols-12 lg:items-center lg:gap-6">
