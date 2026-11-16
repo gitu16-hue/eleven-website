@@ -300,11 +300,11 @@ export function AiCommandPalette() {
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label="Open AI Command Palette (Ctrl+K or Cmd+K)"
-        className="hidden md:flex items-center gap-2 rounded-full border border-el-border-strong bg-el-bg-raised/70 px-3 py-1 font-mono text-[11px] text-el-fg-muted shadow-xs backdrop-blur-xs hover:border-el-accent hover:text-el-fg transition-all cursor-pointer group"
+        className="hidden md:flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-el-border-strong bg-el-bg-raised/70 px-3 py-1 font-mono text-[11px] text-el-fg-muted shadow-xs backdrop-blur-xs hover:border-el-accent hover:text-el-fg transition-all cursor-pointer group"
       >
-        <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse" />
-        <span className="group-hover:text-el-accent transition-colors">AI HUD</span>
-        <kbd className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.2 text-[9px] text-el-fg-faint">
+        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-el-accent animate-pulse" />
+        <span className="whitespace-nowrap group-hover:text-el-accent transition-colors">AI HUD</span>
+        <kbd className="shrink-0 rounded-xs border border-el-border bg-el-bg px-1.5 py-0.2 text-[9px] text-el-fg-faint">
           ⌘K
         </kbd>
       </button>

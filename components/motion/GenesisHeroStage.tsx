@@ -643,14 +643,9 @@ export function GenesisHeroStage() {
         if (dashboardPin) {
           masterTl.fromTo(
             dashboardPin,
-            { yPercent: 0 },
-            { yPercent: 115, ease: "power1.in", duration: 0.18, immediateRender: false },
+            { y: 0, autoAlpha: 1 },
+            { y: 180, autoAlpha: 0, ease: "power1.in", duration: 0.16, immediateRender: false },
             0
-          );
-          masterTl.to(
-            dashboardPin,
-            { autoAlpha: 0, duration: 0.06, ease: "none" },
-            0.14
           );
         }
         if (heroContent) {
@@ -837,7 +832,7 @@ export function GenesisHeroStage() {
         className="relative isolate w-full lg:h-[340vh]"
       >
         {/* Sticky Viewport Container on Desktop, Natural Stack on Mobile */}
-        <div className="relative w-full lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden">
+        <div className="relative flex w-full flex-col items-center lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden">
           {/* Top Radial Emerald HeroGlow Ellipses (HeroGlow-BLVG_dxt.js) */}
           <div className="hero-glow" aria-hidden="true">
             <div className="hero-glow__img" />
@@ -849,19 +844,8 @@ export function GenesisHeroStage() {
               ============================================================ */}
           <div
             ref={heroContentRef}
-            className="hero-content relative z-10 mx-auto flex max-w-[1160px] flex-col items-center px-5 pt-6 pb-4 text-center lg:pt-7"
+            className="hero-content relative z-10 mx-auto flex max-w-[1060px] shrink-0 flex-col items-center px-5 pt-4 pb-2 text-center lg:pt-6"
           >
-            {/* Terminology Mode Toggle */}
-            <div
-              data-hero-item
-              className="mb-3 flex flex-wrap items-center justify-center gap-3"
-            >
-              <span className="font-mono text-xs text-[#a0a0a0]">
-                Reading mode:
-              </span>
-              <ClarityTogglePill />
-            </div>
-
             {/* GenesisFX Hero Badge */}
             <div data-hero-item className="gfx-badge mb-3">
               <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
@@ -876,13 +860,13 @@ export function GenesisHeroStage() {
             <h1
               id="hero-heading"
               data-hero-item
-              className="max-w-[19ch] text-[clamp(2.25rem,4.2vw,3.95rem)] font-normal leading-[1.03] tracking-[-0.03em] heading-gradient"
+              className="max-w-[20ch] text-[clamp(2.15rem,4.1vw,3.9rem)] font-normal leading-[1.03] tracking-[-0.03em] heading-gradient"
             >
               Private AI that thinks, speaks, and works—only with your permission.
             </h1>
 
             {/* GenesisFX Hero Subtitle */}
-            <div data-hero-item className="mt-2.5">
+            <div data-hero-item className="mt-3">
               <DualCopy
                 className="text-base sm:text-lg font-medium text-[#e8ecf5]"
                 plain="Built like a vault. Effortless like a conversation."
@@ -893,38 +877,16 @@ export function GenesisHeroStage() {
             {/* GenesisFX Hero Description */}
             <div data-hero-item className="mt-2">
               <DualCopy
-                className="max-w-[40rem] text-sm sm:text-[15px] leading-[1.5] text-[#a0a0a0]"
+                className="max-w-[38rem] text-sm sm:text-[15px] leading-[1.5] text-[#a0a0a0]"
                 plain="Speak naturally, automate complex work across your files and apps, and review every important action before it happens. Everything stays 100% private on your own computer."
                 technical="Runs across four isolated OS process rooms with loopback-only Qdrant + SQLite WAL memory (127.0.0.1) and 30-second Ed25519 hardware-signed approval leases."
               />
             </div>
 
-            {/* GenesisFX Status Bubbles */}
-            <div
-              data-hero-item
-              className="mt-4 flex flex-wrap items-center justify-center gap-2.5"
-            >
-              {[
-                { label: "Replies in 0.42s", spec: "<500ms voice loop" },
-                { label: "Asks before acting", spec: "5-Stage ActionGate" },
-                { label: "100% on your device", spec: "Zero cloud uploads" },
-              ].map((pill) => (
-                <div key={pill.label} className="gfx-bubble !h-9 !px-3.5">
-                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
-                  <span className="text-xs font-normal text-white">
-                    {pill.label}
-                  </span>
-                  <span className="font-mono text-[11px] text-[#10bc83]">
-                    · {pill.spec}
-                  </span>
-                </div>
-              ))}
-            </div>
-
             {/* GenesisFX Hero CTA Row */}
             <div
               data-hero-item
-              className="mt-4 flex flex-wrap items-center justify-center gap-3.5"
+              className="mt-5 flex flex-wrap items-center justify-center gap-3.5"
             >
               <WaitlistActionButton
                 tier="general"
@@ -942,44 +904,62 @@ export function GenesisHeroStage() {
             </div>
           </div>
 
-          {/* Rising Hero Dashboard Showcase Pin (.hero-dashboard-pin + @keyframes hero-dashboard-rise) */}
-          <div ref={dashboardPinRef} className="hero-dashboard-pin hidden lg:flex">
+          {/* Rising Hero Dashboard Showcase Pin (In-flow directly below Hero CTAs — never overlaps text) */}
+          <div ref={dashboardPinRef} className="hero-dashboard-pin mt-6 lg:mt-7 hidden lg:flex">
             <div ref={dashboardRef} className="hero-dashboard gfx-frame">
-              <div className="gfx-frame__inner p-4 sm:p-5">
-                <div className="flex items-center justify-between border-b border-white/[0.07] pb-3 mb-3 font-mono text-xs text-[#a0a0a0]">
+              <div className="gfx-frame__highlight" aria-hidden="true">
+                <div className="gfx-frame__highlight-glow" />
+              </div>
+              <span className="gfx-frame__top-beam" aria-hidden="true" />
+              <div className="relative z-[1] overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/95 p-4 sm:p-5">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.07] pb-3 mb-3.5 font-mono text-xs text-[#a0a0a0]">
                   <span className="flex items-center gap-2 text-white">
                     <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
                     ELEVEN SOVEREIGN CONTROL PLANE · LIVE 3D CORE PREVIEW
                   </span>
-                  <span className="text-[#38ffbd]">
-                    SCROLL DOWN TO UNVEIL 3D HOLOGRAM STAGE ↓
-                  </span>
+                  <div className="flex items-center gap-4">
+                    <ClarityTogglePill />
+                    <span className="text-[#38ffbd] hidden xl:inline">
+                      SCROLL TO EXPLORE 3D STAGE ↓
+                    </span>
+                  </div>
                 </div>
-                <div className="grid grid-cols-12 gap-4 items-center">
-                  <div className="col-span-7">
+                <div className="grid grid-cols-12 gap-5 items-center">
+                  <div className="col-span-6">
                     <HeroOrbEmbed />
                   </div>
-                  <div className="col-span-5 space-y-3 text-left">
-                    <div className="rounded-xl border border-white/[0.07] bg-[#080c14] p-3.5">
+                  <div className="col-span-6 space-y-3 text-left">
+                    <div className="rounded-xl border border-white/[0.07] bg-[#080c14] p-4">
                       <div className="font-mono text-[10px] text-[#10bc83]">
                         SYSTEM 1 + SYSTEM 2 COGNITION
                       </div>
-                      <div className="mt-1 text-sm font-normal heading-gradient">
+                      <div className="mt-1 text-base font-normal heading-gradient">
                         Instant 0.42s Voice + Deep DAG Planning
                       </div>
                       <p className="mt-1 text-xs text-[#a0a0a0]">
                         While you talk naturally, background helper agents compile and verify tasks in quarantined git worktrees.
                       </p>
                     </div>
-                    <div className="rounded-xl border border-white/[0.07] bg-[#080c14] p-3.5">
+                    <div className="rounded-xl border border-white/[0.07] bg-[#080c14] p-4">
                       <div className="font-mono text-[10px] text-[#38ffbd]">
                         5-STAGE ACTIONGATE (INV-04)
                       </div>
-                      <div className="mt-1 text-sm font-normal heading-gradient">
+                      <div className="mt-1 text-base font-normal heading-gradient">
                         Ed25519 Signed Human Consent
                       </div>
                       <p className="mt-1 text-xs text-[#a0a0a0]">
                         Every high-impact action pauses for your 30-second cryptographic approval with instant one-click rollback.
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-white/[0.07] bg-[#080c14] p-4">
+                      <div className="font-mono text-[10px] text-[#10bc83]">
+                        SOVEREIGN LOCAL MEMORY (127.0.0.1)
+                      </div>
+                      <div className="mt-1 text-base font-normal heading-gradient">
+                        4 AES-256 Encrypted Drawers On-Device
+                      </div>
+                      <p className="mt-1 text-xs text-[#a0a0a0]">
+                        Zero cloud memory uploads—your timeline, vector index, and cryptographic receipts remain on your PC.
                       </p>
                     </div>
                   </div>
@@ -989,9 +969,17 @@ export function GenesisHeroStage() {
           </div>
 
           {/* Mobile / Tablet Inline 3D Orb Showcase */}
-          <div className="mx-auto max-w-xl px-5 pb-12 lg:hidden">
+          <div className="mt-6 w-full max-w-xl px-5 pb-12 lg:hidden">
+            <div className="mb-4 flex items-center justify-center gap-2">
+              <span className="font-mono text-xs text-[#a0a0a0]">Reading mode:</span>
+              <ClarityTogglePill />
+            </div>
             <div className="gfx-frame">
-              <div className="gfx-frame__inner p-2">
+              <div className="gfx-frame__highlight" aria-hidden="true">
+                <div className="gfx-frame__highlight-glow" />
+              </div>
+              <span className="gfx-frame__top-beam" aria-hidden="true" />
+              <div className="relative z-[1] overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/95 p-3">
                 <HeroOrbEmbed />
               </div>
             </div>
