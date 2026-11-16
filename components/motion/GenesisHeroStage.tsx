@@ -262,91 +262,184 @@ const MOBILE_DECK_ICONS: Record<string, React.ReactNode> = {
 };
 
 function MobileGatewayCarousel({
-  activeIdx,
-  onSelectIdx,
+  targetIdxRef,
+  activeStep,
+  onActiveStepChange,
 }: {
-  activeIdx: number;
-  onSelectIdx: React.Dispatch<React.SetStateAction<number>>;
+  targetIdxRef: React.MutableRefObject<number>;
+  activeStep: number;
+  onActiveStepChange: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const [isPaused, setIsPaused] = React.useState(false);
-  const touchStartX = React.useRef<number | null>(null);
+  const cardRefs = useRef<(HTMLElement | null)[]>([]);
+  const smoothIdxRef = useRef<number>(0);
+  const pointerTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const pointerSmoothRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const touchStartRef = useRef<{ x: number; idx: number } | null>(null);
+  const lastStepRef = useRef<number>(0);
   const total = ALL_GATEWAY_CARDS.length;
 
-  React.useEffect(() => {
-    if (isPaused) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
-    const id = window.setInterval(() => {
-      onSelectIdx((prev) => (prev + 1) % total);
-    }, 3600);
-    return () => window.clearInterval(id);
-  }, [isPaused, onSelectIdx, total]);
+  useEffect(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      cardRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const isCurrent = i === activeStep;
+        el.style.transform = "translate3d(0px, 0px, 0px) scale(1)";
+        el.style.opacity = isCurrent ? "1" : "0";
+        el.style.zIndex = isCurrent ? "50" : "10";
+        el.style.pointerEvents = isCurrent ? "auto" : "none";
+        el.classList.toggle("gateway-spiral-card--active", isCurrent);
+      });
+      return;
+    }
+
+    let rafId = 0;
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      rafId = requestAnimationFrame(tick);
+      const t = (now - startTime) / 1000;
+
+      // Continuous rAF Lerp (damping 0.075) + cursor/touch tilt lerp
+      smoothIdxRef.current += (targetIdxRef.current - smoothIdxRef.current) * 0.075;
+      pointerSmoothRef.current.x +=
+        (pointerTargetRef.current.x - pointerSmoothRef.current.x) * 0.08;
+      pointerSmoothRef.current.y +=
+        (pointerTargetRef.current.y - pointerSmoothRef.current.y) * 0.08;
+
+      const vw = window.innerWidth || 390;
+      const isTablet = vw >= 640;
+      const radiusX = isTablet ? 250 : 148;
+      const stepY = isTablet ? 115 : 86;
+      const radiusZ = isTablet ? 260 : 210;
+      const zOffset = isTablet ? 200 : 155;
+
+      const rounded = Math.min(
+        total - 1,
+        Math.max(0, Math.round(smoothIdxRef.current))
+      );
+      if (rounded !== lastStepRef.current) {
+        lastStepRef.current = rounded;
+        onActiveStepChange(rounded);
+      }
+
+      for (let i = 0; i < total; i++) {
+        const el = cardRefs.current[i];
+        if (!el) continue;
+
+        const offset = i - smoothIdxRef.current;
+        const absOff = Math.abs(offset);
+        const theta = offset * 0.92; // rad step along 3D cylinder
+
+        // Cylindrical Helix coordinates
+        const x = Math.sin(theta) * radiusX;
+        const y = offset * stepY;
+        const z = Math.cos(theta) * radiusZ - zOffset;
+
+        // Idle sine-wave orbital float ("breathes in 3D even when stopped")
+        const breathY = Math.sin(t * 1.1 + i * 1.15) * 4.5;
+        const breathRx = Math.cos(t * 0.85 + i * 0.95) * 1.4;
+        const breathRy = Math.sin(t * 0.72 + i * 1.25) * 1.8;
+        const breathRz = Math.sin(t * 0.64 + i * 0.8) * 0.9;
+
+        // 3-Axis orientation + interactive pointer parallax tilt
+        const rotY =
+          -theta * (180 / Math.PI) * 0.44 +
+          pointerSmoothRef.current.x * 7 +
+          breathRy;
+        const rotX = offset * -5.2 - pointerSmoothRef.current.y * 6 + breathRx;
+        const rotZ = offset * 4.2 + breathRz;
+
+        const scale = Math.max(0.68, 1 - absOff * 0.13);
+        const opacity =
+          absOff > 2.35 ? 0 : Math.max(0, 1 - Math.pow(absOff / 2.35, 1.55));
+        const zIndex = Math.round(100 - absOff * 20);
+        const isFront = absOff < 0.45;
+
+        el.style.transform = `translate3d(${x.toFixed(1)}px, ${(y + breathY).toFixed(1)}px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) rotateZ(${rotZ.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+        el.style.opacity = opacity.toFixed(3);
+        el.style.zIndex = String(zIndex);
+        el.style.pointerEvents = absOff < 1.65 ? "auto" : "none";
+        el.setAttribute("aria-hidden", absOff > 1.65 ? "true" : "false");
+        el.classList.toggle("gateway-spiral-card--active", isFront);
+      }
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [activeStep, onActiveStepChange, targetIdxRef, total]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0]?.clientX ?? null;
-    setIsPaused(true);
+    const t = e.touches[0];
+    if (!t) return;
+    touchStartRef.current = { x: t.clientX, idx: targetIdxRef.current };
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
-    const delta = touchStartX.current - endX;
-    touchStartX.current = null;
-    if (Math.abs(delta) > 32) {
-      onSelectIdx((prev) =>
-        delta > 0 ? (prev + 1) % total : (prev - 1 + total) % total
-      );
-    }
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartRef.current) return;
+    const t = e.touches[0];
+    if (!t) return;
+    const dx = touchStartRef.current.x - t.clientX;
+    const next = Math.min(
+      total - 1,
+      Math.max(0, touchStartRef.current.idx + dx / 145)
+    );
+    targetIdxRef.current = next;
+    pointerTargetRef.current = {
+      x: Math.max(-1, Math.min(1, -dx / 180)),
+      y: 0,
+    };
   };
 
-  const progressPct = ((activeIdx + 1) / total) * 100;
+  const handleTouchEnd = () => {
+    if (!touchStartRef.current) return;
+    touchStartRef.current = null;
+    targetIdxRef.current = Math.min(
+      total - 1,
+      Math.max(0, Math.round(targetIdxRef.current))
+    );
+    pointerTargetRef.current = { x: 0, y: 0 };
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const nx = ((e.clientX - rect.left) / Math.max(1, rect.width)) * 2 - 1;
+    const ny = ((e.clientY - rect.top) / Math.max(1, rect.height)) * 2 - 1;
+    pointerTargetRef.current = {
+      x: Math.max(-1, Math.min(1, nx)),
+      y: Math.max(-1, Math.min(1, ny)),
+    };
+  };
+
+  const handlePointerLeave = () => {
+    pointerTargetRef.current = { x: 0, y: 0 };
+  };
+
+  const stepTo = (nextIdx: number) => {
+    const wrapped = ((nextIdx % total) + total) % total;
+    targetIdxRef.current = wrapped;
+    onActiveStepChange(wrapped);
+  };
+
+  const progressPct = ((activeStep + 1) / total) * 100;
 
   return (
     <div
-      className="gateway-carousel pointer-events-auto w-full lg:hidden"
+      className="gateway-carousel pointer-events-auto flex w-full flex-1 flex-col justify-between lg:hidden"
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
     >
-      {/* 3D Perspective Diagonal Card Deck (Mobile-Only) */}
-      <div className="gateway-deck-stage mx-auto h-[282px] w-full max-w-[360px]">
-        <div className="gateway-deck-watermark" aria-hidden="true">
+      {/* 3D Cylindrical Spiral / Helix Stage (perspective: 1400px, preserve-3d) */}
+      <div className="gateway-spiral-stage mx-auto flex-1 min-h-[340px] w-full max-w-[440px]">
+        <div className="gateway-spiral-watermark" aria-hidden="true">
           ELEVEN
         </div>
 
         {ALL_GATEWAY_CARDS.map((card, i) => {
-          const rel = (i - activeIdx + total) % total;
-          const isFront = rel === 0;
-          const isSecond = rel === 1;
-          const isThird = rel === 2;
-          const isExiting = rel === total - 1;
-
-          let transform = "translate3d(84px, 88px, -200px) rotateY(-10deg) scale(0.76)";
-          let opacity = 0;
-          let zIndex = 10;
-          let pointerEvents: "auto" | "none" = "none";
-
-          if (isFront) {
-            transform = "translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg) scale(1)";
-            opacity = 1;
-            zIndex = 40;
-            pointerEvents = "auto";
-          } else if (isSecond) {
-            transform = "translate3d(34px, 34px, -70px) rotateY(-5deg) rotateX(2deg) scale(0.92)";
-            opacity = 0.78;
-            zIndex = 30;
-            pointerEvents = "auto";
-          } else if (isThird) {
-            transform = "translate3d(62px, 64px, -140px) rotateY(-8deg) rotateX(3deg) scale(0.84)";
-            opacity = 0.42;
-            zIndex = 20;
-            pointerEvents = "auto";
-          } else if (isExiting) {
-            transform = "translate3d(-52px, -22px, 60px) rotateY(7deg) rotateZ(-2deg) scale(1.03)";
-            opacity = 0;
-            zIndex = 50;
-            pointerEvents = "none";
-          }
-
           const accentClass =
             card.tone === "amber"
               ? "text-[#e29d58]"
@@ -357,28 +450,21 @@ function MobileGatewayCarousel({
           return (
             <article
               key={card.key}
-              onClick={
-                !isFront && (isSecond || isThird)
-                  ? () => {
-                      setIsPaused(true);
-                      onSelectIdx(i);
-                    }
-                  : undefined
-              }
-              aria-hidden={!isFront && !isSecond && !isThird}
-              className={`gateway-deck-card gateway-deck-card--${card.tone} ${
-                isFront ? "gateway-deck-card--active" : "cursor-pointer"
-              } flex flex-col justify-between p-4`}
-              style={{
-                transform,
-                opacity,
-                zIndex,
-                pointerEvents,
+              ref={(el) => {
+                cardRefs.current[i] = el;
               }}
+              onClick={() => {
+                if (Math.round(targetIdxRef.current) !== i) {
+                  stepTo(i);
+                }
+              }}
+              className={`gateway-spiral-card gateway-spiral-card--${card.tone} flex cursor-pointer flex-col justify-between p-4`}
             >
               {/* Top Tag + Top-Right Square Icon Chip */}
               <div className="flex items-start justify-between gap-2">
-                <span className={`font-mono text-[10px] uppercase tracking-[0.14em] ${accentClass}`}>
+                <span
+                  className={`font-mono text-[10px] uppercase tracking-[0.14em] ${accentClass}`}
+                >
                   0{i + 1} / {card.badge}
                 </span>
                 <span
@@ -389,19 +475,22 @@ function MobileGatewayCarousel({
               </div>
 
               {/* Card Body: Title + Description + Direct Arrow CTA */}
-              <div className="mt-3 flex flex-col gap-1.5">
+              <div className="mt-2.5 flex flex-col gap-1.5">
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-[1.08rem] font-normal uppercase tracking-[0.01em] text-white leading-tight">
+                  <h3 className="text-[1.02rem] sm:text-[1.08rem] font-normal uppercase tracking-[0.01em] text-white leading-tight">
                     {card.title}
                   </h3>
-                  <span className={`shrink-0 text-sm leading-none pt-0.5 ${accentClass}`} aria-hidden="true">
+                  <span
+                    className={`shrink-0 text-sm leading-none pt-0.5 ${accentClass}`}
+                    aria-hidden="true"
+                  >
                     ↗
                   </span>
                 </div>
-                <p className="text-[11.5px] text-[#a0b0ac] leading-[1.45] line-clamp-3">
+                <p className="text-[11px] sm:text-[11.5px] text-[#a0b0ac] leading-[1.42] line-clamp-3">
                   {card.desc}
                 </p>
-                <div className="mt-2 pt-2 border-t border-white/[0.08]">
+                <div className="mt-1.5 pt-2 border-t border-white/[0.08]">
                   <Button
                     href={card.href}
                     variant={card.fill ? "secondary" : "ghost"}
@@ -418,14 +507,11 @@ function MobileGatewayCarousel({
       </div>
 
       {/* Emerald Progress Bar + Prev/Next Controls */}
-      <div className="mx-auto mt-2.5 flex max-w-[360px] items-center gap-3 px-1">
+      <div className="mx-auto mt-1 flex w-full max-w-[360px] items-center gap-3 px-1">
         <button
           type="button"
           aria-label="Previous capability"
-          onClick={() => {
-            setIsPaused(true);
-            onSelectIdx((prev) => (prev - 1 + total) % total);
-          }}
+          onClick={() => stepTo(Math.round(targetIdxRef.current) - 1)}
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#05070d]/80 text-xs text-[#cff2e6] transition-colors hover:border-[#10bc83]/60"
         >
           ←
@@ -443,10 +529,7 @@ function MobileGatewayCarousel({
         <button
           type="button"
           aria-label="Next capability"
-          onClick={() => {
-            setIsPaused(true);
-            onSelectIdx((prev) => (prev + 1) % total);
-          }}
+          onClick={() => stepTo(Math.round(targetIdxRef.current) + 1)}
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#05070d]/80 text-xs text-[#cff2e6] transition-colors hover:border-[#10bc83]/60"
         >
           →
@@ -457,6 +540,7 @@ function MobileGatewayCarousel({
 }
 
 export function GenesisHeroStage() {
+  const spiralTargetRef = useRef<number>(0);
   const [mobileDeckStep, setMobileDeckStep] = React.useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -1047,7 +1131,7 @@ export function GenesisHeroStage() {
         const heroContent = heroContentRef.current;
         const statsSection = statsSectionRef.current;
         const gatewaySection = gatewaySectionRef.current;
-        let lastDeckStep = -1;
+        let lastScrollProg = -1;
 
         const mobileMasterTl = gsap.timeline({
           scrollTrigger: {
@@ -1056,19 +1140,18 @@ export function GenesisHeroStage() {
             end: "bottom bottom",
             scrub: 0.55,
             onUpdate: (self) => {
-              if (self.progress >= 0.62 && self.progress <= 0.92) {
-                const frac = Math.min(0.999, Math.max(0, (self.progress - 0.62) / 0.28));
-                const step = Math.min(
-                  ALL_GATEWAY_CARDS.length - 1,
-                  Math.max(0, Math.floor(frac * ALL_GATEWAY_CARDS.length))
-                );
-                if (step !== lastDeckStep) {
-                  lastDeckStep = step;
-                  setMobileDeckStep(step);
+              if (self.progress >= 0.56) {
+                if (Math.abs(self.progress - lastScrollProg) > 0.0005) {
+                  lastScrollProg = self.progress;
+                  const frac = Math.min(
+                    1,
+                    Math.max(0, (self.progress - 0.58) / 0.32)
+                  );
+                  spiralTargetRef.current = frac * (ALL_GATEWAY_CARDS.length - 1);
                 }
-              } else if (self.progress < 0.62 && lastDeckStep !== 0) {
-                lastDeckStep = 0;
-                setMobileDeckStep(0);
+              } else if (lastScrollProg >= 0.56 || lastScrollProg < 0) {
+                lastScrollProg = self.progress;
+                spiralTargetRef.current = 0;
               }
             },
           },
@@ -1157,14 +1240,14 @@ export function GenesisHeroStage() {
           );
         }
 
-        // Phase 3 (0.52 -> 0.92): 3D Globe morphs to Emerald Hologram Core + #gateway-section 3D stacked deck reveals
+        // Phase 3 (0.52 -> 0.92): 3D Globe morphs to Emerald Hologram Core + #gateway-section 3D Cylindrical Spiral
         mobileMasterTl.to(
           sceneState,
           {
             morph: 1.0,
             colorMix: 1.0,
-            globeScale: 0.72,
-            globeY: 0.2,
+            globeScale: 0.8,
+            globeY: 0.06,
             waterAlpha: 0.35,
             duration: 0.18,
             ease: "power2.inOut",
@@ -1178,9 +1261,9 @@ export function GenesisHeroStage() {
           const gwCarousel = gatewaySection.querySelector(".gateway-carousel");
 
           gsap.set(gatewaySection, { autoAlpha: 0 });
-          if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 32 });
+          if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 28 });
           if (gwCenterTag) gsap.set(gwCenterTag, { opacity: 0, scale: 0.92 });
-          if (gwCarousel) gsap.set(gwCarousel, { opacity: 0, y: 34 });
+          if (gwCarousel) gsap.set(gwCarousel, { opacity: 0 });
 
           mobileMasterTl.to(
             gatewaySection,
@@ -1204,7 +1287,7 @@ export function GenesisHeroStage() {
           if (gwCarousel) {
             mobileMasterTl.to(
               gwCarousel,
-              { opacity: 1, y: 0, duration: 0.07, ease: "power2.out" },
+              { opacity: 1, duration: 0.07, ease: "power2.out" },
               0.57
             );
           }
@@ -1487,17 +1570,18 @@ export function GenesisHeroStage() {
               One sovereign operating system. Six core capabilities.
             </h2>
 
-            {/* Mobile/Tablet Open Center Showcase Window letting the Morphed 3D Hologram Core shine */}
-            <div className="flex flex-1 flex-col items-center justify-end pb-3 lg:hidden pointer-events-none">
+            {/* Mobile/Tablet Core Indicator Above the 3D Cylindrical Spiral */}
+            <div className="mt-1 mb-1 flex justify-center lg:hidden pointer-events-none">
               <div className="gateway-mobile-core-tag rounded-full border border-[#10bc83]/35 bg-[#062118]/65 px-3 py-1 font-mono text-[10px] tracking-[0.1em] text-[#38ffbd] backdrop-blur-md">
                 3D CORE ACTIVE
               </div>
             </div>
 
-            {/* Mobile 3D Perspective Diagonal Card Deck + Emerald Progress Bar */}
+            {/* Mobile Scroll-Driven 3D Cylindrical Spiral / Helix Carousel */}
             <MobileGatewayCarousel
-              activeIdx={mobileDeckStep}
-              onSelectIdx={setMobileDeckStep}
+              targetIdxRef={spiralTargetRef}
+              activeStep={mobileDeckStep}
+              onActiveStepChange={setMobileDeckStep}
             />
 
             {/* Desktop Split 3-Column Grid Around Morphed 3D Hologram */}

@@ -1510,71 +1510,77 @@ body {
     width: min(460px, 100%);
   }
 
-  .gateway-deck-stage {
+  .gateway-spiral-stage {
     position: relative;
-    perspective: 1100px;
+    perspective: 1400px;
+    perspective-origin: 50% 48%;
     transform-style: preserve-3d;
   }
 
-  .gateway-deck-watermark {
+  .gateway-spiral-watermark {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(4rem, 19vw, 6.5rem);
+    font-size: clamp(4.2rem, 20vw, 7rem);
     font-weight: 600;
     letter-spacing: 0.14em;
     line-height: 1;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.085);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.08);
+    transform: translateZ(-260px);
     user-select: none;
     pointer-events: none;
-    z-index: 0;
   }
 
-  .gateway-deck-card {
+  .gateway-spiral-card {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 82%;
-    max-width: 304px;
+    top: 50%;
+    left: 50%;
+    width: 268px;
+    margin-left: -134px;
+    margin-top: -102px;
     border-radius: 1.2rem;
     border: 1px solid rgba(255, 255, 255, 0.14);
     background:
       radial-gradient(90% 95% at 88% 12%, rgba(16, 188, 131, 0.24), transparent 62%),
-      rgba(7, 13, 21, 0.88);
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
+      rgba(7, 13, 21, 0.93);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     box-shadow:
       0 26px 56px -18px rgba(0, 0, 0, 0.85),
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    transform-origin: center center;
-    transition:
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.6s ease,
-      border-color 0.45s ease,
-      box-shadow 0.55s ease;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
     will-change: transform, opacity;
   }
 
-  .gateway-deck-card--amber {
+  @media (min-width: 640px) {
+    .gateway-spiral-card {
+      width: 310px;
+      margin-left: -155px;
+      margin-top: -106px;
+    }
+  }
+
+  .gateway-spiral-card--amber {
     background:
       radial-gradient(90% 95% at 88% 12%, rgba(226, 157, 88, 0.22), transparent 62%),
-      rgba(11, 12, 18, 0.9);
+      rgba(11, 12, 18, 0.94);
   }
 
-  .gateway-deck-card--blue {
+  .gateway-spiral-card--blue {
     background:
       radial-gradient(90% 95% at 88% 12%, rgba(76, 110, 245, 0.24), transparent 62%),
-      rgba(8, 12, 23, 0.9);
+      rgba(8, 12, 23, 0.94);
   }
 
-  .gateway-deck-card--active {
-    border-color: rgba(56, 255, 189, 0.36);
+  .gateway-spiral-card--active {
+    border-color: rgba(56, 255, 189, 0.38);
     box-shadow:
-      0 28px 64px -16px rgba(0, 0, 0, 0.92),
-      0 0 36px -14px rgba(16, 188, 131, 0.35),
+      0 30px 68px -16px rgba(0, 0, 0, 0.92),
+      0 0 40px -14px rgba(16, 188, 131, 0.36),
       inset 0 1px 0 rgba(255, 255, 255, 0.18);
   }
 
