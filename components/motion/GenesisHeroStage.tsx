@@ -213,6 +213,142 @@ function GatewayCardItem({ card }: { card: GatewayCardSpec }) {
   );
 }
 
+const ALL_GATEWAY_CARDS: GatewayCardSpec[] = [
+  ...LEFT_GATEWAY_CARDS,
+  ...RIGHT_GATEWAY_CARDS,
+];
+
+function MobileGatewayCarousel() {
+  const [activeIdx, setActiveIdx] = React.useState(0);
+  const [isPaused, setIsPaused] = React.useState(false);
+  const touchStartX = React.useRef<number | null>(null);
+  const total = ALL_GATEWAY_CARDS.length;
+
+  React.useEffect(() => {
+    if (isPaused) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+    const id = window.setInterval(() => {
+      setActiveIdx((prev) => (prev + 1) % total);
+    }, 3200);
+    return () => window.clearInterval(id);
+  }, [isPaused, total]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0]?.clientX ?? null;
+    setIsPaused(true);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
+    const delta = touchStartX.current - endX;
+    touchStartX.current = null;
+    if (Math.abs(delta) > 36) {
+      setActiveIdx((prev) =>
+        delta > 0 ? (prev + 1) % total : (prev - 1 + total) % total
+      );
+    }
+  };
+
+  const progressPct = ((activeIdx + 1) / total) * 100;
+
+  return (
+    <div
+      className="gateway-carousel pointer-events-auto w-full lg:hidden"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      <div className="overflow-hidden">
+        <div
+          className="flex transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          style={{ transform: `translate3d(-${activeIdx * 100}%, 0, 0)` }}
+        >
+          {ALL_GATEWAY_CARDS.map((card) => (
+            <div key={card.key} className="w-full shrink-0 px-1">
+              <article
+                className={`gateway-card gateway-card--${card.tone} mx-auto w-full max-w-[360px]`}
+              >
+                <div className="flex items-center justify-between gap-2 w-full">
+                  <div
+                    className={`flex h-7 w-auto px-2.5 shrink-0 flex-row items-center justify-center gap-1.5 rounded-full border font-mono text-[10px] ${
+                      card.tone === "amber"
+                        ? "border-[#e29d58]/40 bg-gradient-to-br from-[#3d2e0d] to-[#1f1606] text-[#e29d58]"
+                        : card.tone === "blue"
+                        ? "border-[#4c6ef5]/45 bg-gradient-to-br from-[#0d152e] to-[#28429e] text-[#9eb4ff]"
+                        : "border-[#10bc83]/40 bg-gradient-to-br from-[#0d3d28] to-[#061f16] text-[#38ffbd]"
+                    }`}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-current opacity-85" />
+                    <span className="whitespace-nowrap">{card.badge}</span>
+                  </div>
+                  <span className="font-mono text-[10px] tracking-[0.12em] text-[#6e857b]">
+                    0{ALL_GATEWAY_CARDS.indexOf(card) + 1} / 0{total}
+                  </span>
+                </div>
+                <div className="flex w-full flex-col items-start gap-1">
+                  <h3 className="text-[1.05rem] font-normal text-[#e8ecf5] leading-snug">
+                    {card.title}
+                  </h3>
+                  <p className="text-[11.5px] text-[#a0a0a0] leading-snug line-clamp-2">
+                    {card.desc}
+                  </p>
+                  <div className="mt-1.5 w-full">
+                    <Button
+                      href={card.href}
+                      variant={card.fill ? "secondary" : "ghost"}
+                      arrow={card.fill}
+                      className="w-full"
+                    >
+                      {card.btn}
+                    </Button>
+                  </div>
+                </div>
+              </article>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* GenesisFX Emerald Progress Bar + Prev/Next Controls */}
+      <div className="mx-auto mt-3 flex max-w-[360px] items-center gap-3 px-1">
+        <button
+          type="button"
+          aria-label="Previous capability"
+          onClick={() => {
+            setIsPaused(true);
+            setActiveIdx((prev) => (prev - 1 + total) % total);
+          }}
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#05070d]/80 text-xs text-[#cff2e6] transition-colors hover:border-[#10bc83]/60"
+        >
+          ←
+        </button>
+        <div
+          className="carousel-progress flex-1 cursor-pointer"
+          role="tablist"
+          aria-label="Capabilities slides"
+        >
+          <div
+            className="carousel-progress__bar"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+        <button
+          type="button"
+          aria-label="Next capability"
+          onClick={() => {
+            setIsPaused(true);
+            setActiveIdx((prev) => (prev + 1) % total);
+          }}
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#05070d]/80 text-xs text-[#cff2e6] transition-colors hover:border-[#10bc83]/60"
+        >
+          →
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function GenesisHeroStage() {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -794,114 +930,176 @@ export function GenesisHeroStage() {
         );
       });
 
-      // Mobile & Tablet Choreography (<1024px): keep scrolling natural while cleanly morphing
-      // the 3D Globe through #gateway-section and fading #globe-canvas out before lower sections.
+      // Mobile & Tablet 3-Phase Choreography (<1024px): identical scrubbed 3-phase arc as desktop
+      // (Rising dashboard exit -> Pinned #stats-section left/right reveal over rotating 3D Globe ->
+      //  Morph into Emerald Hologram Core in #gateway-section with mobile swipe carousel -> Clean exit).
       mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
         const heroBars = gsap.utils.toArray<HTMLElement>(".hero-bar");
+        const dashboardPin = dashboardPinRef.current;
+        const heroContent = heroContentRef.current;
         const statsSection = statsSectionRef.current;
         const gatewaySection = gatewaySectionRef.current;
-        const cleanups: Array<() => void> = [];
 
-        if (gatewaySection) {
-          const morphTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: gatewaySection,
-              start: "top 85%",
-              end: "bottom 40%",
-              scrub: 0.45,
-            },
-          });
-          morphTl.to(
-            sceneState,
+        const mobileMasterTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.55,
+          },
+        });
+
+        // Phase 1 (0.0 -> 0.22): Rising dashboard slides down, hero copy & bars fade out, Globe rises to center
+        if (dashboardPin) {
+          mobileMasterTl.fromTo(
+            dashboardPin,
+            { y: 0, autoAlpha: 1 },
             {
-              morph: 0.9,
-              colorMix: 1.0,
-              globeScale: 0.84,
-              waterAlpha: 0.35,
-              ease: "power2.inOut",
+              y: 160,
+              autoAlpha: 0,
+              ease: "power1.in",
+              duration: 0.16,
+              immediateRender: false,
             },
             0
           );
-          cleanups.push(() => {
-            morphTl.scrollTrigger?.kill();
-            morphTl.kill();
-          });
         }
-
-        // Cleanly fade fixed #globe-canvas & .hero-bar columns out when exiting #hero-section
-        const exitTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "bottom 100%",
-            end: "bottom 55%",
-            scrub: true,
-          },
-        });
-        exitTl.to(
+        if (heroContent) {
+          mobileMasterTl.to(
+            heroContent,
+            { autoAlpha: 0, y: -42, duration: 0.16, ease: "power1.in" },
+            0.02
+          );
+        }
+        if (heroBars.length) {
+          mobileMasterTl.to(
+            heroBars,
+            { autoAlpha: 0, duration: 0.12, ease: "none" },
+            0.1
+          );
+        }
+        mobileMasterTl.to(
           sceneState,
-          { canvasOpacity: 0, globeY: 0.55, ease: "none" },
+          {
+            globeY: 0.04,
+            globeScale: 0.94,
+            duration: 0.22,
+            ease: "power1.out",
+          },
           0
         );
-        if (heroBars.length) {
-          exitTl.to(heroBars, { autoAlpha: 0, ease: "none" }, 0);
-        }
-        cleanups.push(() => {
-          exitTl.scrollTrigger?.kill();
-          exitTl.kill();
-        });
 
-        const revealMobileGroup = (triggerEl: HTMLElement, targets: HTMLElement[]) => {
-          if (!targets.length) return;
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: triggerEl,
-              start: "top 90%",
-              end: "bottom top",
-              toggleActions: "play none none reverse",
-            },
-          });
-          tl.fromTo(
-            targets,
-            { autoAlpha: 0, y: 24 },
-            { autoAlpha: 1, y: 0, duration: 0.65, stagger: 0.06, ease: "power3.out" }
-          );
-          const sync = () => {
-            if (triggerEl.getBoundingClientRect().top <= window.innerHeight * 0.95) {
-              tl.progress(1);
-            }
-          };
-          const raf = requestAnimationFrame(sync);
-          ScrollTrigger.addEventListener("refresh", sync);
-          cleanups.push(() => {
-            cancelAnimationFrame(raf);
-            ScrollTrigger.removeEventListener("refresh", sync);
-            tl.scrollTrigger?.kill();
-            tl.kill();
-          });
-        };
-
+        // Phase 2 (0.21 -> 0.56): #stats-section reveals cleanly over rotating 3D Globe
         if (statsSection) {
-          const introTargets = gsap.utils.toArray<HTMLElement>(
-            statsSection.querySelectorAll(".stats-intro > *")
+          const statsIntroItems = statsSection.querySelectorAll(".stats-intro > *");
+          const metricRows = statsSection.querySelectorAll(".metric-row");
+
+          gsap.set(statsSection, { autoAlpha: 0 });
+          gsap.set(statsIntroItems, { opacity: 0, x: -36 });
+          gsap.set(metricRows, { opacity: 0, x: 36 });
+
+          mobileMasterTl.to(
+            statsSection,
+            { autoAlpha: 1, duration: 0.03, ease: "none" },
+            0.21
           );
-          const metricTargets = gsap.utils.toArray<HTMLElement>(
-            statsSection.querySelectorAll(".metric-row")
+          mobileMasterTl.to(
+            statsIntroItems,
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.09,
+              stagger: 0.015,
+              ease: "power2.out",
+            },
+            0.22
           );
-          revealMobileGroup(statsSection, introTargets);
-          revealMobileGroup(statsSection, metricTargets);
+          mobileMasterTl.to(
+            metricRows,
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.08,
+              stagger: 0.015,
+              ease: "power2.out",
+            },
+            0.23
+          );
+          mobileMasterTl.to(
+            statsSection,
+            { autoAlpha: 0, y: -24, duration: 0.08, ease: "power2.in" },
+            0.50
+          );
         }
+
+        // Phase 3 (0.52 -> 0.92): 3D Globe morphs to Emerald Hologram Core + #gateway-section carousel reveals
+        mobileMasterTl.to(
+          sceneState,
+          {
+            morph: 1.0,
+            colorMix: 1.0,
+            globeScale: 0.78,
+            globeY: 0.04,
+            waterAlpha: 0.35,
+            duration: 0.22,
+            ease: "power2.inOut",
+          },
+          0.52
+        );
 
         if (gatewaySection) {
-          const gwHeading = gatewaySection.querySelector<HTMLElement>(".gateway-heading");
-          const gwCards = gsap.utils.toArray<HTMLElement>(
-            gatewaySection.querySelectorAll(".gateway-card")
+          const gwHeading = gatewaySection.querySelector(".gateway-heading");
+          const gwCenterTag = gatewaySection.querySelector(".gateway-mobile-core-tag");
+          const gwCarousel = gatewaySection.querySelector(".gateway-carousel");
+
+          gsap.set(gatewaySection, { autoAlpha: 0 });
+          if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 36 });
+          if (gwCenterTag) gsap.set(gwCenterTag, { opacity: 0, scale: 0.92 });
+          if (gwCarousel) gsap.set(gwCarousel, { opacity: 0, y: 40 });
+
+          mobileMasterTl.to(
+            gatewaySection,
+            { autoAlpha: 1, duration: 0.04, ease: "none" },
+            0.56
           );
-          if (gwHeading) revealMobileGroup(gatewaySection, [gwHeading]);
-          revealMobileGroup(gatewaySection, gwCards);
+          if (gwHeading) {
+            mobileMasterTl.to(
+              gwHeading,
+              { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" },
+              0.58
+            );
+          }
+          if (gwCenterTag) {
+            mobileMasterTl.to(
+              gwCenterTag,
+              { opacity: 1, scale: 1, duration: 0.1, ease: "power2.out" },
+              0.60
+            );
+          }
+          if (gwCarousel) {
+            mobileMasterTl.to(
+              gwCarousel,
+              { opacity: 1, y: 0, duration: 0.14, ease: "power2.out" },
+              0.62
+            );
+          }
         }
 
+        // Leaving #hero-section (0.92 -> 1.0): Fade out background #globe-canvas cleanly
+        mobileMasterTl.to(
+          sceneState,
+          {
+            canvasOpacity: 0,
+            globeY: 0.75,
+            duration: 0.08,
+            ease: "none",
+          },
+          0.92
+        );
+
         return () => {
-          cleanups.forEach((fn) => fn());
+          mobileMasterTl.scrollTrigger?.kill();
+          mobileMasterTl.kill();
         };
       });
 
@@ -944,10 +1142,10 @@ export function GenesisHeroStage() {
         ref={sectionRef}
         id="hero-section"
         aria-labelledby="hero-heading"
-        className="relative isolate w-full lg:h-[340vh]"
+        className="relative isolate w-full h-[330svh] lg:h-[340vh]"
       >
-        {/* Sticky Viewport Container on Desktop, Natural Stack on Mobile */}
-        <div className="relative flex w-full flex-col items-center lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden">
+        {/* Sticky Viewport Container on both Mobile & Desktop for 3-Phase Choreography */}
+        <div className="sticky top-0 flex h-[100svh] w-full flex-col items-center overflow-hidden lg:h-screen">
           {/* Top Radial Emerald HeroGlow Ellipses (HeroGlow-BLVG_dxt.js) */}
           <div className="hero-glow" aria-hidden="true">
             <div className="hero-glow__img" />
@@ -959,10 +1157,10 @@ export function GenesisHeroStage() {
               ============================================================ */}
           <div
             ref={heroContentRef}
-            className="hero-content relative z-10 mx-auto flex max-w-[1060px] shrink-0 flex-col items-center px-4 sm:px-5 pt-3 pb-2 text-center lg:pt-6"
+            className="hero-content relative z-10 mx-auto flex max-w-[1060px] shrink-0 flex-col items-center px-4 sm:px-5 pt-1 sm:pt-3 pb-1.5 sm:pb-2 text-center lg:pt-6"
           >
             {/* GenesisFX Hero Badge */}
-            <div data-hero-item className="gfx-badge mb-3">
+            <div data-hero-item className="gfx-badge mb-2 sm:mb-3">
               <span className="h-2 w-2 shrink-0 rounded-full bg-[#10bc83] animate-pulse" />
               <DualCopy
                 as="span"
@@ -975,24 +1173,24 @@ export function GenesisHeroStage() {
             <h1
               id="hero-heading"
               data-hero-item
-              className="max-w-[20ch] text-[clamp(2rem,4.1vw,3.9rem)] font-normal leading-[1.04] tracking-[-0.03em] heading-gradient"
+              className="max-w-[20ch] text-[clamp(1.68rem,4.1vw,3.9rem)] sm:text-[clamp(2rem,4.1vw,3.9rem)] font-normal leading-[1.04] tracking-[-0.03em] heading-gradient"
             >
               Private AI that thinks, speaks, and works—only with your permission.
             </h1>
 
             {/* GenesisFX Hero Subtitle */}
-            <div data-hero-item className="mt-3">
+            <div data-hero-item className="mt-2 sm:mt-3">
               <DualCopy
-                className="text-base sm:text-lg font-medium text-[#e8ecf5]"
+                className="text-sm sm:text-lg font-medium text-[#e8ecf5]"
                 plain="Built like a vault. Effortless like a conversation."
                 technical="Sub-500ms Full-Duplex Voice · System 2 DAG Compiler · 5-Stage ActionGate (INV-04)"
               />
             </div>
 
             {/* GenesisFX Hero Description */}
-            <div data-hero-item className="mt-2">
+            <div data-hero-item className="mt-1.5 sm:mt-2">
               <DualCopy
-                className="max-w-[38rem] text-sm sm:text-[15px] leading-[1.55] text-[#a0a0a0]"
+                className="max-w-[38rem] text-[13px] sm:text-[15px] leading-[1.45] sm:leading-[1.55] text-[#a0a0a0]"
                 plain="Speak naturally, automate complex work across your files and apps, and review every important action before it happens. Everything stays 100% private on your own computer."
                 technical="Runs across four isolated OS process rooms with loopback-only Qdrant + SQLite WAL memory (127.0.0.1) and 30-second Ed25519 hardware-signed approval leases."
               />
@@ -1001,7 +1199,7 @@ export function GenesisHeroStage() {
             {/* GenesisFX Hero CTA Row */}
             <div
               data-hero-item
-              className="mt-5 flex w-full max-w-[340px] flex-col sm:w-auto sm:max-w-none sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-3.5"
+              className="mt-3.5 sm:mt-5 flex w-full max-w-[340px] flex-col sm:w-auto sm:max-w-none sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-2 sm:gap-3.5"
             >
               <WaitlistActionButton
                 tier="general"
@@ -1020,18 +1218,21 @@ export function GenesisHeroStage() {
             </div>
           </div>
 
-          {/* Rising Hero Dashboard Showcase Pin (In-flow directly below Hero CTAs — never overlaps text) */}
-          <div ref={dashboardPinRef} className="hero-dashboard-pin mt-6 lg:mt-7 hidden lg:flex">
+          {/* Rising Hero Dashboard Showcase Pin (Single unified card on both Mobile & Desktop) */}
+          <div ref={dashboardPinRef} className="hero-dashboard-pin mt-3 sm:mt-5 lg:mt-7 flex">
             <div ref={dashboardRef} className="hero-dashboard gfx-frame">
               <div className="gfx-frame__highlight" aria-hidden="true">
                 <div className="gfx-frame__highlight-glow" />
               </div>
               <span className="gfx-frame__top-beam" aria-hidden="true" />
-              <div className="relative z-[1] overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/95 p-4 sm:p-5">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.07] pb-3 mb-3.5 font-mono text-xs text-[#a0a0a0]">
+              <div className="relative z-[1] overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/95 p-3 sm:p-4 lg:p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3 border-b border-white/[0.07] pb-2.5 sm:pb-3 mb-2.5 sm:mb-3.5 font-mono text-[10px] sm:text-xs text-[#a0a0a0]">
                   <span className="flex items-center gap-2 text-white">
                     <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
-                    ELEVEN SOVEREIGN CONTROL PLANE · LIVE 3D CORE PREVIEW
+                    <span className="lg:hidden">LIVE 3D CORE PREVIEW</span>
+                    <span className="hidden lg:inline">
+                      ELEVEN SOVEREIGN CONTROL PLANE · LIVE 3D CORE PREVIEW
+                    </span>
                   </span>
                   <div className="flex items-center gap-4">
                     <ClarityTogglePill />
@@ -1040,11 +1241,11 @@ export function GenesisHeroStage() {
                     </span>
                   </div>
                 </div>
-                <div className="grid grid-cols-12 gap-5 items-center">
-                  <div className="col-span-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 items-center">
+                  <div className="lg:col-span-6">
                     <HeroOrbEmbed />
                   </div>
-                  <div className="col-span-6 space-y-3 text-left">
+                  <div className="hidden lg:block lg:col-span-6 space-y-3 text-left">
                     <div className="rounded-xl border border-white/[0.07] bg-[#080c14] p-4">
                       <div className="font-mono text-[10px] text-[#10bc83]">
                         SYSTEM 1 + SYSTEM 2 COGNITION
@@ -1084,48 +1285,30 @@ export function GenesisHeroStage() {
             </div>
           </div>
 
-          {/* Mobile / Tablet Inline 3D Orb Showcase */}
-          <div className="mt-6 w-full max-w-lg px-4 pb-8 lg:hidden">
-            <div className="gfx-frame">
-              <div className="gfx-frame__highlight" aria-hidden="true">
-                <div className="gfx-frame__highlight-glow" />
-              </div>
-              <span className="gfx-frame__top-beam" aria-hidden="true" />
-              <div className="relative z-[1] overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/95 p-3.5 sm:p-4">
-                <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.07] pb-2.5">
-                  <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[#cff2e6]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse" />
-                    LIVE 3D CORE PREVIEW
-                  </span>
-                  <ClarityTogglePill />
-                </div>
-                <HeroOrbEmbed />
-              </div>
-            </div>
-          </div>
-
           {/* ============================================================
               PHASE 2: #stats-section PINNED REVEAL OVER 3D GLOBE
               ============================================================ */}
           <div
             ref={statsSectionRef}
             id="stats-section"
-            className="relative z-20 mx-auto max-w-[1280px] px-4 sm:px-5 py-8 lg:py-12 lg:pointer-events-none lg:absolute lg:inset-0 lg:flex lg:items-center lg:justify-center"
+            className="pointer-events-none absolute inset-0 z-20 mx-auto flex max-w-[1280px] items-center justify-center px-4 sm:px-5 pt-12 pb-4 lg:py-12"
           >
-            <div className="pointer-events-auto grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
+            <div className="pointer-events-auto grid w-full grid-cols-1 items-center gap-4 sm:gap-6 lg:grid-cols-12 lg:gap-12">
               {/* Left: .stats-intro */}
-              <div className="stats-intro space-y-4 lg:col-span-5">
-                <span className="gfx-badge">
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-[#10bc83] animate-pulse" />
-                  <span>Verified Local Telemetry · Zero Cloud Egress</span>
-                </span>
-                <h2 className="text-[1.85rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
+              <div className="stats-intro space-y-2.5 sm:space-y-4 text-center lg:text-left lg:col-span-5">
+                <div className="flex justify-center lg:justify-start">
+                  <span className="gfx-badge">
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-[#10bc83] animate-pulse" />
+                    <span>Verified Local Telemetry · Zero Cloud Egress</span>
+                  </span>
+                </div>
+                <h2 className="text-[1.45rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
                   Engineered for instant voice and zero-trust execution.
                 </h2>
-                <p className="text-sm sm:text-base text-[#a0a0a0] leading-relaxed">
+                <p className="mx-auto max-w-[34rem] lg:mx-0 text-xs sm:text-base text-[#a0a0a0] leading-relaxed">
                   Every millisecond of voice latency, every quarantined git worktree, and every Ed25519 approval receipt is enforced directly on your own hardware.
                 </p>
-                <div className="flex w-full sm:w-auto flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 pt-2">
+                <div className="hidden sm:flex w-full sm:w-auto flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center lg:justify-start gap-3 pt-2">
                   <WaitlistActionButton
                     tier="technical"
                     variant="primary"
@@ -1144,21 +1327,21 @@ export function GenesisHeroStage() {
               <div className="hidden lg:block lg:col-span-2" />
 
               {/* Right: 5 GenesisFX Metric Rows (.metrics) */}
-              <ul className="metrics divide-y divide-white/[0.08] rounded-2xl border border-white/[0.08] bg-[#05070d]/80 p-3.5 sm:p-4 backdrop-blur-xl lg:col-span-5">
+              <ul className="metrics overflow-hidden divide-y divide-white/[0.08] rounded-2xl border border-white/[0.08] bg-[#05070d]/80 px-3.5 py-2.5 sm:p-4 backdrop-blur-xl lg:col-span-5">
                 {STATS_METRICS.map((m) => (
                   <li
                     key={m.label}
-                    className="metric-row flex items-center justify-between gap-3 py-3 px-1 sm:py-3.5 sm:px-2 first:pt-1.5 last:pb-1.5"
+                    className="metric-row flex items-center justify-between gap-2.5 sm:gap-3 py-2 px-0.5 sm:py-3.5 sm:px-2 first:pt-1 last:pb-1"
                   >
-                    <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
-                      <span className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl border border-[#10bc83]/30 bg-[#062118]/70">
+                    <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
+                      <span className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl border border-[#10bc83]/30 bg-[#062118]/70">
                         {m.icon}
                       </span>
-                      <span className="whitespace-nowrap text-xl sm:text-3xl font-normal heading-gradient">
+                      <span className="whitespace-nowrap text-lg sm:text-3xl font-normal heading-gradient">
                         {m.value}
                       </span>
                     </div>
-                    <span className="text-right text-[11.5px] sm:text-sm leading-snug font-normal text-[#10bc83]">
+                    <span className="min-w-0 text-right text-[10.5px] sm:text-sm leading-snug font-normal text-[#10bc83]">
                       {m.label}
                     </span>
                   </li>
@@ -1168,34 +1351,45 @@ export function GenesisHeroStage() {
           </div>
 
           {/* ============================================================
-              PHASE 3: #gateway-section 6-CARD SPLIT GRID AROUND 3D HOLOGRAM
+              PHASE 3: #gateway-section 6-CARD SPLIT GRID / MOBILE CAROUSEL AROUND 3D HOLOGRAM
               ============================================================ */}
           <div
             ref={gatewaySectionRef}
             id="gateway-section"
-            className="relative z-20 mx-auto max-w-[1360px] px-4 sm:px-5 py-8 lg:py-12 lg:pointer-events-none lg:absolute lg:inset-0 lg:flex lg:flex-col lg:justify-center"
+            className="pointer-events-none absolute inset-0 z-20 mx-auto flex max-w-[1360px] flex-col justify-between px-4 sm:px-5 pt-16 pb-5 lg:justify-center lg:py-12"
           >
-            <h2 className="gateway-heading mb-6 sm:mb-8 text-center text-[1.85rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
+            <h2 className="gateway-heading mb-2 sm:mb-4 lg:mb-8 text-center text-[1.45rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
               One sovereign operating system. Six core capabilities.
             </h2>
 
-            <div className="pointer-events-auto grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12 lg:items-center">
+            {/* Mobile/Tablet Open Center Showcase Window letting the Morphed 3D Hologram Core shine */}
+            <div className="flex flex-1 flex-col items-center justify-end pb-3 lg:hidden pointer-events-none">
+              <div className="gateway-mobile-core-tag rounded-full border border-[#10bc83]/35 bg-[#062118]/65 px-3 py-1 font-mono text-[10px] tracking-[0.1em] text-[#38ffbd] backdrop-blur-md">
+                3D CORE ACTIVE
+              </div>
+            </div>
+
+            {/* Mobile GenesisFX Horizontal Auto/Swipe Carousel + Emerald Progress Bar */}
+            <MobileGatewayCarousel />
+
+            {/* Desktop Split 3-Column Grid Around Morphed 3D Hologram */}
+            <div className="pointer-events-auto hidden lg:grid lg:grid-cols-12 lg:items-center lg:gap-6">
               {/* Left 3 Gateway Cards */}
-              <div className="gateway-col-left flex flex-col items-center lg:items-start gap-4 lg:col-span-5">
+              <div className="gateway-col-left flex flex-col items-start gap-4 lg:col-span-5">
                 {LEFT_GATEWAY_CARDS.map((card) => (
                   <GatewayCardItem key={card.key} card={card} />
                 ))}
               </div>
 
               {/* Center Hologram Stage Window on Desktop */}
-              <div className="hidden lg:flex lg:col-span-2 flex-col items-center justify-center text-center pointer-events-none">
+              <div className="flex lg:col-span-2 flex-col items-center justify-center text-center pointer-events-none">
                 <div className="rounded-full border border-[#10bc83]/35 bg-[#062118]/60 px-3 py-1 font-mono text-[10px] text-[#38ffbd] backdrop-blur-md">
                   3D CORE ACTIVE
                 </div>
               </div>
 
               {/* Right 3 Gateway Cards */}
-              <div className="gateway-col-right flex flex-col items-center lg:items-end gap-4 lg:col-span-5">
+              <div className="gateway-col-right flex flex-col items-end gap-4 lg:col-span-5">
                 {RIGHT_GATEWAY_CARDS.map((card) => (
                   <GatewayCardItem key={card.key} card={card} />
                 ))}

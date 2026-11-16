@@ -243,14 +243,14 @@ export function EnterHudConsole() {
     };
   }, [clearScheduledTimers]);
 
-  // Orchestrated GenesisFX Entrance & ScrollTrigger Choreography (homepage parity)
+  // Orchestrated GenesisFX Entrance & ScrollTrigger Choreography (homepage parity on both desktop & mobile)
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
 
     const mm = gsap.matchMedia();
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
+    mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
       const ctx = gsap.context(() => {
         const glowImgs = gsap.utils.toArray<HTMLElement>(".enter-glow-img", root);
         const header = root.querySelector<HTMLElement>(".enter-header");
@@ -418,6 +418,166 @@ export function EnterHudConsole() {
                 trigger: gateSteps[0],
                 start: "top 90%",
                 once: true,
+              },
+            }
+          );
+        }
+      }, root);
+
+      return () => ctx.revert();
+    });
+
+    mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
+      const ctx = gsap.context(() => {
+        const glowImgs = gsap.utils.toArray<HTMLElement>(".enter-glow-img", root);
+        const header = root.querySelector<HTMLElement>(".enter-header");
+        const banner = root.querySelector<HTMLElement>(".enter-banner");
+        const centerStage = root.querySelector<HTMLElement>(".enter-center-stage");
+        const topBeam = root.querySelector<HTMLElement>(".enter-top-beam");
+        const leftCards = gsap.utils.toArray<HTMLElement>(".enter-left-card", root);
+        const rightCards = gsap.utils.toArray<HTMLElement>(".enter-right-card", root);
+
+        const introTl = gsap.timeline({ delay: 0.12 });
+        if (glowImgs.length) {
+          introTl.fromTo(
+            glowImgs,
+            { autoAlpha: 0, scale: 0.78 },
+            { autoAlpha: 1, scale: 1, duration: 1.0, ease: "power2.out" },
+            0
+          );
+        }
+        if (header) {
+          introTl.fromTo(
+            header,
+            { autoAlpha: 0, y: -20 },
+            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", clearProps: "transform" },
+            0.04
+          );
+        }
+        if (banner) {
+          introTl.fromTo(
+            banner,
+            { autoAlpha: 0, y: 18 },
+            { autoAlpha: 1, y: 0, duration: 0.65, ease: "power3.out", clearProps: "transform" },
+            0.1
+          );
+        }
+        if (centerStage) {
+          introTl.fromTo(
+            centerStage,
+            { autoAlpha: 0, y: 36, scale: 0.96 },
+            { autoAlpha: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out", clearProps: "transform" },
+            0.16
+          );
+        }
+        if (topBeam) {
+          introTl.fromTo(
+            topBeam,
+            { scaleX: 0, autoAlpha: 0 },
+            { scaleX: 1, autoAlpha: 1, duration: 0.8, ease: "power2.out" },
+            0.3
+          );
+        }
+
+        leftCards.forEach((card) => {
+          gsap.fromTo(
+            card,
+            { autoAlpha: 0, x: -30, y: 24 },
+            {
+              autoAlpha: 1,
+              x: 0,
+              y: 0,
+              duration: 0.72,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 92%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        });
+
+        rightCards.forEach((card) => {
+          gsap.fromTo(
+            card,
+            { autoAlpha: 0, x: 30, y: 24 },
+            {
+              autoAlpha: 1,
+              x: 0,
+              y: 0,
+              duration: 0.72,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 92%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        });
+
+        const archIntro = root.querySelector<HTMLElement>(".enter-arch-intro");
+        if (archIntro) {
+          gsap.fromTo(
+            archIntro.children,
+            { autoAlpha: 0, y: 36 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.75,
+              stagger: 0.08,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: {
+                trigger: archIntro,
+                start: "top 90%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        const roomCards = gsap.utils.toArray<HTMLElement>(".enter-room-card", root);
+        if (roomCards.length) {
+          gsap.fromTo(
+            roomCards,
+            { autoAlpha: 0, y: 32, scale: 0.97 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.7,
+              stagger: 0.08,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: {
+                trigger: roomCards[0],
+                start: "top 90%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        const gateSteps = gsap.utils.toArray<HTMLElement>(".enter-gate-step", root);
+        if (gateSteps.length) {
+          gsap.fromTo(
+            gateSteps,
+            { autoAlpha: 0, x: -24 },
+            {
+              autoAlpha: 1,
+              x: 0,
+              duration: 0.65,
+              stagger: 0.07,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: {
+                trigger: gateSteps[0],
+                start: "top 92%",
+                toggleActions: "play none none reverse",
               },
             }
           );
@@ -757,7 +917,7 @@ export function EnterHudConsole() {
           </div>
         </div>
 
-        <main className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-12">
+        <main className="grid grid-cols-1 gap-4 sm:gap-5 overflow-x-clip lg:grid-cols-12 lg:overflow-visible">
           {/* Left Column: 7 Cognitive States + 2 Live Demos + Private Memory */}
           <section className="order-2 lg:order-1 flex flex-col justify-between gap-4 lg:col-span-3">
             <div className="enter-left-card gfx-card p-4">

@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
 }
 
 /**
@@ -255,7 +256,7 @@ export function GenesisSectionIntro({
     }
 
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    const rise = isPortrait ? 64 : 128;
+    const rise = isPortrait ? 88 : 128;
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -546,15 +547,27 @@ export function GenesisSplitReveal({
       });
 
       tl.fromTo(
-        [leftEl, rightEl],
-        { y: 44, autoAlpha: 0 },
+        leftEl,
+        { x: -22, y: 44, autoAlpha: 0 },
         {
+          x: 0,
           y: 0,
           autoAlpha: 1,
           duration: 0.78,
-          stagger: 0.1,
           ease: "power3.out",
-        }
+        },
+        0
+      ).fromTo(
+        rightEl,
+        { x: 22, y: 52, autoAlpha: 0 },
+        {
+          x: 0,
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.82,
+          ease: "power3.out",
+        },
+        0.08
       );
 
       stopSync = ensureVisibleInViewport(el, tl);
