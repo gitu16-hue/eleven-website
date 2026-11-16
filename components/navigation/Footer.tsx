@@ -230,11 +230,11 @@ export function Footer() {
         }}
       />
 
-      <Container className="relative z-10 pt-20 pb-10 lg:pt-24">
+      <Container className="relative z-10 pt-14 pb-8 sm:pt-20 sm:pb-10 lg:pt-24">
         {/* Top Row: Brand Left + Columns Right */}
         <div
           ref={topRowRef}
-          className="flex flex-col justify-between gap-14 lg:flex-row lg:gap-12"
+          className="flex flex-col justify-between gap-10 sm:gap-14 lg:flex-row lg:gap-12"
         >
           {/* Brand Column */}
           <div className="max-w-[380px]">
@@ -264,7 +264,7 @@ export function Footer() {
               technical="Frontier intelligence. Human-owned authority. A local-first control plane separating untrusted model reasoning from deterministic real-world execution."
             />
 
-            <div className="mt-7">
+            <div className="mt-6 sm:mt-7">
               <Button
                 type="button"
                 variant="primary"
@@ -277,13 +277,13 @@ export function Footer() {
           </div>
 
           {/* 4-Column GenesisFX Footer Nav (#10bc83 emerald headings) */}
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:gap-10">
+          <div className="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-4 lg:gap-10">
             {columns.map((col) => (
               <div key={col.heading}>
-                <p className="mb-4 text-[13.5px] font-normal text-[#10bc83]">
+                <p className="mb-3 sm:mb-4 text-[13.5px] font-normal text-[#10bc83]">
                   {col.heading}
                 </p>
-                <ul className="space-y-3">
+                <ul className="space-y-2 sm:space-y-3">
                   {col.links.map((l) => (
                     <li key={l.label}>
                       <Link
@@ -305,7 +305,7 @@ export function Footer() {
         {/* GenesisFX Platform Cards Row */}
         <div
           ref={cardsRef}
-          className="mt-14 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-10 sm:mt-14 grid grid-cols-1 gap-3 sm:gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
         >
           {platformSpecs.map((spec) => (
             <div key={spec.kicker} className="platform-card">
@@ -329,7 +329,7 @@ export function Footer() {
         <div
           ref={watermarkRef}
           aria-hidden="true"
-          className="pointer-events-none select-none mt-12 -mb-4 flex justify-center overflow-hidden"
+          className="pointer-events-none select-none mt-8 sm:mt-12 -mb-2 sm:-mb-4 flex justify-center overflow-hidden"
         >
           <span
             className="block w-full text-center font-normal leading-[0.82] tracking-[-0.045em]"

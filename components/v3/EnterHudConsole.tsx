@@ -662,29 +662,32 @@ export function EnterHudConsole() {
 
       {/* Top GenesisFX Floating Command Header */}
       <header className="enter-header sticky top-0 z-30 border-b border-white/[0.07] bg-[#05070d]/82 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-5 py-2.5 lg:px-8">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#10bc83]/45 bg-[#062118]/85 font-mono text-[11px] text-[#38ffbd] shadow-[0_0_16px_rgba(16,188,131,0.3)]">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-2 sm:gap-3 px-3.5 py-2 sm:px-5 sm:py-2.5 lg:px-8">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#10bc83]/45 bg-[#062118]/85 font-mono text-[11px] text-[#38ffbd] shadow-[0_0_16px_rgba(16,188,131,0.3)]">
                 G
               </span>
-              <span className="font-mono text-xs font-normal tracking-[0.16em] text-white">
-                ELEVEN v3.1 · LIVE INTERACTIVE 3D CORE
+              <span className="font-mono text-[11px] sm:text-xs font-normal tracking-[0.12em] sm:tracking-[0.16em] text-white whitespace-nowrap">
+                ELEVEN v3.1
+                <span className="hidden sm:inline"> · LIVE INTERACTIVE 3D CORE</span>
               </span>
             </div>
-            <span className="gfx-badge !py-1 !px-3 !text-[11px] whitespace-nowrap">
-              <span
-                className="h-2 w-2 rounded-full animate-pulse"
-                style={{
-                  backgroundColor: activeConfig.hex,
-                  boxShadow: `0 0 10px ${activeConfig.hex}`,
-                }}
-              />
-              <span>{activeFriendly.friendlyLabel}</span>
+            <span className="hidden md:inline-flex">
+              <span className="gfx-badge !py-1 !px-3 !text-[11px] whitespace-nowrap">
+                <span
+                  className="h-2 w-2 rounded-full animate-pulse"
+                  style={{
+                    backgroundColor: activeConfig.hex,
+                    boxShadow: `0 0 10px ${activeConfig.hex}`,
+                  }}
+                />
+                <span>{activeFriendly.friendlyLabel}</span>
+              </span>
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <span className="hidden font-mono text-[11px] text-[#a0a0a0] 2xl:inline mr-2">
               SHORTCUTS: <span className="text-[#38ffbd]">[1–7]</span> STATE ·{" "}
               <span className="text-[#38ffbd]">[S]</span> 4 HELPERS ·{" "}
@@ -698,42 +701,45 @@ export function EnterHudConsole() {
                 setIsWaitlistOpen(true);
               }}
             >
-              Join Early Access
+              <span className="sm:hidden">Early Access</span>
+              <span className="hidden sm:inline">Join Early Access</span>
             </Button>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setWaitlistTier("technical");
-                setIsWaitlistOpen(true);
-              }}
-              className="hidden sm:inline-flex"
-            >
-              Request Technical Access
-            </Button>
+            <span className="hidden sm:inline-flex">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setWaitlistTier("technical");
+                  setIsWaitlistOpen(true);
+                }}
+              >
+                Request Technical Access
+              </Button>
+            </span>
             <Button
               variant="ghost"
               onClick={() => exitToInstitutionalMode("/")}
             >
-              ← Back to Website
+              <span className="sm:hidden">← Exit</span>
+              <span className="hidden sm:inline">← Back to Website</span>
             </Button>
           </div>
         </div>
       </header>
 
       {/* Main 3-Column GenesisFX Interactive Cockpit */}
-      <div className="relative z-10 mx-auto max-w-[1440px] px-5 py-4 lg:px-8 lg:py-5">
+      <div className="relative z-10 mx-auto max-w-[1440px] px-3.5 py-3 sm:px-5 sm:py-4 lg:px-8 lg:py-5">
         {/* Top Cockpit Intro Banner */}
-        <div className="enter-banner mb-4 flex flex-col justify-between gap-3 rounded-[1.35rem] border border-white/[0.08] bg-[#062118]/25 px-5 py-3 backdrop-blur-xl sm:flex-row sm:items-center">
+        <div className="enter-banner mb-3.5 sm:mb-4 flex flex-col justify-between gap-2.5 sm:gap-3 rounded-[1.15rem] sm:rounded-[1.35rem] border border-white/[0.08] bg-[#062118]/25 px-4 py-2.5 sm:px-5 sm:py-3 backdrop-blur-xl sm:flex-row sm:items-center">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-2 text-[11px] font-mono text-[#38ffbd]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse" />
+            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono text-[#38ffbd]">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#10bc83] animate-pulse" />
               <span>COMPUTATIONAL CONTROL PLANE // GENESIS HOLOGRAPHIC STAGE</span>
             </div>
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-normal heading-gradient">
+            <h1 className="text-base sm:text-xl lg:text-2xl font-normal heading-gradient">
               Inspect how ELEVEN thinks, listens, and enforces constitutional boundaries in real time.
             </h1>
           </div>
-          <div className="flex flex-wrap gap-2 shrink-0">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 shrink-0">
             <span className="gfx-bubble !h-8 !py-1 !px-3 !text-[11px] whitespace-nowrap">
               <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
               54K GPU Particles
@@ -742,16 +748,18 @@ export function EnterHudConsole() {
               <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
               5-Stage ActionGate
             </span>
-            <span className="gfx-bubble !h-8 !py-1 !px-3 !text-[11px] whitespace-nowrap hidden xl:inline-flex">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
-              127.0.0.1 Loopback
+            <span className="hidden xl:inline-flex">
+              <span className="gfx-bubble !h-8 !py-1 !px-3 !text-[11px] whitespace-nowrap">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                127.0.0.1 Loopback
+              </span>
             </span>
           </div>
         </div>
 
-        <main className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <main className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-12">
           {/* Left Column: 7 Cognitive States + 2 Live Demos + Private Memory */}
-          <section className="flex flex-col justify-between gap-4 lg:col-span-3">
+          <section className="order-2 lg:order-1 flex flex-col justify-between gap-4 lg:col-span-3">
             <div className="enter-left-card gfx-card p-4">
               <span className="gfx-card__border" aria-hidden="true" />
               <div className="relative z-10 flex items-center justify-between gap-2 border-b border-white/[0.07] pb-2">
@@ -909,18 +917,18 @@ export function EnterHudConsole() {
           </section>
 
           {/* Center Column: Interactive 3D WebGL Holographic Orb in GenesisShowcaseFrame */}
-          <section className="enter-center-stage lg:col-span-6 flex flex-col">
+          <section className="order-1 lg:order-2 enter-center-stage lg:col-span-6 flex flex-col">
             <div className="gfx-frame flex-1 flex flex-col">
               <div className="gfx-frame__highlight" aria-hidden="true">
                 <div className="gfx-frame__highlight-glow" />
               </div>
               <span className="gfx-frame__top-beam enter-top-beam origin-center" aria-hidden="true" />
 
-              <div className="relative z-[1] flex min-h-[500px] flex-1 flex-col justify-between overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/92">
-                <div className="pointer-events-none relative z-10 flex items-center justify-between gap-3 border-b border-white/[0.06] bg-[#05070d]/75 px-5 py-3 font-mono text-[11px] backdrop-blur-md">
+              <div className="relative z-[1] flex min-h-[380px] sm:min-h-[500px] flex-1 flex-col justify-between overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/92">
+                <div className="pointer-events-none relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 border-b border-white/[0.06] bg-[#05070d]/75 px-3.5 py-2.5 sm:px-5 sm:py-3 font-mono text-[10.5px] sm:text-[11px] backdrop-blur-md">
                   <div>
                     <p className="flex items-center gap-2 text-[#38ffbd]">
-                      <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
+                      <span className="h-2 w-2 shrink-0 rounded-full bg-[#10bc83] animate-pulse" />
                       <span>DRAG TO SPIN IN 3D · CLICK TO PULSE</span>
                     </p>
                     <p className="mt-0.5 text-[10.5px] text-[#a0a0a0]">
@@ -949,7 +957,7 @@ export function EnterHudConsole() {
                       ))}
                     </div>
 
-                    <div className="text-right shrink-0">
+                    <div className="text-left sm:text-right shrink-0">
                       <p style={{ color: activeConfig.hex }} className="font-normal">
                         {activeFriendly.friendlyLabel.toUpperCase()}
                       </p>
@@ -965,7 +973,7 @@ export function EnterHudConsole() {
                 </div>
 
                 {/* Live 3D WebGL Holographic Orb Viewport (fullHeight edge-to-edge fill) */}
-                <div className="relative min-h-[430px] sm:min-h-[540px] w-full flex-1 flex bg-[radial-gradient(circle_at_50%_46%,rgba(16,188,131,0.08),transparent_68%)]">
+                <div className="relative min-h-[300px] sm:min-h-[540px] w-full flex-1 flex bg-[radial-gradient(circle_at_50%_46%,rgba(16,188,131,0.08),transparent_68%)]">
                   <ElevenHolographicOrb3D
                     state={orbState}
                     bargeInSignal={bargeInSignal}
@@ -998,7 +1006,7 @@ export function EnterHudConsole() {
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 12 }}
-                      className="relative z-20 m-4 rounded-2xl border border-[#ef4444]/60 bg-[#140b0e]/95 p-5 text-xs shadow-2xl backdrop-blur-xl"
+                      className="relative z-20 m-3.5 sm:m-4 rounded-2xl border border-[#ef4444]/60 bg-[#140b0e]/95 p-4 sm:p-5 text-xs shadow-2xl backdrop-blur-xl"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#ef4444]/30 pb-2.5">
                         <span className="font-mono font-normal text-[#ef4444]">
@@ -1036,7 +1044,7 @@ export function EnterHudConsole() {
                       key="status-bar"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.06] bg-[#05070d]/90 px-5 py-2.5 font-mono text-[10px] text-[#a0a0a0]"
+                      className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.06] bg-[#05070d]/90 px-3.5 py-2 sm:px-5 sm:py-2.5 font-mono text-[9.5px] sm:text-[10px] text-[#a0a0a0]"
                     >
                       <span className="text-[#10bc83]">● VOICE REPLY GOAL: &lt;0.5 SECONDS</span>
                       <span>PASSWORDS &amp; FILES: PROTECTED</span>
@@ -1049,7 +1057,7 @@ export function EnterHudConsole() {
           </section>
 
           {/* Right Column: Orbiting Helpers Status + Plain-English Activity Feed */}
-          <section className="flex flex-col justify-between gap-4 lg:col-span-3">
+          <section className="order-3 lg:order-3 flex flex-col justify-between gap-4 lg:col-span-3">
             <div className="enter-right-card gfx-card p-4">
               <span className="gfx-card__border" aria-hidden="true" />
               <div className="relative z-10">

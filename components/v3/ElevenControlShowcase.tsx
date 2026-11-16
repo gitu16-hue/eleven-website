@@ -568,7 +568,7 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
               {/* Header Greeting */}
               <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-800/80 pb-4">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex flex-wrap items-center gap-2">
                     <span>Good morning, Gitanshu</span>
                     <span className="font-mono text-xs font-normal text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-xs">
                       NODE // LOCALHOST-01
@@ -648,7 +648,7 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
               {/* Bottom Split Row: SVG Area Chart (60%) + J.A.R.V.I.S. Feed (40%) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 {/* Left (60%): Animated Cubic-Bezier Area Chart */}
-                <div className="lg:col-span-7 rounded-sm border border-emerald-500/20 bg-[#091116] p-5 shadow-sm space-y-3">
+                <div className="lg:col-span-7 rounded-sm border border-emerald-500/20 bg-[#091116] p-4 sm:p-5 shadow-sm space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
                     <div>
                       <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
@@ -660,7 +660,7 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2 font-mono text-[10px]">
+                    <div className="flex flex-wrap items-center gap-2 font-mono text-[10px]">
                       <span className="rounded-xs border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-emerald-300">
                         68% Local Execution
                       </span>
@@ -675,13 +675,13 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
                 </div>
 
                 {/* Right (40%): J.A.R.V.I.S. Subconscious Feed */}
-                <div className="lg:col-span-5 rounded-sm border border-emerald-500/20 bg-[#091116] p-5 shadow-sm space-y-3">
-                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                <div className="lg:col-span-5 rounded-sm border border-emerald-500/20 bg-[#091116] p-4 sm:p-5 shadow-sm space-y-3">
+                  <div className="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
                     <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
                       <Terminal className="h-3.5 w-3.5 text-cyan-400" />
                       <span>J.A.R.V.I.S. Subconscious Feed</span>
                     </h3>
-                    <span className="font-mono text-[9px] uppercase text-emerald-400 bg-emerald-950/80 px-1.5 py-0.5 rounded-xs border border-emerald-800/50">
+                    <span className="shrink-0 font-mono text-[9px] uppercase text-emerald-400 bg-emerald-950/80 px-1.5 py-0.5 rounded-xs border border-emerald-800/50">
                       LIVE DAEMON
                     </span>
                   </div>
@@ -699,7 +699,7 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
                         <p className="mt-1 text-[11px] text-slate-300 leading-snug">
                           {feed.detail}
                         </p>
-                        <div className="mt-2.5 flex items-center justify-between pt-1 border-t border-slate-800/60 font-mono text-[9.5px]">
+                        <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/60 font-mono text-[9.5px]">
                           <span className="text-slate-400 truncate max-w-[160px]">
                             {feed.reflex}
                           </span>
@@ -768,7 +768,7 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
                   return (
                     <div
                       key={col.id}
-                      className="rounded-sm border border-slate-800/90 bg-[#091116]/80 p-3 font-mono text-xs flex flex-col min-h-[420px]"
+                      className="rounded-sm border border-slate-800/90 bg-[#091116]/80 p-3 font-mono text-xs flex flex-col min-h-0 md:min-h-[420px]"
                     >
                       {/* Column Header */}
                       <div className="border-b border-slate-800/80 pb-2 mb-3">
@@ -1255,12 +1255,12 @@ function ColdRoomInspectionCard({
   }, [targetLatency, targetToken]);
 
   return (
-    <div className="rounded-sm border border-slate-200/90 bg-[#f4f8f7] text-slate-900 shadow-2xl p-6 sm:p-8 space-y-6">
+    <div className="rounded-sm border border-slate-200/90 bg-[#f4f8f7] text-slate-900 shadow-2xl p-4 sm:p-8 space-y-5 sm:space-y-6">
       {/* Top Colophon */}
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-300 pb-4">
         <div>
           <div className="flex items-center gap-2 font-mono text-[10.5px] uppercase font-bold tracking-wider text-teal-800">
-            <span className="h-2 w-2 rounded-full bg-teal-600 animate-pulse" />
+            <span className="h-2 w-2 shrink-0 rounded-full bg-teal-600 animate-pulse" />
             <span>COLD-ROOM VERIFICATION ENCLAVE // DETERMINISTIC AST INVARIANTS</span>
           </div>
           <h3 className="mt-1 text-xl font-bold tracking-tight text-slate-900">
@@ -1271,7 +1271,7 @@ function ColdRoomInspectionCard({
           </p>
         </div>
 
-        <div className="flex flex-col items-end gap-1 font-mono text-xs">
+        <div className="flex flex-col items-start sm:items-end gap-1 font-mono text-xs">
           <span className="rounded-xs bg-teal-100 border border-teal-300 px-2.5 py-1 text-teal-900 font-semibold flex items-center gap-1.5">
             <CheckCircle2 className="h-3.5 w-3.5 text-teal-700" />
             <span>ENCLAVE ARMED · DEC-008</span>
@@ -1286,7 +1286,7 @@ function ColdRoomInspectionCard({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Invariant Gate Checklist (7 cols) */}
         <div className="lg:col-span-7 space-y-3">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-500 border-b border-slate-300 pb-1.5">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-500 border-b border-slate-300 pb-1.5">
             <span className="font-semibold uppercase tracking-wider text-slate-700">
               Deterministic Gate Invariants
             </span>
@@ -1303,7 +1303,7 @@ function ColdRoomInspectionCard({
                   <Check className="h-3.5 w-3.5" />
                 </div>
                 <div className="space-y-0.5 text-xs">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-[10.5px] font-bold text-slate-900">
                       {inv.code}: {inv.label}
                     </span>
@@ -1328,7 +1328,7 @@ function ColdRoomInspectionCard({
         </div>
 
         {/* Right: Live Parameter Sliders & Tweens (5 cols) */}
-        <div className="lg:col-span-5 rounded-xs border border-slate-300 bg-white p-4.5 space-y-4 shadow-sm font-mono">
+        <div className="lg:col-span-5 rounded-xs border border-slate-300 bg-white p-4 sm:p-4.5 space-y-4 shadow-sm font-mono">
           <div className="flex items-center justify-between border-b border-slate-200 pb-2 text-xs">
             <span className="font-bold text-slate-800 flex items-center gap-1.5">
               <Sliders className="h-3.5 w-3.5 text-teal-700" />

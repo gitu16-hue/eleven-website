@@ -99,10 +99,10 @@ export default function DevelopersSolutionPage() {
         />
 
         {/* ── HERO SECTION ── */}
-        <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
+        <Section className="relative overflow-hidden pt-5 pb-12 sm:pt-8 sm:pb-16 lg:pt-12 lg:pb-20">
           <GenesisSubpageHeroBackdrop />
           <div className="relative z-10">
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
+            <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
                   { label: "Solutions", href: "/solutions" },
@@ -117,7 +117,7 @@ export default function DevelopersSolutionPage() {
               </div>
             </div>
 
-            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+            <GenesisHeroIntro className="mt-6 sm:mt-10 max-w-4xl space-y-4 sm:space-y-6">
               <div className="gfx-badge shadow-el-xs">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Engineering Runtime · Local Control Plane" />

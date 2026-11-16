@@ -180,7 +180,7 @@ function GatewayCardItem({ card }: { card: GatewayCardSpec }) {
   return (
     <article className={`gateway-card gateway-card--${card.tone} w-full max-w-[420px]`}>
       <div
-        className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl border font-mono text-[10px] ${
+        className={`flex h-9 w-auto px-3 shrink-0 flex-row items-center justify-center gap-2 rounded-full sm:h-14 sm:w-14 sm:flex-col sm:gap-0 sm:px-0 sm:rounded-2xl border font-mono text-[10px] ${
           card.tone === "amber"
             ? "border-[#e29d58]/40 bg-gradient-to-br from-[#3d2e0d] to-[#1f1606] text-[#e29d58]"
             : card.tone === "blue"
@@ -188,21 +188,22 @@ function GatewayCardItem({ card }: { card: GatewayCardSpec }) {
             : "border-[#10bc83]/40 bg-gradient-to-br from-[#0d3d28] to-[#061f16] text-[#38ffbd]"
         }`}
       >
-        <span className="h-2 w-2 rounded-full bg-current mb-1 opacity-80" />
-        <span>{card.badge}</span>
+        <span className="h-2 w-2 rounded-full bg-current sm:mb-1 opacity-80" />
+        <span className="whitespace-nowrap">{card.badge}</span>
       </div>
-      <div className="flex flex-col items-start gap-1.5">
+      <div className="flex w-full flex-col items-start gap-1.5">
         <h3 className="text-lg font-normal text-[#e8ecf5] leading-snug">
           {card.title}
         </h3>
         <p className="text-xs text-[#a0a0a0] leading-relaxed">
           {card.desc}
         </p>
-        <div className="mt-2">
+        <div className="mt-2 w-full sm:w-auto">
           <Button
             href={card.href}
             variant={card.fill ? "secondary" : "ghost"}
             arrow={card.fill}
+            className="w-full sm:w-auto"
           >
             {card.btn}
           </Button>
@@ -594,7 +595,11 @@ export function GenesisHeroStage() {
         if (disposed || !renderer) return;
         animId = requestAnimationFrame(renderLoop);
 
-        if (sceneState.canvasOpacity <= 0.01 || document.hidden) return;
+        const targetOpacity =
+          sceneState.canvasOpacity <= 0.005 ? 0 : sceneState.canvasOpacity;
+        canvas.style.opacity = String(targetOpacity);
+
+        if (targetOpacity === 0 || document.hidden) return;
 
         const now = performance.now();
         const dt = Math.min((now - lastT) / 1000, 0.05);
@@ -613,7 +618,6 @@ export function GenesisHeroStage() {
 
         rootGroup.scale.setScalar(sceneState.globeScale);
         rootGroup.position.y = sceneState.globeY;
-        canvas.style.opacity = String(sceneState.canvasOpacity);
 
         renderer.render(scene, camera);
       };
@@ -790,6 +794,117 @@ export function GenesisHeroStage() {
         );
       });
 
+      // Mobile & Tablet Choreography (<1024px): keep scrolling natural while cleanly morphing
+      // the 3D Globe through #gateway-section and fading #globe-canvas out before lower sections.
+      mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
+        const heroBars = gsap.utils.toArray<HTMLElement>(".hero-bar");
+        const statsSection = statsSectionRef.current;
+        const gatewaySection = gatewaySectionRef.current;
+        const cleanups: Array<() => void> = [];
+
+        if (gatewaySection) {
+          const morphTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: gatewaySection,
+              start: "top 85%",
+              end: "bottom 40%",
+              scrub: 0.45,
+            },
+          });
+          morphTl.to(
+            sceneState,
+            {
+              morph: 0.9,
+              colorMix: 1.0,
+              globeScale: 0.84,
+              waterAlpha: 0.35,
+              ease: "power2.inOut",
+            },
+            0
+          );
+          cleanups.push(() => {
+            morphTl.scrollTrigger?.kill();
+            morphTl.kill();
+          });
+        }
+
+        // Cleanly fade fixed #globe-canvas & .hero-bar columns out when exiting #hero-section
+        const exitTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "bottom 100%",
+            end: "bottom 55%",
+            scrub: true,
+          },
+        });
+        exitTl.to(
+          sceneState,
+          { canvasOpacity: 0, globeY: 0.55, ease: "none" },
+          0
+        );
+        if (heroBars.length) {
+          exitTl.to(heroBars, { autoAlpha: 0, ease: "none" }, 0);
+        }
+        cleanups.push(() => {
+          exitTl.scrollTrigger?.kill();
+          exitTl.kill();
+        });
+
+        const revealMobileGroup = (triggerEl: HTMLElement, targets: HTMLElement[]) => {
+          if (!targets.length) return;
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: triggerEl,
+              start: "top 90%",
+              end: "bottom top",
+              toggleActions: "play none none reverse",
+            },
+          });
+          tl.fromTo(
+            targets,
+            { autoAlpha: 0, y: 24 },
+            { autoAlpha: 1, y: 0, duration: 0.65, stagger: 0.06, ease: "power3.out" }
+          );
+          const sync = () => {
+            if (triggerEl.getBoundingClientRect().top <= window.innerHeight * 0.95) {
+              tl.progress(1);
+            }
+          };
+          const raf = requestAnimationFrame(sync);
+          ScrollTrigger.addEventListener("refresh", sync);
+          cleanups.push(() => {
+            cancelAnimationFrame(raf);
+            ScrollTrigger.removeEventListener("refresh", sync);
+            tl.scrollTrigger?.kill();
+            tl.kill();
+          });
+        };
+
+        if (statsSection) {
+          const introTargets = gsap.utils.toArray<HTMLElement>(
+            statsSection.querySelectorAll(".stats-intro > *")
+          );
+          const metricTargets = gsap.utils.toArray<HTMLElement>(
+            statsSection.querySelectorAll(".metric-row")
+          );
+          revealMobileGroup(statsSection, introTargets);
+          revealMobileGroup(statsSection, metricTargets);
+        }
+
+        if (gatewaySection) {
+          const gwHeading = gatewaySection.querySelector<HTMLElement>(".gateway-heading");
+          const gwCards = gsap.utils.toArray<HTMLElement>(
+            gatewaySection.querySelectorAll(".gateway-card")
+          );
+          if (gwHeading) revealMobileGroup(gatewaySection, [gwHeading]);
+          revealMobileGroup(gatewaySection, gwCards);
+        }
+
+        return () => {
+          cleanups.forEach((fn) => fn());
+        };
+      });
+
       return () => {
         disposed = true;
         introTl.kill();
@@ -844,11 +959,11 @@ export function GenesisHeroStage() {
               ============================================================ */}
           <div
             ref={heroContentRef}
-            className="hero-content relative z-10 mx-auto flex max-w-[1060px] shrink-0 flex-col items-center px-5 pt-4 pb-2 text-center lg:pt-6"
+            className="hero-content relative z-10 mx-auto flex max-w-[1060px] shrink-0 flex-col items-center px-4 sm:px-5 pt-3 pb-2 text-center lg:pt-6"
           >
             {/* GenesisFX Hero Badge */}
             <div data-hero-item className="gfx-badge mb-3">
-              <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
+              <span className="h-2 w-2 shrink-0 rounded-full bg-[#10bc83] animate-pulse" />
               <DualCopy
                 as="span"
                 plain="Private AI for Your Computer · 100% On-Device"
@@ -860,7 +975,7 @@ export function GenesisHeroStage() {
             <h1
               id="hero-heading"
               data-hero-item
-              className="max-w-[20ch] text-[clamp(2.15rem,4.1vw,3.9rem)] font-normal leading-[1.03] tracking-[-0.03em] heading-gradient"
+              className="max-w-[20ch] text-[clamp(2rem,4.1vw,3.9rem)] font-normal leading-[1.04] tracking-[-0.03em] heading-gradient"
             >
               Private AI that thinks, speaks, and works—only with your permission.
             </h1>
@@ -877,7 +992,7 @@ export function GenesisHeroStage() {
             {/* GenesisFX Hero Description */}
             <div data-hero-item className="mt-2">
               <DualCopy
-                className="max-w-[38rem] text-sm sm:text-[15px] leading-[1.5] text-[#a0a0a0]"
+                className="max-w-[38rem] text-sm sm:text-[15px] leading-[1.55] text-[#a0a0a0]"
                 plain="Speak naturally, automate complex work across your files and apps, and review every important action before it happens. Everything stays 100% private on your own computer."
                 technical="Runs across four isolated OS process rooms with loopback-only Qdrant + SQLite WAL memory (127.0.0.1) and 30-second Ed25519 hardware-signed approval leases."
               />
@@ -886,19 +1001,20 @@ export function GenesisHeroStage() {
             {/* GenesisFX Hero CTA Row */}
             <div
               data-hero-item
-              className="mt-5 flex flex-wrap items-center justify-center gap-3.5"
+              className="mt-5 flex w-full max-w-[340px] flex-col sm:w-auto sm:max-w-none sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-3.5"
             >
               <WaitlistActionButton
                 tier="general"
                 variant="primary"
                 arrow
+                className="w-full sm:w-auto"
               >
                 Get Early Access
               </WaitlistActionButton>
-              <Button href="#how-it-works" variant="secondary" arrow>
+              <Button href="#how-it-works" variant="secondary" arrow className="w-full sm:w-auto">
                 See How It Works
               </Button>
-              <Button href="/enter" variant="ghost">
+              <Button href="/enter" variant="ghost" className="w-full sm:w-auto">
                 Open 3D Core (/enter)
               </Button>
             </div>
@@ -969,17 +1085,20 @@ export function GenesisHeroStage() {
           </div>
 
           {/* Mobile / Tablet Inline 3D Orb Showcase */}
-          <div className="mt-6 w-full max-w-xl px-5 pb-12 lg:hidden">
-            <div className="mb-4 flex items-center justify-center gap-2">
-              <span className="font-mono text-xs text-[#a0a0a0]">Reading mode:</span>
-              <ClarityTogglePill />
-            </div>
+          <div className="mt-6 w-full max-w-lg px-4 pb-8 lg:hidden">
             <div className="gfx-frame">
               <div className="gfx-frame__highlight" aria-hidden="true">
                 <div className="gfx-frame__highlight-glow" />
               </div>
               <span className="gfx-frame__top-beam" aria-hidden="true" />
-              <div className="relative z-[1] overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/95 p-3">
+              <div className="relative z-[1] overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/95 p-3.5 sm:p-4">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.07] pb-2.5">
+                  <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[#cff2e6]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse" />
+                    LIVE 3D CORE PREVIEW
+                  </span>
+                  <ClarityTogglePill />
+                </div>
                 <HeroOrbEmbed />
               </div>
             </div>
@@ -991,30 +1110,31 @@ export function GenesisHeroStage() {
           <div
             ref={statsSectionRef}
             id="stats-section"
-            className="relative z-20 mx-auto max-w-[1280px] px-5 py-12 lg:pointer-events-none lg:absolute lg:inset-0 lg:flex lg:items-center lg:justify-center"
+            className="relative z-20 mx-auto max-w-[1280px] px-4 sm:px-5 py-8 lg:py-12 lg:pointer-events-none lg:absolute lg:inset-0 lg:flex lg:items-center lg:justify-center"
           >
-            <div className="pointer-events-auto grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
+            <div className="pointer-events-auto grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
               {/* Left: .stats-intro */}
               <div className="stats-intro space-y-4 lg:col-span-5">
                 <span className="gfx-badge">
-                  <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-[#10bc83] animate-pulse" />
                   <span>Verified Local Telemetry · Zero Cloud Egress</span>
                 </span>
-                <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.06] heading-gradient">
+                <h2 className="text-[1.85rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
                   Engineered for instant voice and zero-trust execution.
                 </h2>
                 <p className="text-sm sm:text-base text-[#a0a0a0] leading-relaxed">
                   Every millisecond of voice latency, every quarantined git worktree, and every Ed25519 approval receipt is enforced directly on your own hardware.
                 </p>
-                <div className="flex flex-wrap items-center gap-3 pt-2">
+                <div className="flex w-full sm:w-auto flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 pt-2">
                   <WaitlistActionButton
                     tier="technical"
                     variant="primary"
                     arrow
+                    className="w-full sm:w-auto"
                   >
                     Request Technical Access
                   </WaitlistActionButton>
-                  <Button href="/architecture" variant="ghost">
+                  <Button href="/architecture" variant="ghost" className="w-full sm:w-auto">
                     Read Architecture Specs
                   </Button>
                 </div>
@@ -1024,21 +1144,21 @@ export function GenesisHeroStage() {
               <div className="hidden lg:block lg:col-span-2" />
 
               {/* Right: 5 GenesisFX Metric Rows (.metrics) */}
-              <ul className="metrics divide-y divide-white/[0.08] rounded-2xl border border-white/[0.08] bg-[#05070d]/70 p-4 backdrop-blur-xl lg:col-span-5">
+              <ul className="metrics divide-y divide-white/[0.08] rounded-2xl border border-white/[0.08] bg-[#05070d]/80 p-3.5 sm:p-4 backdrop-blur-xl lg:col-span-5">
                 {STATS_METRICS.map((m) => (
                   <li
                     key={m.label}
-                    className="metric-row flex items-center justify-between gap-4 py-3.5 px-2 first:pt-1.5 last:pb-1.5"
+                    className="metric-row flex items-center justify-between gap-3 py-3 px-1 sm:py-3.5 sm:px-2 first:pt-1.5 last:pb-1.5"
                   >
-                    <div className="flex items-center gap-3.5">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#10bc83]/30 bg-[#062118]/70">
+                    <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
+                      <span className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl border border-[#10bc83]/30 bg-[#062118]/70">
                         {m.icon}
                       </span>
-                      <span className="text-2xl sm:text-3xl font-normal heading-gradient">
+                      <span className="whitespace-nowrap text-xl sm:text-3xl font-normal heading-gradient">
                         {m.value}
                       </span>
                     </div>
-                    <span className="text-right text-xs sm:text-sm font-normal text-[#10bc83]">
+                    <span className="text-right text-[11.5px] sm:text-sm leading-snug font-normal text-[#10bc83]">
                       {m.label}
                     </span>
                   </li>
@@ -1053,13 +1173,13 @@ export function GenesisHeroStage() {
           <div
             ref={gatewaySectionRef}
             id="gateway-section"
-            className="relative z-20 mx-auto max-w-[1360px] px-5 py-12 lg:pointer-events-none lg:absolute lg:inset-0 lg:flex lg:flex-col lg:justify-center"
+            className="relative z-20 mx-auto max-w-[1360px] px-4 sm:px-5 py-8 lg:py-12 lg:pointer-events-none lg:absolute lg:inset-0 lg:flex lg:flex-col lg:justify-center"
           >
-            <h2 className="gateway-heading mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.06] heading-gradient">
+            <h2 className="gateway-heading mb-6 sm:mb-8 text-center text-[1.85rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
               One sovereign operating system. Six core capabilities.
             </h2>
 
-            <div className="pointer-events-auto grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
+            <div className="pointer-events-auto grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12 lg:items-center">
               {/* Left 3 Gateway Cards */}
               <div className="gateway-col-left flex flex-col items-center lg:items-start gap-4 lg:col-span-5">
                 {LEFT_GATEWAY_CARDS.map((card) => (

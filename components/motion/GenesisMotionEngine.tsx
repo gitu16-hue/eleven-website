@@ -72,10 +72,27 @@ export function GenesisSmoothScroll({ children }: { children: React.ReactNode })
     if (lenisRef.current) {
       lenisRef.current.scrollTo(0, { immediate: true });
     }
-    const timer = window.setTimeout(() => {
+    let lastH = document.documentElement.scrollHeight;
+    let timer = window.setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 60);
-    return () => window.clearTimeout(timer);
+    }, 80);
+
+    const ro = new ResizeObserver(() => {
+      const nextH = document.documentElement.scrollHeight;
+      if (Math.abs(nextH - lastH) > 4) {
+        lastH = nextH;
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 120);
+      }
+    });
+    ro.observe(document.body);
+
+    return () => {
+      ro.disconnect();
+      window.clearTimeout(timer);
+    };
   }, [pathname]);
 
   return <>{children}</>;

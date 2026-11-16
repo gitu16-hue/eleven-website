@@ -107,10 +107,10 @@ export default function ArchitecturePage() {
           }}
         />
         {/* ── HERO + COMPACT 3D MODEL ── */}
-        <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
+        <Section className="relative overflow-hidden pt-5 pb-12 sm:pt-8 sm:pb-16 lg:pt-12 lg:pb-20">
           <GenesisSubpageHeroBackdrop />
           <div className="relative z-10">
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border">
+            <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-8 border-b border-el-border">
               <Breadcrumbs
                 items={[
                   { label: "How It Works", href: "/architecture" },

@@ -150,10 +150,10 @@ export default function ResearchPage() {
           }}
         />
         {/* ── HERO ── */}
-        <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
+        <Section className="relative overflow-hidden pt-5 pb-12 sm:pt-8 sm:pb-16 lg:pt-12 lg:pb-20">
           <GenesisSubpageHeroBackdrop />
           <div className="relative z-10">
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
+            <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-8 border-b border-el-border/60">
               <Breadcrumbs
                 items={[
                   { label: "Our Promises", href: "/research" },
@@ -167,7 +167,7 @@ export default function ResearchPage() {
               </div>
             </div>
 
-            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+            <GenesisHeroIntro className="mt-6 sm:mt-10 max-w-4xl space-y-4 sm:space-y-6">
               <div className="gfx-badge">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] motion-safe:animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
                 <CipherText text="Scientific Rigor & Honest Architecture · Zero AI Hype" />

@@ -179,9 +179,9 @@ export function AutonomyControlSection() {
       >
         {TIERS.map((t) => (
           <Tilt3DCard key={t.tier}>
-            <div className="flex h-full flex-col justify-between p-6">
+            <div className="flex h-full flex-col justify-between p-5 sm:p-6">
               <div>
-                <div className="flex items-center justify-between font-mono text-[10px] text-el-fg-faint">
+                <div className="flex flex-wrap items-center justify-between gap-1.5 font-mono text-[10px] text-el-fg-faint">
                   <span>{t.tier}</span>
                   <span className="rounded-xs bg-el-bg px-1.5 py-0.5 text-el-accent font-semibold">
                     {t.badge}
@@ -214,41 +214,41 @@ export function AutonomyControlSection() {
         <table className="w-full min-w-[720px] border-collapse text-left text-el-xs">
           <thead>
             <tr className="border-b border-el-border bg-el-bg font-mono text-[11px] uppercase tracking-[0.07em] text-el-fg-faint">
-              <th className="p-4">What Matters to You</th>
-              <th className="p-4">Smart Speakers</th>
-              <th className="p-4">Chat Websites</th>
-              <th className="p-4">Reckless Auto-Agents</th>
-              <th className="p-4 text-el-accent font-semibold">ELEVEN v3</th>
+              <th className="p-3 sm:p-4">What Matters to You</th>
+              <th className="p-3 sm:p-4">Smart Speakers</th>
+              <th className="p-3 sm:p-4">Chat Websites</th>
+              <th className="p-3 sm:p-4">Reckless Auto-Agents</th>
+              <th className="p-3 sm:p-4 text-el-accent font-semibold">ELEVEN v3</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-el-border text-el-fg-muted">
             <tr className="transition-colors hover:bg-el-bg/60">
-              <td className="p-4 font-medium text-el-fg">Who holds the keys?</td>
-              <td className="p-4">Preset commands only</td>
-              <td className="p-4">Manual copy-paste</td>
-              <td className="p-4">AI gets raw access (risky!)</td>
-              <td className="p-4 font-medium text-el-fg">AI suggests · Your PC guards</td>
+              <td className="p-3 sm:p-4 font-medium text-el-fg">Who holds the keys?</td>
+              <td className="p-3 sm:p-4">Preset commands only</td>
+              <td className="p-3 sm:p-4">Manual copy-paste</td>
+              <td className="p-3 sm:p-4">AI gets raw access (risky!)</td>
+              <td className="p-3 sm:p-4 font-medium text-el-fg">AI suggests · Your PC guards</td>
             </tr>
             <tr className="transition-colors hover:bg-el-bg/60">
-              <td className="p-4 font-medium text-el-fg">Before deleting or sending</td>
-              <td className="p-4">Easy to mishear &ldquo;Yes&rdquo;</td>
-              <td className="p-4">AI explains itself</td>
-              <td className="p-4">Acts without asking</td>
-              <td className="p-4 font-medium text-el-fg">Shows an honest 30s safety receipt</td>
+              <td className="p-3 sm:p-4 font-medium text-el-fg">Before deleting or sending</td>
+              <td className="p-3 sm:p-4">Easy to mishear &ldquo;Yes&rdquo;</td>
+              <td className="p-3 sm:p-4">AI explains itself</td>
+              <td className="p-3 sm:p-4">Acts without asking</td>
+              <td className="p-3 sm:p-4 font-medium text-el-fg">Shows an honest 30s safety receipt</td>
             </tr>
             <tr className="transition-colors hover:bg-el-bg/60">
-              <td className="p-4 font-medium text-el-fg">Talking while working</td>
-              <td className="p-4">Fast, but can&apos;t do deep work</td>
-              <td className="p-4">Slow typing back &amp; forth</td>
-              <td className="p-4">Freezes while running tools</td>
-              <td className="p-4 font-medium text-el-fg">Instant voice + background planner</td>
+              <td className="p-3 sm:p-4 font-medium text-el-fg">Talking while working</td>
+              <td className="p-3 sm:p-4">Fast, but can&apos;t do deep work</td>
+              <td className="p-3 sm:p-4">Slow typing back &amp; forth</td>
+              <td className="p-3 sm:p-4">Freezes while running tools</td>
+              <td className="p-3 sm:p-4 font-medium text-el-fg">Instant voice + background planner</td>
             </tr>
             <tr className="transition-colors hover:bg-el-bg/60">
-              <td className="p-4 font-medium text-el-fg">Where memories live</td>
-              <td className="p-4">Big-tech cloud servers</td>
-              <td className="p-4">Locked in one vendor&apos;s app</td>
-              <td className="p-4">Messy text logs</td>
-              <td className="p-4 font-medium text-el-fg">Encrypted on your own computer</td>
+              <td className="p-3 sm:p-4 font-medium text-el-fg">Where memories live</td>
+              <td className="p-3 sm:p-4">Big-tech cloud servers</td>
+              <td className="p-3 sm:p-4">Locked in one vendor&apos;s app</td>
+              <td className="p-3 sm:p-4">Messy text logs</td>
+              <td className="p-3 sm:p-4 font-medium text-el-fg">Encrypted on your own computer</td>
             </tr>
           </tbody>
         </table>
