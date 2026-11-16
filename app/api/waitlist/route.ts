@@ -69,9 +69,16 @@ function checkRateLimit(ipHash: string): boolean {
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
+// Process-scoped CSPRNG fallback when WAITLIST_SALT is unset in production
+const EPHEMERAL_FALLBACK_SALT = crypto.randomBytes(16).toString("hex");
+
 // Safe one-way hash for client IP to avoid storing raw PII
 function hashClientIp(rawIp: string): string {
-  const salt = process.env.WAITLIST_SALT || "eleven_default_salt_2026";
+  const salt =
+    process.env.WAITLIST_SALT ||
+    (process.env.NODE_ENV === "production"
+      ? EPHEMERAL_FALLBACK_SALT
+      : "eleven_default_salt_2026");
   return crypto.createHash("sha256").update(rawIp + salt).digest("hex");
 }
 
@@ -96,11 +103,14 @@ export async function POST(request: Request) {
   try {
     // 0. Guard against oversized request payloads before parsing JSON
     const contentLengthHeader = request.headers.get("content-length");
-    if (contentLengthHeader && Number(contentLengthHeader) > MAX_BODY_BYTES) {
-      return NextResponse.json(
-        { success: false, error: "Request payload too large." },
-        { status: 413, headers: NO_STORE_HEADERS }
-      );
+    if (contentLengthHeader) {
+      const parsedLength = Number(contentLengthHeader);
+      if (!Number.isFinite(parsedLength) || parsedLength < 0 || parsedLength > MAX_BODY_BYTES) {
+        return NextResponse.json(
+          { success: false, error: "Request payload too large." },
+          { status: 413, headers: NO_STORE_HEADERS }
+        );
+      }
     }
 
     // 1. Client IP identification & privacy-preserving hash
@@ -126,11 +136,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Parse and validate JSON payload with strict byte cap
+    // 3. Parse and validate JSON payload with strict UTF-8 byte cap
     let body: Record<string, unknown>;
     try {
       const rawText = await request.text();
-      if (rawText.length > MAX_BODY_BYTES) {
+      if (Buffer.byteLength(rawText, "utf8") > MAX_BODY_BYTES) {
         return NextResponse.json(
           { success: false, error: "Request payload too large." },
           { status: 413, headers: NO_STORE_HEADERS }

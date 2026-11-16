@@ -510,9 +510,9 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
       {/* ------------------------------------------------------------- */}
       {/* 2. Primary Navigation Tabs: Overview · Pipeline · Governance  */}
       {/* ------------------------------------------------------------- */}
-      <nav className="relative z-10 border-b border-emerald-500/10 bg-[#070e13]/70 px-4 sm:px-6 py-2.5">
-        <div className="flex items-center justify-between gap-3 overflow-x-auto max-w-full no-scrollbar">
-          <div className="flex items-center gap-1.5 font-mono text-xs">
+      <nav className="relative z-10 border-b border-emerald-500/10 bg-[#070e13]/70 px-3.5 sm:px-6 py-2.5">
+        <div className="flex items-center justify-between gap-3 max-w-full">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-1.5 font-mono text-[11px] sm:text-xs">
             {[
               { id: "overview", label: "[01] Overview", icon: Activity },
               { id: "pipeline", label: "[02] Hive Pipeline", icon: Layers },
@@ -526,7 +526,7 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
                   key={tab.id}
                   type="button"
                   onClick={() => handleSelectView(tab.id as ShowcaseView)}
-                  className={`relative flex items-center shrink-0 gap-1.5 rounded-xs px-3 py-1.5 font-medium transition-all cursor-pointer ${
+                  className={`relative flex items-center shrink-0 gap-1.5 rounded-xs px-2.5 sm:px-3 py-1.5 font-medium transition-all cursor-pointer ${
                     isActive
                       ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-xs"
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border border-transparent"

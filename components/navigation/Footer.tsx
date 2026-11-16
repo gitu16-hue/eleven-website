@@ -98,9 +98,9 @@ export function Footer() {
     const watermark = watermarkRef.current;
 
     if (reduced) {
-      if (cols.length) gsap.set(cols, { autoAlpha: 1, y: 0 });
-      if (cards.length) gsap.set(cards, { autoAlpha: 1, y: 0, scale: 1 });
-      if (watermark) gsap.set(watermark, { autoAlpha: 1, y: 0 });
+      if (cols.length) gsap.set(cols, { opacity: 1, y: 0 });
+      if (cards.length) gsap.set(cards, { opacity: 1, y: 0, scale: 1 });
+      if (watermark) gsap.set(watermark, { opacity: 1, y: 0 });
       return;
     }
 
@@ -117,8 +117,8 @@ export function Footer() {
       });
       tlCols.fromTo(
         cols,
-        { autoAlpha: 0, y: 40 },
-        { autoAlpha: 1, y: 0, duration: 0.78, stagger: 0.08, ease: "power3.out" }
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.78, stagger: 0.08, ease: "power3.out" }
       );
       timelines.push(tlCols);
     }
@@ -134,9 +134,9 @@ export function Footer() {
       });
       tlCards.fromTo(
         cards,
-        { autoAlpha: 0, y: 34, scale: 0.97 },
+        { opacity: 0, y: 34, scale: 0.97 },
         {
-          autoAlpha: 1,
+          opacity: 1,
           y: 0,
           scale: 1,
           duration: 0.72,
@@ -158,8 +158,8 @@ export function Footer() {
       });
       tlWatermark.fromTo(
         watermark,
-        { autoAlpha: 0, y: 52 },
-        { autoAlpha: 1, y: 0, duration: 1.0, ease: "power2.out" }
+        { opacity: 0, y: 52 },
+        { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" }
       );
       timelines.push(tlWatermark);
     }
@@ -277,25 +277,39 @@ export function Footer() {
           </div>
 
           {/* 4-Column GenesisFX Footer Nav (#10bc83 emerald headings) */}
-          <div className="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-4 lg:gap-10">
+          <div className="grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-8 sm:grid-cols-4 lg:gap-10">
             {columns.map((col) => (
               <div key={col.heading}>
                 <p className="mb-3 sm:mb-4 text-[13.5px] font-normal text-[#10bc83]">
                   {col.heading}
                 </p>
                 <ul className="space-y-2 sm:space-y-3">
-                  {col.links.map((l) => (
-                    <li key={l.label}>
-                      <Link
-                        href={l.href}
-                        scroll={true}
-                        onClick={(e) => handleFooterLinkClick(l.href, e)}
-                        className="text-[13.5px] font-normal text-[#8a8a8a] transition-colors duration-150 hover:text-[#e8ecf5] focus-visible:outline-2 focus-visible:outline-[#00b38c] rounded-xs"
-                      >
-                        {l.label}
-                      </Link>
-                    </li>
-                  ))}
+                  {col.links.map((l) => {
+                    const isExternal = l.href.startsWith("https://");
+                    return (
+                      <li key={l.label}>
+                        {isExternal ? (
+                          <a
+                            href={l.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block py-0.5 lg:py-0 text-[13.5px] font-normal leading-snug text-[#8a8a8a] transition-colors duration-150 hover:text-[#e8ecf5] focus-visible:outline-2 focus-visible:outline-[#00b38c] rounded-xs"
+                          >
+                            {l.label}
+                          </a>
+                        ) : (
+                          <Link
+                            href={l.href}
+                            scroll={true}
+                            onClick={(e) => handleFooterLinkClick(l.href, e)}
+                            className="inline-block py-0.5 lg:py-0 text-[13.5px] font-normal leading-snug text-[#8a8a8a] transition-colors duration-150 hover:text-[#e8ecf5] focus-visible:outline-2 focus-visible:outline-[#00b38c] rounded-xs"
+                          >
+                            {l.label}
+                          </Link>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}

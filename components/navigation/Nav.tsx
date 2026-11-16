@@ -33,6 +33,7 @@ const mobileLinks = [
 
 export function Nav() {
   const [condensed, setCondensed] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { enterComputationalMode } = usePortalTransition();
@@ -42,9 +43,10 @@ export function Nav() {
 
   // GenesisFX scroll-condensed header (>80px scroll down condenses wings & scales center pill)
   useEffect(() => {
-    let lastY = window.scrollY;
+    let lastY = window.scrollY || document.documentElement.scrollTop || 0;
     const onScroll = () => {
-      const y = window.scrollY;
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      setScrolled(y > 24);
       if (y <= 80) {
         setCondensed(false);
       } else if (y > lastY + 4) {
@@ -170,9 +172,9 @@ export function Nav() {
 
   return (
     <header
-      className={`site-header sticky top-0 z-50 transition-[padding,transform] duration-300 ${
+      className={`site-header sticky top-0 z-50 transition-[padding,transform,background-color] duration-300 ${
         condensed && !open ? "is-condensed" : ""
-      }`}
+      } ${scrolled && !open ? "is-scrolled" : ""}`}
     >
       <div className="mx-auto flex max-w-[1380px] items-center justify-between gap-4 lg:grid lg:grid-cols-[1fr_max-content_1fr]">
         {/* Brand Left */}
@@ -337,9 +339,7 @@ export function Nav() {
                   document.body.style.overflow = "";
                   document.documentElement.style.overflow = "";
                   setOpen(false);
-                  window.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "k", metaKey: true })
-                  );
+                  window.dispatchEvent(new CustomEvent("eleven:open-command-palette"));
                 }}
                 className="w-full min-h-[44px] cursor-pointer flex items-center justify-between rounded-full border border-white/15 bg-white/[0.03] px-5 text-xs text-[#e8ecf5] transition-colors hover:border-[#00b38c]"
               >

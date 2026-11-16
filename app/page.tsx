@@ -200,7 +200,7 @@ export default function HomePage() {
           <div id="how-it-works" className="absolute -top-24 left-0 pointer-events-none" aria-hidden="true" />
 
           {/* Paired Command Deck fixing orphaned prompt box & echoing #hero-section spatial luminance */}
-          <GenesisShowcaseFrame className="mb-14" innerClassName="relative p-5 sm:p-7 lg:p-8">
+          <GenesisShowcaseFrame className="mb-8 lg:mb-14" innerClassName="relative p-3.5 sm:p-6 lg:p-8">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -top-24 right-0 h-[280px] w-[360px] rounded-full opacity-40 blur-[90px]"
@@ -210,7 +210,7 @@ export default function HomePage() {
               }}
             />
             <GenesisSplitReveal
-              className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12"
+              className="relative z-10 grid grid-cols-1 items-center gap-5 lg:gap-8 lg:grid-cols-12"
               leftClassName="lg:col-span-7"
               rightClassName="lg:col-span-5"
               offset={56}
@@ -229,7 +229,7 @@ export default function HomePage() {
                 </div>
               }
               right={
-                <div className="rounded-xl border border-white/[0.08] bg-[#080d0b]/85 p-5 sm:p-6">
+                <div className="rounded-xl border border-white/[0.08] bg-[#080d0b]/85 p-4 sm:p-6">
                   <div className="flex items-center justify-between border-b border-white/[0.07] pb-3.5">
                     <div>
                       <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#10bc83]">

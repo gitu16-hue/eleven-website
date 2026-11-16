@@ -291,7 +291,7 @@ export function CipherText({
     if (!inView || reduced) return;
 
     const glyphs = "01/_▪◊×+<>";
-    const durationMs = 540;
+    const durationMs = 280;
     let rafId = 0;
     let frame = 0;
 
@@ -474,15 +474,34 @@ export function Tilt3DCard({
   const surfaceGlare = useMotionTemplate`radial-gradient(380px circle at ${glowX}px ${glowY}px, rgba(0, 179, 140, 0.14), rgba(16, 188, 131, 0.05) 45%, transparent 72%)`;
   const borderGlare = useMotionTemplate`radial-gradient(240px circle at ${glowX}px ${glowY}px, rgba(56, 255, 189, 0.65), rgba(0, 179, 140, 0.3) 55%, transparent 100%)`;
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current || reduced) return;
+    if (
+      typeof window !== "undefined" &&
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    ) {
+      return;
+    }
     // Measure once on enter so mousemove never triggers layout reads
-    rectRef.current = cardRef.current.getBoundingClientRect();
+    const rect = cardRef.current.getBoundingClientRect();
+    rectRef.current = rect;
+    const lx = e.clientX - rect.left;
+    const ly = e.clientY - rect.top;
+    glowX.set(lx);
+    glowY.set(ly);
+    mouseX.set(Math.max(0, Math.min(1, lx / Math.max(1, rect.width))));
+    mouseY.set(Math.max(0, Math.min(1, ly / Math.max(1, rect.height))));
     glareOpacity.set(1);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reduced) return;
+    if (
+      typeof window !== "undefined" &&
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    ) {
+      return;
+    }
     const rect =
       rectRef.current ||
       (cardRef.current
@@ -532,7 +551,7 @@ export function Tilt3DCard({
         {/* Cursor-tracked 1px anodized perimeter border beam */}
         <motion.div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-[inherit] p-px [mask:linear-gradient(#000_0_0)_content-box,linear-gradient(#000_0_0)] [mask-composite:exclude]"
+          className="tilt-card-border-beam pointer-events-none absolute inset-0 rounded-[inherit] p-px"
           style={{
             opacity: smoothOpacity,
             background: borderGlare,

@@ -5,17 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ELEVEN v3 — Brilliant AI. Always Under Your Control. (Presentation)</title>
   
-  <!-- Typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  
-  <!-- Three.js (r128) for Embedded 3D Holographic Visualizers -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <!-- Anime.js (v3.2.1) for Staggered Timelines & Kinetic UI -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-
   <style>
+    @font-face {
+      font-family: 'Geist';
+      src: url('/fonts/GeistVF.woff2') format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Share Tech Mono';
+      src: url('/fonts/share-tech-mono-v15-latin-regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
     /* ============================================================
        ELEVEN v3 Presentation Deck — Sci-Fi Quantum Spatial System
        Fixed 1920x1080 Stage · Scaled Uniformly to Viewport
@@ -34,8 +40,8 @@
       --el-cyan-glow: rgba(0, 240, 255, 0.18);
       --el-violet: #8B5CF6;
       --el-lime: #00FF9D;
-      --font-sans: 'Inter', -apple-system, sans-serif;
-      --font-mono: 'Share Tech Mono', monospace;
+      --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Share Tech Mono', ui-monospace, SFMono-Regular, monospace;
     }
 
     * {
@@ -940,10 +946,10 @@
             </p>
 
             <div style="margin-top: 40px; display: flex; gap: 20px;">
-              <a href="https://eleven-website-self.vercel.app/" target="_blank" class="ctrl-btn" style="padding: 14px 28px; font-size: 15px; background: var(--el-cyan); color: #04060A; font-weight: 700; text-decoration: none;">
+              <a href="https://eleven-website-self.vercel.app/" target="_blank" rel="noopener noreferrer" class="ctrl-btn" style="padding: 14px 28px; font-size: 15px; background: var(--el-cyan); color: #04060A; font-weight: 700; text-decoration: none;">
                 JOIN EARLY ACCESS →
               </a>
-              <a href="https://eleven-website-self.vercel.app/architecture" target="_blank" class="ctrl-btn" style="padding: 14px 28px; font-size: 15px; text-decoration: none;">
+              <a href="https://eleven-website-self.vercel.app/architecture" target="_blank" rel="noopener noreferrer" class="ctrl-btn" style="padding: 14px 28px; font-size: 15px; text-decoration: none;">
                 VIEW TECHNICAL ARCHITECTURE
               </a>
             </div>
@@ -1015,6 +1021,17 @@
   window.addEventListener('resize', fitStage);
   window.addEventListener('DOMContentLoaded', fitStage);
 
+  function animateNodes(nodes, keyframes, options) {
+    nodes.forEach((el, idx) => {
+      if (typeof el.animate !== 'function') return;
+      el.animate(keyframes, {
+        ...options,
+        delay: (options.baseDelay || 0) + idx * (options.stagger || 0),
+        fill: 'both',
+      });
+    });
+  }
+
   function updateSlide(newIdx) {
     if (newIdx < 1 || newIdx > totalSlides) return;
     let targetSlideEl = null;
@@ -1031,62 +1048,50 @@
     currentSlide = newIdx;
     progressBar.style.width = `${((currentSlide - 1) / (totalSlides - 1)) * 100}%`;
 
-    // Anime.js Kinetic Multi-Stage Orchestration for active slide
-    if (window.anime && targetSlideEl) {
-      const tl = anime.timeline({
-        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-      });
-
-      // 1. Headline & Lead entrance
-      tl.add({
-        targets: targetSlideEl.querySelectorAll('h1, h2'),
-        translateY: [32, 0],
-        opacity: [0, 1],
-        duration: 650,
-      }).add({
-        targets: targetSlideEl.querySelectorAll('.lead'),
-        translateY: [20, 0],
-        opacity: [0, 1],
-        duration: 600,
-      }, '-=450');
-
-      // 2. Staggered Card Entrance with Spring Easing
-      const cards = targetSlideEl.querySelectorAll('.deck-card');
-      if (cards.length > 0) {
-        tl.add({
-          targets: cards,
-          translateY: [40, 0],
-          opacity: [0, 1],
-          delay: anime.stagger(110),
-          duration: 750,
-          easing: 'spring(1, 80, 12, 0)',
-        }, '-=400');
-      }
-
-      // 3. Staggered Metric Counters with Spring Easing
-      const metrics = targetSlideEl.querySelectorAll('.metric-item');
-      if (metrics.length > 0) {
-        tl.add({
-          targets: metrics,
-          scale: [0.88, 1],
-          opacity: [0, 1],
-          delay: anime.stagger(90),
-          duration: 600,
-          easing: 'spring(1, 85, 10, 0)',
-        }, '-=500');
-      }
-
-      // 4. 3D Visualizer Container Pop
-      const vis = targetSlideEl.querySelectorAll('.vis-container');
-      if (vis.length > 0) {
-        tl.add({
-          targets: vis,
-          scale: [0.94, 1],
-          opacity: [0, 1],
-          duration: 750,
-          easing: 'spring(1, 75, 12, 0)',
-        }, '-=550');
-      }
+    const prefersReduced =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced && targetSlideEl) {
+      const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+      animateNodes(
+        targetSlideEl.querySelectorAll('h1, h2'),
+        [
+          { transform: 'translateY(32px)', opacity: 0 },
+          { transform: 'translateY(0)', opacity: 1 },
+        ],
+        { duration: 650, easing: ease }
+      );
+      animateNodes(
+        targetSlideEl.querySelectorAll('.lead'),
+        [
+          { transform: 'translateY(20px)', opacity: 0 },
+          { transform: 'translateY(0)', opacity: 1 },
+        ],
+        { duration: 600, easing: ease, baseDelay: 120 }
+      );
+      animateNodes(
+        targetSlideEl.querySelectorAll('.deck-card'),
+        [
+          { transform: 'translateY(36px)', opacity: 0 },
+          { transform: 'translateY(0)', opacity: 1 },
+        ],
+        { duration: 700, easing: ease, baseDelay: 180, stagger: 95 }
+      );
+      animateNodes(
+        targetSlideEl.querySelectorAll('.metric-item'),
+        [
+          { transform: 'scale(0.9)', opacity: 0 },
+          { transform: 'scale(1)', opacity: 1 },
+        ],
+        { duration: 550, easing: ease, baseDelay: 220, stagger: 80 }
+      );
+      animateNodes(
+        targetSlideEl.querySelectorAll('.vis-container'),
+        [
+          { transform: 'scale(0.94)', opacity: 0 },
+          { transform: 'scale(1)', opacity: 1 },
+        ],
+        { duration: 700, easing: ease, baseDelay: 160 }
+      );
     }
   }
 
@@ -1117,9 +1122,12 @@
     } else if (e.key === 'e' || e.key === 'E') {
       const isEditable = document.body.contentEditable === 'true';
       document.body.contentEditable = isEditable ? 'false' : 'true';
-      console.log('Edit mode:', !isEditable);
     }
   });
+</script>
+
+<script type="module">
+  import * as THREE from '/vendor/three.module.js';
 
   /* ============================================================
      Three.js Visualizer 1: Holographic Cognitive Orb (Slide 1)

@@ -350,17 +350,21 @@ function MobileGatewayCarousel({
         const rotX = offset * -5.2 - pointerSmoothRef.current.y * 6 + breathRx;
         const rotZ = offset * 4.2 + breathRz;
 
-        const scale = Math.max(0.68, 1 - absOff * 0.13);
+        const scale = Math.max(0.68, 1 - absOff * 0.14);
         const opacity =
-          absOff > 2.35 ? 0 : Math.max(0, 1 - Math.pow(absOff / 2.35, 1.55));
-        const zIndex = Math.round(100 - absOff * 20);
+          absOff > 2.15
+            ? 0
+            : absOff < 0.35
+            ? 1
+            : Math.max(0, 0.72 * (1 - Math.pow((absOff - 0.35) / 1.8, 1.15)));
+        const zIndex = Math.round(100 - absOff * 24);
         const isFront = absOff < 0.45;
 
         el.style.transform = `translate3d(${x.toFixed(1)}px, ${(y + breathY).toFixed(1)}px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) rotateZ(${rotZ.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
         el.style.opacity = opacity.toFixed(3);
         el.style.zIndex = String(zIndex);
-        el.style.pointerEvents = absOff < 1.65 ? "auto" : "none";
-        el.setAttribute("aria-hidden", absOff > 1.65 ? "true" : "false");
+        el.style.pointerEvents = isFront ? "auto" : "none";
+        el.setAttribute("aria-hidden", isFront ? "false" : "true");
         el.classList.toggle("gateway-spiral-card--active", isFront);
       }
     };
@@ -490,7 +494,10 @@ function MobileGatewayCarousel({
                 <p className="text-[11px] sm:text-[11.5px] text-[#a0b0ac] leading-[1.42] line-clamp-3">
                   {card.desc}
                 </p>
-                <div className="mt-1.5 pt-2 border-t border-white/[0.08]">
+                <div
+                  className="mt-1.5 pt-2 border-t border-white/[0.08]"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Button
                     href={card.href}
                     variant={card.fill ? "secondary" : "ghost"}
@@ -506,13 +513,13 @@ function MobileGatewayCarousel({
         })}
       </div>
 
-      {/* Emerald Progress Bar + Prev/Next Controls */}
-      <div className="mx-auto mt-1 flex w-full max-w-[360px] items-center gap-3 px-1">
+      {/* Emerald Progress Bar + Accessible Prev/Next Controls */}
+      <div className="mx-auto mt-1 flex w-full max-w-[360px] items-center gap-2.5 px-1">
         <button
           type="button"
           aria-label="Previous capability"
           onClick={() => stepTo(Math.round(targetIdxRef.current) - 1)}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#05070d]/80 text-xs text-[#cff2e6] transition-colors hover:border-[#10bc83]/60"
+          className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/85 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
         >
           ←
         </button>
@@ -526,11 +533,14 @@ function MobileGatewayCarousel({
             style={{ width: `${progressPct}%` }}
           />
         </div>
+        <span className="shrink-0 font-mono text-[10px] tracking-[0.08em] text-[#8ab8a8] tabular-nums">
+          0{activeStep + 1}/0{total}
+        </span>
         <button
           type="button"
           aria-label="Next capability"
           onClick={() => stepTo(Math.round(targetIdxRef.current) + 1)}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#05070d]/80 text-xs text-[#cff2e6] transition-colors hover:border-[#10bc83]/60"
+          className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/85 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
         >
           →
         </button>
@@ -1564,9 +1574,9 @@ export function GenesisHeroStage() {
           <div
             ref={gatewaySectionRef}
             id="gateway-section"
-            className="pointer-events-none absolute inset-0 z-20 mx-auto flex max-w-[1360px] flex-col justify-between px-4 sm:px-5 pt-16 pb-5 lg:justify-center lg:py-12"
+            className="pointer-events-none absolute inset-0 z-20 mx-auto flex max-w-[1360px] flex-col justify-between px-4 sm:px-5 pt-[4.25rem] pb-4 lg:justify-center lg:py-12"
           >
-            <h2 className="gateway-heading mb-2 sm:mb-4 lg:mb-8 text-center text-[1.45rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
+            <h2 className="gateway-heading mb-1.5 sm:mb-4 lg:mb-8 text-center text-[1.4rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
               One sovereign operating system. Six core capabilities.
             </h2>
 

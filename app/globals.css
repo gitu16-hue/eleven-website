@@ -224,15 +224,17 @@
     appearance: none;
     -webkit-appearance: none;
   }
+
+  button:active,
+  a[href]:active,
+  input:where([type="button"], [type="reset"], [type="submit"]):active {
+    transform: translateY(0);
+  }
 }
 
 :focus-visible {
   outline: 2px solid var(--el-accent);
   outline-offset: 3px;
-}
-
-:active {
-  transform: translateY(0);
 }
 
 :disabled, [disabled] {
@@ -1312,6 +1314,13 @@ body {
     AI Core Halo SVG, Bubble Float & CtaInstance Glow Blobs)
    ============================================================ */
 
+/* Perimeter mask for Tilt3DCard border beam */
+.tilt-card-border-beam {
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
 /* Animated specular conic border beam (GlowImage / DataSection / Showcase) */
 .border-shadow {
   position: absolute;
@@ -1506,6 +1515,13 @@ body {
    ============================================================ */
 
 @media (max-width: 1023px) {
+  .site-header.is-scrolled {
+    background: rgba(5, 7, 13, 0.88);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
   .hero-dashboard {
     width: min(460px, 100%);
   }
@@ -1545,7 +1561,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.14);
     background:
       radial-gradient(90% 95% at 88% 12%, rgba(16, 188, 131, 0.24), transparent 62%),
-      rgba(7, 13, 21, 0.93);
+      rgba(7, 13, 21, 0.97);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     box-shadow:
@@ -1567,21 +1583,21 @@ body {
   .gateway-spiral-card--amber {
     background:
       radial-gradient(90% 95% at 88% 12%, rgba(226, 157, 88, 0.22), transparent 62%),
-      rgba(11, 12, 18, 0.94);
+      rgba(11, 12, 18, 0.97);
   }
 
   .gateway-spiral-card--blue {
     background:
       radial-gradient(90% 95% at 88% 12%, rgba(76, 110, 245, 0.24), transparent 62%),
-      rgba(8, 12, 23, 0.94);
+      rgba(8, 12, 23, 0.97);
   }
 
   .gateway-spiral-card--active {
-    border-color: rgba(56, 255, 189, 0.38);
+    border-color: rgba(56, 255, 189, 0.42);
     box-shadow:
-      0 30px 68px -16px rgba(0, 0, 0, 0.92),
-      0 0 40px -14px rgba(16, 188, 131, 0.36),
-      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      0 30px 68px -16px rgba(0, 0, 0, 0.94),
+      0 0 40px -14px rgba(16, 188, 131, 0.38),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 
   .carousel-progress {
@@ -1660,10 +1676,10 @@ body {
 
   .gfx-bubble {
     height: auto;
-    min-height: 2.25rem;
+    min-height: 2rem;
     max-width: 100%;
-    padding: 0.42rem 0.9rem;
-    font-size: 0.84rem;
+    padding: 0.34rem 0.78rem;
+    font-size: 0.78rem;
     white-space: normal;
     line-height: 1.3;
   }

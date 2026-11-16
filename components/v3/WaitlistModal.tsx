@@ -121,7 +121,7 @@ function WaitlistForm({
           type="button"
           onClick={onClose}
           aria-label="Close dialog"
-          className="cursor-pointer rounded-xs border border-white/10 p-1.5 text-neutral-400 transition-colors hover:border-white/20 hover:text-el-sec-porcelain focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.96]"
+          className="cursor-pointer flex min-h-[40px] min-w-[40px] items-center justify-center rounded-xs border border-white/10 text-neutral-400 transition-colors hover:border-white/20 hover:text-el-sec-porcelain focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.96]"
         >
           ✕
         </button>
@@ -135,7 +135,7 @@ function WaitlistForm({
             setTier("general");
             setErrorMessage(null);
           }}
-          className={`cursor-pointer rounded-xs py-1.5 text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] ${
+          className={`cursor-pointer min-h-[38px] rounded-xs py-2 px-2 text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] ${
             tier === "general"
               ? "bg-el-sec-graphite-raised text-el-sec-porcelain shadow-sm"
               : "text-neutral-400 hover:text-el-sec-porcelain"
@@ -149,7 +149,7 @@ function WaitlistForm({
             setTier("technical");
             setErrorMessage(null);
           }}
-          className={`cursor-pointer rounded-xs py-1.5 text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] ${
+          className={`cursor-pointer min-h-[38px] rounded-xs py-2 px-2 text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.98] ${
             tier === "technical"
               ? "bg-el-sec-graphite-raised text-el-sec-porcelain shadow-sm"
               : "text-neutral-400 hover:text-el-sec-porcelain"
@@ -227,7 +227,7 @@ function WaitlistForm({
               placeholder="name@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1.5 w-full rounded-sm border border-white/10 bg-el-sec-graphite-deep px-3.5 py-2 text-sm text-el-sec-porcelain placeholder-neutral-500 transition-colors focus:border-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
+              className="mt-1.5 w-full rounded-sm border border-white/10 bg-el-sec-graphite-deep px-3.5 py-2.5 sm:py-2 text-base sm:text-sm text-el-sec-porcelain placeholder-neutral-500 transition-colors focus:border-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             />
           </div>
 
@@ -245,7 +245,7 @@ function WaitlistForm({
               placeholder="Ada Lovelace"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1.5 w-full rounded-sm border border-white/10 bg-el-sec-graphite-deep px-3.5 py-2 text-sm text-el-sec-porcelain placeholder-neutral-500 transition-colors focus:border-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
+              className="mt-1.5 w-full rounded-sm border border-white/10 bg-el-sec-graphite-deep px-3.5 py-2.5 sm:py-2 text-base sm:text-sm text-el-sec-porcelain placeholder-neutral-500 transition-colors focus:border-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             />
           </div>
 
@@ -270,7 +270,7 @@ function WaitlistForm({
               }
               value={intendedUse}
               onChange={(e) => setIntendedUse(e.target.value)}
-              className="mt-1.5 w-full rounded-sm border border-white/10 bg-el-sec-graphite-deep px-3.5 py-2 text-sm text-el-sec-porcelain placeholder-neutral-500 transition-colors focus:border-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
+              className="mt-1.5 w-full rounded-sm border border-white/10 bg-el-sec-graphite-deep px-3.5 py-2.5 sm:py-2 text-base sm:text-sm text-el-sec-porcelain placeholder-neutral-500 transition-colors focus:border-el-sec-lime focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             />
           </div>
 
@@ -306,7 +306,7 @@ function WaitlistForm({
             <button
               type="submit"
               disabled={loading}
-              className="w-full cursor-pointer rounded-sm bg-el-sec-lime py-2.5 text-xs font-semibold text-el-sec-graphite transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
+              className="w-full min-h-[42px] cursor-pointer rounded-sm bg-el-sec-lime py-2.5 text-xs font-semibold text-el-sec-graphite transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             >
               {loading
                 ? "Validating…"
@@ -420,29 +420,31 @@ export function WaitlistModal({
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <div
           ref={modalRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="waitlist-title"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              onClose();
-            }
-          }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-sm overflow-y-auto"
+          className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-6"
         >
+          {/* Separate backdrop so clicks outside close without intercepting dialog controls */}
+          <motion.div
+            aria-hidden="true"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.14 }}
+            onClick={onClose}
+            className="fixed inset-0 z-0 bg-black/75 backdrop-blur-sm"
+          />
+
           {/* Form Content Component: freshly mounted with initial state */}
           <WaitlistForm
             key={initialTier}
             initialTier={initialTier}
             onClose={onClose}
           />
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>,
     document.body

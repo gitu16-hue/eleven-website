@@ -133,14 +133,14 @@ export function ArchitectureVisualization() {
   const [activeTab, setActiveTab] = useState<ArchTab>("processes");
 
   return (
-    <div className="mt-10 w-full">
+    <div className="mt-0 lg:mt-10 w-full">
       {/* Tab Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-el-border pb-4">
-        <div className="flex items-center gap-2 font-mono text-el-xs overflow-x-auto max-w-full no-scrollbar py-1">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-4 border-b border-el-border pb-3 sm:pb-4">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-1.5 sm:gap-2 font-mono text-[11px] sm:text-el-xs max-w-full py-0.5 sm:py-1">
           <button
             type="button"
             onClick={() => setActiveTab("processes")}
-            className={`cursor-pointer shrink-0 rounded-xs px-3.5 py-1.5 transition-colors ${
+            className={`cursor-pointer shrink-0 rounded-xs px-2.5 sm:px-3.5 py-1.5 transition-colors ${
               activeTab === "processes"
                 ? "bg-el-fg text-el-bg font-semibold shadow-el-sm"
                 : "border border-el-border bg-el-bg-raised text-el-fg-muted hover:text-el-fg"
@@ -151,7 +151,7 @@ export function ArchitectureVisualization() {
           <button
             type="button"
             onClick={() => setActiveTab("memory")}
-            className={`cursor-pointer shrink-0 rounded-xs px-3.5 py-1.5 transition-colors ${
+            className={`cursor-pointer shrink-0 rounded-xs px-2.5 sm:px-3.5 py-1.5 transition-colors ${
               activeTab === "memory"
                 ? "bg-el-fg text-el-bg font-semibold shadow-el-sm"
                 : "border border-el-border bg-el-bg-raised text-el-fg-muted hover:text-el-fg"
@@ -162,7 +162,7 @@ export function ArchitectureVisualization() {
           <button
             type="button"
             onClick={() => setActiveTab("policy")}
-            className={`cursor-pointer shrink-0 rounded-xs px-3.5 py-1.5 transition-colors ${
+            className={`cursor-pointer shrink-0 rounded-xs px-2.5 sm:px-3.5 py-1.5 transition-colors ${
               activeTab === "policy"
                 ? "bg-el-fg text-el-bg font-semibold shadow-el-sm"
                 : "border border-el-border bg-el-bg-raised text-el-fg-muted hover:text-el-fg"

@@ -265,8 +265,8 @@ export function EnterHudConsole() {
         if (glowImgs.length) {
           introTl.fromTo(
             glowImgs,
-            { autoAlpha: 0, scale: 0.78 },
-            { autoAlpha: 1, scale: 1, duration: 1.05, ease: "power2.out" },
+            { opacity: 0, scale: 0.78 },
+            { opacity: 1, scale: 1, duration: 1.05, ease: "power2.out" },
             0
           );
         }
@@ -274,9 +274,9 @@ export function EnterHudConsole() {
         if (header) {
           introTl.fromTo(
             header,
-            { autoAlpha: 0, y: -24 },
+            { opacity: 0, y: -24 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               duration: 0.65,
               ease: "power3.out",
@@ -289,9 +289,9 @@ export function EnterHudConsole() {
         if (banner) {
           introTl.fromTo(
             banner,
-            { autoAlpha: 0, y: 22 },
+            { opacity: 0, y: 22 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               duration: 0.7,
               ease: "power3.out",
@@ -304,9 +304,9 @@ export function EnterHudConsole() {
         if (centerStage) {
           introTl.fromTo(
             centerStage,
-            { autoAlpha: 0, y: 44, scale: 0.96 },
+            { opacity: 0, y: 44, scale: 0.96 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               scale: 1,
               duration: 0.85,
@@ -320,8 +320,8 @@ export function EnterHudConsole() {
         if (topBeam) {
           introTl.fromTo(
             topBeam,
-            { scaleX: 0, autoAlpha: 0 },
-            { scaleX: 1, autoAlpha: 1, duration: 0.85, ease: "power2.out" },
+            { scaleX: 0, opacity: 0 },
+            { scaleX: 1, opacity: 1, duration: 0.85, ease: "power2.out" },
             0.34
           );
         }
@@ -329,9 +329,9 @@ export function EnterHudConsole() {
         if (leftCards.length) {
           introTl.fromTo(
             leftCards,
-            { autoAlpha: 0, x: -42 },
+            { opacity: 0, x: -42 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               x: 0,
               duration: 0.72,
               stagger: 0.09,
@@ -345,9 +345,9 @@ export function EnterHudConsole() {
         if (rightCards.length) {
           introTl.fromTo(
             rightCards,
-            { autoAlpha: 0, x: 42 },
+            { opacity: 0, x: 42 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               x: 0,
               duration: 0.72,
               stagger: 0.09,
@@ -363,9 +363,9 @@ export function EnterHudConsole() {
         if (archIntro) {
           gsap.fromTo(
             archIntro.children,
-            { autoAlpha: 0, y: 36 },
+            { opacity: 0, y: 36 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               duration: 0.75,
               stagger: 0.08,
@@ -384,9 +384,9 @@ export function EnterHudConsole() {
         if (roomCards.length) {
           gsap.fromTo(
             roomCards,
-            { autoAlpha: 0, y: 34, scale: 0.97 },
+            { opacity: 0, y: 34, scale: 0.97 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               scale: 1,
               duration: 0.72,
@@ -406,9 +406,9 @@ export function EnterHudConsole() {
         if (gateSteps.length) {
           gsap.fromTo(
             gateSteps,
-            { autoAlpha: 0, x: -24 },
+            { opacity: 0, x: -24 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               x: 0,
               duration: 0.65,
               stagger: 0.07,
@@ -441,40 +441,40 @@ export function EnterHudConsole() {
         if (glowImgs.length) {
           introTl.fromTo(
             glowImgs,
-            { autoAlpha: 0, scale: 0.78 },
-            { autoAlpha: 1, scale: 1, duration: 1.0, ease: "power2.out" },
+            { opacity: 0, scale: 0.78 },
+            { opacity: 1, scale: 1, duration: 1.0, ease: "power2.out" },
             0
           );
         }
         if (header) {
           introTl.fromTo(
             header,
-            { autoAlpha: 0, y: -20 },
-            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", clearProps: "transform" },
+            { opacity: 0, y: -20 },
+            { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", clearProps: "transform" },
             0.04
           );
         }
         if (banner) {
           introTl.fromTo(
             banner,
-            { autoAlpha: 0, y: 18 },
-            { autoAlpha: 1, y: 0, duration: 0.65, ease: "power3.out", clearProps: "transform" },
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.65, ease: "power3.out", clearProps: "transform" },
             0.1
           );
         }
         if (centerStage) {
           introTl.fromTo(
             centerStage,
-            { autoAlpha: 0, y: 36, scale: 0.96 },
-            { autoAlpha: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out", clearProps: "transform" },
+            { opacity: 0, y: 36, scale: 0.96 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out", clearProps: "transform" },
             0.16
           );
         }
         if (topBeam) {
           introTl.fromTo(
             topBeam,
-            { scaleX: 0, autoAlpha: 0 },
-            { scaleX: 1, autoAlpha: 1, duration: 0.8, ease: "power2.out" },
+            { scaleX: 0, opacity: 0 },
+            { scaleX: 1, opacity: 1, duration: 0.8, ease: "power2.out" },
             0.3
           );
         }
@@ -482,9 +482,9 @@ export function EnterHudConsole() {
         leftCards.forEach((card) => {
           gsap.fromTo(
             card,
-            { autoAlpha: 0, x: -30, y: 24 },
+            { opacity: 0, x: -30, y: 24 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               x: 0,
               y: 0,
               duration: 0.72,
@@ -502,9 +502,9 @@ export function EnterHudConsole() {
         rightCards.forEach((card) => {
           gsap.fromTo(
             card,
-            { autoAlpha: 0, x: 30, y: 24 },
+            { opacity: 0, x: 30, y: 24 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               x: 0,
               y: 0,
               duration: 0.72,
@@ -523,9 +523,9 @@ export function EnterHudConsole() {
         if (archIntro) {
           gsap.fromTo(
             archIntro.children,
-            { autoAlpha: 0, y: 36 },
+            { opacity: 0, y: 36 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               duration: 0.75,
               stagger: 0.08,
@@ -544,9 +544,9 @@ export function EnterHudConsole() {
         if (roomCards.length) {
           gsap.fromTo(
             roomCards,
-            { autoAlpha: 0, y: 32, scale: 0.97 },
+            { opacity: 0, y: 32, scale: 0.97 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               scale: 1,
               duration: 0.7,
@@ -566,9 +566,9 @@ export function EnterHudConsole() {
         if (gateSteps.length) {
           gsap.fromTo(
             gateSteps,
-            { autoAlpha: 0, x: -24 },
+            { opacity: 0, x: -24 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               x: 0,
               duration: 0.65,
               stagger: 0.07,
@@ -1277,10 +1277,10 @@ export function EnterHudConsole() {
             </div>
 
             {/* Live Plain-English Activity Stream */}
-            <div className="enter-right-card gfx-card p-5 flex-1">
+            <div className="enter-right-card gfx-card p-4 lg:p-5 flex-1">
               <span className="gfx-card__border" aria-hidden="true" />
               <div className="relative z-10">
-                <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
+                <div className="flex items-center justify-between border-b border-white/[0.07] pb-2.5 lg:pb-3">
                   <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
                     Live Activity Feed
                   </span>
@@ -1290,7 +1290,7 @@ export function EnterHudConsole() {
                   </span>
                 </div>
 
-                <div className="mt-3.5 space-y-2.5 text-xs">
+                <div className="mt-3 lg:mt-3.5 space-y-2.5 text-xs">
                   {logs.map((entry) => (
                     <motion.div
                       key={entry.id}
@@ -1326,9 +1326,9 @@ export function EnterHudConsole() {
         {/* Scroll-Triggered Below-the-Fold L5 Constitutional Architecture Telemetry Band */}
         <section
           id="enter-telemetry-band"
-          className="mt-12 border-t border-white/[0.07] pt-12 pb-8"
+          className="mt-8 border-t border-white/[0.07] pt-8 pb-6 lg:mt-12 lg:pt-12 lg:pb-8"
         >
-          <div className="enter-arch-intro flex flex-col justify-between gap-6 md:flex-row md:items-end mb-8">
+          <div className="enter-arch-intro flex flex-col justify-between gap-5 lg:gap-6 md:flex-row md:items-end mb-6 lg:mb-8">
             <div className="space-y-3 max-w-2xl">
               <span className="gfx-badge">
                 <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
@@ -1352,11 +1352,11 @@ export function EnterHudConsole() {
           </div>
 
           {/* 4 Isolated Process Room Cards */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3.5 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {OS_PROCESS_ROOMS.map((room) => (
               <div
                 key={room.id}
-                className="enter-room-card gfx-card p-5 flex flex-col justify-between gap-4"
+                className="enter-room-card gfx-card p-4 lg:p-5 flex flex-col justify-between gap-3.5 lg:gap-4"
               >
                 <span className="gfx-card__border" aria-hidden="true" />
                 <div className="relative z-10 flex items-start gap-3">
@@ -1382,9 +1382,9 @@ export function EnterHudConsole() {
           </div>
 
           {/* 5-Stage ActionGate Verification Pipeline */}
-          <div className="mt-8 gfx-card p-5 sm:p-6">
+          <div className="mt-6 lg:mt-8 gfx-card p-4 sm:p-6">
             <span className="gfx-card__border" aria-hidden="true" />
-            <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.07] pb-3.5 mb-5">
+            <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.07] pb-3.5 mb-4 lg:mb-5">
               <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#38ffbd]">
                 5-STAGE PRE-EXECUTION ACTIONGATE PIPELINE (INV-04)
               </span>

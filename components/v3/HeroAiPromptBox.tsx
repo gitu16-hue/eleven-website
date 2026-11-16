@@ -107,10 +107,10 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
       {/* Outer Tactical HUD & Spatial Panel Enclosure */}
       <div className="ai-native-prompt-container rounded-md p-3.5 sm:p-4 font-sans">
         {/* Top Header Tag */}
-        <div className="flex items-center justify-between text-xs text-el-fg-faint border-b border-el-border pb-2">
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-el-accent motion-safe:animate-pulse" />
-            <span className="text-el-accent font-medium">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-el-fg-faint border-b border-el-border pb-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-el-accent motion-safe:animate-pulse" />
+            <span className="text-el-accent font-medium leading-snug">
               Interactive preview · Simulated responses
             </span>
           </div>
@@ -126,7 +126,7 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
               }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: reduced ? 0 : 0.22 }}
-              className="text-el-fg-muted font-mono text-[10px]"
+              className="shrink-0 text-el-fg-muted font-mono text-[10px]"
             >
               {activePreset.badge}
             </motion.span>
@@ -134,8 +134,8 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
         </div>
 
         {/* Input Form */}
-        <form onSubmit={handleExecute} className="mt-2.5 flex items-center gap-2">
-          <span className="text-el-accent text-sm font-semibold select-none">❯</span>
+        <form onSubmit={handleExecute} className="mt-2.5 flex items-center gap-2.5">
+          <span className="shrink-0 text-el-accent text-sm font-semibold select-none">❯</span>
           <input
             type="text"
             value={inputValue}
@@ -144,7 +144,7 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
               setFeedback(null);
             }}
             placeholder="Give an instruction to your personal AI OS..."
-            className="w-full bg-transparent font-sans text-base sm:text-el-sm text-el-fg placeholder:text-el-fg-faint focus:outline-none"
+            className="min-w-0 flex-1 pr-1 bg-transparent font-sans text-base sm:text-el-sm text-el-fg placeholder:text-el-fg-faint focus:outline-none"
           />
           <button
             type="submit"

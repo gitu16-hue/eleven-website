@@ -70,7 +70,7 @@ export function GenesisSmoothScroll({ children }: { children: React.ReactNode })
   }, []);
 
   useEffect(() => {
-    if (lenisRef.current) {
+    if (lenisRef.current && !window.location.hash) {
       lenisRef.current.scrollTo(0, { immediate: true });
     }
     let lastH = document.documentElement.scrollHeight;
@@ -121,16 +121,16 @@ export function GenesisHeroIntro({
     if (!items.length) return;
 
     if (reduced || window.scrollY > 10) {
-      gsap.set(items, { autoAlpha: 1, y: 0, clearProps: "transform" });
+      gsap.set(items, { opacity: 1, y: 0, clearProps: "transform" });
       return;
     }
 
     const tl = gsap.timeline({ delay: 0.18 });
     tl.fromTo(
       items,
-      { autoAlpha: 0, y: 24 },
+      { opacity: 0, y: 24 },
       {
-        autoAlpha: 1,
+        opacity: 1,
         y: 0,
         duration: 0.8,
         stagger: 0.08,
@@ -172,8 +172,8 @@ export function GenesisSubpageHeroBackdrop({
     const bars = gsap.utils.toArray<HTMLElement>(el.querySelectorAll(".hero-bar"));
 
     if (reduced) {
-      if (glow) gsap.set(glow, { autoAlpha: 1, scale: 1 });
-      if (bars.length) gsap.set(bars, { autoAlpha: 1, y: 0 });
+      if (glow) gsap.set(glow, { opacity: 1, scale: 1 });
+      if (bars.length) gsap.set(bars, { opacity: 1, y: 0 });
       return;
     }
 
@@ -181,17 +181,17 @@ export function GenesisSubpageHeroBackdrop({
     if (glow) {
       tl.fromTo(
         glow,
-        { autoAlpha: 0, scale: 0.88 },
-        { autoAlpha: 1, scale: 1, duration: 1.05, ease: "power2.out" },
+        { opacity: 0, scale: 0.88 },
+        { opacity: 1, scale: 1, duration: 1.05, ease: "power2.out" },
         0
       );
     }
     if (bars.length) {
       tl.fromTo(
         bars,
-        { autoAlpha: 0, y: -18 },
+        { opacity: 0, y: -18 },
         {
-          autoAlpha: 1,
+          opacity: 1,
           y: 0,
           duration: 0.85,
           stagger: 0.06,
@@ -251,7 +251,7 @@ export function GenesisSectionIntro({
     if (!items.length) return;
 
     if (reduced) {
-      gsap.set(items, { autoAlpha: 1, y: 0, clearProps: "transform" });
+      gsap.set(items, { opacity: 1, y: 0, clearProps: "transform" });
       return;
     }
 
@@ -279,9 +279,9 @@ export function GenesisSectionIntro({
       0
     ).fromTo(
       items,
-      { autoAlpha: 0 },
+      { opacity: 0 },
       {
-        autoAlpha: 1,
+        opacity: 1,
         duration: 0.85,
         stagger: 0.08,
         ease: "power1.in",
@@ -329,7 +329,7 @@ export function GenesisShowcaseFrame({
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) {
-      gsap.set(el, { autoAlpha: 1, y: 0, scale: 1, clearProps: "transform" });
+      gsap.set(el, { opacity: 1, y: 0, scale: 1, clearProps: "transform" });
       return;
     }
 
@@ -344,9 +344,9 @@ export function GenesisShowcaseFrame({
 
     tl.fromTo(
       el,
-      { autoAlpha: 0, y: rise, scale: 0.988 },
+      { opacity: 0, y: rise, scale: 0.988 },
       {
-        autoAlpha: 1,
+        opacity: 1,
         y: 0,
         scale: 1,
         duration: 0.92,
@@ -412,7 +412,7 @@ export function GenesisStaggerGrid({
     if (!items.length) return;
 
     if (reduced) {
-      gsap.set(items, { autoAlpha: 1, y: 0, scale: 1, clearProps: "transform" });
+      gsap.set(items, { opacity: 1, y: 0, scale: 1, clearProps: "transform" });
       return;
     }
 
@@ -427,9 +427,9 @@ export function GenesisStaggerGrid({
 
     tl.fromTo(
       items,
-      { autoAlpha: 0, y: rise, scale: 0.985 },
+      { opacity: 0, y: rise, scale: 0.985 },
       {
-        autoAlpha: 1,
+        opacity: 1,
         y: 0,
         scale: 1,
         duration: 0.72,
@@ -495,7 +495,7 @@ export function GenesisSplitReveal({
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) {
       gsap.set([leftEl, rightEl], {
-        autoAlpha: 1,
+        opacity: 1,
         x: 0,
         y: 0,
         clearProps: "transform",
@@ -518,13 +518,13 @@ export function GenesisSplitReveal({
 
       tl.fromTo(
         leftEl,
-        { x: -offset, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1, duration: 0.92, ease: "power3.out" },
+        { x: -offset, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.92, ease: "power3.out" },
         0
       ).fromTo(
         rightEl,
-        { x: offset, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1, duration: 0.92, ease: "power3.out" },
+        { x: offset, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.92, ease: "power3.out" },
         0.04
       );
 
@@ -548,22 +548,22 @@ export function GenesisSplitReveal({
 
       tl.fromTo(
         leftEl,
-        { x: -22, y: 44, autoAlpha: 0 },
+        { x: -22, y: 44, opacity: 0 },
         {
           x: 0,
           y: 0,
-          autoAlpha: 1,
+          opacity: 1,
           duration: 0.78,
           ease: "power3.out",
         },
         0
       ).fromTo(
         rightEl,
-        { x: 22, y: 52, autoAlpha: 0 },
+        { x: 22, y: 52, opacity: 0 },
         {
           x: 0,
           y: 0,
-          autoAlpha: 1,
+          opacity: 1,
           duration: 0.82,
           ease: "power3.out",
         },
@@ -619,7 +619,7 @@ export function GenesisTimelineList({
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) {
-      gsap.set(items, { autoAlpha: 1, y: 0, x: 0 });
+      gsap.set(items, { opacity: 1, y: 0, x: 0 });
       items.forEach((item) => item.classList.add("is-active"));
       return;
     }
@@ -635,9 +635,9 @@ export function GenesisTimelineList({
 
     tl.fromTo(
       items,
-      { autoAlpha: 0, y: 26 },
+      { opacity: 0, y: 26 },
       {
-        autoAlpha: 1,
+        opacity: 1,
         y: 0,
         duration: 0.72,
         stagger: 0.11,
@@ -712,7 +712,7 @@ export function GenesisBubbleRow({
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) {
-      gsap.set(bubbles, { autoAlpha: 1, y: 0, scale: 1 });
+      gsap.set(bubbles, { opacity: 1, y: 0, scale: 1 });
       return;
     }
 
@@ -727,9 +727,9 @@ export function GenesisBubbleRow({
 
     tl.fromTo(
       bubbles,
-      { autoAlpha: 0, y: 20, scale: 0.92 },
+      { opacity: 0, y: 20, scale: 0.92 },
       {
-        autoAlpha: 1,
+        opacity: 1,
         y: 0,
         scale: 1,
         duration: 0.65,

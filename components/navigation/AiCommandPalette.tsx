@@ -1,9 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useClarityMode } from "@/components/motion/PremiumMotion";
+
+const emptySubscribe = () => () => {};
 
 interface CommandItem {
   id: string;
@@ -21,6 +30,11 @@ export function AiCommandPalette() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { mode, toggleMode } = useClarityMode();
   const router = useRouter();
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   const navigateTo = useCallback(
     (path: string) => {
@@ -30,7 +44,7 @@ export function AiCommandPalette() {
     [router]
   );
 
-  // Keyboard shortcut listener for Cmd+K / Ctrl+K
+  // Keyboard shortcut listener for Cmd+K / Ctrl+K + mobile drawer custom trigger event
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
@@ -42,8 +56,16 @@ export function AiCommandPalette() {
       }
     };
 
+    const handleCustomOpen = () => {
+      setIsOpen(true);
+    };
+
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("eleven:open-command-palette", handleCustomOpen);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("eleven:open-command-palette", handleCustomOpen);
+    };
   }, [isOpen]);
 
   const scrollToSection = useCallback((id: string) => {
@@ -208,7 +230,9 @@ export function AiCommandPalette() {
         shortcut: "P",
         badge: "16:9 SLIDES",
         action: () => {
-          window.location.href = "/presentation.html";
+          setIsOpen(false);
+          // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- static HTML presentation in public/ outside Next.js App Router
+          window.location.assign("/presentation.html");
         },
       },
       {
@@ -309,118 +333,133 @@ export function AiCommandPalette() {
         </kbd>
       </button>
 
-      {/* Modal Dialog Backdrop */}
-      <AnimatePresence>
-        {isOpen && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="AI Command Center"
-            className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 px-3 sm:px-6"
-          >
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-[#000205]/80 backdrop-blur-md"
-            />
-
-            {/* Command Palette Card */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -10 }}
-              transition={{ duration: 0.18, ease: "easeOut" }}
-              className="relative w-full max-w-xl overflow-hidden rounded-md border border-el-border-strong bg-el-bg-raised shadow-2xl z-10"
-            >
-              {/* Top Search Input */}
-              <div className="flex items-center border-b border-el-border px-4 py-3 bg-el-bg">
-                <span className="font-mono text-el-accent text-sm mr-2.5">❯</span>
-                <input
-                  type="text"
-                  autoFocus
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setSelectedIndex(0);
-                  }}
-                  onKeyDown={handleKeyNavigation}
-                  placeholder="Type a command or jump to section..."
-                  className="w-full bg-transparent font-mono text-base sm:text-el-sm text-el-fg placeholder:text-el-fg-faint focus:outline-none"
+      {/* Portal Modal Dialog above sticky navbar */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && (
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-label="AI Command Center"
+                className="fixed inset-0 z-[80] flex items-start justify-center pt-12 sm:pt-20 px-3 sm:px-6"
+              >
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.14 }}
+                  onClick={() => setIsOpen(false)}
+                  className="fixed inset-0 z-0 bg-[#000205]/80 backdrop-blur-md"
                 />
-                <kbd className="hidden sm:inline rounded-xs border border-el-border bg-el-bg-raised px-1.5 py-0.5 font-mono text-[9.5px] text-el-fg-faint">
-                  ESC
-                </kbd>
-              </div>
 
-              {/* Command List */}
-              <div className="max-h-[min(360px,50dvh)] overflow-y-auto overscroll-contain p-2 font-mono">
-                {filteredCommands.length === 0 ? (
-                  <div className="py-8 text-center text-el-xs text-el-fg-faint">
-                    No matching AI commands or sections found.
+                {/* Command Palette Card */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="relative w-full max-w-xl overflow-hidden rounded-md border border-el-border-strong bg-el-bg-raised shadow-2xl z-10"
+                >
+                  {/* Top Search Input */}
+                  <div className="flex items-center gap-2 border-b border-el-border px-3.5 sm:px-4 py-2.5 sm:py-3 bg-el-bg">
+                    <span className="font-mono text-el-accent text-sm shrink-0">❯</span>
+                    <input
+                      type="text"
+                      autoFocus
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                        setSelectedIndex(0);
+                      }}
+                      onKeyDown={handleKeyNavigation}
+                      placeholder="Type a command or jump to section..."
+                      className="min-w-0 w-full bg-transparent font-mono text-base sm:text-el-sm text-el-fg placeholder:text-el-fg-faint focus:outline-none"
+                    />
+                    <kbd className="hidden sm:inline shrink-0 rounded-xs border border-el-border bg-el-bg-raised px-1.5 py-0.5 font-mono text-[9.5px] text-el-fg-faint">
+                      ESC
+                    </kbd>
+                    <button
+                      type="button"
+                      onClick={() => setIsOpen(false)}
+                      aria-label="Close command palette"
+                      className="sm:hidden shrink-0 flex h-9 w-9 items-center justify-center rounded-xs border border-el-border bg-el-bg-raised text-sm text-el-fg-muted hover:text-el-fg"
+                    >
+                      ✕
+                    </button>
                   </div>
-                ) : (
-                  filteredCommands.map((cmd, idx) => {
-                    const isSelected = idx === selectedIndex;
-                    return (
-                      <div
-                        key={cmd.id}
-                        onClick={cmd.action}
-                        onMouseEnter={() => setSelectedIndex(idx)}
-                        className={`flex items-center justify-between rounded-sm px-3 py-2.5 cursor-pointer transition-colors ${
-                          isSelected
-                            ? "bg-el-accent/15 border border-el-accent/40 text-el-fg"
-                            : "hover:bg-el-bg text-el-fg-muted"
-                        }`}
-                      >
-                        <div className="flex flex-col gap-0.5">
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`text-[12px] font-medium ${
-                                isSelected ? "text-el-accent" : "text-el-fg"
-                              }`}
-                            >
-                              {cmd.title}
-                            </span>
-                            {cmd.badge && (
-                              <span className="rounded-xs bg-el-bg px-1.5 py-0.2 text-[8.5px] text-el-fg-faint border border-el-border">
-                                {cmd.badge}
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-[10px] text-el-fg-faint">
-                            {cmd.subtitle}
-                          </span>
-                        </div>
 
-                        {cmd.shortcut && (
-                          <kbd className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9px] text-el-fg-faint font-semibold">
-                            {cmd.shortcut}
-                          </kbd>
-                        )}
+                  {/* Command List */}
+                  <div className="max-h-[min(360px,55dvh)] overflow-y-auto overscroll-contain p-2 font-mono">
+                    {filteredCommands.length === 0 ? (
+                      <div className="py-8 text-center text-el-xs text-el-fg-faint">
+                        No matching AI commands or sections found.
                       </div>
-                    );
-                  })
-                )}
-              </div>
+                    ) : (
+                      filteredCommands.map((cmd, idx) => {
+                        const isSelected = idx === selectedIndex;
+                        return (
+                          <button
+                            key={cmd.id}
+                            type="button"
+                            onClick={cmd.action}
+                            onMouseEnter={() => setSelectedIndex(idx)}
+                            className={`w-full min-h-[44px] text-left flex items-center justify-between gap-2 rounded-sm px-3 py-2.5 cursor-pointer transition-colors ${
+                              isSelected
+                                ? "bg-el-accent/15 border border-el-accent/40 text-el-fg"
+                                : "hover:bg-el-bg text-el-fg-muted border border-transparent"
+                            }`}
+                          >
+                            <div className="flex flex-col gap-0.5 min-w-0">
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <span
+                                  className={`text-[12px] font-medium ${
+                                    isSelected ? "text-el-accent" : "text-el-fg"
+                                  }`}
+                                >
+                                  {cmd.title}
+                                </span>
+                                {cmd.badge && (
+                                  <span className="rounded-xs bg-el-bg px-1.5 py-0.2 text-[8.5px] text-el-fg-faint border border-el-border">
+                                    {cmd.badge}
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-[10px] text-el-fg-faint leading-snug">
+                                {cmd.subtitle}
+                              </span>
+                            </div>
 
-              {/* Footer Helper */}
-              <div className="flex items-center justify-between border-t border-el-border/60 bg-el-bg px-4 py-2 text-[10px] text-el-fg-faint font-mono">
-                <div className="flex items-center gap-3">
-                  <span>↑↓ Navigate</span>
-                  <span>↵ Select</span>
-                  <span>ESC Close</span>
-                </div>
-                <span className="text-el-accent font-semibold">
-                  ELEVEN v3.1 CONTROL PLANE
-                </span>
+                            {cmd.shortcut && (
+                              <kbd className="shrink-0 rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9px] text-el-fg-faint font-semibold">
+                                {cmd.shortcut}
+                              </kbd>
+                            )}
+                          </button>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Footer Helper */}
+                  <div className="flex items-center justify-between border-t border-el-border/60 bg-el-bg px-3.5 sm:px-4 py-2 text-[10px] text-el-fg-faint font-mono">
+                    <div className="hidden sm:flex items-center gap-3">
+                      <span>↑↓ Navigate</span>
+                      <span>↵ Select</span>
+                      <span>ESC Close</span>
+                    </div>
+                    <span className="sm:hidden">Tap any command</span>
+                    <span className="text-el-accent font-semibold">
+                      ELEVEN v3.1 CONTROL PLANE
+                    </span>
+                  </div>
+                </motion.div>
               </div>
-            </motion.div>
-          </div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 }
