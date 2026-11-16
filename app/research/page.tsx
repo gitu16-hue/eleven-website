@@ -13,6 +13,10 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+} from "@/components/motion/GenesisMotionEngine";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 export const metadata: Metadata = {
@@ -144,7 +148,11 @@ export default function ResearchPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
+            className="pointer-events-none absolute inset-0 el-aurora"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -161,10 +169,10 @@ export default function ResearchPage() {
               </div>
             </div>
 
-            <div className="mt-10 max-w-4xl space-y-6">
-              <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
-                <CipherText text="Scientific Rigor &amp; Honest Architecture · Zero AI Hype" />
+            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
+                <CipherText text="Scientific Rigor & Honest Architecture · Zero AI Hype" />
               </div>
 
               <h1 className="el-h1">
@@ -177,37 +185,30 @@ export default function ResearchPage() {
                 technical="Architectural changes at GISHH Labs earn rollout authorization only after passing offline causality audits, adversarial taint evaluations, and tail-latency benchmarks."
               />
 
-              <div className="flex flex-wrap gap-2 pt-2 text-el-xs">
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  15 constitutional invariants
+              <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
+                  <span>15 constitutional invariants</span>
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  Formal threat matrix
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <span>Formal threat matrix</span>
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  Empirical benchmark disclosure
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
+                  <span>Empirical benchmark disclosure</span>
                 </span>
               </div>
 
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <Button
-                  href="/security"
-                  variant="primary"
-                  arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-                >
+                <Button href="/security" variant="primary" arrow>
                   Inspect Threat Model &amp; Invariants
                 </Button>
-                <Button
-                  href="/benchmarks/voice-latency"
-                  variant="secondary"
-                  arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-                >
+                <Button href="/benchmarks/voice-latency" variant="secondary" arrow>
                   Voice Latency Targets (&lt;50ms)
                 </Button>
               </div>
-            </div>
+            </GenesisHeroIntro>
           </div>
         </Section>
 
@@ -215,9 +216,10 @@ export default function ResearchPage() {
 
         {/* ── 4 RESEARCH BREAKTHROUGHS ── */}
         <Section id="audit-trail" className="relative py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 01 Four Research Breakthroughs" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="01 · Four Research Breakthroughs" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Four real-world problems we engineered out of personal AI." />
@@ -227,7 +229,7 @@ export default function ResearchPage() {
               plain="From halting runaway commands to preventing forgotten memories, here are four engineering breakthroughs built into ELEVEN."
               technical="Addressing prompt injection taint, split-second acoustic barge-in, bi-temporal memory graph drift, and proof verification."
             />
-          </div>
+          </GenesisSectionIntro>
 
           <ScrollReveal
             stagger={0.09}
@@ -235,18 +237,18 @@ export default function ResearchPage() {
           >
             {RESEARCH_PILLARS.map((t) => (
               <RevealItem key={t.id} className="h-full">
-                <Tilt3DCard className="p-7">
+                <Tilt3DCard className="p-7 h-full">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-el-border pb-3">
-                    <span className="text-xs font-medium text-el-accent">
+                    <span className="text-xs font-medium text-[#10bc83]">
                       {t.id}
                     </span>
-                    <span className="rounded-xs bg-el-bg px-2 py-0.5 text-[10px] text-el-fg-muted border border-el-border/60">
+                    <span className="rounded-full bg-black/40 px-2.5 py-0.5 text-[10px] text-el-fg-muted border border-el-border/60">
                       {t.status}
                     </span>
                   </div>
                   <DualCopy
                     as="div"
-                    className="mt-4 text-base font-semibold text-el-fg"
+                    className="mt-4 text-lg font-normal heading-gradient"
                     plain={t.plainTitle}
                     technical={t.techTitle}
                   />
@@ -264,10 +266,11 @@ export default function ResearchPage() {
         <SignalBeamDivider />
 
         {/* ── 15 UNBREAKABLE PROMISES ── */}
-        <Section id="rules" className="relative py-16 lg:py-24 bg-el-bg-raised/45">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 02 Safety Constitution" />
+        <Section id="rules" className="relative py-16 lg:py-24">
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="02 · Safety Constitution" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="15 safety rules ELEVEN is never allowed to break." />
@@ -275,7 +278,7 @@ export default function ResearchPage() {
             <p className="text-base leading-relaxed text-el-fg-muted">
               Written in plain English: no speed shortcut or new feature may ever violate these fifteen promises.
             </p>
-          </div>
+          </GenesisSectionIntro>
 
           <ScrollReveal
             stagger={0.04}
@@ -284,8 +287,8 @@ export default function ResearchPage() {
           >
             {FIFTEEN_PROMISES.map((rule, i) => (
               <RevealItem key={rule} className="h-full">
-                <Tilt3DCard className="p-5">
-                  <span className="text-xs font-medium text-el-fg-faint">
+                <Tilt3DCard className="p-5 h-full">
+                  <span className="text-xs font-medium text-[#10bc83]">
                     Rule {String(i + 1).padStart(2, "0")}
                   </span>
                   <p className="mt-2 text-xs leading-relaxed text-el-fg">
@@ -297,12 +300,7 @@ export default function ResearchPage() {
           </ScrollReveal>
 
           <div className="mt-8 flex justify-end">
-            <Button
-              href="/security"
-              variant="ghost"
-              arrow
-              className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-            >
+            <Button href="/security" variant="ghost" arrow>
               Inspect Mathematical Invariant Conditions &amp; Threat Model
             </Button>
           </div>
@@ -313,9 +311,10 @@ export default function ResearchPage() {
         {/* ── HONEST LIMITS (NO OVERCLAIMING) ── */}
         <Section className="py-16 lg:py-24">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
-            <div className="lg:col-span-5 space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 03 Engineering Boundaries" />
+            <GenesisSectionIntro className="lg:col-span-5 space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="03 · Engineering Boundaries" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="What we refuse to exaggerate." />
@@ -324,22 +323,14 @@ export default function ResearchPage() {
                 Real engineering means being upfront about boundaries, not pretending software is magic.
               </p>
               <div className="pt-4 flex flex-wrap gap-3">
-                <PortalActionButton
-                  variant="primary"
-                  arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-                >
+                <PortalActionButton variant="primary" arrow>
                   Explore Live 3D Orb
                 </PortalActionButton>
-                <Button
-                  href="/"
-                  variant="secondary"
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-                >
+                <Button href="/" variant="secondary">
                   Back to Home
                 </Button>
               </div>
-            </div>
+            </GenesisSectionIntro>
 
             <ScrollReveal
               stagger={0.1}
@@ -348,7 +339,7 @@ export default function ResearchPage() {
               {HONEST_TRUTHS.map((nc) => (
                 <RevealItem key={nc.title}>
                   <Tilt3DCard className="p-6">
-                    <h3 className="text-el-base font-medium text-el-fg">
+                    <h3 className="text-el-lg font-normal heading-gradient">
                       {nc.title}
                     </h3>
                     <DualCopy

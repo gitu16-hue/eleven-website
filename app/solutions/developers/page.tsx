@@ -14,6 +14,11 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+} from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
   title: "ELEVEN for Software Engineers & AI Developers | Local Control Plane",
@@ -91,7 +96,11 @@ export default function DevelopersSolutionPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
+            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -109,9 +118,9 @@ export default function DevelopersSolutionPage() {
               </div>
             </div>
 
-            <div className="mt-10 max-w-4xl space-y-6">
-              <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+              <div className="gfx-badge shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Engineering Runtime · Local Control Plane" />
               </div>
 
@@ -125,17 +134,21 @@ export default function DevelopersSolutionPage() {
                 technical="Run autonomous agents against your codebase with deterministic diff approvals, jailed git worktrees, low-integrity OS tokens, static AST safety audits, and zero cloud IP exposure."
               />
 
-              <div className="flex flex-wrap gap-2 pt-2 text-el-xs">
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+              <div className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Git worktree isolation (INV-09)
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Default-deny egress (INV-12)
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Ed25519 30s TTL (DEC-008)
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Ring-0 watchdog (&lt;0.05s)
                 </span>
               </div>
@@ -146,7 +159,6 @@ export default function DevelopersSolutionPage() {
                   tier="technical"
                   arrow
                   variant="primary"
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Request Technical Access
                 </WaitlistActionButton>
@@ -154,19 +166,17 @@ export default function DevelopersSolutionPage() {
                   variant="secondary"
                   href="/docs"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Read Architecture Specs
                 </Button>
                 <Button
                   variant="ghost"
                   href="/tools/dag-visualizer"
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Explore DAG Visualizer
                 </Button>
               </div>
-            </div>
+            </GenesisHeroIntro>
           </div>
         </Section>
 
@@ -174,9 +184,10 @@ export default function DevelopersSolutionPage() {
 
         {/* ── THREE DEVELOPER SUPERPOWERS ── */}
         <Section className="py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 01 Developer Superpowers" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="01 · Developer Superpowers" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Full agent autonomy, zero host risk." />
@@ -186,21 +197,21 @@ export default function DevelopersSolutionPage() {
               plain="Here is how ELEVEN gives software engineers superpowers while ensuring your files and git branches are never modified without your direct consent."
               technical="Engineered with three uncompromising runtime guarantees separating model reasoning from operating system mutation."
             />
-          </div>
+          </GenesisSectionIntro>
 
           <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
             {/* Superpower 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
                     01 · DAG Compiler
                   </span>
-                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-el-fg-faint">
                     Topology
                   </span>
                 </div>
-                <h3 className="text-el-lg font-medium tracking-tight text-el-fg">
+                <h3 className="text-el-lg font-normal tracking-tight heading-gradient">
                   Governed TaskCompiler DAG
                 </h3>
                 <DualCopy
@@ -210,23 +221,23 @@ export default function DevelopersSolutionPage() {
                 />
               </div>
 
-              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+              <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint">
                 <span className="text-el-accent">Engine:</span> <code>petgraph / async-task-scheduler</code>
               </div>
             </Tilt3DCard>
 
             {/* Superpower 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
                     02 · Quarantine
                   </span>
-                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-el-signal-lime">
                     Isolated
                   </span>
                 </div>
-                <h3 className="text-el-lg font-medium tracking-tight text-el-fg">
+                <h3 className="text-el-lg font-normal tracking-tight heading-gradient">
                   Quarantined Test Runner
                 </h3>
                 <DualCopy
@@ -236,23 +247,23 @@ export default function DevelopersSolutionPage() {
                 />
               </div>
 
-              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+              <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint">
                 <span className="text-el-signal-lime">Boundary:</span> <code>Linux cgroup v2 / Windows AppContainer</code>
               </div>
             </Tilt3DCard>
 
             {/* Superpower 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
                     03 · Cryptographic Audit
                   </span>
-                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-fg-muted">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-el-fg-muted">
                     Ed25519
                   </span>
                 </div>
-                <h3 className="text-el-lg font-medium tracking-tight text-el-fg">
+                <h3 className="text-el-lg font-normal tracking-tight heading-gradient">
                   Ed25519 ActionProposal Diff Review
                 </h3>
                 <DualCopy
@@ -262,7 +273,7 @@ export default function DevelopersSolutionPage() {
                 />
               </div>
 
-              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+              <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint">
                 <span className="text-el-accent">Receipt:</span> <code>Ed25519 / Nonce SHA-256</code>
               </div>
             </Tilt3DCard>
@@ -272,14 +283,16 @@ export default function DevelopersSolutionPage() {
         <SignalBeamDivider />
 
         {/* ── INTERACTIVE DIFF REVIEW CONSOLE ── */}
-        <Section className="py-16 lg:py-24 bg-el-bg">
-          <div className="max-w-3xl space-y-4">
+        <Section className="py-16 lg:py-24 bg-[#08090a]/60">
+          <GenesisSectionIntro className="max-w-3xl space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 02 Live Terminal Simulator" />
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="02 · Live Terminal Simulator" />
               </div>
-              <div className="rounded-xs border border-el-border bg-el-bg-raised px-2.5 py-1 text-xs text-el-fg-faint">
-                Status: <span className="text-el-mint font-medium">Online (Interactive)</span>
+              <div className="gfx-bubble !h-8 !px-3 !text-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                Status: <span className="text-[#10bc83] font-medium">Online (Interactive)</span>
               </div>
             </div>
             <h2 className="el-h2">
@@ -290,32 +303,32 @@ export default function DevelopersSolutionPage() {
               plain="Try the live simulation below. Inspect the code change proposed by the AI agent, view the automated 5-point policy check, and sign the change into the real repository."
               technical="Interactive simulation of the Quarantine Sanctum ActionProposal pipeline. Toggle between the unified git diff, the 5-layer policy audit gate, and the Ed25519 cryptographic receipt."
             />
-          </div>
+          </GenesisSectionIntro>
 
-          <div className="mt-10">
+          <GenesisShowcaseFrame className="mt-10 p-4 sm:p-6">
             <DeveloperDiffReviewConsole />
-          </div>
+          </GenesisShowcaseFrame>
 
           {/* Under-Console Architecture Details */}
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3 text-xs">
-            <div className="rounded-sm border border-el-border/60 bg-el-bg-raised/40 p-4">
+            <Tilt3DCard className="p-5">
               <span className="text-el-accent font-medium">AST Confinement:</span>
-              <p className="mt-1 text-el-fg-muted text-[11px] leading-relaxed">
+              <p className="mt-1.5 text-el-fg-muted text-[11px] leading-relaxed">
                 Static syntax analysis blocks arbitrary execution, eval calls, and directory traversal beyond targeted workspace boundaries.
               </p>
-            </div>
-            <div className="rounded-sm border border-el-border/60 bg-el-bg-raised/40 p-4">
-              <span className="text-el-mint font-medium">Isolated Git Trees:</span>
-              <p className="mt-1 text-el-fg-muted text-[11px] leading-relaxed">
+            </Tilt3DCard>
+            <Tilt3DCard className="p-5">
+              <span className="text-[#10bc83] font-medium">Isolated Git Trees:</span>
+              <p className="mt-1.5 text-el-fg-muted text-[11px] leading-relaxed">
                 Agents operate in transient memory-backed worktrees (<code>git worktree add</code>). Untrusted code is never checkout-linked to your main working tree.
               </p>
-            </div>
-            <div className="rounded-sm border border-el-border/60 bg-el-bg-raised/40 p-4">
+            </Tilt3DCard>
+            <Tilt3DCard className="p-5">
               <span className="text-el-fg font-medium">Ring-0 E-Stop:</span>
-              <p className="mt-1 text-el-fg-muted text-[11px] leading-relaxed">
+              <p className="mt-1.5 text-el-fg-muted text-[11px] leading-relaxed">
                 If an agent triggers unexpected CPU spikes or network egress attempts, the hardware supervisor terminates the process in under 50ms.
               </p>
-            </div>
+            </Tilt3DCard>
           </div>
 
           <div className="mt-6 flex justify-end">
@@ -323,7 +336,6 @@ export default function DevelopersSolutionPage() {
               variant="ghost"
               href="/tools/inspector"
               arrow
-              className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
             >
               Open Full JSON-RPC ActionProposal Inspector &amp; Policy Playground
             </Button>
@@ -335,9 +347,10 @@ export default function DevelopersSolutionPage() {
         {/* ── DEVELOPER CLI WORKFLOW & ERGONOMICS ── */}
         <Section className="py-16 lg:py-24">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-            <div className="lg:col-span-6 space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 03 Ergonomics &amp; Workflow" />
+            <GenesisSectionIntro className="lg:col-span-6 space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="03 · Ergonomics & Workflow" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Fits inside your terminal. Never alters your muscle memory." />
@@ -362,18 +375,18 @@ export default function DevelopersSolutionPage() {
                   <span><strong className="text-el-fg">Multi-Branch Parallelism:</strong> Spawn up to 8 isolated worktrees simultaneously to explore parallel refactoring strategies.</span>
                 </li>
               </ul>
-            </div>
+            </GenesisSectionIntro>
 
             {/* CLI Code Snippet Box */}
             <div className="lg:col-span-6">
-              <div className="overflow-hidden rounded-sm border border-el-border bg-el-bg-raised font-mono text-[11.5px] shadow-el-md">
-                <div className="flex items-center justify-between border-b border-el-border/80 bg-el-bg px-4 py-2.5 text-el-xs">
+              <GenesisShowcaseFrame className="overflow-hidden font-mono text-[11.5px]">
+                <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#08090a] px-4 py-2.5 text-el-xs">
                   <span className="text-el-fg-faint">terminal // zsh</span>
-                  <span className="text-el-accent text-[10px]">eleven-cli v3.1</span>
+                  <span className="text-[#10bc83] text-[10px]">eleven-cli v3.1</span>
                 </div>
                 <div className="p-5 space-y-3 leading-relaxed">
                   <p className="text-el-fg-faint">
-                    <span className="text-el-accent">$</span> eleven run \
+                    <span className="text-[#10bc83]">$</span> eleven run \
                   </p>
                   <p className="pl-4 text-el-fg">
                     --task &quot;Migrate auth handlers to async WebCrypto&quot; \
@@ -384,17 +397,17 @@ export default function DevelopersSolutionPage() {
                   <p className="pl-4 text-el-fg">
                     --gates path-confinement,ast-audit,unit-tests \
                   </p>
-                  <p className="pl-4 text-el-signal-lime">
+                  <p className="pl-4 text-[#10bc83]">
                     --egress deny-all
                   </p>
-                  <div className="border-t border-el-border/60 pt-3 text-[11px] text-el-fg-faint">
-                    <p className="text-el-accent">✔ Created ephemeral worktree: /tmp/eleven_tree_0492</p>
+                  <div className="border-t border-white/[0.07] pt-3 text-[11px] text-el-fg-faint">
+                    <p className="text-[#38ffbd]">✔ Created ephemeral worktree: /tmp/eleven_tree_0492</p>
                     <p className="text-el-fg-muted">✔ Dispatched 3 DAG sub-tasks across 2 local worker threads</p>
-                    <p className="text-el-signal-lime">✔ 38 unit tests passed in quarantine sandbox (0 regressions)</p>
+                    <p className="text-[#10bc83]">✔ 38 unit tests passed in quarantine sandbox (0 regressions)</p>
                     <p className="text-el-fg font-semibold">➜ ActionProposal #0492 staged. Awaiting operator signature.</p>
                   </div>
                 </div>
-              </div>
+              </GenesisShowcaseFrame>
             </div>
           </div>
         </Section>
@@ -403,9 +416,10 @@ export default function DevelopersSolutionPage() {
 
         {/* ── LOCAL SANCTUM VS CLOUD AGENTS COMPARISON ── */}
         <Section className="py-16">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 04 Architectural Comparison" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="04 · Architectural Comparison" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Why engineers choose local sovereign control." />
@@ -415,53 +429,52 @@ export default function DevelopersSolutionPage() {
               plain="Compare running agents inside a secure local sandbox against uploading your entire repository to cloud-hosted agent services."
               technical="Direct comparison between ELEVEN's local-first supervisor runtime and conventional cloud-hosted agent architectures."
             />
-          </div>
+          </GenesisSectionIntro>
 
-          <div className="mt-10 overflow-x-auto rounded-sm border border-el-border bg-el-bg-raised/40">
+          <GenesisShowcaseFrame className="mt-10 overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-el-border bg-el-bg-raised text-el-fg-muted">
+                <tr className="border-b border-white/[0.08] bg-[#08090a] text-el-fg-muted">
                   <th className="py-3.5 px-4 font-medium text-el-fg">Engineering dimension</th>
-                  <th className="py-3.5 px-4 font-medium text-el-accent">ELEVEN local control plane</th>
+                  <th className="py-3.5 px-4 font-medium text-[#10bc83]">ELEVEN local control plane</th>
                   <th className="py-3.5 px-4 font-medium text-el-fg-faint">Cloud agent platforms</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-el-border/60 text-el-fg-muted">
+              <tbody className="divide-y divide-white/[0.07] text-el-fg-muted">
                 <tr>
                   <td className="py-3 px-4 font-semibold text-el-fg">Source code privacy</td>
-                  <td className="py-3 px-4 text-el-signal-lime font-medium">100% local (Never leaves PC disk)</td>
+                  <td className="py-3 px-4 text-[#10bc83] font-medium">100% local (Never leaves PC disk)</td>
                   <td className="py-3 px-4 text-red-400/90">Uploaded to third-party cloud servers</td>
                 </tr>
                 <tr>
                   <td className="py-3 px-4 font-semibold text-el-fg">Git write safety</td>
-                  <td className="py-3 px-4 text-el-signal-lime font-medium">Isolated worktree + Ed25519 approval</td>
+                  <td className="py-3 px-4 text-[#10bc83] font-medium">Isolated worktree + Ed25519 approval</td>
                   <td className="py-3 px-4 text-yellow-400/90">Direct unstaged writes to repo</td>
                 </tr>
                 <tr>
                   <td className="py-3 px-4 font-semibold text-el-fg">Process sandboxing</td>
-                  <td className="py-3 px-4 text-el-signal-lime font-medium">cgroups v2 / AppContainer low-integrity</td>
+                  <td className="py-3 px-4 text-[#10bc83] font-medium">cgroups v2 / AppContainer low-integrity</td>
                   <td className="py-3 px-4 text-yellow-400/90">Remote Docker VM or un-jailed terminal</td>
                 </tr>
                 <tr>
                   <td className="py-3 px-4 font-semibold text-el-fg">Emergency intervention</td>
-                  <td className="py-3 px-4 text-el-signal-lime font-medium">Ring-0 hardware watchdog (&lt;0.05s)</td>
+                  <td className="py-3 px-4 text-[#10bc83] font-medium">Ring-0 hardware watchdog (&lt;0.05s)</td>
                   <td className="py-3 px-4 text-red-400/90">HTTP cancel request (seconds of latency)</td>
                 </tr>
                 <tr>
                   <td className="py-3 px-4 font-semibold text-el-fg">Audit trail</td>
-                  <td className="py-3 px-4 text-el-signal-lime font-medium">Cryptographic Ed25519 nonce receipts</td>
+                  <td className="py-3 px-4 text-[#10bc83] font-medium">Cryptographic Ed25519 nonce receipts</td>
                   <td className="py-3 px-4 text-el-fg-faint">Ephemeral cloud log files</td>
                 </tr>
               </tbody>
             </table>
-          </div>
+          </GenesisShowcaseFrame>
 
           <div className="mt-6 flex justify-end">
             <Button
               variant="ghost"
               href="/compare/cloud-vs-local"
               arrow
-              className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
             >
               View Full 6-Dimensional Local vs Cloud Matrix &amp; TCO Calculator
             </Button>
@@ -472,14 +485,14 @@ export default function DevelopersSolutionPage() {
 
         {/* ── PRE-QUALIFIED TECHNICAL WAITLIST CTA ── */}
         <Section className="py-20">
-          <div className="relative overflow-hidden rounded-sm border border-el-border bg-gradient-to-b from-el-bg-raised/90 to-el-bg p-8 sm:p-12 text-center shadow-el-lg">
+          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-30"
+              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
             />
-            <div className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="el-badge mx-auto shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
+              <div className="gfx-badge mx-auto">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Technical Alpha Program · Ring 1 Access" />
               </div>
 
@@ -497,7 +510,6 @@ export default function DevelopersSolutionPage() {
                 <WaitlistActionButton
                   tier="technical"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Request Technical Access (Developer Ring)
                 </WaitlistActionButton>
@@ -505,7 +517,6 @@ export default function DevelopersSolutionPage() {
                   variant="secondary"
                   href="/architecture"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Explore Execution Rooms
                 </Button>
@@ -513,7 +524,6 @@ export default function DevelopersSolutionPage() {
                   variant="ghost"
                   href="/solutions/enterprise"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Enterprise Fleet Governance
                 </Button>
@@ -522,7 +532,7 @@ export default function DevelopersSolutionPage() {
               <p className="pt-2 text-xs text-el-fg-faint">
                 Supports macOS (Apple Silicon), Windows 11 (WSL2/Hyper-V), and Ubuntu 22.04+ LTS.
               </p>
-            </div>
+            </GenesisSectionIntro>
           </div>
         </Section>
       </main>

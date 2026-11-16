@@ -17,7 +17,7 @@ function ProgressBarInner() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none fixed top-0 left-0 right-0 z-50 h-[2px] origin-left bg-gradient-to-r from-el-cyan via-el-violet to-el-lime shadow-[0_0_12px_rgba(0,240,255,0.55)]"
+      className="pointer-events-none fixed top-0 left-0 right-0 z-50 h-[2px] origin-left bg-gradient-to-r from-[#064b34] via-[#00b38c] to-[#38ffbd] shadow-[0_0_12px_rgba(0,179,140,0.55)]"
       style={{ scaleX: reduced ? scrollYProgress : scaleX }}
     />
   );

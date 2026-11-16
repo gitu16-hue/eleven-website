@@ -13,6 +13,10 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+} from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
   title: "Sovereign AI Solutions: Developers & Enterprise Fleets | ELEVEN",
@@ -110,7 +114,11 @@ export default function SolutionsOverviewPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
+            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -127,9 +135,9 @@ export default function SolutionsOverviewPage() {
               </div>
             </div>
 
-            <div className="mt-10 max-w-4xl space-y-6">
-              <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+              <div className="gfx-badge shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Sovereign Control Planes · Outcome-Oriented Architecture" />
               </div>
 
@@ -143,14 +151,17 @@ export default function SolutionsOverviewPage() {
                 technical="Deterministic control plane decoupling model reasoning from host OS mutation. Eliminates data exfiltration vectors, prompt injection privilege escalation, and un-sandboxed terminal execution."
               />
 
-              <div className="flex flex-wrap gap-2 pt-2 text-el-xs">
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+              <div className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Jailed git worktrees
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Zero-trust fleet governance
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Sub-50ms hardware watchdog
                 </span>
               </div>
@@ -160,7 +171,6 @@ export default function SolutionsOverviewPage() {
                   tier="general"
                   arrow
                   variant="primary"
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Request Technical Access
                 </WaitlistActionButton>
@@ -168,7 +178,6 @@ export default function SolutionsOverviewPage() {
                   variant="secondary"
                   href="/solutions/developers"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   For Developers
                 </Button>
@@ -176,12 +185,11 @@ export default function SolutionsOverviewPage() {
                   variant="ghost"
                   href="/solutions/enterprise"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   For Enterprise
                 </Button>
               </div>
-            </div>
+            </GenesisHeroIntro>
           </div>
         </Section>
 
@@ -189,9 +197,10 @@ export default function SolutionsOverviewPage() {
 
         {/* ── TWO SPECIALIZED ARCHITECTURAL PATHS ── */}
         <Section className="py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 01 Specialized Control Planes" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="01 · Specialized Control Planes" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Targeted architectures for developers and corporate fleets." />
@@ -201,25 +210,25 @@ export default function SolutionsOverviewPage() {
               plain="Select your operational environment to explore how ELEVEN enforces safety and keeps proprietary intelligence inside your boundaries."
               technical="Domain-specific deployment targets offering isolated process sandboxes for workstation engineers and centralized cryptographic compliance for enterprise fleets."
             />
-          </div>
+          </GenesisSectionIntro>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {SOVEREIGN_PATHS.map((path) => (
               <Tilt3DCard
                 key={path.title}
-                className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-7 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40"
+                className="relative flex flex-col justify-between p-7"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-medium text-el-accent">
                       {path.badge}
                     </span>
-                    <span className="rounded-xs border border-el-border bg-el-bg px-2 py-0.5 text-[10px] text-el-fg-muted">
-                      {path.metricLabel}: <strong className="text-el-fg">{path.metricValue}</strong>
+                    <span className="rounded-full border border-white/[0.1] bg-[#08090a] px-2.5 py-0.5 text-[10px] text-el-fg-muted">
+                      {path.metricLabel}: <strong className="text-[#10bc83]">{path.metricValue}</strong>
                     </span>
                   </div>
 
-                  <h3 className="text-el-xl font-medium tracking-tight text-el-fg">
+                  <h3 className="text-el-xl font-normal tracking-tight heading-gradient">
                     {path.title}
                   </h3>
 
@@ -230,12 +239,12 @@ export default function SolutionsOverviewPage() {
                   />
                 </div>
 
-                <div className="mt-8 border-t border-el-border/60 pt-5">
+                <div className="mt-8 border-t border-white/[0.07] pt-5">
                   <Button
                     variant="secondary"
                     href={path.href}
                     arrow
-                    className="w-full justify-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
+                    className="w-full justify-center"
                   >
                     {path.cta}
                   </Button>
@@ -248,10 +257,11 @@ export default function SolutionsOverviewPage() {
         <SignalBeamDivider />
 
         {/* ── THREE SYSTEMIC FAILURES AND ARCHITECTURAL ANSWERS ── */}
-        <Section className="py-16 lg:py-24 bg-el-bg-raised/45">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 02 Systemic Risk Remediation" />
+        <Section className="py-16 lg:py-24 bg-[#08090a]/60">
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="02 · Systemic Risk Remediation" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Three cloud vulnerabilities engineered out of personal AI." />
@@ -261,7 +271,7 @@ export default function SolutionsOverviewPage() {
               plain="Here is how sovereign architecture eliminates the security gaps and runaway bills of cloud AI platforms."
               technical="Addressing source code egress, un-sandboxed process escalation, and compounding per-token billing curves."
             />
-          </div>
+          </GenesisSectionIntro>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             {CORE_PROBLEMS_SOLUTIONS.map((item) => (
@@ -271,7 +281,7 @@ export default function SolutionsOverviewPage() {
                 </span>
 
                 <div className="mt-4 space-y-4">
-                  <div className="rounded-xs border border-red-500/20 bg-red-500/5 p-3">
+                  <div className="rounded-[0.75rem] border border-red-500/20 bg-red-500/5 p-3.5">
                     <span className="block text-[11px] font-medium text-red-400">
                       Cloud AI Vulnerability:
                     </span>
@@ -282,8 +292,8 @@ export default function SolutionsOverviewPage() {
                     />
                   </div>
 
-                  <div className="rounded-xs border border-el-accent/30 bg-el-accent-soft p-3">
-                    <span className="block text-[11px] font-medium text-el-accent">
+                  <div className="rounded-[0.75rem] border border-[#10bc83]/30 bg-[#10bc83]/10 p-3.5">
+                    <span className="block text-[11px] font-medium text-[#38ffbd]">
                       ELEVEN Sovereign Solution:
                     </span>
                     <DualCopy
@@ -302,7 +312,6 @@ export default function SolutionsOverviewPage() {
               href="/compare/cloud-vs-local"
               variant="ghost"
               arrow
-              className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
             >
               Inspect 6-Dimensional Architectural Matrix
             </Button>
@@ -313,14 +322,14 @@ export default function SolutionsOverviewPage() {
 
         {/* ── CALL TO ACTION SECTION ── */}
         <Section className="py-20">
-          <div className="relative overflow-hidden rounded-sm border border-el-border bg-gradient-to-b from-el-bg-raised/90 to-el-bg p-8 sm:p-12 text-center shadow-el-lg">
+          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-30"
+              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
             />
-            <div className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="el-badge mx-auto shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
+              <div className="gfx-badge mx-auto">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Sovereign Deployment Program · Ring 1" />
               </div>
 
@@ -338,7 +347,6 @@ export default function SolutionsOverviewPage() {
                 <WaitlistActionButton
                   tier="general"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Request Technical Access
                 </WaitlistActionButton>
@@ -346,7 +354,6 @@ export default function SolutionsOverviewPage() {
                   variant="secondary"
                   href="/solutions/developers"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Developer Architecture
                 </Button>
@@ -354,7 +361,6 @@ export default function SolutionsOverviewPage() {
                   variant="ghost"
                   href="/solutions/enterprise"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Enterprise Architecture
                 </Button>
@@ -363,7 +369,7 @@ export default function SolutionsOverviewPage() {
               <p className="pt-2 text-xs text-el-fg-faint">
                 Supports macOS (Apple Silicon M-series), Windows 11 (Hyper-V / WSL2), and Ubuntu 22.04+ LTS.
               </p>
-            </div>
+            </GenesisSectionIntro>
           </div>
         </Section>
       </main>

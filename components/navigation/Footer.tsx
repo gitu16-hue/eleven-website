@@ -6,11 +6,10 @@ import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/Section";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
 import {
-  CipherText,
   DualCopy,
-  WordReveal,
   useClarityMode,
 } from "@/components/motion/PremiumMotion";
+import { Button } from "@/components/ui/Button";
 
 const columns = [
   {
@@ -19,7 +18,7 @@ const columns = [
       { href: "/", label: "Overview" },
       { href: "/eleven", label: "How It Thinks" },
       { href: "/dashboard", label: "Voyage Pipeline Tracker" },
-      { href: "/benchmarks/voice-latency", label: "Voice Latency (<0.05s)" },
+      { href: "/benchmarks/voice-latency", label: "Voice Latency (<0.5s)" },
       { href: "/enter", label: "3D Visualizer Core" },
       { href: "/presentation.html", label: "Executive Deck (16:9)" },
     ],
@@ -75,85 +74,99 @@ export function Footer() {
     }
   };
 
+  const platformSpecs = [
+    {
+      kicker: "Two Minds",
+      value: isPlain ? "Quick Voice + Deep Planner" : "F.R.I.D.A.Y. · J.A.R.V.I.S.",
+      tag: "01",
+    },
+    {
+      kicker: "Safety Gates",
+      value: isPlain ? "5 Automatic Checkpoints" : "5-Stage Control Plane",
+      tag: "02",
+    },
+    {
+      kicker: "Approvals",
+      value: isPlain ? "Honest 30s One-Time Pass" : "DEC-008 Nonce · SHA-256",
+      tag: "03",
+    },
+    {
+      kicker: "Local Memory",
+      value: isPlain ? "100% Private on Your PC" : "Redis · Neo4j · Qdrant",
+      tag: "04",
+    },
+  ];
+
   return (
-    <footer className="relative overflow-hidden border-t border-el-border bg-el-bg">
+    <footer className="site-footer relative w-full overflow-hidden border-t border-white/[0.07] bg-[#05070d] text-[#e8ecf5]">
+      {/* GenesisFX Centered Emerald Ambient Glow */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.025]"
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[48%] h-[320px] w-[min(92vw,840px)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-80 blur-[90px]"
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, var(--el-fg) 1px, transparent 0)",
-          backgroundSize: "28px 28px",
+          background:
+            "radial-gradient(ellipse at center, rgba(16, 188, 131, 0.32), rgba(16, 188, 131, 0) 70%)",
         }}
       />
 
-      <Container className="relative py-20 lg:py-28">
-        {/* Top Monumental Institutional Colophon */}
-        <div className="grid grid-cols-1 gap-14 border-b border-el-border pb-16 lg:grid-cols-12 lg:items-end lg:pb-20">
-          <div className="lg:col-span-7">
-            <div className="flex items-center gap-4">
-              <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-sm border border-el-border-strong/60 bg-el-bg-raised p-1 shadow-el-sm">
+      <Container className="relative z-10 pt-20 pb-10 lg:pt-24">
+        {/* Top Row: Brand Left + Columns Right */}
+        <div className="flex flex-col justify-between gap-14 lg:flex-row lg:gap-12">
+          {/* Brand Column */}
+          <div className="max-w-[380px]">
+            <div className="flex items-center gap-3">
+              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/15 bg-[#0c1311] p-1">
                 <Image
                   src="/gishh-logo-icon.png"
                   alt="GISHH Labs"
-                  width={44}
-                  height={44}
+                  width={40}
+                  height={40}
                   className="h-full w-full object-contain"
                 />
               </div>
               <div>
-                <p className="text-xs text-el-fg-faint">
-                  <CipherText text="ELEVEN v3.1 · Built by GISHH Labs" />
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#10bc83]">
+                  ELEVEN v3.1 · GISHH Labs
                 </p>
-                <p className="text-el-xl font-semibold tracking-[-0.02em] text-el-fg">
-                  <WordReveal text="Brilliant AI. Always Under Your Control." />
+                <p className="text-lg font-normal tracking-tight text-[#e8ecf5]">
+                  Brilliant AI. Always Under Control.
                 </p>
               </div>
             </div>
 
             <DualCopy
-              className="mt-7 max-w-[52ch] text-el-lg leading-relaxed text-el-fg-muted"
+              className="mt-5 text-[15px] leading-[1.5] text-[#a0a0a0]"
               plain="Talk naturally, get deep work done in the background, keep your memories private on your own computer, and approve important actions before they happen."
               technical="Frontier intelligence. Human-owned authority. A local-first control plane separating untrusted model reasoning from deterministic real-world execution."
             />
+
+            <div className="mt-7">
+              <Button
+                type="button"
+                variant="primary"
+                arrow
+                onClick={enterComputationalMode}
+              >
+                Enter ELEVEN 3D Core
+              </Button>
+            </div>
           </div>
 
-          <div className="flex flex-col items-start lg:col-span-5 lg:items-end">
-            <button
-              type="button"
-              onClick={enterComputationalMode}
-              className="group flex cursor-pointer items-center gap-4 border border-el-border-strong bg-el-bg-raised px-6 py-4 text-left shadow-el-sm transition-[border-color,box-shadow] duration-200 hover:border-el-fg hover:shadow-el-md focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98]"
-            >
-              <div>
-                <p className="text-xs text-el-fg-faint">
-                  Interactive 3D experience
-                </p>
-                <p className="mt-0.5 text-el-sm font-medium text-el-fg transition-colors group-hover:text-el-signal-lime">
-                  Explore the Live 3D Holographic Orb
-                </p>
-              </div>
-              <span className="text-el-sm text-el-fg-muted transition-transform duration-200 group-hover:translate-x-1 group-hover:text-el-signal-lime">
-                →
-              </span>
-            </button>
-          </div>
-        </div>
-
-        {/* Navigation & Summary Card */}
-        <div className="mt-14 flex flex-col gap-12 md:flex-row md:justify-between lg:mt-16">
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:gap-14">
+          {/* 4-Column GenesisFX Footer Nav (#10bc83 emerald headings) */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:gap-10">
             {columns.map((col) => (
               <div key={col.heading}>
-                <p className="text-xs font-semibold text-el-fg-faint">
+                <p className="mb-4 text-[13.5px] font-normal text-[#10bc83]">
                   {col.heading}
                 </p>
-                <ul className="mt-5 space-y-3.5">
+                <ul className="space-y-3">
                   {col.links.map((l) => (
                     <li key={l.label}>
                       <Link
                         href={l.href}
                         scroll={true}
                         onClick={(e) => handleFooterLinkClick(l.href, e)}
-                        className="el-link-laser text-el-sm text-el-fg-muted transition-colors duration-[var(--el-duration-fast)] hover:text-el-fg focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime rounded-xs"
+                        className="text-[13.5px] font-normal text-[#8a8a8a] transition-colors duration-150 hover:text-[#e8ecf5] focus-visible:outline-2 focus-visible:outline-[#00b38c] rounded-xs"
                       >
                         {l.label}
                       </Link>
@@ -163,54 +176,54 @@ export function Footer() {
               </div>
             ))}
           </div>
-
-          {/* At-a-Glance Summary Card */}
-          <div className="min-w-[295px] border border-el-border bg-el-bg-raised p-5 text-xs leading-relaxed text-el-fg-muted shadow-el-sm">
-            <div className="flex items-center justify-between border-b border-el-border pb-2.5 text-el-fg">
-              <span className="font-medium">
-                {isPlain ? "At a glance" : "Architecture ledger"}
-              </span>
-              <span className="flex items-center gap-1.5 text-el-signal-lime">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime" />
-                <span>Verified v3.1</span>
-              </span>
-            </div>
-            <div className="mt-3 space-y-1.5 text-xs">
-              <div className="flex justify-between gap-6">
-                <span className="text-el-fg-faint">Two minds</span>
-                <span className="text-el-fg">
-                  {isPlain ? "Quick Voice + Deep Planner" : "F.R.I.D.A.Y. · J.A.R.V.I.S."}
-                </span>
-              </div>
-              <div className="flex justify-between gap-6">
-                <span className="text-el-fg-faint">Safety</span>
-                <span className="text-el-fg">
-                  {isPlain ? "5 Automatic Checkpoints" : "5-Stage Control Plane"}
-                </span>
-              </div>
-              <div className="flex justify-between gap-6">
-                <span className="text-el-fg-faint">Approvals</span>
-                <span className="text-el-fg">
-                  {isPlain ? "Honest 30s One-Time Pass" : "DEC-008 Nonce · SHA-256"}
-                </span>
-              </div>
-              <div className="flex justify-between gap-6">
-                <span className="text-el-fg-faint">Memory</span>
-                <span className="text-el-fg">
-                  {isPlain ? "100% Private on Your PC" : "Redis · Neo4j · Qdrant"}
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* Bottom Legal & Motto Bar */}
-        <div className="mt-16 flex flex-col-reverse items-start gap-4 border-t border-el-border pt-8 md:flex-row md:items-center md:justify-between">
-          <p className="text-xs text-el-fg-faint">
+        {/* GenesisFX Platform Cards Row */}
+        <div className="mt-14 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+          {platformSpecs.map((spec) => (
+            <div key={spec.kicker} className="platform-card">
+              <span className="platform-card__fill" aria-hidden="true" />
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#00b38c]/35 bg-[#021b13] font-mono text-[11px] text-[#10bc83]">
+                {spec.tag}
+              </span>
+              <div className="flex flex-col leading-tight">
+                <span className="text-[12px] font-normal text-[#a0a0a0]">
+                  {spec.kicker}
+                </span>
+                <span className="mt-0.5 text-[14px] font-medium text-white">
+                  {spec.value}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Giant Full-Width Edge-to-Edge GenesisFX Typographic Watermark */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none select-none mt-12 -mb-4 flex justify-center overflow-hidden"
+        >
+          <span
+            className="block w-full text-center font-normal leading-[0.82] tracking-[-0.045em]"
+            style={{
+              fontSize: "clamp(4.5rem, 19vw, 17.5rem)",
+              background:
+                "linear-gradient(180deg, rgba(232, 236, 245, 0.14) 0%, rgba(16, 188, 131, 0.04) 68%, rgba(5, 7, 13, 0) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            ELEVEN
+          </span>
+        </div>
+
+        {/* Bottom Legal & Disclosure */}
+        <div className="mt-6 flex flex-col items-start justify-between gap-4 border-t border-white/[0.07] pt-6 sm:flex-row sm:items-center">
+          <p className="text-xs text-[#686868]">
             © {new Date().getFullYear()} GISHH Labs Pvt. Ltd. All rights reserved.
           </p>
-          <p className="text-xs text-el-fg-faint">
-            Quiet Authority · Your AI, Your Rules
+          <p className="text-xs text-[#686868]">
+            Local-First Sovereign Control Plane · Your AI, Your Rules
           </p>
         </div>
       </Container>

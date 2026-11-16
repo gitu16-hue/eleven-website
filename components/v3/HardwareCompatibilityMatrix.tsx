@@ -244,7 +244,7 @@ export function HardwareCompatibilityMatrix() {
       <div className="flex flex-wrap items-center justify-between border-b border-el-border/80 bg-el-bg-raised/80 px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-el-cyan shadow-[0_0_8px_#00F0FF]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-el-cyan shadow-[0_0_8px_#10BC83]" />
             <span className="h-2.5 w-2.5 rounded-full bg-el-mint/40" />
             <span className="h-2.5 w-2.5 rounded-full bg-el-border" />
           </div>

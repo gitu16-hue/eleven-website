@@ -148,7 +148,7 @@ export function VoiceLatencyBenchmarkSimulator() {
                 key={i}
                 animate={{
                   height: interrupted ? 2 : `${h}px`,
-                  backgroundColor: interrupted ? "#22c55e" : "#00F0FF",
+                  backgroundColor: interrupted ? "#38FFBD" : "#10BC83",
                   opacity: interrupted ? 0.35 : 0.85,
                 }}
                 transition={{ duration: 0.08 }}

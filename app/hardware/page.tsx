@@ -15,6 +15,11 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+} from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
   title: "Hardware Compatibility & Local Model Benchmark Matrix | ELEVEN",
@@ -76,10 +81,7 @@ export default function HardwarePage() {
     <>
       <Nav />
 
-      <main
-        id="main-content"
-        className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
-      >
+      <main id="main-content">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -97,7 +99,11 @@ export default function HardwarePage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-60"
+            className="pointer-events-none absolute inset-0 el-aurora"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
           />
 
           <Container className="relative">
@@ -117,9 +123,9 @@ export default function HardwarePage() {
               </div>
             </div>
 
-            <div className="mt-10 max-w-4xl space-y-6">
-              <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime motion-reduce:animate-none" />
+            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
                 <CipherText text="Hardware Benchmark · Local Inference Compatibility" />
               </div>
 
@@ -134,51 +140,40 @@ export default function HardwarePage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2 pt-2 text-xs text-el-fg-muted">
-                <span className="rounded-xs border border-el-signal-lime/40 bg-el-signal-lime/10 px-2.5 py-1 text-el-signal-lime">
-                  Sub-50ms Voice Ready (16GB+ RAM)
+              <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
+                  <span>Sub-50ms Voice Ready (16GB+ RAM)</span>
                 </span>
-                <span className="rounded-xs border border-el-signal-lime/30 bg-el-signal-lime/5 px-2.5 py-1 text-el-fg-muted">
-                  Metal, CUDA, ONNX Native
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <span>Metal, CUDA, ONNX Native</span>
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  100% Air-Gappable Runtime
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
+                  <span>100% Air-Gappable Runtime</span>
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  Zero GPU Cloud Rental
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <span>Zero GPU Cloud Rental</span>
                 </span>
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <WaitlistActionButton
-                  tier="technical"
-                  arrow
-                  variant="primary"
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-                >
+                <WaitlistActionButton tier="technical" arrow variant="primary">
                   Request Hardware Testing Access
                 </WaitlistActionButton>
 
-                <Button
-                  href="/benchmarks/voice-latency"
-                  variant="secondary"
-                  arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-                >
+                <Button href="/benchmarks/voice-latency" variant="secondary" arrow>
                   Voice Latency Benchmarks (&lt;50ms)
                 </Button>
 
-                <Button
-                  href="/tools/vault-calculator"
-                  variant="ghost"
-                  arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-                >
+                <Button href="/tools/vault-calculator" variant="ghost" arrow>
                   Estimate Storage Economics
                 </Button>
               </div>
-            </div>
+            </GenesisHeroIntro>
           </Container>
         </Section>
 
@@ -187,9 +182,10 @@ export default function HardwarePage() {
         {/* INTERACTIVE HARDWARE COMPATIBILITY MATRIX */}
         <Section className="py-16 lg:py-24 bg-el-bg">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 01 INTERACTIVE HARDWARE BENCHMARK CALCULATOR" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="01 · Interactive Hardware Benchmark Calculator" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Workstation Sizing & Model Throughput" />
@@ -197,10 +193,12 @@ export default function HardwarePage() {
               <p className="el-body">
                 Select your computer’s chip and memory configuration below to inspect real-world token generation rates, voice barge-in latency, and supported model architectures.
               </p>
-            </div>
+            </GenesisSectionIntro>
 
             <div className="mt-10">
-              <HardwareCompatibilityMatrix />
+              <GenesisShowcaseFrame>
+                <HardwareCompatibilityMatrix />
+              </GenesisShowcaseFrame>
             </div>
           </Container>
         </Section>
@@ -210,9 +208,10 @@ export default function HardwarePage() {
         {/* 3 HARDWARE TIERS TAXONOMY */}
         <Section className="py-16 lg:py-24">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 02 HARDWARE TIER TAXONOMY" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="02 · Hardware Tier Taxonomy" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Recommended Hardware Profiles" />
@@ -220,32 +219,32 @@ export default function HardwarePage() {
               <p className="el-body">
                 Whether deploying on a single personal laptop or outfitting an enterprise engineering organization, ELEVEN scales across three distinct compute envelopes.
               </p>
-            </div>
+            </GenesisSectionIntro>
 
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Tier 1 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+              <Tilt3DCard className="p-6 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-3 right-3">
-                  <code className="text-el-signal-lime/50 font-mono text-xs">TIER 01</code>
+                  <code className="text-[#10bc83]/60 font-mono text-xs">TIER 01</code>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                <div className="flex items-center gap-2 text-xs text-[#10bc83] font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Minimum viable sovereign</span>
                 </div>
-                <h3 className="text-xl font-bold text-el-fg">
+                <h3 className="text-xl font-normal heading-gradient">
                   16GB Unified Memory / 8GB VRAM
                 </h3>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   Entry-level specification for daily knowledge work, instant voice conversations, and rapid task delegation.
                 </p>
 
-                <div className="rounded-xs border border-el-border bg-el-bg-raised/60 p-3 text-xs space-y-2">
-                  <div className="text-el-fg font-semibold border-b border-el-border/60 pb-1">
+                <div className="rounded-lg border border-el-border bg-black/40 p-3 text-xs space-y-2">
+                  <div className="text-el-fg font-medium border-b border-el-border/60 pb-1">
                     Runnable workloads:
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>System 1 Voice:</span>
-                    <span className="text-el-signal-lime">Whisper Turbo + Kokoro</span>
+                    <span className="text-[#10bc83]">Whisper Turbo + Kokoro</span>
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>System 2 Planner:</span>
@@ -253,7 +252,7 @@ export default function HardwarePage() {
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>Token Throughput:</span>
-                    <span className="text-el-signal-lime">55 to 75 tok/sec</span>
+                    <span className="text-[#10bc83]">55 to 75 tok/sec</span>
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>Typical Hardware:</span>
@@ -263,28 +262,28 @@ export default function HardwarePage() {
               </Tilt3DCard>
 
               {/* Tier 2 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/40 p-6 space-y-4 shadow-el-sm transition-colors duration-200 hover:border-el-signal-lime/40">
+              <Tilt3DCard className="p-6 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-3 right-3">
-                  <code className="text-el-signal-lime/50 font-mono text-xs">TIER 02</code>
+                  <code className="text-[#10bc83]/60 font-mono text-xs">TIER 02</code>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                <div className="flex items-center gap-2 text-xs text-[#10bc83] font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Recommended professional</span>
                 </div>
-                <h3 className="text-xl font-bold text-el-fg">
+                <h3 className="text-xl font-normal heading-gradient">
                   32GB to 36GB Unified Memory / 16GB VRAM
                 </h3>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   The ideal daily driver for software engineers, security researchers, and technical power users running local code synthesis.
                 </p>
 
-                <div className="rounded-xs border border-el-border bg-el-bg-raised/60 p-3 text-xs space-y-2">
-                  <div className="text-el-signal-lime font-semibold border-b border-el-border/60 pb-1">
+                <div className="rounded-lg border border-el-border bg-black/40 p-3 text-xs space-y-2">
+                  <div className="text-[#10bc83] font-medium border-b border-el-border/60 pb-1">
                     Runnable workloads:
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>System 1 Voice:</span>
-                    <span className="text-el-signal-lime">Full 16kHz Sub-40ms</span>
+                    <span className="text-[#10bc83]">Full 16kHz Sub-40ms</span>
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>System 2 Coding:</span>
@@ -296,7 +295,7 @@ export default function HardwarePage() {
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>Token Throughput:</span>
-                    <span className="text-el-signal-lime">18 to 35 tok/sec</span>
+                    <span className="text-[#10bc83]">18 to 35 tok/sec</span>
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>Typical Hardware:</span>
@@ -306,28 +305,28 @@ export default function HardwarePage() {
               </Tilt3DCard>
 
               {/* Tier 3 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+              <Tilt3DCard className="p-6 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-3 right-3">
-                  <code className="text-el-signal-lime/50 font-mono text-xs">TIER 03</code>
+                  <code className="text-[#10bc83]/60 font-mono text-xs">TIER 03</code>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                <div className="flex items-center gap-2 text-xs text-[#10bc83] font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Extreme multi-agent lab</span>
                 </div>
-                <h3 className="text-xl font-bold text-el-fg">
+                <h3 className="text-xl font-normal heading-gradient">
                   64GB to 192GB Unified Memory / Dual GPU
                 </h3>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   Frontier workstation for autonomous multi-agent simulation, monorepo AST analysis, and running 70B+ frontier models with zero quantization compromise.
                 </p>
 
-                <div className="rounded-xs border border-el-border bg-el-bg-raised/60 p-3 text-xs space-y-2">
-                  <div className="text-el-signal-lime font-semibold border-b border-el-border/60 pb-1">
+                <div className="rounded-lg border border-el-border bg-black/40 p-3 text-xs space-y-2">
+                  <div className="text-[#10bc83] font-medium border-b border-el-border/60 pb-1">
                     Runnable workloads:
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>Frontier Reasoning:</span>
-                    <span className="text-el-signal-lime">Llama 3.3 70B Instruct</span>
+                    <span className="text-[#10bc83]">Llama 3.3 70B Instruct</span>
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>Context Window:</span>
@@ -335,7 +334,7 @@ export default function HardwarePage() {
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>Token Throughput:</span>
-                    <span className="text-el-signal-lime">18 to 30 tok/sec</span>
+                    <span className="text-[#10bc83]">18 to 30 tok/sec</span>
                   </div>
                   <div className="flex justify-between text-el-fg-faint">
                     <span>Typical Hardware:</span>
@@ -352,9 +351,10 @@ export default function HardwarePage() {
         {/* THE PHYSICS OF LOCAL AI: MEMORY BANDWIDTH VS COMPUTE */}
         <Section className="py-16 lg:py-24 bg-el-bg">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 03 HARDWARE ARCHITECTURE DEEP DIVE" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="03 · Hardware Architecture Deep Dive" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="The Memory Wall: Why Bandwidth Beats Teraflops" />
@@ -364,14 +364,13 @@ export default function HardwarePage() {
                 plain="In local AI, memory speed matters far more than raw processor speed. When generating text word-by-word, the computer must read every single parameter from memory for every word produced."
                 technical="During autoregressive token generation, arithmetic intensity is near zero: computing one token requires transferring the entire model weight matrix through the memory bus. Therefore, Token Generation Speed (tok/s) ≈ Memory Bandwidth (GB/s) ÷ Model Footprint (GB)."
               />
-            </div>
+            </GenesisSectionIntro>
 
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs">
-              {/* Feature 1 */}
-              <div className="rounded-xs border border-el-border bg-el-bg-raised/40 p-6 space-y-3">
-                <div className="flex items-center gap-2 text-el-signal-lime">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
-                  <span className="font-semibold text-sm">Unified Memory Architecture (UMA) Advantage</span>
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+              <Tilt3DCard className="p-6 space-y-3 h-full">
+                <div className="flex items-center gap-2 text-[#10bc83]">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
+                  <span className="font-normal text-base heading-gradient">Unified Memory Architecture (UMA) Advantage</span>
                 </div>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   On conventional PCs, weights must be transferred across a PCIe bus (typically 32 to 64 GB/s) from system RAM to GPU VRAM. On Apple Silicon, CPU, GPU, and the Neural Engine share a unified pool of LPDDR5 memory with up to 800 GB/s bandwidth. This eliminates PCIe bottlenecks completely.
@@ -379,13 +378,12 @@ export default function HardwarePage() {
                 <div className="border-t border-el-border/60 pt-3 text-[11px] text-el-fg-faint">
                   Benefit: Zero-copy tensor sharing between voice ASR, audio playback, and LLM reasoning.
                 </div>
-              </div>
+              </Tilt3DCard>
 
-              {/* Feature 2 */}
-              <div className="rounded-xs border border-el-border bg-el-bg-raised/40 p-6 space-y-3">
-                <div className="flex items-center gap-2 text-el-signal-lime">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
-                  <span className="font-semibold text-sm">Optimal Quantization: Q4_K_M vs Q8_0</span>
+              <Tilt3DCard className="p-6 space-y-3 h-full">
+                <div className="flex items-center gap-2 text-[#10bc83]">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
+                  <span className="font-normal text-base heading-gradient">Optimal Quantization: Q4_K_M vs Q8_0</span>
                 </div>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   ELEVEN defaults to 4-bit Medium K-quants (Q4_K_M), preserving 99.2% of full 16-bit float perplexity while slashing memory consumption by 72%. A 32B model shrinks from 65 GB to 19.4 GB, allowing it to run smoothly on standard 32GB developer laptops.
@@ -393,13 +391,12 @@ export default function HardwarePage() {
                 <div className="border-t border-el-border/60 pt-3 text-[11px] text-el-fg-faint">
                   Benefit: 3.5x token generation speedup due to proportional reduction in memory bytes read per token.
                 </div>
-              </div>
+              </Tilt3DCard>
 
-              {/* Feature 3 */}
-              <div className="rounded-xs border border-el-border bg-el-bg-raised/40 p-6 space-y-3">
-                <div className="flex items-center gap-2 text-el-signal-lime">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
-                  <span className="font-semibold text-sm">KV Cache Context Scaling Mathematics</span>
+              <Tilt3DCard className="p-6 space-y-3 h-full">
+                <div className="flex items-center gap-2 text-[#10bc83]">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
+                  <span className="font-normal text-base heading-gradient">KV Cache Context Scaling Mathematics</span>
                 </div>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   Each conversational turn expands the Key-Value (KV) cache. At 32k context, FP16 KV cache for a 32B model consumes approximately 4.2 GB of RAM. ELEVEN utilizes FlashAttention-2 and Q8 KV-cache quantization to compress memory footprint by 50%, enabling deep code analysis on modest hardware.
@@ -407,13 +404,12 @@ export default function HardwarePage() {
                 <div className="border-t border-el-border/60 pt-3 text-[11px] text-el-fg-faint">
                   Benefit: Eliminates out-of-memory crashes during multi-thousand-line monorepo audits.
                 </div>
-              </div>
+              </Tilt3DCard>
 
-              {/* Feature 4 */}
-              <div className="rounded-xs border border-el-border bg-el-bg-raised/40 p-6 space-y-3">
-                <div className="flex items-center gap-2 text-el-signal-lime">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
-                  <span className="font-semibold text-sm">Sub-50ms Voice Pipeline Dedicated Pinning</span>
+              <Tilt3DCard className="p-6 space-y-3 h-full">
+                <div className="flex items-center gap-2 text-[#10bc83]">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
+                  <span className="font-normal text-base heading-gradient">Sub-50ms Voice Pipeline Dedicated Pinning</span>
                 </div>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   The System 1 voice pipeline (Whisper Large v3 Turbo + Kokoro 82M TTS) requires only ~1.8 GB of memory. By pinning this pipeline into high-priority memory and binding audio processing to dedicated Neural Engine / Tensor Core threads, speech is never blocked by heavy background DAG reasoning.
@@ -421,7 +417,7 @@ export default function HardwarePage() {
                 <div className="border-t border-el-border/60 pt-3 text-[11px] text-el-fg-faint">
                   Benefit: Zero voice stutter or frame dropping even under 100% CPU/GPU loads.
                 </div>
-              </div>
+              </Tilt3DCard>
             </div>
           </Container>
         </Section>
@@ -431,9 +427,10 @@ export default function HardwarePage() {
         {/* HARDWARE BENCHMARK FAQ */}
         <Section className="py-16 lg:py-24">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 04 HARDWARE EVALUATION FAQ" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="04 · Hardware Evaluation FAQ" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Frequently Asked Hardware Questions" />
@@ -441,7 +438,7 @@ export default function HardwarePage() {
               <p className="el-body">
                 Clear guidance on upgrading, GPU configurations, and laptop purchasing decisions for local AI.
               </p>
-            </div>
+            </GenesisSectionIntro>
 
             <div className="mt-10 max-w-4xl space-y-4">
               {[
@@ -462,71 +459,68 @@ export default function HardwarePage() {
                   a: "Because the System 1 voice pipeline utilizes quantized weights accelerated by the Apple Neural Engine / Qualcomm NPU rather than spinning up power-hungry GPU cores continuously, power draw averages only 4 to 8 watts during active conversation, delivering all-day battery life on modern laptops.",
                 },
               ].map((faq, i) => (
-                <div key={i} className="rounded-xs border border-el-border bg-el-bg-raised/40 p-5 space-y-2">
-                  <h3 className="text-sm font-semibold text-el-fg">
+                <Tilt3DCard key={i} className="p-5 space-y-2">
+                  <h3 className="text-base font-normal heading-gradient">
                     {faq.q}
                   </h3>
                   <p className="text-xs text-el-fg-muted leading-relaxed">
                     {faq.a}
                   </p>
-                </div>
+                </Tilt3DCard>
               ))}
             </div>
           </Container>
         </Section>
 
         {/* BOTTOM CTA ACCESS FUNNEL */}
-        <Section className="py-16 lg:py-24 border-t border-el-border bg-gradient-to-b from-el-bg-raised/90 to-el-bg">
+        <Section className="py-16 lg:py-24">
           <Container>
-            <div className="mx-auto max-w-3xl text-center space-y-6">
-              <div className="el-eyebrow">
-                <CipherText text="// 05 RUNTIME SIZING VERIFIED" />
-              </div>
-
-              <h2 className="el-h2">
-                <WordReveal text="Ready to experience sovereign intelligence on your hardware?" />
-              </h2>
-
-              <DualCopy
-                className="mx-auto max-w-2xl el-body"
-                plain="Join the early access program to receive the ELEVEN installer binary and test local execution on your machine."
-                technical="Request access to the ELEVEN Technical Preview. Includes hardware benchmarking utilities, quantized model packs, and Ring-0 supervisory daemon."
+            <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[32rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
               />
+              <div className="relative mx-auto max-w-3xl space-y-6">
+                <div className="gfx-badge mx-auto">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <CipherText text="05 · Runtime Sizing Verified" />
+                </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                <WaitlistActionButton
-                  tier="technical"
-                  arrow
-                  variant="primary"
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-                >
-                  Request Hardware Testing Access
-                </WaitlistActionButton>
+                <h2 className="el-h2">
+                  <WordReveal text="Ready to experience sovereign intelligence on your hardware?" />
+                </h2>
 
-                <Button
-                  href="/solutions/developers"
-                  variant="secondary"
-                  arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-                >
-                  Explore Developer Solutions
-                </Button>
-              </div>
+                <DualCopy
+                  className="mx-auto max-w-2xl el-body"
+                  plain="Join the early access program to receive the ELEVEN installer binary and test local execution on your machine."
+                  technical="Request access to the ELEVEN Technical Preview. Includes hardware benchmarking utilities, quantized model packs, and Ring-0 supervisory daemon."
+                />
 
-              {/* Cross Links to Other Deep Architecture Pages */}
-              <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
-                <Link href="/benchmarks/voice-latency" className="hover:text-el-signal-lime hover:underline">
-                  Voice Latency Benchmark
-                </Link>
-                <Link href="/tools/vault-calculator" className="hover:text-el-signal-lime hover:underline">
-                  Vault Storage Estimator
-                </Link>
-                <Link href="/solutions/enterprise" className="hover:text-el-signal-lime hover:underline">
-                  Enterprise Fleet Governance
-                </Link>
-                <Link href="/compare/cloud-vs-local" className="hover:text-el-signal-lime hover:underline">
-                  Local vs Cloud Audit
-                </Link>
+                <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+                  <WaitlistActionButton tier="technical" arrow variant="primary">
+                    Request Hardware Testing Access
+                  </WaitlistActionButton>
+
+                  <Button href="/solutions/developers" variant="secondary" arrow>
+                    Explore Developer Solutions
+                  </Button>
+                </div>
+
+                {/* Cross Links to Other Deep Architecture Pages */}
+                <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
+                  <Link href="/benchmarks/voice-latency" className="hover:text-[#10bc83] hover:underline">
+                    Voice Latency Benchmark
+                  </Link>
+                  <Link href="/tools/vault-calculator" className="hover:text-[#10bc83] hover:underline">
+                    Vault Storage Estimator
+                  </Link>
+                  <Link href="/solutions/enterprise" className="hover:text-[#10bc83] hover:underline">
+                    Enterprise Fleet Governance
+                  </Link>
+                  <Link href="/compare/cloud-vs-local" className="hover:text-[#10bc83] hover:underline">
+                    Local vs Cloud Audit
+                  </Link>
+                </div>
               </div>
             </div>
           </Container>

@@ -1,22 +1,18 @@
 "use client";
 
-import React, { ComponentPropsWithoutRef, useRef } from "react";
+import React, { ComponentPropsWithoutRef, useCallback, useRef } from "react";
 import Link from "next/link";
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useMountedReducedMotion } from "@/components/motion/PremiumMotion";
+import { GenesisSparkles } from "@/components/motion/GenesisMotionEngine";
 
 type Variant = "primary" | "secondary" | "ghost";
 
 const base =
-  "group relative overflow-hidden inline-flex items-center justify-center gap-2 text-el-sm font-medium tracking-[-0.01em] transition-[box-shadow,border-color,background-color,color,filter] duration-[var(--el-duration-fast)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--el-accent)] disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed active:scale-[0.98] active:brightness-95 rounded-xs cursor-pointer";
+  "group gfx-btn focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#00b38c] disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed active:scale-[0.98]";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-el-accent text-el-sec-graphite-deep font-semibold px-5 py-2.5 sm:px-5.5 sm:py-2.5 min-h-[44px] hover:shadow-md hover:brightness-105",
-  secondary:
-    "border border-el-border-strong text-el-fg bg-el-bg-raised px-5 py-2.5 sm:px-5.5 sm:py-2.5 min-h-[44px] hover:border-el-accent hover:text-el-fg hover:shadow-sm",
-  ghost:
-    "text-el-fg-muted hover:text-el-accent px-3 py-2 min-h-[44px]",
+  primary: "glow-btn",
+  secondary: "gfx-btn-secondary",
+  ghost: "gfx-btn-ghost",
 };
 
 type ButtonProps = {
@@ -35,100 +31,122 @@ export function Button({
   href,
   ...props
 }: ButtonProps) {
-  const wrapRef = useRef<HTMLSpanElement>(null);
-  const rectRef = useRef<DOMRect | null>(null);
-  const reduced = useMountedReducedMotion();
+  const lightRef = useRef<HTMLSpanElement>(null);
+  const ringRRef = useRef<HTMLSpanElement>(null);
+  const ringLRef = useRef<HTMLSpanElement>(null);
 
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 320, damping: 22, mass: 0.4 });
-  const sy = useSpring(my, { stiffness: 320, damping: 22, mass: 0.4 });
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLElement>) => {
+      if (variant !== "primary") return;
+      if (
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        return;
+      }
+      const el = e.currentTarget;
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
 
-  const onEnter = () => {
-    if (reduced || !wrapRef.current) return;
-    if (window.matchMedia("(hover: none)").matches) return;
-    rectRef.current = wrapRef.current.getBoundingClientRect();
-  };
+      if (lightRef.current) {
+        const lx = Math.round(x - lightRef.current.offsetWidth / 2);
+        lightRef.current.style.setProperty("--lx", String(lx));
+      }
 
-  const onMove = (e: React.PointerEvent<HTMLSpanElement>) => {
-    if (reduced || !rectRef.current) return;
-    const r = rectRef.current;
-    const dx = (e.clientX - (r.left + r.width * 0.5)) * 0.14;
-    const dy = (e.clientY - (r.top + r.height * 0.5)) * 0.2;
-    mx.set(Math.max(-4.5, Math.min(4.5, dx)));
-    my.set(Math.max(-3.5, Math.min(3.5, dy)));
-  };
-
-  const onLeave = () => {
-    rectRef.current = null;
-    mx.set(0);
-    my.set(0);
-  };
+      const ratio = Math.min(1, Math.max(0, x / Math.max(rect.width, 1)));
+      if (ringRRef.current) ringRRef.current.style.opacity = ratio.toFixed(3);
+      if (ringLRef.current) ringLRef.current.style.opacity = (1 - ratio).toFixed(3);
+    },
+    [variant]
+  );
 
   const classes = `${base} ${variants[variant]} ${className}`;
 
-  const innerContent = (
-    <>
-      {/* Optical specular sweep on hover */}
-      {variant !== "ghost" && (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent motion-safe:transition-transform duration-700 ease-out group-hover:translate-x-full"
-        />
-      )}
-      <span className="relative z-10 inline-flex items-center gap-2">
-        {children}
-        {arrow && <ArrowIcon />}
-      </span>
-    </>
-  );
+  const innerContent =
+    variant === "primary" ? (
+      <>
+        <span ref={ringRRef} className="glow-btn__ring glow-btn__ring--r" aria-hidden="true" />
+        <span ref={ringLRef} className="glow-btn__ring glow-btn__ring--l" aria-hidden="true" />
+        <span className="glow-btn__fill" aria-hidden="true" />
+        <span className="glow-btn__edge" aria-hidden="true" />
+        <span className="glow-btn__clip" aria-hidden="true">
+          <span ref={lightRef} className="glow-btn__light">
+            <span className="glow-btn__spread" />
+            <span className="glow-btn__core" />
+          </span>
+        </span>
+        <span className="glow-btn__label inline-flex items-center gap-2.5 font-normal text-[#05070d]">
+          <span>{children}</span>
+          {arrow && <ArrowIcon />}
+        </span>
+      </>
+    ) : (
+      <>
+        {variant === "ghost" && <GenesisSparkles />}
+        <span className="relative z-10 inline-flex items-center gap-2.5">
+          <span>{children}</span>
+          {arrow && <ArrowIcon subtle />}
+        </span>
+      </>
+    );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        onPointerMove={handlePointerMove}
+        className={classes}
+        {...(props as Omit<ComponentPropsWithoutRef<typeof Link>, "href">)}
+      >
+        {innerContent}
+      </Link>
+    );
+  }
 
   return (
-    <motion.span
-      ref={wrapRef}
-      onPointerEnter={onEnter}
-      onPointerMove={onMove}
-      onPointerLeave={onLeave}
-      style={{ x: sx, y: sy }}
-      className="inline-flex"
+    <button
+      onPointerMove={handlePointerMove}
+      className={classes}
+      {...(props as ComponentPropsWithoutRef<"button">)}
     >
-      {href ? (
-        <Link
-          href={href}
-          className={classes}
-          {...(props as Omit<ComponentPropsWithoutRef<typeof Link>, "href">)}
-        >
-          {innerContent}
-        </Link>
-      ) : (
-        <button
-          className={classes}
-          {...(props as ComponentPropsWithoutRef<"button">)}
-        >
-          {innerContent}
-        </button>
-      )}
-    </motion.span>
+      {innerContent}
+    </button>
   );
 }
 
-function ArrowIcon() {
+function ArrowIcon({ subtle = false }: { subtle?: boolean }) {
+  if (subtle) {
+    return (
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        className="motion-safe:transition-transform duration-200 group-hover:translate-x-1"
+      >
+        <path
+          d="M5 12h14M13 6l6 6-6 6"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-      className="motion-safe:transition-transform duration-[var(--el-duration-fast)] group-hover:translate-x-1"
-    >
-      <path
-        d="M3 8H13M13 8L9 4M13 8L9 12"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <span className="btn__icon motion-safe:transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M5 12h14M13 6l6 6-6 6"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
   );
 }

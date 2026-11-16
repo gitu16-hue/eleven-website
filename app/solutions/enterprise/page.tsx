@@ -16,6 +16,11 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+} from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
   title: "Enterprise Sovereign AI Fleet & Zero-Trust Governance | ELEVEN",
@@ -99,7 +104,14 @@ export default function EnterpriseSolutionPage() {
 
         {/* HERO SECTION */}
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60" />
+          <div
+            aria-hidden="true"
+            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
+          />
 
           <Container className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -118,9 +130,9 @@ export default function EnterpriseSolutionPage() {
               </div>
             </div>
 
-            <div className="mt-10 max-w-4xl space-y-6">
-              <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+              <div className="gfx-badge shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Enterprise Fleet Governance · Zero-Trust Air-Gap Compliant" />
               </div>
 
@@ -135,17 +147,21 @@ export default function EnterpriseSolutionPage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2 pt-2 text-el-xs">
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+              <div className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Zero cloud exfiltration
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   MDM / Jamf / Intune ready
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   FIDO2 hardware-bound
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Merkle WORM audit trail
                 </span>
               </div>
@@ -156,7 +172,6 @@ export default function EnterpriseSolutionPage() {
                   tier="technical"
                   arrow
                   variant="primary"
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Schedule Architecture Consultation
                 </WaitlistActionButton>
@@ -165,7 +180,6 @@ export default function EnterpriseSolutionPage() {
                   href="/security"
                   variant="secondary"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Inspect Threat Model
                 </Button>
@@ -174,23 +188,23 @@ export default function EnterpriseSolutionPage() {
                   href="/tools/vault-calculator"
                   variant="ghost"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Estimate Storage Economics
                 </Button>
               </div>
-            </div>
+            </GenesisHeroIntro>
           </Container>
         </Section>
 
         <SignalBeamDivider />
 
         {/* 4 ENTERPRISE GOVERNANCE PILLARS */}
-        <Section className="py-16 lg:py-24 bg-el-bg">
+        <Section className="py-16 lg:py-24 bg-[#08090a]/60">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 01 Architectural Foundation" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="01 · Architectural Foundation" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="The 4 Enterprise Governance Pillars" />
@@ -198,19 +212,19 @@ export default function EnterpriseSolutionPage() {
               <p className="el-body">
                 Traditional cloud AI assistants ask enterprise CISOs to surrender perimeter defense in exchange for model intelligence. ELEVEN reverses this paradigm: intelligence is shipped to the hardware boundary, where deterministic kernel controls govern every byte.
               </p>
-            </div>
+            </GenesisSectionIntro>
 
             <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Pillar 01 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/50 p-6 lg:p-8">
-                <div className="pointer-events-none absolute top-3 right-3 text-xs text-el-fg-faint">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8">
+                <div className="pointer-events-none absolute top-4 right-5 text-xs text-el-fg-faint font-mono">
                   01
                 </div>
                 <div className="flex items-center gap-2 text-xs text-el-accent font-medium">
-                  <span className="h-2 w-2 rounded-full bg-el-accent" />
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Air-gapped fleet deployment</span>
                 </div>
-                <h3 className="mt-3 text-xl font-medium text-el-fg">
+                <h3 className="mt-3 text-xl font-normal heading-gradient">
                   Centralized MDM &amp; 100% Offline Local Weights
                 </h3>
                 <DualCopy
@@ -218,28 +232,28 @@ export default function EnterpriseSolutionPage() {
                   plain="Distribute ELEVEN like any other standard enterprise application through Jamf, Microsoft Intune, or Ansible. Models run entirely on employee laptops with zero internet dependency."
                   technical="Zero-runtime cloud dependence. Deploy pre-quantized Safetensors / GGUF model binaries via corporate package managers. Signed SHA-256 hashes prevent binary tampering; models execute on device Neural Engines and local GPUs."
                 />
-                <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint space-y-1.5">
+                <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint space-y-1.5">
                   <div className="flex justify-between">
                     <span>Package Delivery:</span>
                     <span className="text-el-fg"><code>Jamf Pro, Intune, Puppet, Ansible</code></span>
                   </div>
                   <div className="flex justify-between">
                     <span>Offline Capability:</span>
-                    <span className="text-el-mint">100% operational offline</span>
+                    <span className="text-[#10bc83]">100% operational offline</span>
                   </div>
                 </div>
               </Tilt3DCard>
 
               {/* Pillar 02 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/50 p-6 lg:p-8">
-                <div className="pointer-events-none absolute top-3 right-3 text-xs text-el-fg-faint">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8">
+                <div className="pointer-events-none absolute top-4 right-5 text-xs text-el-fg-faint font-mono">
                   02
                 </div>
                 <div className="flex items-center gap-2 text-xs text-el-accent font-medium">
-                  <span className="h-2 w-2 rounded-full bg-el-accent" />
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Hardware-bound identity &amp; SAML</span>
                 </div>
-                <h3 className="mt-3 text-xl font-medium text-el-fg">
+                <h3 className="mt-3 text-xl font-normal heading-gradient">
                   FIDO2 Touch Attestation &amp; Corporate SSO
                 </h3>
                 <DualCopy
@@ -247,28 +261,28 @@ export default function EnterpriseSolutionPage() {
                   plain="Connect with your existing corporate login (Okta, Microsoft Entra ID). High-risk actions require physical hardware touch (YubiKey or Touch ID) so AI can never act without human confirmation."
                   technical="Federated SAML 2.0 / OIDC authentication bound to hardware security tokens. Tier 2 and Tier 3 ActionProposals require WebAuthn FIDO2 presence assertion or Secure Enclave biometric attestation, mathematically preventing autonomous privilege escalation."
                 />
-                <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint space-y-1.5">
+                <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint space-y-1.5">
                   <div className="flex justify-between">
                     <span>SSO Federation:</span>
                     <span className="text-el-fg"><code>Okta, Microsoft Entra ID, PingFederate</code></span>
                   </div>
                   <div className="flex justify-between">
                     <span>Human Approval Gate:</span>
-                    <span className="text-el-mint">YubiKey 5 FIDO2 / Apple Touch ID</span>
+                    <span className="text-[#10bc83]">YubiKey 5 FIDO2 / Apple Touch ID</span>
                   </div>
                 </div>
               </Tilt3DCard>
 
               {/* Pillar 03 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/50 p-6 lg:p-8">
-                <div className="pointer-events-none absolute top-3 right-3 text-xs text-el-fg-faint">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8">
+                <div className="pointer-events-none absolute top-4 right-5 text-xs text-el-fg-faint font-mono">
                   03
                 </div>
                 <div className="flex items-center gap-2 text-xs text-el-accent font-medium">
-                  <span className="h-2 w-2 rounded-full bg-el-accent" />
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Continuous auditing &amp; Merkle ledgers</span>
                 </div>
-                <h3 className="mt-3 text-xl font-medium text-el-fg">
+                <h3 className="mt-3 text-xl font-normal heading-gradient">
                   Tamper-Evident RFC 6962 Receipts for SIEM
                 </h3>
                 <DualCopy
@@ -276,43 +290,43 @@ export default function EnterpriseSolutionPage() {
                   plain="Every decision, recommendation, and action generates a verifiable audit certificate. Your compliance team gets ironclad proof for auditors without ever exposing raw confidential text."
                   technical="Cryptographically chained Merkle trees recording every reasoning node, ActionProposal hash, and policy clearance. Endpoints export signed Merkle root proofs to corporate SIEMs (Splunk, Datadog, Sentinel) satisfying SOC 2 Type II and SEC Rule 17a-4."
                 />
-                <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint space-y-1.5">
+                <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint space-y-1.5">
                   <div className="flex justify-between">
                     <span>SIEM Export Format:</span>
                     <span className="text-el-fg"><code>RFC-5424 Syslog / JSON Merkle Roots</code></span>
                   </div>
                   <div className="flex justify-between">
                     <span>Record Immutability:</span>
-                    <span className="text-el-mint">SEC Rule 17a-4(f) WORM Compliant</span>
+                    <span className="text-[#10bc83]">SEC Rule 17a-4(f) WORM Compliant</span>
                   </div>
                 </div>
               </Tilt3DCard>
 
               {/* Pillar 04 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/50 p-6 lg:p-8">
-                <div className="pointer-events-none absolute top-3 right-3 text-xs text-el-fg-faint">
+              <Tilt3DCard className="relative overflow-hidden p-6 lg:p-8">
+                <div className="pointer-events-none absolute top-4 right-5 text-xs text-el-fg-faint font-mono">
                   04
                 </div>
                 <div className="flex items-center gap-2 text-xs text-el-accent font-medium">
-                  <span className="h-2 w-2 rounded-full bg-el-accent" />
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Default-deny network isolation</span>
                 </div>
-                <h3 className="mt-3 text-xl font-medium text-el-fg">
+                <h3 className="mt-3 text-xl font-normal heading-gradient">
                   Ring-0 Kernel Watchdog &amp; &lt;50ms Killswitch
                 </h3>
                 <DualCopy
                   className="mt-3 text-sm text-el-fg-muted leading-relaxed"
                   plain="If an agent attempts to open an unauthorized internet connection or access restricted directories, the system instantly halts the process in under 50 milliseconds."
-                  technical="Ring-0 supervisory daemon enforces eBPF socket filtering and macOS EndpointSecurity invariants. Any socket creation outside localhost IPC triggers an immediate SIGKILL (&lt;42ms), neutralizing prompt injection escapes at the kernel boundary."
+                  technical="Ring-0 supervisory daemon enforces eBPF socket filtering and macOS EndpointSecurity invariants. Any socket creation outside localhost IPC triggers an immediate SIGKILL (<42ms), neutralizing prompt injection escapes at the kernel boundary."
                 />
-                <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint space-y-1.5">
+                <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint space-y-1.5">
                   <div className="flex justify-between">
                     <span>Enforcement Mechanism:</span>
                     <span className="text-el-fg"><code>Ring-0 Supervisor (eBPF / EndpointSec)</code></span>
                   </div>
                   <div className="flex justify-between">
                     <span>Emergency Stop Latency:</span>
-                    <span className="text-el-mint">&lt;50ms deterministic halting</span>
+                    <span className="text-[#10bc83]">&lt;50ms deterministic halting</span>
                   </div>
                 </div>
               </Tilt3DCard>
@@ -325,9 +339,10 @@ export default function EnterpriseSolutionPage() {
         {/* INTERACTIVE ENTERPRISE FLEET CONFIGURATOR */}
         <Section className="py-16 lg:py-24">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 02 Interactive Fleet Simulator" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="02 · Interactive Fleet Simulator" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Simulate Fleet Governance &amp; Telemetry" />
@@ -335,22 +350,23 @@ export default function EnterpriseSolutionPage() {
               <p className="el-body">
                 Model enterprise workstation deployments from 25-seat pilot programs to 2,500-seat global rollouts. Calculate avoided cloud data exposure, annual licensing savings, and inspect generated MDM configuration manifests.
               </p>
-            </div>
+            </GenesisSectionIntro>
 
-            <div className="mt-10">
+            <GenesisShowcaseFrame className="mt-10 p-4 sm:p-6">
               <EnterpriseFleetConfigurator />
-            </div>
+            </GenesisShowcaseFrame>
           </Container>
         </Section>
 
         <SignalBeamDivider />
 
         {/* INTERACTIVE REGULATORY COMPLIANCE MATRIX */}
-        <Section className="py-16 lg:py-24 bg-el-bg">
+        <Section className="py-16 lg:py-24 bg-[#08090a]/60">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 03 Regulatory Cross-Walk" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="03 · Regulatory Cross-Walk" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Enterprise Regulatory Compliance Matrix" />
@@ -358,11 +374,11 @@ export default function EnterpriseSolutionPage() {
               <p className="el-body">
                 Compare traditional cloud SaaS assistants against ELEVEN’s sovereign local architecture across critical data privacy, security, and governance standards.
               </p>
-            </div>
+            </GenesisSectionIntro>
 
-            <div className="mt-10">
+            <GenesisShowcaseFrame className="mt-10 p-4 sm:p-6">
               <EnterpriseComplianceMatrix />
-            </div>
+            </GenesisShowcaseFrame>
           </Container>
         </Section>
 
@@ -371,9 +387,10 @@ export default function EnterpriseSolutionPage() {
         {/* ENTERPRISE ARCHITECTURE TOPOLOGY BLUEPRINT */}
         <Section className="py-16 lg:py-24">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 04 Zero-Trust System Topology" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="04 · Zero-Trust System Topology" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Endpoint Hardware vs Corporate Control Plane" />
@@ -381,84 +398,84 @@ export default function EnterpriseSolutionPage() {
               <p className="el-body">
                 ELEVEN enforces an unbreachable separation between private employee workstation execution and centralized corporate compliance monitoring.
               </p>
-            </div>
+            </GenesisSectionIntro>
 
             {/* Architecture Diagram Grid */}
             <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
               {/* Layer 1: Managed Endpoint */}
-              <div className="relative rounded-sm border border-el-border bg-el-bg-raised/40 p-6 space-y-4 shadow-el-sm">
+              <Tilt3DCard className="relative p-6 space-y-4">
                 <div className="flex items-center justify-between text-el-accent">
                   <span className="font-medium">Layer 1: Workstation Endpoint</span>
                   <span className="text-[10px] text-el-fg-faint">100% private</span>
                 </div>
                 <div className="space-y-3 text-xs text-el-fg-muted">
-                  <div className="rounded-xs border border-el-border bg-el-bg p-3 space-y-1">
+                  <div className="rounded-[0.75rem] border border-white/[0.08] bg-[#08090a] p-3 space-y-1">
                     <p className="text-el-fg font-medium">Local Model Inference</p>
                     <p className="text-el-fg-faint">System 1 (16kHz Voice) + System 2 (DAG Plan)</p>
                   </div>
-                  <div className="rounded-xs border border-el-border bg-el-bg p-3 space-y-1">
+                  <div className="rounded-[0.75rem] border border-white/[0.08] bg-[#08090a] p-3 space-y-1">
                     <p className="text-el-fg font-medium">4-Drawer Private Vault</p>
                     <p className="text-el-fg-faint">AES-256-GCM encrypted SQLite + HNSW index</p>
                   </div>
-                  <div className="rounded-xs border border-el-border bg-el-bg p-3 space-y-1">
+                  <div className="rounded-[0.75rem] border border-white/[0.08] bg-[#08090a] p-3 space-y-1">
                     <p className="text-el-fg font-medium">Quarantined Git Worktrees</p>
                     <p className="text-el-fg-faint">AST security audits &amp; diff sign-off gates</p>
                   </div>
                 </div>
-                <div className="border-t border-el-border pt-3 text-[11px] text-el-mint">
+                <div className="border-t border-white/[0.07] pt-3 text-[11px] text-[#10bc83]">
                   Zero prompts or code ever leave this boundary
                 </div>
-              </div>
+              </Tilt3DCard>
 
               {/* Layer 2: Ring-0 Supervisor */}
-              <div className="relative rounded-sm border border-el-border bg-el-bg-raised/40 p-6 space-y-4 shadow-el-sm">
-                <div className="flex items-center justify-between text-el-mint">
+              <Tilt3DCard className="relative p-6 space-y-4">
+                <div className="flex items-center justify-between text-[#10bc83]">
                   <span className="font-medium">Layer 2: Kernel Supervisor</span>
                   <span className="text-[10px] text-el-fg-faint">Hard boundary</span>
                 </div>
                 <div className="space-y-3 text-xs text-el-fg-muted">
-                  <div className="rounded-xs border border-el-border bg-el-bg p-3 space-y-1">
+                  <div className="rounded-[0.75rem] border border-white/[0.08] bg-[#08090a] p-3 space-y-1">
                     <p className="text-el-fg font-medium">eBPF Socket Firewall</p>
                     <p className="text-el-fg-faint">Drops unexpected outbound SYN packets</p>
                   </div>
-                  <div className="rounded-xs border border-el-border bg-el-bg p-3 space-y-1">
+                  <div className="rounded-[0.75rem] border border-white/[0.08] bg-[#08090a] p-3 space-y-1">
                     <p className="text-el-fg font-medium">FIDO2 WebAuthn Gate</p>
                     <p className="text-el-fg-faint">Hardware token touch verified on OS mutations</p>
                   </div>
-                  <div className="rounded-xs border border-el-border bg-el-bg p-3 space-y-1">
+                  <div className="rounded-[0.75rem] border border-white/[0.08] bg-[#08090a] p-3 space-y-1">
                     <p className="text-el-fg font-medium">Watchdog Killswitch (&lt;50ms)</p>
                     <p className="text-el-fg-faint">SIGKILL dispatched on policy non-conformance</p>
                   </div>
                 </div>
-                <div className="border-t border-el-border pt-3 text-[11px] text-el-mint">
+                <div className="border-t border-white/[0.07] pt-3 text-[11px] text-[#10bc83]">
                   Deterministic fail-closed kernel enforcement
                 </div>
-              </div>
+              </Tilt3DCard>
 
               {/* Layer 3: Centralized SIEM / MDM */}
-              <div className="relative rounded-sm border border-el-border bg-el-bg-raised/40 p-6 space-y-4 shadow-el-sm">
+              <Tilt3DCard className="relative p-6 space-y-4">
                 <div className="flex items-center justify-between text-el-accent">
                   <span className="font-medium">Layer 3: SIEM &amp; MDM Sync</span>
                   <span className="text-[10px] text-el-fg-faint">Audit only</span>
                 </div>
                 <div className="space-y-3 text-xs text-el-fg-muted">
-                  <div className="rounded-xs border border-el-border bg-el-bg p-3 space-y-1">
+                  <div className="rounded-[0.75rem] border border-white/[0.08] bg-[#08090a] p-3 space-y-1">
                     <p className="text-el-fg font-medium">Centralized Policy Fleet Distribution</p>
                     <p className="text-el-fg-faint">Jamf / Intune pushes signed YAML manifests</p>
                   </div>
-                  <div className="rounded-xs border border-el-border bg-el-bg p-3 space-y-1">
+                  <div className="rounded-[0.75rem] border border-white/[0.08] bg-[#08090a] p-3 space-y-1">
                     <p className="text-el-fg font-medium">Zero-Knowledge Merkle Sync</p>
                     <p className="text-el-fg-faint">Splunk / Datadog receives SHA-256 root hashes</p>
                   </div>
-                  <div className="rounded-xs border border-el-border bg-el-bg p-3 space-y-1">
+                  <div className="rounded-[0.75rem] border border-white/[0.08] bg-[#08090a] p-3 space-y-1">
                     <p className="text-el-fg font-medium">External Auditor Verification</p>
                     <p className="text-el-fg-faint">SOC 2 / ISO 27001 proof without data exposure</p>
                   </div>
                 </div>
-                <div className="border-t border-el-border pt-3 text-[11px] text-el-fg-muted">
+                <div className="border-t border-white/[0.07] pt-3 text-[11px] text-el-fg-muted">
                   Zero-knowledge proofs with verifiable visibility
                 </div>
-              </div>
+              </Tilt3DCard>
             </div>
           </Container>
         </Section>
@@ -466,11 +483,12 @@ export default function EnterpriseSolutionPage() {
         <SignalBeamDivider />
 
         {/* ENTERPRISE SECURITY EVALUATION FAQ */}
-        <Section className="py-16 lg:py-24 bg-el-bg">
+        <Section className="py-16 lg:py-24 bg-[#08090a]/60">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 05 CISO &amp; IT Evaluation FAQ" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="05 · CISO & IT Evaluation FAQ" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Frequently Addressed Security Questions" />
@@ -478,7 +496,7 @@ export default function EnterpriseSolutionPage() {
               <p className="el-body">
                 Technical answers for security review committees, compliance officers, and IT infrastructure leads.
               </p>
-            </div>
+            </GenesisSectionIntro>
 
             <div className="mt-10 max-w-4xl space-y-4">
               {[
@@ -503,73 +521,77 @@ export default function EnterpriseSolutionPage() {
                   a: "The Ring-0 supervisory daemon monitors all system calls and network sockets at the kernel level. Because model reasoning is strictly separated from tool execution, an untrusted LLM can only emit a structured JSON ActionProposal. If the proposal violates invariant rules or attempts unauthorized socket access, the Ring-0 watchdog executes a deterministic process SIGKILL in under 50 milliseconds.",
                 },
               ].map((faq, i) => (
-                <div key={i} className="rounded-xs border border-el-border bg-el-bg-raised/40 p-5 space-y-2">
-                  <h3 className="text-sm font-medium text-el-fg">
+                <Tilt3DCard key={i} className="p-5 space-y-2">
+                  <h3 className="text-sm font-normal heading-gradient">
                     Q: {faq.q}
                   </h3>
                   <p className="text-xs text-el-fg-muted leading-relaxed">
                     {faq.a}
                   </p>
-                </div>
+                </Tilt3DCard>
               ))}
             </div>
           </Container>
         </Section>
 
         {/* BOTTOM CTA ACCESS FUNNEL */}
-        <Section className="py-16 lg:py-24 border-t border-el-border bg-gradient-to-b from-el-bg-raised/90 to-el-bg">
+        <Section className="py-20">
           <Container>
-            <div className="mx-auto max-w-3xl text-center space-y-6">
-              <div className="el-badge mx-auto">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
-                <CipherText text="Enterprise Pilot Program · 25 to 2,500 Seats" />
-              </div>
-
-              <h2 className="el-h2">
-                <WordReveal text="Ready to deploy sovereign AI across your fleet?" />
-              </h2>
-
-              <DualCopy
-                className="mx-auto max-w-2xl el-body"
-                plain="Contact GISHH Labs to schedule an architecture consultation, pilot deployment, and security review for your organization."
-                technical="Engage with our core systems engineering team for air-gapped pilot deployment, custom MDM policy synthesis, and compliance integration."
+            <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
               />
+              <GenesisSectionIntro className="relative mx-auto max-w-3xl text-center space-y-6">
+                <div className="gfx-badge mx-auto">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
+                  <CipherText text="Enterprise Pilot Program · 25 to 2,500 Seats" />
+                </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                <WaitlistActionButton
-                  tier="technical"
-                  arrow
-                  variant="primary"
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-                >
-                  Schedule Architecture Consultation
-                </WaitlistActionButton>
+                <h2 className="el-h2">
+                  <WordReveal text="Ready to deploy sovereign AI across your fleet?" />
+                </h2>
 
-                <Button
-                  href="/security"
-                  variant="secondary"
-                  arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-                >
-                  Security Architecture &amp; Threat Model
-                </Button>
-              </div>
+                <DualCopy
+                  className="mx-auto max-w-2xl el-body"
+                  plain="Contact GISHH Labs to schedule an architecture consultation, pilot deployment, and security review for your organization."
+                  technical="Engage with our core systems engineering team for air-gapped pilot deployment, custom MDM policy synthesis, and compliance integration."
+                />
 
-              {/* Cross Links to Other Deep Architecture Pages */}
-              <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
-                <Link href="/solutions/developers" className="hover:text-el-accent transition-colors">
-                  For Software Engineers
-                </Link>
-                <Link href="/tools/vault-calculator" className="hover:text-el-accent transition-colors">
-                  Vault Storage Estimator
-                </Link>
-                <Link href="/compare/cloud-vs-local" className="hover:text-el-accent transition-colors">
-                  Cloud vs Local Audit
-                </Link>
-                <Link href="/docs" className="hover:text-el-accent transition-colors">
-                  Developer Documentation Hub
-                </Link>
-              </div>
+                <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+                  <WaitlistActionButton
+                    tier="technical"
+                    arrow
+                    variant="primary"
+                  >
+                    Schedule Architecture Consultation
+                  </WaitlistActionButton>
+
+                  <Button
+                    href="/security"
+                    variant="secondary"
+                    arrow
+                  >
+                    Security Architecture &amp; Threat Model
+                  </Button>
+                </div>
+
+                {/* Cross Links to Other Deep Architecture Pages */}
+                <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
+                  <Link href="/solutions/developers" className="hover:text-[#38ffbd] transition-colors">
+                    For Software Engineers
+                  </Link>
+                  <Link href="/tools/vault-calculator" className="hover:text-[#38ffbd] transition-colors">
+                    Vault Storage Estimator
+                  </Link>
+                  <Link href="/compare/cloud-vs-local" className="hover:text-[#38ffbd] transition-colors">
+                    Cloud vs Local Audit
+                  </Link>
+                  <Link href="/docs" className="hover:text-[#38ffbd] transition-colors">
+                    Developer Documentation Hub
+                  </Link>
+                </div>
+              </GenesisSectionIntro>
             </div>
           </Container>
         </Section>

@@ -40,6 +40,11 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+} from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
   title: "Sovereign Voyage Dashboard & Curved SVG Stepper | ELEVEN",
@@ -101,10 +106,7 @@ export default function DashboardPage() {
     <>
       <Nav />
 
-      <main
-        id="main-content"
-        className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
-      >
+      <main id="main-content">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -122,7 +124,11 @@ export default function DashboardPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-60"
+            className="pointer-events-none absolute inset-0 el-aurora"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
           />
 
           <Container className="relative">
@@ -141,9 +147,9 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="mt-10 max-w-4xl space-y-6">
-              <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime motion-reduce:animate-none" />
+            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
                 <CipherText text="GSAP Kinematics · Curved SVG Voyage Stepper" />
               </div>
 
@@ -158,18 +164,22 @@ export default function DashboardPage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2 pt-2 text-xs text-el-fg-muted">
-                <span className="rounded-xs border border-el-signal-lime/40 bg-el-signal-lime/10 px-2.5 py-1 text-el-signal-lime">
-                  Dual SVG Path Arc-Length Reveal
+              <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
+                  <span>Dual SVG Path Arc-Length Reveal</span>
                 </span>
-                <span className="rounded-xs border border-el-signal-lime/30 bg-el-signal-lime/5 px-2.5 py-1 text-el-fg-muted">
-                  Tangent-Aligned Damped Banking
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <span>Tangent-Aligned Damped Banking</span>
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  Animated Cubic Spline Chart
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
+                  <span>Animated Cubic Spline Chart</span>
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                  Fluid GSAP Value Tweening
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <span>Fluid GSAP Value Tweening</span>
                 </span>
               </div>
 
@@ -179,7 +189,6 @@ export default function DashboardPage() {
                   tier="technical"
                   arrow
                   variant="primary"
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
                 >
                   Request Dashboard Integration
                 </WaitlistActionButton>
@@ -188,7 +197,6 @@ export default function DashboardPage() {
                   href="/tools/dag-visualizer"
                   variant="secondary"
                   arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
                 >
                   System 2 DAG Visualizer
                 </Button>
@@ -197,12 +205,11 @@ export default function DashboardPage() {
                   href="/tools/vault-calculator"
                   variant="ghost"
                   arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
                 >
                   Vault Storage Estimator
                 </Button>
               </div>
-            </div>
+            </GenesisHeroIntro>
           </Container>
         </Section>
 
@@ -211,41 +218,47 @@ export default function DashboardPage() {
         {/* INTERACTIVE ELEVEN V3 CONTROL SHOWCASE (ZERO-PROMPT TRIAD & L5 HYPERVISOR) */}
         <Section className="py-12 lg:py-20 bg-el-bg">
           <Container>
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <GenesisSectionIntro className="mb-8 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="el-eyebrow">
-                  <CipherText text="// 01 FLAGSHIP INTERACTIVE SHOWCASE" />
+                <div className="gfx-badge mb-3">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <CipherText text="01 · Flagship Interactive Showcase" />
                 </div>
                 <h2 className="el-h2 mt-1">
                   <WordReveal text="Zero-Prompt Cognitive Triad and L5 Zero-Trust Hypervisor" />
                 </h2>
               </div>
-              <span className="text-xs text-el-fg-muted bg-el-bg-raised/60 border border-el-border px-3 py-1 rounded-xs">
+              <span className="gfx-bubble !h-8 !px-3 !text-xs">
                 Jev + CDM + F.R.I.D.A.Y.
               </span>
-            </div>
+            </GenesisSectionIntro>
 
-            <ElevenControlShowcase />
+            <GenesisShowcaseFrame>
+              <ElevenControlShowcase />
+            </GenesisShowcaseFrame>
           </Container>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ACTUARIAL APPLICATION USE CASE: CAPITAL ALLOCATION & UNDERWRITING */}
-        <Section className="py-12 lg:py-20 bg-el-bg-raised/40">
+        <Section className="py-12 lg:py-20">
           <Container>
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <GenesisSectionIntro className="mb-8 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="el-eyebrow">
-                  <CipherText text="// 02 COMMERCIAL WORKFLOW DEMO" />
+                <div className="gfx-badge mb-3">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <CipherText text="02 · Commercial Workflow Demo" />
                 </div>
-                <h3 className="mt-1 text-xl font-bold tracking-tight text-el-fg">
+                <h2 className="el-h2 mt-1">
                   <WordReveal text="Sovereign Underwriting Engine with Dynamic Premium Tweening" />
-                </h3>
+                </h2>
               </div>
-            </div>
+            </GenesisSectionIntro>
 
-            <AnimatedDashboard />
+            <GenesisShowcaseFrame>
+              <AnimatedDashboard />
+            </GenesisShowcaseFrame>
           </Container>
         </Section>
 
@@ -254,9 +267,10 @@ export default function DashboardPage() {
         {/* ARCHITECTURAL DEEP DIVE: 3 KINEMATIC PRINCIPLES */}
         <Section className="py-16 lg:py-24">
           <Container>
-            <div className="max-w-3xl space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 03 MATHEMATICAL AND ANIMATION MECHANICS" />
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="03 · Mathematical and Animation Mechanics" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="The Mathematics of Curved Route Kinematics" />
@@ -265,65 +279,65 @@ export default function DashboardPage() {
                 className="el-body"
                 text="Standard UI steppers use one-dimensional linear percentages. The VoyageStepper maps milestones along arbitrary cubic-bezier space curves with precise tangent tracking."
               />
-            </div>
+            </GenesisSectionIntro>
 
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Feature 1 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+              <Tilt3DCard className="p-6 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-3 right-3">
-                  <code className="text-el-signal-lime/50 font-mono text-xs">01</code>
+                  <code className="text-[#10bc83]/60 font-mono text-xs">01</code>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                <div className="flex items-center gap-2 text-xs text-[#10bc83] font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Dual-path arc mapping</span>
                 </div>
-                <h3 className="text-xl font-bold text-el-fg">
+                <h3 className="text-xl font-normal heading-gradient">
                   Dynamic Stroke-Dasharray Revelation
                 </h3>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   Two overlaid SVG paths share the identical cubic-bezier path definition. The background path renders a muted guide, while the foreground path dynamically modulates its stroke-dasharray to exactly match the current animated arc length:
                 </p>
-                <div className="rounded-xs border border-el-border bg-el-bg-raised/60 p-3 text-xs text-el-signal-lime font-mono text-[11px]">
+                <div className="rounded-lg border border-el-border bg-black/50 p-3 text-xs text-[#10bc83] font-mono text-[11px]">
                   {"done.setAttribute('stroke-dasharray', `${l} ${total}`);"}
                 </div>
               </Tilt3DCard>
 
               {/* Feature 2 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 space-y-4 shadow-el-sm transition-colors duration-200 hover:border-el-signal-lime/40">
+              <Tilt3DCard className="p-6 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-3 right-3">
-                  <code className="text-el-signal-lime/50 font-mono text-xs">02</code>
+                  <code className="text-[#10bc83]/60 font-mono text-xs">02</code>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                <div className="flex items-center gap-2 text-xs text-[#10bc83] font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Tangent-aligned banking</span>
                 </div>
-                <h3 className="text-xl font-bold text-el-fg">
+                <h3 className="text-xl font-normal heading-gradient">
                   Damped Differential Heading
                 </h3>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   To calculate the traveler’s orientation without high-frequency vibration, the engine samples a point 2 pixels ahead on the curve and computes the arctangent with a 0.4 damping factor:
                 </p>
-                <div className="rounded-xs border border-el-border bg-el-bg-raised/60 p-3 text-xs text-el-signal-lime font-mono text-[11px]">
+                <div className="rounded-lg border border-el-border bg-black/50 p-3 text-xs text-[#10bc83] font-mono text-[11px]">
                   ang = (atan2(q.y - p.y, q.x - p.x) * 180 / π) * 0.4;
                 </div>
               </Tilt3DCard>
 
               {/* Feature 3 */}
-              <Tilt3DCard className="relative overflow-hidden rounded-sm border border-el-border bg-el-bg-raised/30 p-6 space-y-4 transition-colors duration-200 hover:border-el-signal-lime/40">
+              <Tilt3DCard className="p-6 space-y-4 h-full">
                 <div className="pointer-events-none absolute top-3 right-3">
-                  <code className="text-el-signal-lime/50 font-mono text-xs">03</code>
+                  <code className="text-[#10bc83]/60 font-mono text-xs">03</code>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-el-signal-lime font-semibold">
-                  <span className="h-2 w-2 rounded-full bg-el-signal-lime" />
+                <div className="flex items-center gap-2 text-xs text-[#10bc83] font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
                   <span>Fluid numerical tweening</span>
                 </div>
-                <h3 className="text-xl font-bold text-el-fg">
+                <h3 className="text-xl font-normal heading-gradient">
                   Sub-Millisecond Parameter Rolling
                 </h3>
                 <p className="text-xs text-el-fg-muted leading-relaxed">
                   Dragging interactive range sliders updates GSAP proxy values that smoothly tween the formatted currency totals on screen, avoiding abrupt jumps and delivering tactile feedback.
                 </p>
-                <div className="rounded-xs border border-el-border bg-el-bg-raised/60 p-3 text-xs text-el-signal-lime font-mono text-[11px]">
+                <div className="rounded-lg border border-el-border bg-black/50 p-3 text-xs text-[#10bc83] font-mono text-[11px]">
                   {"gsap.to(proxy, { val: target, ease: 'power2.out' });"}
                 </div>
               </Tilt3DCard>
@@ -332,57 +346,62 @@ export default function DashboardPage() {
         </Section>
 
         {/* BOTTOM CTA ACCESS FUNNEL */}
-        <Section className="py-16 lg:py-24 border-t border-el-border bg-gradient-to-b from-el-bg-raised/90 to-el-bg">
+        <Section className="py-16 lg:py-24">
           <Container>
-            <div className="mx-auto max-w-3xl text-center space-y-6">
-              <div className="el-eyebrow">
-                <CipherText text="// 04 PRODUCTION ANIMATION SUITE" />
-              </div>
-
-              <h2 className="el-h2">
-                <WordReveal text="Deploy high-craft animations across your applications" />
-              </h2>
-
-              <DualCopy
-                className="mx-auto max-w-2xl el-body"
-                plain="Connect with our design systems team to incorporate custom SVG journey steppers, live actuarial calculators, and fluid dashboards into your products."
-                technical="Access the VoyageStepper component source code, GSAP animation hooks, and SVG bezier path utilities for React 19 and Next.js."
+            <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[32rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
               />
+              <div className="relative mx-auto max-w-3xl space-y-6">
+                <div className="gfx-badge mx-auto">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <CipherText text="04 · Production Animation Suite" />
+                </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                <WaitlistActionButton
-                  tier="technical"
-                  arrow
-                  variant="primary"
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-                >
-                  Request Component Source Access
-                </WaitlistActionButton>
+                <h2 className="el-h2">
+                  <WordReveal text="Deploy high-craft animations across your applications" />
+                </h2>
 
-                <Button
-                  href="/solutions/enterprise"
-                  variant="secondary"
-                  arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-                >
-                  Enterprise Fleet Governance
-                </Button>
-              </div>
+                <DualCopy
+                  className="mx-auto max-w-2xl el-body"
+                  plain="Connect with our design systems team to incorporate custom SVG journey steppers, live actuarial calculators, and fluid dashboards into your products."
+                  technical="Access the VoyageStepper component source code, GSAP animation hooks, and SVG bezier path utilities for React 19 and Next.js."
+                />
 
-              {/* Cross Links to Other Deep Architecture Pages */}
-              <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
-                <Link href="/tools/dag-visualizer" className="hover:text-el-signal-lime hover:underline">
-                  System 2 DAG Orchestrator
-                </Link>
-                <Link href="/hardware" className="hover:text-el-signal-lime hover:underline">
-                  Hardware Benchmarks
-                </Link>
-                <Link href="/tools/vault-calculator" className="hover:text-el-signal-lime hover:underline">
-                  Vault Storage Estimator
-                </Link>
-                <Link href="/compare/cloud-vs-local" className="hover:text-el-signal-lime hover:underline">
-                  Cloud vs Local Audit
-                </Link>
+                <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+                  <WaitlistActionButton
+                    tier="technical"
+                    arrow
+                    variant="primary"
+                  >
+                    Request Component Source Access
+                  </WaitlistActionButton>
+
+                  <Button
+                    href="/solutions/enterprise"
+                    variant="secondary"
+                    arrow
+                  >
+                    Enterprise Fleet Governance
+                  </Button>
+                </div>
+
+                {/* Cross Links to Other Deep Architecture Pages */}
+                <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-xs text-el-fg-faint">
+                  <Link href="/tools/dag-visualizer" className="hover:text-[#10bc83] hover:underline">
+                    System 2 DAG Orchestrator
+                  </Link>
+                  <Link href="/hardware" className="hover:text-[#10bc83] hover:underline">
+                    Hardware Benchmarks
+                  </Link>
+                  <Link href="/tools/vault-calculator" className="hover:text-[#10bc83] hover:underline">
+                    Vault Storage Estimator
+                  </Link>
+                  <Link href="/compare/cloud-vs-local" className="hover:text-[#10bc83] hover:underline">
+                    Cloud vs Local Audit
+                  </Link>
+                </div>
               </div>
             </div>
           </Container>

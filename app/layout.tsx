@@ -8,6 +8,7 @@ import { AmbientSpatialFieldEmbed } from "@/components/ui/AmbientSpatialFieldEmb
 import { ScrollProgressBar } from "@/components/ui/ScrollProgressBar";
 import { PortalTransitionProvider } from "@/components/ui/PortalTransition";
 import { ClarityProvider } from "@/components/motion/PremiumMotion";
+import { GenesisSmoothScroll } from "@/components/motion/GenesisMotionEngine";
 import { RouteScrollRestoration } from "@/components/navigation/RouteScrollRestoration";
 
 export const metadata: Metadata = {
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#06080D",
+  themeColor: "#05070D",
   colorScheme: "dark",
 };
 
@@ -114,11 +115,13 @@ export default function RootLayout({
         />
         <ClarityProvider>
           <PortalTransitionProvider>
-            <RouteScrollRestoration />
-            <ScrollProgressBar />
-            <AmbientSpatialFieldEmbed />
-            <AmbientGlow />
-            <div className="relative z-[3]">{children}</div>
+            <GenesisSmoothScroll>
+              <RouteScrollRestoration />
+              <ScrollProgressBar />
+              <AmbientSpatialFieldEmbed />
+              <AmbientGlow />
+              <div className="relative z-[3]">{children}</div>
+            </GenesisSmoothScroll>
           </PortalTransitionProvider>
         </ClarityProvider>
       </body>

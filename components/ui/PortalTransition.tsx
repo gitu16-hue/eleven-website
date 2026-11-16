@@ -28,10 +28,10 @@ export function usePortalTransition() {
 }
 
 const PHASES = [
-  { bg: "#06080D", accent: "#00F0FF", status: "SEALING HOST CONTROL SURFACE" },
-  { bg: "#080E1A", accent: "#8B5CF6", status: "VERIFYING L5 POLICY INVARIANTS" },
-  { bg: "#050B14", accent: "#00FF9D", status: "COUPLING F.R.I.D.A.Y. ↔ J.A.R.V.I.S. BUS" },
-  { bg: "#04060A", accent: "#00F0FF", status: "QUANTUM HOLOGRAPHIC HUD // ONLINE" },
+  { bg: "#05070D", accent: "#00B38C", status: "SEALING HOST CONTROL SURFACE" },
+  { bg: "#06100D", accent: "#10BC83", status: "VERIFYING L5 POLICY INVARIANTS" },
+  { bg: "#040D0A", accent: "#38FFBD", status: "COUPLING F.R.I.D.A.Y. ↔ J.A.R.V.I.S. BUS" },
+  { bg: "#05070D", accent: "#10BC83", status: "QUANTUM HOLOGRAPHIC HUD // ONLINE" },
 ];
 
 export function PortalTransitionProvider({

@@ -26,6 +26,11 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+} from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
   title: "Sovereign Vault Storage & Encryption Estimator | ELEVEN Tools",
@@ -82,10 +87,7 @@ export default function VaultCalculatorPage() {
     <>
       <Nav />
 
-      <main
-        id="main-content"
-        className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
-      >
+      <main id="main-content">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -103,7 +105,11 @@ export default function VaultCalculatorPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-60"
+            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
           />
 
           <div className="relative">
@@ -123,9 +129,9 @@ export default function VaultCalculatorPage() {
               </div>
             </div>
 
-            <div className="mt-10 max-w-4xl space-y-6">
-              <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime motion-reduce:animate-none" />
+            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+              <div className="gfx-badge shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Storage Calculator · Encrypted Local Memory" />
               </div>
 
@@ -140,17 +146,21 @@ export default function VaultCalculatorPage() {
               />
 
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2 pt-2 text-xs text-el-fg-muted">
-                <span className="rounded-xs border border-el-signal-lime/40 bg-el-signal-lime/10 px-2.5 py-1 text-el-signal-lime">
+              <div className="flex flex-wrap gap-2.5 pt-2 text-xs text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   <code>AES-256-GCM</code> / <code>Argon2id</code>
                 </span>
-                <span className="rounded-xs border border-el-signal-lime/30 bg-el-signal-lime/5 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Dense HNSW (M=16, EF=64)
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   SQLite 3 WAL Mode
                 </span>
-                <span className="rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   127.0.0.1 Loopback Only
                 </span>
               </div>
@@ -161,7 +171,6 @@ export default function VaultCalculatorPage() {
                   tier="technical"
                   arrow
                   variant="primary"
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
                 >
                   Download Sovereign Vault SDK
                 </WaitlistActionButton>
@@ -169,7 +178,6 @@ export default function VaultCalculatorPage() {
                   variant="secondary"
                   href="/docs"
                   arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
                 >
                   Read Storage Engine Specs
                 </Button>
@@ -177,26 +185,27 @@ export default function VaultCalculatorPage() {
                   variant="ghost"
                   href="/hardware"
                   arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
                 >
                   Verify Hardware Sizing
                 </Button>
               </div>
-            </div>
+            </GenesisHeroIntro>
           </div>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── INTERACTIVE CALCULATOR HARNESS ── */}
-        <Section className="py-16 lg:py-24 bg-el-bg">
-          <div className="max-w-3xl space-y-4">
+        <Section className="py-16 lg:py-24 bg-[#08090a]/60">
+          <GenesisSectionIntro className="max-w-3xl space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 01 CAPACITY AND PERFORMANCE SIMULATOR" />
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="01 · Capacity and Performance Simulator" />
               </div>
-              <div className="rounded-xs border border-el-border bg-el-bg-raised/60 px-2.5 py-1 text-xs text-el-fg-faint">
-                Storage format: <code className="text-el-signal-lime font-semibold">Encrypted SQLite 3</code>
+              <div className="gfx-bubble !h-8 !px-3 !text-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                Storage format: <code className="text-[#10bc83] font-semibold">Encrypted SQLite 3</code>
               </div>
             </div>
             <h2 className="el-h2">
@@ -207,20 +216,21 @@ export default function VaultCalculatorPage() {
               plain="Adjust the number of conversations, task complexity, and vector search quality to see how compact and fast your local database will be."
               technical="Interactive simulation modeling SQLite 3 WAL index growth, dense vector graph RAM consumption, and cryptographic unlock benchmarks across varying conversation timeframes."
             />
-          </div>
+          </GenesisSectionIntro>
 
-          <div className="mt-10">
+          <GenesisShowcaseFrame className="mt-10 p-4 sm:p-6">
             <SovereignVaultCalculator />
-          </div>
+          </GenesisShowcaseFrame>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── THE 4 PRIVATE MEMORY DRAWERS SPECIFICATION ── */}
         <Section className="py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4">
-            <div className="el-eyebrow">
-              <CipherText text="// 02 MEMORY DRAWER TAXONOMY" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="02 · Memory Drawer Taxonomy" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Separated by role. United by encryption." />
@@ -230,21 +240,21 @@ export default function VaultCalculatorPage() {
               plain="ELEVEN organizes what it knows about you into four distinct compartments so your personal rules never get confused with temporary task notes."
               technical="Four independent storage partitions bound to localhost loopback with distinct lifecycle, index topology, and caching semantics."
             />
-          </div>
+          </GenesisSectionIntro>
 
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {/* Drawer 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-signal-lime font-semibold tracking-wider">
+                  <span className="text-[#10bc83] font-semibold tracking-wider">
                     DRAWER 01 // PREFS
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-el-fg-faint">
                     &lt;5 MB
                   </span>
                 </div>
-                <h3 className="text-el-base font-semibold text-el-fg">
+                <h3 className="text-el-base font-normal heading-gradient">
                   Core Preferences &amp; Rules
                 </h3>
                 <DualCopy
@@ -253,23 +263,23 @@ export default function VaultCalculatorPage() {
                   technical="Structured relational table (prefs.db) holding deterministic policy whitelists, operator identities, and style configurations."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-3 text-xs text-el-fg-faint">
-                <span className="text-el-signal-lime">File:</span> <code className="text-[10px]">/vault/prefs.db</code>
+              <div className="mt-6 border-t border-white/[0.07] pt-3 text-xs text-el-fg-faint">
+                <span className="text-[#10bc83]">File:</span> <code className="text-[10px]">/vault/prefs.db</code>
               </div>
             </Tilt3DCard>
 
             {/* Drawer 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-signal-lime font-semibold tracking-wider">
+                  <span className="text-[#10bc83] font-semibold tracking-wider">
                     DRAWER 02 // SCRATCH
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-[#10bc83]">
                     RAM MMAP
                   </span>
                 </div>
-                <h3 className="text-el-base font-semibold text-el-fg">
+                <h3 className="text-el-base font-normal heading-gradient">
                   Ephemeral Working Scratchpad
                 </h3>
                 <DualCopy
@@ -278,23 +288,23 @@ export default function VaultCalculatorPage() {
                   technical="Zero-disk memory-mapped ring buffer. Holds subagent scratchpad state during DAG execution, self-zeroizing on session close."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-3 text-xs text-el-fg-faint">
-                <span className="text-el-signal-lime">Storage:</span> <code className="text-[10px]">RAM (/dev/shm)</code>
+              <div className="mt-6 border-t border-white/[0.07] pt-3 text-xs text-el-fg-faint">
+                <span className="text-[#10bc83]">Storage:</span> <code className="text-[10px]">RAM (/dev/shm)</code>
               </div>
             </Tilt3DCard>
 
             {/* Drawer 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-signal-lime font-semibold tracking-wider">
+                  <span className="text-[#10bc83] font-semibold tracking-wider">
                     DRAWER 03 // EPISODES
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-[#10bc83]">
                     BI-TEMPORAL
                   </span>
                 </div>
-                <h3 className="text-el-base font-semibold text-el-fg">
+                <h3 className="text-el-base font-normal heading-gradient">
                   Episodic Interaction History
                 </h3>
                 <DualCopy
@@ -303,23 +313,23 @@ export default function VaultCalculatorPage() {
                   technical="Bi-temporal interaction ledger (valid_time vs transaction_time) indexed by turn session, making temporal queries exact."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-3 text-xs text-el-fg-faint">
-                <span className="text-el-signal-lime">File:</span> <code className="text-[10px]">/vault/episodes.db</code>
+              <div className="mt-6 border-t border-white/[0.07] pt-3 text-xs text-el-fg-faint">
+                <span className="text-[#10bc83]">File:</span> <code className="text-[10px]">/vault/episodes.db</code>
               </div>
             </Tilt3DCard>
 
             {/* Drawer 4 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-signal-lime/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between font-mono text-el-xs">
-                  <span className="text-el-signal-lime font-semibold tracking-wider">
+                  <span className="text-[#10bc83] font-semibold tracking-wider">
                     DRAWER 04 // VECTORS
                   </span>
-                  <span className="rounded-xs border border-el-border px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-[#10bc83]">
                     HNSW + BM25
                   </span>
                 </div>
-                <h3 className="text-el-base font-semibold text-el-fg">
+                <h3 className="text-el-base font-normal heading-gradient">
                   Semantic Knowledge Graph
                 </h3>
                 <DualCopy
@@ -328,8 +338,8 @@ export default function VaultCalculatorPage() {
                   technical="Hybrid Reciprocal Rank Fusion (RRF k=60) combining dense HNSW vector search with sparse BM25 keyword rankings."
                 />
               </div>
-              <div className="mt-6 border-t border-el-border/60 pt-3 text-xs text-el-fg-faint">
-                <span className="text-el-signal-lime">Index:</span> <code className="text-[10px]">/vault/knowledge.qdrant</code>
+              <div className="mt-6 border-t border-white/[0.07] pt-3 text-xs text-el-fg-faint">
+                <span className="text-[#10bc83]">Index:</span> <code className="text-[10px]">/vault/knowledge.qdrant</code>
               </div>
             </Tilt3DCard>
           </div>
@@ -340,9 +350,10 @@ export default function VaultCalculatorPage() {
         {/* ── CRYPTOGRAPHIC SPEED & KEY DERIVATION ── */}
         <Section className="py-16 lg:py-24">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-            <div className="lg:col-span-6 space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 03 CRYPTOGRAPHIC THROUGHPUT" />
+            <GenesisSectionIntro className="lg:col-span-6 space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="03 · Cryptographic Throughput" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Faster than your NVMe SSD." />
@@ -355,32 +366,32 @@ export default function VaultCalculatorPage() {
 
               <ul className="space-y-3 pt-2 text-xs text-el-fg-muted">
                 <li className="flex items-start gap-2.5">
-                  <span className="text-el-signal-lime font-bold">▸</span>
+                  <span className="text-[#10bc83] font-bold">▸</span>
                   <span><strong className="text-el-fg">Hardware enclave binding:</strong> Keys reside in Apple Secure Enclave or Windows TPM 2.0; master keys never exist in plaintext on disk.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-el-signal-lime font-bold">▸</span>
+                  <span className="text-[#10bc83] font-bold">▸</span>
                   <span><strong className="text-el-fg">Argon2id memory hardening:</strong> Protects against brute-force password cracking using 64MB RAM and 4 parallel hashing lanes.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-el-signal-lime font-bold">▸</span>
+                  <span className="text-[#10bc83] font-bold">▸</span>
                   <span><strong className="text-el-fg">Zero cloud keys:</strong> GISHH Labs has no escrow keys, no recovery servers, and no backdoor into your memory drawers.</span>
                 </li>
               </ul>
-            </div>
+            </GenesisSectionIntro>
 
             {/* Benchmark Code Box */}
             <div className="lg:col-span-6">
-              <div className="overflow-hidden rounded-sm border border-el-border bg-el-bg font-mono text-[11.5px] shadow-el-md">
-                <div className="flex items-center justify-between border-b border-el-border/80 bg-el-bg-raised/70 px-4 py-2.5 text-xs">
+              <GenesisShowcaseFrame className="overflow-hidden font-mono text-[11.5px]">
+                <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#08090a] px-4 py-2.5 text-xs">
                   <span className="text-el-fg-faint">terminal // bench</span>
-                  <span className="text-el-signal-lime text-[10px]">eleven-cli v3.1</span>
+                  <span className="text-[#10bc83] text-[10px]">eleven-cli v3.1</span>
                 </div>
                 <div className="p-5 space-y-3 leading-relaxed">
                   <p className="text-el-fg-faint">
-                    <span className="text-el-signal-lime">$</span> eleven-cli vault bench --iterations 50000
+                    <span className="text-[#10bc83]">$</span> eleven-cli vault bench --iterations 50000
                   </p>
-                  <p className="text-el-signal-lime">
+                  <p className="text-[#10bc83]">
                     ✔ Hardware Crypto: Apple Crypto Engine (M-Series Hardware AES-GCM)
                   </p>
                   <p className="text-el-fg-muted">
@@ -392,12 +403,12 @@ export default function VaultCalculatorPage() {
                   <p className="text-el-fg-muted">
                     ✔ AES-256-GCM Decrypt: 4,380 MB/s (Authenticated AEAD)
                   </p>
-                  <div className="border-t border-el-border/60 pt-3 text-[11px] text-el-fg-faint">
-                    <p className="text-el-signal-lime font-semibold">➜ 50,000 turn database query (RRF top-k=10): 4.2ms</p>
+                  <div className="border-t border-white/[0.07] pt-3 text-[11px] text-el-fg-faint">
+                    <p className="text-[#10bc83] font-semibold">➜ 50,000 turn database query (RRF top-k=10): 4.2ms</p>
                     <p className="text-el-fg-muted">➜ External Network Sockets: 0 (127.0.0.1 Loopback Verified)</p>
                   </div>
                 </div>
-              </div>
+              </GenesisShowcaseFrame>
             </div>
           </div>
         </Section>
@@ -406,14 +417,15 @@ export default function VaultCalculatorPage() {
 
         {/* ── ACCESS FUNNEL & WAITLIST CTA ── */}
         <Section className="py-20 lg:py-28">
-          <div className="relative overflow-hidden rounded-sm border border-el-border bg-gradient-to-b from-el-bg-raised/90 to-el-bg p-8 sm:p-12 text-center shadow-el-lg">
+          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-30"
+              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
             />
-            <div className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 04 SOVEREIGN STORAGE AND SDK PREVIEW" />
+            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
+              <div className="gfx-badge mx-auto">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
+                <CipherText text="04 · Sovereign Storage and SDK Preview" />
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Keep your intelligence on your own hardware." />
@@ -428,7 +440,6 @@ export default function VaultCalculatorPage() {
                 <WaitlistActionButton
                   tier="technical"
                   arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
                 >
                   Download Sovereign Vault SDK
                 </WaitlistActionButton>
@@ -436,7 +447,6 @@ export default function VaultCalculatorPage() {
                   variant="secondary"
                   href="/benchmarks/voice-latency"
                   arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
                 >
                   Inspect Voice Pipeline Benchmarks
                 </Button>
@@ -444,7 +454,6 @@ export default function VaultCalculatorPage() {
                   variant="ghost"
                   href="/hardware"
                   arrow
-                  className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
                 >
                   Verify Hardware Sizing
                 </Button>
@@ -453,7 +462,7 @@ export default function VaultCalculatorPage() {
               <p className="pt-2 text-xs text-el-fg-faint">
                 Requires minimum 16GB RAM for local 768-d embedding index operations.
               </p>
-            </div>
+            </GenesisSectionIntro>
           </div>
         </Section>
       </main>

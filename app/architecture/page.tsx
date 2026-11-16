@@ -15,6 +15,11 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+} from "@/components/motion/GenesisMotionEngine";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 export const metadata: Metadata = {
@@ -100,7 +105,11 @@ export default function ArchitecturePage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
+            className="pointer-events-none absolute inset-0 el-aurora"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border">
@@ -118,9 +127,9 @@ export default function ArchitecturePage() {
             </div>
 
             <div className="mt-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-              <div className="lg:col-span-7 space-y-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-el-border bg-el-sec-graphite-deep px-3.5 py-1 text-xs font-medium text-el-sec-porcelain">
-                  <span className="h-1.5 w-1.5 rounded-full bg-el-sec-lime motion-safe:animate-pulse motion-reduce:animate-none" />
+              <GenesisHeroIntro className="lg:col-span-7 space-y-6">
+                <div className="gfx-badge">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] motion-safe:animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
                   <span>Fault-Isolated Architecture · 4 OS Process Domains</span>
                 </div>
 
@@ -134,40 +143,36 @@ export default function ArchitecturePage() {
                   technical="ELEVEN v3 isolates acoustic capture, untrusted model reasoning, deterministic policy verification, and loopback memory into separate OS fault domains with fail-closed contracts."
                 />
 
-                <ScrollReveal
-                  stagger={0.08}
-                  className="flex flex-wrap gap-2 pt-2 text-xs"
-                >
-                  <RevealItem>
-                    <span className="inline-block rounded-sm border border-el-sec-lime/30 bg-el-sec-lime/10 px-2.5 py-1 text-el-sec-lime font-medium">
-                      4 OS process rooms (INV-01)
-                    </span>
-                  </RevealItem>
-                  <RevealItem>
-                    <span className="inline-block rounded-sm border border-el-border bg-el-sec-graphite-deep px-2.5 py-1 text-el-fg-muted">
-                      5 safety checkpoints (INV-04)
-                    </span>
-                  </RevealItem>
-                  <RevealItem>
-                    <span className="inline-block rounded-sm border border-el-border bg-el-sec-graphite-deep px-2.5 py-1 text-el-fg-muted">
-                      Loopback-only memory (127.0.0.1)
-                    </span>
-                  </RevealItem>
-                </ScrollReveal>
+                <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                  <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
+                    <span>4 OS process rooms (INV-01)</span>
+                  </span>
+                  <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                    <span>5 safety checkpoints (INV-04)</span>
+                  </span>
+                  <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
+                    <span>Loopback-only memory (127.0.0.1)</span>
+                  </span>
+                </div>
 
                 <div className="pt-2 flex flex-wrap gap-4">
                   <PortalActionButton variant="primary" arrow>
                     Explore Live 3D Orb
                   </PortalActionButton>
-                  <Button href="/autonomy" variant="secondary" arrow className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime active:scale-[0.99] disabled:opacity-50">
+                  <Button href="/autonomy" variant="secondary" arrow>
                     See Approval Controls
                   </Button>
                 </div>
-              </div>
+              </GenesisHeroIntro>
 
-              <ScrollReveal direction="left" delay={0.15} className="lg:col-span-5">
-                <Gyro3DEmbed compact />
-              </ScrollReveal>
+              <div className="lg:col-span-5">
+                <GenesisShowcaseFrame>
+                  <Gyro3DEmbed compact />
+                </GenesisShowcaseFrame>
+              </div>
             </div>
           </div>
         </Section>
@@ -175,10 +180,11 @@ export default function ArchitecturePage() {
         <SignalBeamDivider />
 
         {/* ── FOUR SEPARATE ROOMS (PROCESS ISOLATION) ── */}
-        <Section id="rooms" className="relative py-16 lg:py-24 bg-el-sec-graphite-deep/60">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="text-xs font-medium text-el-sec-lime">
-              01 · Process isolation & memory zoning
+        <Section id="rooms" className="relative py-16 lg:py-24">
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <span>01 · Process isolation &amp; memory zoning</span>
             </div>
             <h2 className="el-h2">
               <WordReveal text="Why one busy task can never freeze or hijack ELEVEN." />
@@ -188,7 +194,7 @@ export default function ArchitecturePage() {
               plain="Think of ELEVEN as four separate rooms in a secure building. Even if the Workshop room is busy crunching a massive folder, the Voice Studio and Security Guard stay 100% responsive."
               technical="A runaway model stream or tool timeout in eleven_deep can never starve acoustic barge-in in eleven_voice or block supervisor hardware interrupts."
             />
-          </div>
+          </GenesisSectionIntro>
 
           <ScrollReveal
             stagger={0.08}
@@ -196,16 +202,16 @@ export default function ArchitecturePage() {
           >
             {FOUR_ROOMS.map((p) => (
               <RevealItem key={p.proc} className="h-full">
-                <Tilt3DCard className="p-6 rounded-md border border-el-border bg-el-sec-graphite/80 shadow-sm transition-colors duration-200 hover:border-el-border-strong">
+                <Tilt3DCard className="p-6 lg:p-7 h-full">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-el-border pb-3">
-                    <span className="text-xs font-medium text-el-sec-lime">
+                    <span className="text-xs font-medium text-[#10bc83]">
                       {p.room}
                     </span>
                     <code className="font-mono text-xs text-el-fg-faint">
                       {p.proc}
                     </code>
                   </div>
-                  <h3 className="mt-3.5 text-base font-semibold text-el-sec-porcelain">
+                  <h3 className="mt-3.5 text-lg font-normal heading-gradient">
                     {p.plainRole}
                   </h3>
                   <DualCopy
@@ -223,9 +229,10 @@ export default function ArchitecturePage() {
 
         {/* ── INTERACTIVE 5 SAFETY CHECKPOINTS ── */}
         <Section className="py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="text-xs font-medium text-el-sec-lime">
-              02 · Five-stage control plane
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <span>02 · Five-stage control plane</span>
             </div>
             <h2 className="el-h2">
               <WordReveal text="Five deterministic gates between AI ideas and your computer." />
@@ -235,10 +242,10 @@ export default function ArchitecturePage() {
               plain="Explore how ELEVEN filters, rewrites, checks, and executes requests through five un-bypassable checkpoints before touching your files."
               technical="Interactive simulation of TaskCompiler, DataMinimizer, ModelRouter, PolicyGate, and ExecutionController state machines."
             />
-          </div>
-          <ScrollReveal>
+          </GenesisSectionIntro>
+          <GenesisShowcaseFrame>
             <ControlPlaneInteractive />
-          </ScrollReveal>
+          </GenesisShowcaseFrame>
         </Section>
 
         <SignalBeamDivider />
@@ -246,9 +253,10 @@ export default function ArchitecturePage() {
         {/* ── 7 CLEAR LAYERS STACK (SCROLL-SCRUBBED 3D EXPLODED STACK) ── */}
         <Section id="exploded-layer-stack" className="py-16 lg:py-24">
           <div className="flex flex-col justify-between gap-6 mb-10 lg:flex-row lg:items-end">
-            <div className="max-w-3xl space-y-4">
-              <div className="text-xs font-medium text-el-sec-lime">
-                03 · Top-to-bottom stack
+            <GenesisSectionIntro className="max-w-3xl space-y-4">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <span>03 · Top-to-bottom stack</span>
               </div>
               <h2 className="el-h2">
                 <WordReveal text="Seven layers from your microphone down to your private vault." />
@@ -258,16 +266,18 @@ export default function ArchitecturePage() {
                 plain="Scroll through our exploded 3D stack—or select any layer—to see how voice capture, thinking, safety checks, and encrypted memory separate and reconnect."
                 technical="Scroll-scrubbed 3D vertical taxonomy from Operator HUD (L07) down to 127.0.0.1 Loopback Vault (L01), rendered on-demand with static reduced-motion and WebGL fallbacks."
               />
-            </div>
+            </GenesisSectionIntro>
 
             <div className="flex flex-wrap gap-3">
-              <Button href="/security#flagship-security-showcase" variant="secondary" arrow className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime">
+              <Button href="/security#flagship-security-showcase" variant="secondary" arrow>
                 Interactive Security Simulation
               </Button>
             </div>
           </div>
 
-          <ExplodedLayerStack3D />
+          <GenesisShowcaseFrame>
+            <ExplodedLayerStack3D />
+          </GenesisShowcaseFrame>
         </Section>
       </main>
 

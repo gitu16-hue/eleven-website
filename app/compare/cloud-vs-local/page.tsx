@@ -15,6 +15,11 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+} from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
   title: "Local Control Plane vs Cloud AI Assistants | ELEVEN Comparison",
@@ -112,7 +117,11 @@ export default function CompareCloudVsLocalPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
+            className="el-aurora pointer-events-none absolute inset-0 opacity-85"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_50%_at_50%_0%,#000_75%,transparent_100%)]"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -130,9 +139,9 @@ export default function CompareCloudVsLocalPage() {
               </div>
             </div>
 
-            <div className="mt-10 max-w-4xl space-y-6">
-              <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+              <div className="gfx-badge shadow-el-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Architectural Comparison · Sovereign Runtime" />
               </div>
 
@@ -146,14 +155,17 @@ export default function CompareCloudVsLocalPage() {
                 technical="Why frontier reasoning models belong inside an un-bypassable local control plane on your hardware, not inside a black-box cloud. Complete separation of untrusted model reasoning from deterministic OS execution."
               />
 
-              <div className="flex flex-wrap gap-2 pt-2 text-el-xs">
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+              <div className="flex flex-wrap gap-2.5 pt-2 text-el-xs">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   100% local silicon confinement
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
                   Zero data residency risk
                 </span>
-                <span className="rounded-xs border border-el-border/80 bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
                   Fixed workstation economics
                 </span>
               </div>
@@ -164,7 +176,6 @@ export default function CompareCloudVsLocalPage() {
                   tier="general"
                   arrow
                   variant="primary"
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Claim Your Sovereignty
                 </WaitlistActionButton>
@@ -172,29 +183,27 @@ export default function CompareCloudVsLocalPage() {
                   variant="secondary"
                   href="/solutions/developers"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Explore Developer Sandbox
                 </Button>
                 <Button
                   variant="ghost"
                   href="/tools/vault-calculator"
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Estimate Storage Specs
                 </Button>
               </div>
-            </div>
+            </GenesisHeroIntro>
           </div>
 
           {/* ── PROMINENT DISAMBIGUATION NOTICE BANNER ── */}
-          <div className="mt-12 rounded-sm border border-el-border/80 bg-el-bg-raised/60 p-4 sm:p-5 backdrop-blur-sm">
+          <div className="mt-12 rounded-[1rem] border border-white/[0.1] bg-[#08090a]/80 p-4 sm:p-5 backdrop-blur-sm">
             <div className="flex items-start gap-3.5">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-xs bg-el-accent/10 text-el-accent">
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10bc83]/15 text-[#38ffbd]">
                 <Info className="h-3.5 w-3.5" aria-hidden="true" />
               </span>
               <div className="space-y-1 text-xs leading-relaxed">
-                <span className="text-el-accent font-medium">
+                <span className="text-[#38ffbd] font-medium">
                   Product Identity Notice:
                 </span>
                 <p className="text-el-fg-muted text-[11.5px]">
@@ -209,9 +218,10 @@ export default function CompareCloudVsLocalPage() {
 
         {/* ── THE 6 CRITICAL VECTORS COMPARISON MATRIX ── */}
         <Section className="py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 01 Six-Dimensional Audit" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="01 · Six-Dimensional Audit" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Local workstation control vs. multi-tenant cloud subscriptions." />
@@ -221,17 +231,17 @@ export default function CompareCloudVsLocalPage() {
               plain="Compare how local personal AI stacks up against typical cloud assistants across privacy, speed, emergency safety, and lifetime cost."
               technical="Direct architectural comparison matrix across Memory Topology, Code Execution Jails, Interrupt Latency, Audio DSP, Marginal Cost, and Audit Chains."
             />
-          </div>
+          </GenesisSectionIntro>
 
           {/* Detailed Responsive Table */}
-          <div className="mt-10 overflow-x-auto rounded-sm border border-el-border bg-el-bg-raised/40">
+          <GenesisShowcaseFrame className="mt-10 overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-el-border bg-el-bg-raised text-el-fg-muted">
+                <tr className="border-b border-white/[0.08] bg-[#08090a] text-el-fg-muted">
                   <th className="py-4 px-4 font-medium text-el-fg w-[24%]">
                     Operational vector
                   </th>
-                  <th className="py-4 px-4 font-medium text-el-accent w-[38%]">
+                  <th className="py-4 px-4 font-medium text-[#10bc83] w-[38%]">
                     ELEVEN sovereign local control plane
                   </th>
                   <th className="py-4 px-4 font-medium text-el-fg-faint w-[38%]">
@@ -239,13 +249,13 @@ export default function CompareCloudVsLocalPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-el-border/60 text-el-fg-muted">
+              <tbody className="divide-y divide-white/[0.07] text-el-fg-muted">
                 {/* Vector 1 */}
-                <tr className="hover:bg-el-bg-raised/20 transition-colors">
+                <tr className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-4 px-4 font-semibold text-el-fg">
                     1. Data Ownership &amp; Storage
                   </td>
-                  <td className="py-4 px-4 text-el-signal-lime">
+                  <td className="py-4 px-4 text-[#10bc83]">
                     <strong className="text-el-fg block mb-0.5">100% Local AES-256 Storage</strong>
                     Stored in private SQLite drawers on your physical disk. Zero cloud telemetry, zero model retraining on your private files.
                   </td>
@@ -256,11 +266,11 @@ export default function CompareCloudVsLocalPage() {
                 </tr>
 
                 {/* Vector 2 */}
-                <tr className="hover:bg-el-bg-raised/20 transition-colors">
+                <tr className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-4 px-4 font-semibold text-el-fg">
                     2. Process Sandboxing &amp; Execution
                   </td>
-                  <td className="py-4 px-4 text-el-signal-lime">
+                  <td className="py-4 px-4 text-[#10bc83]">
                     <strong className="text-el-fg block mb-0.5">Quarantined OS Namespaces</strong>
                     Code runs in low-integrity jailed worktrees with read-only root mounts. Ephemeral test environments isolated from personal files.
                   </td>
@@ -271,11 +281,11 @@ export default function CompareCloudVsLocalPage() {
                 </tr>
 
                 {/* Vector 3 */}
-                <tr className="hover:bg-el-bg-raised/20 transition-colors">
+                <tr className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-4 px-4 font-semibold text-el-fg">
                     3. Emergency Killswitch
                   </td>
-                  <td className="py-4 px-4 text-el-signal-lime">
+                  <td className="py-4 px-4 text-[#10bc83]">
                     <strong className="text-el-fg block mb-0.5">Ring-0 Hardware Watchdog (&lt;0.05s)</strong>
                     Dedicated hardware listener instantly terminates spawned threads and isolates sockets on physical gesture or hotkey.
                   </td>
@@ -286,11 +296,11 @@ export default function CompareCloudVsLocalPage() {
                 </tr>
 
                 {/* Vector 4 */}
-                <tr className="hover:bg-el-bg-raised/20 transition-colors">
+                <tr className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-4 px-4 font-semibold text-el-fg">
                     4. Voice Perception &amp; Barge-In
                   </td>
-                  <td className="py-4 px-4 text-el-signal-lime">
+                  <td className="py-4 px-4 text-[#10bc83]">
                     <strong className="text-el-fg block mb-0.5">16kHz Local Buffer (&lt;50ms Barge-In)</strong>
                     Real-time audio processing directly on local NPU/GPU. Zero network round-trip delay when interrupting or speaking naturally.
                   </td>
@@ -301,11 +311,11 @@ export default function CompareCloudVsLocalPage() {
                 </tr>
 
                 {/* Vector 5 */}
-                <tr className="hover:bg-el-bg-raised/20 transition-colors">
+                <tr className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-4 px-4 font-semibold text-el-fg">
                     5. Economics &amp; Pricing Model
                   </td>
-                  <td className="py-4 px-4 text-el-signal-lime">
+                  <td className="py-4 px-4 text-[#10bc83]">
                     <strong className="text-el-fg block mb-0.5">Fixed Workstation License ($0 per-token)</strong>
                     Run billions of tokens on your own silicon for zero marginal cost. Predictable budgeting with no sudden rate-limit throttling.
                   </td>
@@ -316,11 +326,11 @@ export default function CompareCloudVsLocalPage() {
                 </tr>
 
                 {/* Vector 6 */}
-                <tr className="hover:bg-el-bg-raised/20 transition-colors">
+                <tr className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-4 px-4 font-semibold text-el-fg">
                     6. Auditability &amp; Invariants
                   </td>
-                  <td className="py-4 px-4 text-el-signal-lime">
+                  <td className="py-4 px-4 text-[#10bc83]">
                     <strong className="text-el-fg block mb-0.5">Cryptographic Ed25519 Receipts</strong>
                     Every action proposal creates an immutable SHA-256 hash receipt with a 30s TTL nonce for mathematical proof of execution.
                   </td>
@@ -331,20 +341,22 @@ export default function CompareCloudVsLocalPage() {
                 </tr>
               </tbody>
             </table>
-          </div>
+          </GenesisShowcaseFrame>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── INTERACTIVE TCO & PRIVACY CALCULATOR ── */}
-        <Section className="py-16 lg:py-24 bg-el-bg">
-          <div className="max-w-3xl space-y-4">
+        <Section className="py-16 lg:py-24 bg-[#08090a]/60">
+          <GenesisSectionIntro className="max-w-3xl space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="el-eyebrow">
-                <CipherText text="// 02 Interactive TCO &amp; Privacy Simulator" />
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                <CipherText text="02 · Interactive TCO & Privacy Simulator" />
               </div>
-              <div className="rounded-xs border border-el-border bg-el-bg-raised px-2.5 py-1 text-xs text-el-fg-faint">
-                Engine: <span className="text-el-mint font-medium">Local Workstation Silicon</span>
+              <div className="gfx-bubble !h-8 !px-3 !text-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                Engine: <span className="text-[#10bc83] font-medium">Local Workstation Silicon</span>
               </div>
             </div>
             <h2 className="el-h2">
@@ -355,20 +367,21 @@ export default function CompareCloudVsLocalPage() {
               plain="Slide the controls below to see how much money your team saves and how many gigabytes of sensitive data you keep safe by moving from cloud subscriptions to ELEVEN."
               technical="Interactive model simulating enterprise SaaS seat subscriptions, token consumption curves, and outbound corporate IP exposure risk."
             />
-          </div>
+          </GenesisSectionIntro>
 
-          <div className="mt-10">
+          <GenesisShowcaseFrame className="mt-10 p-4 sm:p-6">
             <LocalVsCloudCalculator />
-          </div>
+          </GenesisShowcaseFrame>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── THREE ARCHITECTURAL PILLARS OF SOVEREIGNTY ── */}
         <Section className="py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 03 Hardware-Backed Sovereignty" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="03 · Hardware-Backed Sovereignty" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Architected to make trust verifiable." />
@@ -378,21 +391,21 @@ export default function CompareCloudVsLocalPage() {
               plain="We do not ask you to trust our promises. We built ELEVEN so the software mathematically cannot leak your data or disobey your rules."
               technical="Security guarantees enforced through deterministic kernel primitives, hardware security enclaves, and cryptographic proofs."
             />
-          </div>
+          </GenesisSectionIntro>
 
           <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
             {/* Pillar 1 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
                     01 · Enclave
                   </span>
-                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-fg-faint">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-el-fg-faint">
                     Hardware key
                   </span>
                 </div>
-                <h3 className="text-el-lg font-medium tracking-tight text-el-fg">
+                <h3 className="text-el-lg font-normal tracking-tight heading-gradient">
                   Hardware-Bound Keys
                 </h3>
                 <DualCopy
@@ -402,23 +415,23 @@ export default function CompareCloudVsLocalPage() {
                 />
               </div>
 
-              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+              <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint">
                 <span className="text-el-accent">Key Derivation:</span> <code>Argon2id / TPM 2.0 PCR</code>
               </div>
             </Tilt3DCard>
 
             {/* Pillar 2 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
                     02 · Air-Gap
                   </span>
-                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-signal-lime">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-[#10bc83]">
                     Offline 100%
                   </span>
                 </div>
-                <h3 className="text-el-lg font-medium tracking-tight text-el-fg">
+                <h3 className="text-el-lg font-normal tracking-tight heading-gradient">
                   Air-Gap Autonomy
                 </h3>
                 <DualCopy
@@ -428,23 +441,23 @@ export default function CompareCloudVsLocalPage() {
                 />
               </div>
 
-              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
-                <span className="text-el-signal-lime">Network Status:</span> <code>Loopback Bind (127.0.0.1)</code>
+              <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint">
+                <span className="text-[#10bc83]">Network Status:</span> <code>Loopback Bind (127.0.0.1)</code>
               </div>
             </Tilt3DCard>
 
             {/* Pillar 3 */}
-            <Tilt3DCard className="relative flex flex-col justify-between rounded-sm border border-el-border bg-el-bg-raised/70 p-6 shadow-el-sm backdrop-blur-sm transition-colors duration-200 hover:border-el-accent/40">
+            <Tilt3DCard className="relative flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-el-accent font-medium">
                     03 · Policy Gates
                   </span>
-                  <span className="rounded-xs border border-el-border bg-el-bg px-1.5 py-0.5 text-[9.5px] text-el-fg-muted">
+                  <span className="rounded-full border border-white/[0.08] bg-[#08090a] px-2 py-0.5 text-[9.5px] text-el-fg-muted">
                     Fail-closed
                   </span>
                 </div>
-                <h3 className="text-el-lg font-medium tracking-tight text-el-fg">
+                <h3 className="text-el-lg font-normal tracking-tight heading-gradient">
                   5 Fail-Closed Checkpoints
                 </h3>
                 <DualCopy
@@ -454,7 +467,7 @@ export default function CompareCloudVsLocalPage() {
                 />
               </div>
 
-              <div className="mt-6 border-t border-el-border/60 pt-4 text-xs text-el-fg-faint">
+              <div className="mt-6 border-t border-white/[0.07] pt-4 text-xs text-el-fg-faint">
                 <span className="text-el-fg font-medium">Policy Gates:</span> <code>5 Checkpoints Active</code>
               </div>
             </Tilt3DCard>
@@ -465,9 +478,10 @@ export default function CompareCloudVsLocalPage() {
 
         {/* ── FREQUENTLY ASKED QUESTIONS (GEO & SEO CITABILITY) ── */}
         <Section className="py-16">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 04 Frequently Asked Questions" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="04 · Frequently Asked Questions" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Clear answers on architecture &amp; sovereignty." />
@@ -475,44 +489,44 @@ export default function CompareCloudVsLocalPage() {
             <p className="el-body">
               Understand how ELEVEN fits into your existing computing setup and hardware requirements.
             </p>
-          </div>
+          </GenesisSectionIntro>
 
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="rounded-sm border border-el-border/80 bg-el-bg-raised/40 p-6 space-y-2.5">
-              <h3 className="text-el-base font-semibold text-el-fg">
+            <Tilt3DCard className="p-6 space-y-2.5">
+              <h3 className="text-el-base font-normal heading-gradient">
                 What hardware is needed to run ELEVEN locally?
               </h3>
               <p className="text-el-sm text-el-fg-muted leading-relaxed">
                 ELEVEN runs smoothly on Apple Silicon Macs (M1/M2/M3/M4 with 16GB+ RAM) and Windows or Linux workstations equipped with NVIDIA RTX GPUs (RTX 3060 12GB+, 4070, 4080, 4090). For lighter tasks, quantized 7B and 14B models execute directly on unified system RAM.
               </p>
-            </div>
+            </Tilt3DCard>
 
-            <div className="rounded-sm border border-el-border/80 bg-el-bg-raised/40 p-6 space-y-2.5">
-              <h3 className="text-el-base font-semibold text-el-fg">
+            <Tilt3DCard className="p-6 space-y-2.5">
+              <h3 className="text-el-base font-normal heading-gradient">
                 Can I still connect frontier cloud models if I want to?
               </h3>
               <p className="text-el-sm text-el-fg-muted leading-relaxed">
                 Yes. ELEVEN supports a Hybrid Edge mode. You can route complex non-sensitive reasoning prompts to frontier models via encrypted egress, while your private memory drawers, personal files, and execution sandbox remain 100% confined to your local PC.
               </p>
-            </div>
+            </Tilt3DCard>
 
-            <div className="rounded-sm border border-el-border/80 bg-el-bg-raised/40 p-6 space-y-2.5">
-              <h3 className="text-el-base font-semibold text-el-fg">
+            <Tilt3DCard className="p-6 space-y-2.5">
+              <h3 className="text-el-base font-normal heading-gradient">
                 How does ELEVEN differ from cloud voice APIs?
               </h3>
               <p className="text-el-sm text-el-fg-muted leading-relaxed">
                 ELEVEN by GISHH Labs is an autonomous desktop personal AI operating system with process supervision, quarantined git worktrees, and sovereign local memory. It is not an audio generator or voice cloning API service.
               </p>
-            </div>
+            </Tilt3DCard>
 
-            <div className="rounded-sm border border-el-border/80 bg-el-bg-raised/40 p-6 space-y-2.5">
-              <h3 className="text-el-base font-semibold text-el-fg">
+            <Tilt3DCard className="p-6 space-y-2.5">
+              <h3 className="text-el-base font-normal heading-gradient">
                 How does the Emergency Stop killswitch work?
               </h3>
               <p className="text-el-sm text-el-fg-muted leading-relaxed">
                 The killswitch is implemented at the un-sandboxed host supervisor level (outside model control). Pressing the physical shortcut or double-tapping the desktop widget halts all spawned worker threads and tears down network sockets in under 0.05 seconds.
               </p>
-            </div>
+            </Tilt3DCard>
           </div>
         </Section>
 
@@ -520,14 +534,14 @@ export default function CompareCloudVsLocalPage() {
 
         {/* ── HIGH CONVERTING SOVEREIGN WAITLIST CTA ── */}
         <Section className="py-20">
-          <div className="relative overflow-hidden rounded-sm border border-el-border bg-gradient-to-b from-el-bg-raised/90 to-el-bg p-8 sm:p-12 text-center shadow-el-lg">
+          <div className="relative overflow-hidden rounded-[1.65rem] border border-white/[0.18] bg-[#05070d] p-8 sm:p-14 text-center shadow-el-lg">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-30"
+              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] rounded-full bg-[#00b38c]/20 blur-[90px]"
             />
-            <div className="relative mx-auto max-w-[640px] space-y-4">
-              <div className="el-badge mx-auto shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+            <GenesisSectionIntro className="relative mx-auto max-w-[640px] space-y-4">
+              <div className="gfx-badge mx-auto">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] shadow-[0_0_8px_#10bc83] animate-pulse motion-reduce:animate-none" />
                 <CipherText text="Sovereign Alpha · Direct Workstation Access" />
               </div>
 
@@ -545,7 +559,6 @@ export default function CompareCloudVsLocalPage() {
                 <WaitlistActionButton
                   tier="general"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Claim Your Sovereignty (Join Waitlist)
                 </WaitlistActionButton>
@@ -553,7 +566,6 @@ export default function CompareCloudVsLocalPage() {
                   variant="secondary"
                   href="/docs"
                   arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
                 >
                   Read Technical Documentation
                 </Button>
@@ -562,7 +574,7 @@ export default function CompareCloudVsLocalPage() {
               <p className="pt-2 text-xs text-el-fg-faint">
                 Early access invitations are dispatched weekly in verified batches.
               </p>
-            </div>
+            </GenesisSectionIntro>
           </div>
         </Section>
       </main>

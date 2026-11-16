@@ -7,10 +7,10 @@ import { useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 type Direction = "up" | "down" | "left" | "right" | "none";
 
 const offsets: Record<Direction, { x: number; y: number }> = {
-  up: { x: 0, y: 22 },
-  down: { x: 0, y: -22 },
-  left: { x: 22, y: 0 },
-  right: { x: -22, y: 0 },
+  up: { x: 0, y: 36 },
+  down: { x: 0, y: -28 },
+  left: { x: 36, y: 0 },
+  right: { x: -36, y: 0 },
   none: { x: 0, y: 0 },
 };
 
@@ -31,8 +31,8 @@ export function ScrollReveal({
   className = "",
   direction = "up",
   delay = 0,
-  duration = 0.68,
-  threshold = 0.14,
+  duration = 0.78,
+  threshold = 0.12,
   once = true,
   stagger = 0,
   as = "div",
@@ -48,23 +48,16 @@ export function ScrollReveal({
     opacity: 0,
     x: offset.x,
     y: offset.y,
-    scale: direction === "none" ? 1 : 0.984,
-    filter: "blur(5px)",
   };
 
   const visible: Variant = {
     opacity: 1,
     x: 0,
     y: 0,
-    scale: 1,
-    filter: "blur(0px)",
-    transitionEnd: {
-      filter: "none",
-    },
     transition: {
       duration: reduced ? 0 : duration,
       delay: reduced ? 0 : delay,
-      ease: [0.16, 1, 0.3, 1] as const,
+      ease: [0.22, 1, 0.36, 1] as const,
       ...(stagger > 0 && {
         staggerChildren: reduced ? 0 : stagger,
       }),
@@ -84,8 +77,6 @@ export function ScrollReveal({
   );
 }
 
-/* ── Stagger child wrapper ─────────────────────────────── */
-
 interface RevealItemProps {
   children: ReactNode;
   className?: string;
@@ -97,7 +88,7 @@ export function RevealItem({
   children,
   className = "",
   direction = "up",
-  duration = 0.58,
+  duration = 0.68,
 }: RevealItemProps) {
   const reduced = useMountedReducedMotion();
   const offset = offsets[direction];
@@ -110,21 +101,14 @@ export function RevealItem({
           opacity: 0,
           x: offset.x,
           y: offset.y,
-          scale: 0.984,
-          filter: "blur(5px)",
         },
         visible: {
           opacity: 1,
           x: 0,
           y: 0,
-          scale: 1,
-          filter: "blur(0px)",
-          transitionEnd: {
-            filter: "none",
-          },
           transition: {
             duration: reduced ? 0 : duration,
-            ease: [0.16, 1, 0.3, 1] as const,
+            ease: [0.22, 1, 0.36, 1] as const,
           },
         },
       }}

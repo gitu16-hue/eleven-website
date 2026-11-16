@@ -27,6 +27,11 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+} from "@/components/motion/GenesisMotionEngine";
 
 export const metadata: Metadata = {
   title: "Developer Documentation & Technical Reference | ELEVEN v3",
@@ -80,10 +85,7 @@ export default function DocsPage() {
     <>
       <Nav />
 
-      <main
-        id="main-content"
-        className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
-      >
+      <main id="main-content">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -101,15 +103,20 @@ export default function DocsPage() {
         <Section className="relative overflow-hidden pt-10 pb-16">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-30"
+            className="pointer-events-none absolute inset-0 el-aurora"
           />
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div className="max-w-[780px]">
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
+          />
+          <div className="relative flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <GenesisHeroIntro className="max-w-[780px] space-y-4">
               <div className="mb-3.5">
                 <Breadcrumbs items={[{ label: "Documentation", href: "/docs" }]} />
               </div>
-              <div className="el-eyebrow">
-                <CipherText text="// TECHNICAL SPECIFICATIONS AND API REFERENCE" />
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
+                <CipherText text="Technical Specifications & API Reference" />
               </div>
               <WordReveal
                 as="h1"
@@ -122,7 +129,7 @@ export default function DocsPage() {
                 plain="Explore the technical blueprints of ELEVEN: how it runs on your PC, keeps untrusted code jailed in locked sandboxes, and guarantees your personal files never leave your computer."
                 technical="Complete architectural reference covering Host Supervisor Ring-0 isolation, Quarantine Sanctum low-integrity process boundaries, the Dual-Mind Async Event Bus, and AES-256 encrypted storage schemas."
               />
-            </div>
+            </GenesisHeroIntro>
             <ClarityTogglePill />
           </div>
         </Section>
@@ -131,9 +138,10 @@ export default function DocsPage() {
 
         {/* ── CORE SPECIFICATION VIEWER ── */}
         <Section>
-          <div className="max-w-[680px]">
-            <div className="el-eyebrow">
-              <CipherText text="// 01 ARCHITECTURAL SPECIFICATIONS" />
+          <GenesisSectionIntro className="max-w-[680px]">
+            <div className="gfx-badge mb-3">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="01 · Architectural Specifications" />
             </div>
             <WordReveal
               as="h2"
@@ -144,20 +152,23 @@ export default function DocsPage() {
             <p className="mt-3 el-body">
               Select a subsystem below to inspect process privileges, invariant rules, and configuration payloads.
             </p>
-          </div>
+          </GenesisSectionIntro>
 
           <div className="mt-8">
-            <DocsInteractiveViewer />
+            <GenesisShowcaseFrame>
+              <DocsInteractiveViewer />
+            </GenesisShowcaseFrame>
           </div>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── THREE REPRODUCIBLE GUARANTEES ── */}
-        <Section className="bg-el-bg-raised/40">
-          <div className="max-w-[680px]">
-            <div className="el-eyebrow">
-              <CipherText text="// 02 ENGINEERING GUARANTEES" />
+        <Section>
+          <GenesisSectionIntro className="max-w-[680px]">
+            <div className="gfx-badge mb-3">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="02 · Engineering Guarantees" />
             </div>
             <WordReveal
               as="h2"
@@ -165,18 +176,18 @@ export default function DocsPage() {
               mutedText="Not promises. Deterministic math."
               className="mt-3 el-h2"
             />
-          </div>
+          </GenesisSectionIntro>
 
           <ScrollReveal
             stagger={0.1}
             className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3"
           >
             <RevealItem className="h-full">
-              <Tilt3DCard className="p-6 transition-colors duration-200 hover:border-el-signal-lime/40">
-                <span className="text-xs text-el-signal-lime font-semibold">
+              <Tilt3DCard className="p-6 h-full">
+                <span className="text-xs text-[#10bc83] font-medium">
                   Guarantee 01
                 </span>
-                <h3 className="mt-2 text-el-lg font-semibold text-el-fg">
+                <h3 className="mt-2 text-el-lg font-normal heading-gradient">
                   Default-Deny Egress
                 </h3>
                 <p className="mt-2 text-el-sm text-el-fg-muted leading-relaxed">
@@ -186,11 +197,11 @@ export default function DocsPage() {
             </RevealItem>
 
             <RevealItem className="h-full">
-              <Tilt3DCard className="p-6 transition-colors duration-200 hover:border-el-signal-lime/40">
-                <span className="text-xs text-el-signal-lime font-semibold">
+              <Tilt3DCard className="p-6 h-full">
+                <span className="text-xs text-[#10bc83] font-medium">
                   Guarantee 02
                 </span>
-                <h3 className="mt-2 text-el-lg font-semibold text-el-fg">
+                <h3 className="mt-2 text-el-lg font-normal heading-gradient">
                   Sub-50ms Killswitch
                 </h3>
                 <p className="mt-2 text-el-sm text-el-fg-muted leading-relaxed">
@@ -200,11 +211,11 @@ export default function DocsPage() {
             </RevealItem>
 
             <RevealItem className="h-full">
-              <Tilt3DCard className="p-6 transition-colors duration-200 hover:border-el-signal-lime/40">
-                <span className="text-xs text-el-signal-lime font-semibold">
+              <Tilt3DCard className="p-6 h-full">
+                <span className="text-xs text-[#10bc83] font-medium">
                   Guarantee 03
                 </span>
-                <h3 className="mt-2 text-el-lg font-semibold text-el-fg">
+                <h3 className="mt-2 text-el-lg font-normal heading-gradient">
                   Loopback Encryption
                 </h3>
                 <p className="mt-2 text-el-sm text-el-fg-muted leading-relaxed">
@@ -220,46 +231,21 @@ export default function DocsPage() {
               <span className="text-xs text-el-fg-faint">
                 Explore architecture:
               </span>
-              <Button
-                href="/solutions/developers"
-                variant="ghost"
-                arrow
-                className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-              >
+              <Button href="/solutions/developers" variant="ghost" arrow>
                 For Developers
               </Button>
-              <Button
-                href="/architecture"
-                variant="ghost"
-                arrow
-                className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-              >
+              <Button href="/architecture" variant="ghost" arrow>
                 Execution Rooms
               </Button>
-              <Button
-                href="/autonomy"
-                variant="ghost"
-                arrow
-                className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-              >
+              <Button href="/autonomy" variant="ghost" arrow>
                 5 Safety Gates
               </Button>
-              <Button
-                href="/research"
-                variant="ghost"
-                arrow
-                className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-              >
+              <Button href="/research" variant="ghost" arrow>
                 15 Invariant Rules
               </Button>
             </div>
 
-            <WaitlistActionButton
-              variant="primary"
-              arrow
-              tier="technical"
-              className="focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-el-signal-lime active:scale-[0.98] disabled:opacity-50"
-            >
+            <WaitlistActionButton variant="primary" arrow tier="technical">
               Request Technical Access
             </WaitlistActionButton>
           </div>

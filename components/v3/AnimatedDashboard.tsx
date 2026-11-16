@@ -656,9 +656,9 @@ function SplineAreaChart() {
 
           {/* Line stroke gradient */}
           <linearGradient id="spline-stroke-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#00F0FF" />
-            <stop offset="60%" stopColor="#10b981" />
-            <stop offset="100%" stopColor="#00FF9D" />
+            <stop offset="0%" stopColor="#38ffbd" />
+            <stop offset="60%" stopColor="#10bc83" />
+            <stop offset="100%" stopColor="#00b38c" />
           </linearGradient>
         </defs>
 
@@ -720,7 +720,7 @@ function SplineAreaChart() {
                 cy={pt.y}
                 r={isHovered ? "6" : "4.5"}
                 fill="#030508"
-                stroke={isHovered ? "#00FF9D" : "#10b981"}
+                stroke={isHovered ? "#38FFBD" : "#10b981"}
                 strokeWidth={isHovered ? "2.5" : "2"}
                 className="transition-all duration-200"
               />
@@ -731,7 +731,7 @@ function SplineAreaChart() {
                 y="235"
                 textAnchor="middle"
                 className="font-mono text-[10px] select-none"
-                fill={isHovered ? "#00F0FF" : "#64748b"}
+                fill={isHovered ? "#38FFBD" : "#64748b"}
               >
                 {points[i].month}
               </text>
@@ -800,8 +800,8 @@ function MiniSparkline({ data }: { data: number[] }) {
     >
       <defs>
         <linearGradient id="spark-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#00F0FF" />
-          <stop offset="100%" stopColor="#10b981" />
+          <stop offset="0%" stopColor="#00B38C" />
+          <stop offset="100%" stopColor="#38FFBD" />
         </linearGradient>
       </defs>
 

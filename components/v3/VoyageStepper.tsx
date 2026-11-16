@@ -135,15 +135,15 @@ export function VoyageStepper({
       glowBadge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
     },
     cyan: {
-      doneStroke: "#00F0FF",
-      glowColor: "rgba(0, 240, 255, 0.4)",
-      nodeRing: "border-cyan-400 bg-cyan-400/20 text-cyan-300",
-      activeText: "text-cyan-400",
-      glowBadge: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
+      doneStroke: "#38FFBD",
+      glowColor: "rgba(56, 255, 189, 0.4)",
+      nodeRing: "border-emerald-400 bg-emerald-400/20 text-emerald-300",
+      activeText: "text-emerald-400",
+      glowBadge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
     },
     mint: {
-      doneStroke: "#00FF9D",
-      glowColor: "rgba(0, 255, 157, 0.4)",
+      doneStroke: "#10BC83",
+      glowColor: "rgba(16, 188, 131, 0.4)",
       nodeRing: "border-emerald-400 bg-emerald-400/20 text-emerald-300",
       activeText: "text-el-mint",
       glowBadge: "bg-emerald-500/10 text-el-mint border-emerald-500/30",
@@ -308,7 +308,7 @@ export function VoyageStepper({
 
               {/* Linear Gradient for Done Path */}
               <linearGradient id="voyage-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#00F0FF" />
+                <stop offset="0%" stopColor="#38ffbd" />
                 <stop offset="50%" stopColor="#10b981" />
                 <stop offset="100%" stopColor="#00FF9D" />
               </linearGradient>
@@ -423,7 +423,7 @@ export function VoyageStepper({
                     y={idx % 2 === 0 ? "-26" : "34"}
                     textAnchor="middle"
                     className="font-mono text-[11px] font-semibold transition-all duration-200 select-none pointer-events-none"
-                    fill={isCurrent ? "#00F0FF" : isPast ? "#10b981" : "#64748b"}
+                    fill={isCurrent ? "#38ffbd" : isPast ? "#10b981" : "#64748b"}
                   >
                     {stages[idx]?.name}
                   </text>

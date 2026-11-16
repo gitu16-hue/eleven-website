@@ -140,54 +140,13 @@ export function useMountedReducedMotion(): boolean {
  */
 function AnimatedPhraseStream({
   text,
-  active,
-  reduced,
-  baseDelay = 0.02,
 }: {
   text: string;
-  active: boolean;
-  reduced: boolean | null;
+  active?: boolean;
+  reduced?: boolean | null;
   baseDelay?: number;
 }) {
-  const words = useMemo(() => text.trim().split(/\s+/).filter(Boolean), [text]);
-  if (words.length === 0) return <>{text}</>;
-
-  const staggerStep = Math.min(0.02, 0.54 / Math.max(words.length, 1));
-
-  return (
-    <>
-      {words.map((word, idx) => (
-        <React.Fragment key={`${idx}-${word}`}>
-          <motion.span
-            className="inline-block"
-            initial={{ opacity: 0, y: "0.42em", filter: "blur(5.5px)" }}
-            animate={
-              active
-                ? {
-                    opacity: 1,
-                    y: "0em",
-                    filter: "blur(0px)",
-                    transitionEnd: { filter: "none" },
-                  }
-                : {
-                    opacity: 0,
-                    y: "0.42em",
-                    filter: "blur(5.5px)",
-                  }
-            }
-            transition={{
-              duration: reduced ? 0 : 0.52,
-              delay: reduced ? 0 : baseDelay + idx * staggerStep,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-          >
-            {word}
-          </motion.span>
-          {idx < words.length - 1 ? " " : ""}
-        </React.Fragment>
-      ))}
-    </>
-  );
+  return <>{text}</>;
 }
 
 /**
@@ -396,12 +355,14 @@ export function WordReveal({
   className = "",
   as = "span",
   delay = 0.04,
+  gradient = true,
 }: {
   text: string;
   mutedText?: string;
   className?: string;
   as?: "h1" | "h2" | "h3" | "span";
   delay?: number;
+  gradient?: boolean;
 }) {
   const ref = useRef<HTMLHeadingElement & HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.22 });
@@ -411,7 +372,7 @@ export function WordReveal({
   const secondaryWords = mutedText ? mutedText.split(" ") : [];
 
   const Tag = as;
-  const showNow = Boolean(reduced || inView);
+  const wordSurfaceClass = gradient ? "heading-gradient" : "";
 
   return (
     <Tag ref={ref} className={className} style={{ perspective: "850px" }}>
@@ -419,36 +380,20 @@ export function WordReveal({
         {primaryWords.map((word, idx) => (
           <span
             key={`p-${word}-${idx}`}
-            className="inline-block overflow-hidden align-bottom pb-[0.08em] pt-[0.03em]"
+            className="inline-block overflow-hidden align-bottom pb-[0.1em] pt-[0.02em]"
           >
             <motion.span
-              className="inline-block origin-bottom"
-              initial={{
-                y: "110%",
-                rotateX: -26,
-                opacity: 0,
-                filter: "blur(6.5px)",
-              }}
+              className={`inline-block origin-bottom ${wordSurfaceClass}`}
+              initial={false}
               animate={
-                showNow
-                  ? {
-                      y: "0%",
-                      rotateX: 0,
-                      opacity: 1,
-                      filter: "blur(0px)",
-                      transitionEnd: { filter: "none" },
-                    }
-                  : {
-                      y: "110%",
-                      rotateX: -26,
-                      opacity: 0,
-                      filter: "blur(6.5px)",
-                    }
+                reduced || inView
+                  ? { y: "0%", opacity: 1 }
+                  : { y: "0%", opacity: 1 }
               }
               transition={{
-                duration: reduced ? 0 : 0.74,
-                delay: reduced ? 0 : delay + idx * 0.04,
-                ease: [0.16, 1, 0.3, 1],
+                duration: reduced ? 0 : 0.72,
+                delay: reduced ? 0 : delay + idx * 0.045,
+                ease: [0.22, 1, 0.36, 1],
               }}
             >
               {word}
@@ -461,43 +406,23 @@ export function WordReveal({
       {secondaryWords.length > 0 && (
         <>
           <br />
-          <span className="inline text-el-fg-muted">
+          <span className="inline text-[#a0a0a0]">
             {secondaryWords.map((word, idx) => (
               <span
                 key={`s-${word}-${idx}`}
-                className="inline-block overflow-hidden align-bottom pb-[0.08em] pt-[0.03em]"
+                className="inline-block overflow-hidden align-bottom pb-[0.1em] pt-[0.02em]"
               >
                 <motion.span
-                  className="inline-block origin-bottom"
-                  initial={{
-                    y: "110%",
-                    rotateX: -26,
-                    opacity: 0,
-                    filter: "blur(6.5px)",
-                  }}
-                  animate={
-                    showNow
-                      ? {
-                          y: "0%",
-                          rotateX: 0,
-                          opacity: 1,
-                          filter: "blur(0px)",
-                          transitionEnd: { filter: "none" },
-                        }
-                      : {
-                          y: "110%",
-                          rotateX: -26,
-                          opacity: 0,
-                          filter: "blur(6.5px)",
-                        }
-                  }
+                  className={`inline-block origin-bottom ${gradient ? "heading-gradient opacity-80" : ""}`}
+                  initial={false}
+                  animate={{ y: "0%", opacity: gradient ? 0.8 : 1 }}
                   transition={{
-                    duration: reduced ? 0 : 0.74,
+                    duration: reduced ? 0 : 0.72,
                     delay:
                       reduced
                         ? 0
-                        : delay + (primaryWords.length + idx) * 0.04,
-                    ease: [0.16, 1, 0.3, 1],
+                        : delay + (primaryWords.length + idx) * 0.045,
+                    ease: [0.22, 1, 0.36, 1],
                   }}
                 >
                   {word}
@@ -546,8 +471,8 @@ export function Tilt3DCard({
   );
   const smoothOpacity = useSpring(glareOpacity, { stiffness: 220, damping: 28 });
 
-  const surfaceGlare = useMotionTemplate`radial-gradient(380px circle at ${glowX}px ${glowY}px, rgba(0, 240, 255, 0.13), rgba(139, 92, 246, 0.05) 45%, transparent 72%)`;
-  const borderGlare = useMotionTemplate`radial-gradient(240px circle at ${glowX}px ${glowY}px, rgba(0, 240, 255, 0.75), rgba(139, 92, 246, 0.35) 55%, transparent 100%)`;
+  const surfaceGlare = useMotionTemplate`radial-gradient(380px circle at ${glowX}px ${glowY}px, rgba(0, 179, 140, 0.14), rgba(16, 188, 131, 0.05) 45%, transparent 72%)`;
+  const borderGlare = useMotionTemplate`radial-gradient(240px circle at ${glowX}px ${glowY}px, rgba(56, 255, 189, 0.65), rgba(0, 179, 140, 0.3) 55%, transparent 100%)`;
 
   const handleMouseEnter = () => {
     if (!cardRef.current || reduced) return;
@@ -617,7 +542,7 @@ export function Tilt3DCard({
         {/* Top Accent Laser Hairline on Hover */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 right-0 left-0 h-[1.5px] origin-left scale-x-0 bg-gradient-to-r from-el-cyan via-el-violet to-el-lime opacity-0 transition-[transform,opacity] duration-300 ease-out group-hover:scale-x-100 group-hover:opacity-100"
+          className="pointer-events-none absolute top-0 right-0 left-0 h-[1.5px] origin-left scale-x-0 bg-gradient-to-r from-[#00b38c] via-[#38ffbd] to-[#10bc83] opacity-0 transition-[transform,opacity] duration-300 ease-out group-hover:scale-x-100 group-hover:opacity-100"
         />
 
         <div className="relative z-10 h-full">{children}</div>
@@ -684,19 +609,11 @@ export function AnimatedMetric({
   return (
     <div
       ref={ref}
-      className="group relative overflow-hidden rounded-sm border border-el-border/70 bg-el-bg-raised/45 p-3 sm:p-3.5 transition-all duration-300 hover:border-el-accent/50 hover:bg-el-bg-raised/80 hover:shadow-[0_0_20px_rgba(0,240,255,0.12)]"
+      className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 backdrop-blur-xl transition-all duration-300 hover:border-[#00b38c]/45 hover:bg-[#08120f]/80 hover:shadow-[0_0_24px_rgba(0,179,140,0.14)]"
     >
-      {/* Corner Tech Reticle */}
-      <span className="pointer-events-none absolute top-1 right-1.5 font-mono text-[8px] text-el-fg-faint/40">
-        ⌜
-      </span>
-      <span className="pointer-events-none absolute bottom-1 left-1.5 font-mono text-[8px] text-el-fg-faint/40">
-        ⌟
-      </span>
-
       {/* Top Row: Numeric Value + Live Beacon */}
       <div className="flex items-center justify-between gap-2">
-        <p className="font-mono text-el-lg sm:text-el-xl font-bold tracking-[-0.02em] text-el-fg transition-colors group-hover:text-el-accent">
+        <p className="font-sans text-2xl sm:text-[1.65rem] font-normal tracking-[-0.02em] heading-gradient tabular-nums">
           {prefix}
           {display}
           {suffix}
@@ -704,21 +621,21 @@ export function AnimatedMetric({
 
         <span className="relative flex h-2 w-2">
           {canAnimate && (
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-el-accent opacity-75" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#10bc83] opacity-75" />
           )}
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-el-accent" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-[#10bc83]" />
         </span>
       </div>
 
       {/* Bespoke GPU-Only Micro-Gauges (scaleX / scaleY / translateX — zero layout thrash) */}
-      <div className="my-1.5 h-3 flex items-center">
+      <div className="my-2 h-3 flex items-center">
         {/* 1. Voice Reply: GPU scaleY Audio Equalizer */}
         {isVoice && (
           <div className="flex items-end gap-1 h-2.5">
             {[0.4, 0.92, 0.6, 1, 0.52].map((scale, i) => (
               <motion.span
                 key={i}
-                className="h-full w-1 origin-bottom rounded-xs bg-el-accent"
+                className="h-full w-1 origin-bottom rounded-xs bg-[#00b38c]"
                 animate={
                   canAnimate ? { scaleY: [0.22, scale, 0.22] } : { scaleY: 0.35 }
                 }
@@ -730,7 +647,7 @@ export function AnimatedMetric({
                 }}
               />
             ))}
-            <span className="ml-1.5 font-mono text-[9px] text-el-fg-faint">
+            <span className="ml-1.5 font-mono text-[9px] text-[#686868]">
               16kHz PCM
             </span>
           </div>
@@ -742,7 +659,7 @@ export function AnimatedMetric({
             {[0, 1, 2, 3, 4].map((idx) => (
               <motion.span
                 key={idx}
-                className="h-1.5 w-1.5 rounded-full bg-el-accent"
+                className="h-1.5 w-1.5 rounded-full bg-[#10bc83]"
                 animate={
                   canAnimate
                     ? { opacity: [0.3, 1, 0.3], scale: [0.95, 1.28, 0.95] }
@@ -756,7 +673,7 @@ export function AnimatedMetric({
                 }}
               />
             ))}
-            <span className="ml-1 font-mono text-[9px] text-el-fg-faint">
+            <span className="ml-1 font-mono text-[9px] text-[#686868]">
               5 GATES
             </span>
           </div>
@@ -764,9 +681,9 @@ export function AnimatedMetric({
 
         {/* 3. Private Memory: GPU scaleX + translateX Shimmer */}
         {isMemory && (
-          <div className="relative w-full h-1.5 overflow-hidden rounded-full bg-el-border">
+          <div className="relative w-full h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
             <motion.div
-              className="h-full w-full origin-left bg-gradient-to-r from-el-accent via-el-signal-lime to-el-accent"
+              className="h-full w-full origin-left bg-gradient-to-r from-[#064b34] via-[#00b38c] to-[#38ffbd]"
               animate={canAnimate ? { scaleX: [0.72, 1, 0.72] } : { scaleX: 1 }}
               transition={{
                 duration: 3.2,
@@ -776,7 +693,7 @@ export function AnimatedMetric({
             />
             {canAnimate && (
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 to-transparent"
                 animate={{ x: ["-100%", "200%"] }}
                 transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
               />
@@ -788,9 +705,9 @@ export function AnimatedMetric({
         {isStop && (
           <div className="flex items-center gap-2">
             <div className="relative flex h-2 w-16 items-center overflow-hidden">
-              <div className="h-[1px] w-full bg-el-border" />
+              <div className="h-[1px] w-full bg-white/[0.1]" />
               <motion.span
-                className="absolute left-0 h-1.5 w-3 rounded-full bg-el-signal-lime shadow-[0_0_6px_#00FF9D]"
+                className="absolute left-0 h-1.5 w-3 rounded-full bg-[#38ffbd] shadow-[0_0_8px_#00b38c]"
                 animate={canAnimate ? { x: [0, 52, 0] } : { x: 24 }}
                 transition={{
                   duration: 1.25,
@@ -799,7 +716,7 @@ export function AnimatedMetric({
                 }}
               />
             </div>
-            <span className="font-mono text-[9px] text-el-fg-faint">
+            <span className="font-mono text-[9px] text-[#686868]">
               RING-0
             </span>
           </div>
@@ -807,10 +724,10 @@ export function AnimatedMetric({
       </div>
 
       {/* Label and Sublabel */}
-      <p className="mt-1 text-el-xs font-semibold text-el-fg leading-tight">
+      <p className="mt-1 text-[13px] font-medium text-[#10bc83] leading-tight">
         {label}
       </p>
-      <p className="mt-0.5 text-[11px] leading-snug text-el-fg-muted">
+      <p className="mt-0.5 text-[11.5px] leading-snug text-[#a0a0a0]">
         {sublabel}
       </p>
     </div>
@@ -830,12 +747,12 @@ export function SignalBeamDivider() {
     <div
       ref={ref}
       aria-hidden="true"
-      className="relative h-[1px] w-full overflow-hidden bg-el-border"
+      className="relative h-[1px] w-full overflow-hidden bg-white/[0.07]"
     >
       {!reduced && inView && (
         <>
           <motion.div
-            className="absolute top-0 left-0 h-full w-48 bg-gradient-to-r from-transparent via-el-accent/85 to-transparent"
+            className="absolute top-0 left-0 h-full w-48 bg-gradient-to-r from-transparent via-[#00b38c]/85 to-transparent"
             initial={{ x: "-100%" }}
             animate={{ x: "100vw" }}
             transition={{
@@ -846,7 +763,7 @@ export function SignalBeamDivider() {
             }}
           />
           <motion.div
-            className="absolute top-0 right-0 h-full w-36 bg-gradient-to-r from-transparent via-el-violet/65 to-transparent"
+            className="absolute top-0 right-0 h-full w-36 bg-gradient-to-r from-transparent via-[#38ffbd]/55 to-transparent"
             initial={{ x: "100%" }}
             animate={{ x: "-100vw" }}
             transition={{

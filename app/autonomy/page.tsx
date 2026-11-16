@@ -14,6 +14,11 @@ import {
   Tilt3DCard,
   WordReveal,
 } from "@/components/motion/PremiumMotion";
+import {
+  GenesisHeroIntro,
+  GenesisSectionIntro,
+  GenesisShowcaseFrame,
+} from "@/components/motion/GenesisMotionEngine";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 export const metadata: Metadata = {
@@ -99,7 +104,11 @@ export default function AutonomyPage() {
         <Section className="relative overflow-hidden pt-8 pb-16 lg:pt-12 lg:pb-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-60"
+            className="pointer-events-none absolute inset-0 el-aurora"
+          />
+          <div
+            aria-hidden="true"
+            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_0%,#000_40%,transparent_100%)]"
           />
           <div className="relative">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-el-border/60">
@@ -116,9 +125,9 @@ export default function AutonomyPage() {
               </div>
             </div>
 
-            <div className="mt-10 max-w-4xl space-y-6">
-              <div className="el-badge shadow-el-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse motion-reduce:animate-none" />
+            <GenesisHeroIntro className="mt-10 max-w-4xl space-y-6">
+              <div className="gfx-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse motion-reduce:animate-none shadow-[0_0_8px_#10bc83]" />
                 <CipherText text="Deterministic Permission Control · 4-Tier Governance" />
               </div>
 
@@ -132,46 +141,30 @@ export default function AutonomyPage() {
                 technical="Graduated DEC-003 4-tier authority enables zero-friction Tier 0/1 local workflows while enforcing cryptographic Cold-Room DEC-008 nonces on Tier 2/3 boundaries."
               />
 
-              <ScrollReveal
-                stagger={0.08}
-                className="flex flex-wrap gap-2 pt-2 text-[11px] font-medium"
-              >
-                <RevealItem>
-                  <span className="inline-block rounded-xs border border-el-accent/30 bg-el-accent-soft px-2.5 py-1 text-el-accent">
-                    4-Tier Authority (DEC-003)
-                  </span>
-                </RevealItem>
-                <RevealItem>
-                  <span className="inline-block rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg">
-                    30s Cryptographic Nonce (DEC-008)
-                  </span>
-                </RevealItem>
-                <RevealItem>
-                  <span className="inline-block rounded-xs border border-el-border bg-el-bg-raised/70 px-2.5 py-1 text-el-fg-muted">
-                    Hardware Emergency Stop (&lt;50ms)
-                  </span>
-                </RevealItem>
-              </ScrollReveal>
+              <div className="flex flex-wrap gap-2.5 pt-2 text-xs">
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd]" />
+                  <span>4-Tier Authority (DEC-003)</span>
+                </span>
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+                  <span>30s Cryptographic Nonce (DEC-008)</span>
+                </span>
+                <span className="gfx-bubble !h-9 !px-3.5 !text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#00b38c]" />
+                  <span>Hardware Emergency Stop (&lt;50ms)</span>
+                </span>
+              </div>
 
               <div className="flex flex-wrap items-center gap-4 pt-4">
-                <Button
-                  href="/security"
-                  variant="primary"
-                  arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-                >
+                <Button href="/security" variant="primary" arrow>
                   Inspect Zero-Trust Architecture
                 </Button>
-                <Button
-                  href="/tools/inspector"
-                  variant="secondary"
-                  arrow
-                  className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-                >
+                <Button href="/tools/inspector" variant="secondary" arrow>
                   Launch ActionProposal Playground
                 </Button>
               </div>
-            </div>
+            </GenesisHeroIntro>
           </div>
         </Section>
 
@@ -179,9 +172,10 @@ export default function AutonomyPage() {
 
         {/* ── 3 INVARIANT LAWS ── */}
         <Section id="killswitch" className="relative py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 01 Three Invariant Laws" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="01 · Three Invariant Laws" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="The three golden rules of safe AI autonomy." />
@@ -191,7 +185,7 @@ export default function AutonomyPage() {
               plain="Clear boundaries, time-limited cryptographic tokens, and instant hardware brakes prevent unexpected actions."
               technical="TaskCompiler immutable tier bounds, 30s single-use DEC-008 nonces, and <50ms Ring-0 supervisor interrupts."
             />
-          </div>
+          </GenesisSectionIntro>
 
           {/* 3 Simple Rules */}
           <ScrollReveal
@@ -199,11 +193,11 @@ export default function AutonomyPage() {
             className="grid grid-cols-1 gap-4 md:grid-cols-3"
           >
             <RevealItem className="h-full">
-              <Tilt3DCard className="p-6">
-                <span className="text-xs font-semibold text-el-accent">
+              <Tilt3DCard className="p-6 h-full">
+                <span className="text-xs font-medium text-[#10bc83]">
                   Rule 01: Clear limits first
                 </span>
-                <h3 className="mt-2.5 text-base font-semibold text-el-fg">
+                <h3 className="mt-2.5 text-lg font-normal heading-gradient">
                   AI Can Never Promote Itself
                 </h3>
                 <DualCopy
@@ -215,11 +209,11 @@ export default function AutonomyPage() {
             </RevealItem>
 
             <RevealItem className="h-full">
-              <Tilt3DCard className="p-6">
-                <span className="text-xs font-semibold text-el-accent">
+              <Tilt3DCard className="p-6 h-full">
+                <span className="text-xs font-medium text-[#10bc83]">
                   Rule 02: Single-use passes
                 </span>
-                <h3 className="mt-2.5 text-base font-semibold text-el-fg">
+                <h3 className="mt-2.5 text-lg font-normal heading-gradient">
                   30-Second Exact Permission
                 </h3>
                 <DualCopy
@@ -231,11 +225,11 @@ export default function AutonomyPage() {
             </RevealItem>
 
             <RevealItem className="h-full">
-              <Tilt3DCard className="p-6">
-                <span className="text-xs font-semibold text-el-accent">
+              <Tilt3DCard className="p-6 h-full">
+                <span className="text-xs font-medium text-[#10bc83]">
                   Rule 03: Instant brakes
                 </span>
-                <h3 className="mt-2.5 text-base font-semibold text-el-fg">
+                <h3 className="mt-2.5 text-lg font-normal heading-gradient">
                   0.05-Second Emergency Stop
                 </h3>
                 <DualCopy
@@ -252,9 +246,10 @@ export default function AutonomyPage() {
 
         {/* ── INTERACTIVE 4 TRUST LEVELS + RECEIPT DEMO ── */}
         <Section id="policy-gates" className="relative py-16 lg:py-24">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 02 Cold-Room Approval Demo" />
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="02 · Cold-Room Approval Demo" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Experience the 4 graduated trust tiers firsthand." />
@@ -264,19 +259,20 @@ export default function AutonomyPage() {
               plain="From zero-friction quiet actions to strict cryptographic approvals: test how ELEVEN handles different sensitivity levels."
               technical="Simulates DEC-003 Tier 0 through Tier 3 execution boundaries with simulated 128-bit CSPRNG nonces."
             />
-          </div>
-          <ScrollReveal>
+          </GenesisSectionIntro>
+          <GenesisShowcaseFrame>
             <ColdRoomApprovalDemo />
-          </ScrollReveal>
+          </GenesisShowcaseFrame>
         </Section>
 
         <SignalBeamDivider />
 
         {/* ── 4 BUILT-IN PROTECTION SHIELDS ── */}
-        <Section className="py-16 lg:py-24 bg-el-bg-raised/45">
-          <div className="max-w-3xl space-y-4 mb-10">
-            <div className="el-eyebrow">
-              <CipherText text="// 03 Adversarial Defense" />
+        <Section className="py-16 lg:py-24">
+          <GenesisSectionIntro className="max-w-3xl space-y-4 mb-10">
+            <div className="gfx-badge">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              <CipherText text="03 · Adversarial Defense" />
             </div>
             <h2 className="el-h2">
               <WordReveal text="Protected even if a tricky webpage tries to fool the AI." />
@@ -286,7 +282,7 @@ export default function AutonomyPage() {
               plain="Four deep security barriers that catch prompt injections, tainted downloads, runaway loops, and unauthorized data leaks."
               technical="Dynamic taint propagation, canonical root confinement, monotonic privilege checks, and default-deny socket boundaries."
             />
-          </div>
+          </GenesisSectionIntro>
 
           <ScrollReveal
             stagger={0.09}
@@ -294,13 +290,13 @@ export default function AutonomyPage() {
           >
             {FOUR_SHIELDS.map((p) => (
               <RevealItem key={p.code} className="h-full">
-                <Tilt3DCard className="p-6 lg:p-7">
-                  <span className="text-el-xs font-semibold text-el-accent">
+                <Tilt3DCard className="p-6 lg:p-7 h-full">
+                  <span className="text-el-xs font-medium text-[#10bc83]">
                     {p.code}
                   </span>
                   <DualCopy
                     as="div"
-                    className="mt-2.5 text-el-lg font-medium tracking-[-0.015em] text-el-fg"
+                    className="mt-2.5 text-el-lg font-normal heading-gradient tracking-[-0.015em]"
                     plain={p.plainTitle}
                     technical={p.techTitle}
                   />
@@ -318,17 +314,17 @@ export default function AutonomyPage() {
         <SignalBeamDivider />
 
         {/* ── WHY CASUAL "YES" IS PROTECTED + UNEDITABLE LOGS ── */}
-        <Section>
+        <Section className="py-16 lg:py-24">
           <ScrollReveal
             stagger={0.1}
             className="grid grid-cols-1 gap-6 lg:grid-cols-12"
           >
-            <RevealItem className="lg:col-span-6">
-              <Tilt3DCard className="p-7">
-                <p className="text-el-xs font-medium text-el-accent">
+            <RevealItem className="lg:col-span-6 h-full">
+              <Tilt3DCard className="p-7 h-full">
+                <p className="text-el-xs font-medium text-[#10bc83]">
                   Accident prevention
                 </p>
-                <h3 className="mt-2 text-el-xl font-medium text-el-fg">
+                <h3 className="mt-2 text-el-xl font-normal heading-gradient">
                   Why blurting out &ldquo;Yes&rdquo; can never approve the wrong thing.
                 </h3>
                 <DualCopy
@@ -339,12 +335,12 @@ export default function AutonomyPage() {
               </Tilt3DCard>
             </RevealItem>
 
-            <RevealItem className="lg:col-span-6">
-              <Tilt3DCard className="p-7">
-                <p className="text-el-xs font-medium text-el-accent">
+            <RevealItem className="lg:col-span-6 h-full">
+              <Tilt3DCard className="p-7 h-full">
+                <p className="text-el-xs font-medium text-[#10bc83]">
                   Complete transparency
                 </p>
-                <h3 className="mt-2 text-el-xl font-medium text-el-fg">
+                <h3 className="mt-2 text-el-xl font-normal heading-gradient">
                   An uneditable activity log right on your computer.
                 </h3>
                 <DualCopy
@@ -356,12 +352,7 @@ export default function AutonomyPage() {
                   <PortalActionButton variant="primary" arrow>
                     Test Approval Card in 3D Orb
                   </PortalActionButton>
-                  <Button
-                    href="/research"
-                    variant="secondary"
-                    arrow
-                    className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-accent active:scale-[0.99] disabled:opacity-50"
-                  >
+                  <Button href="/research" variant="secondary" arrow>
                     Read Our 15 Promises
                   </Button>
                 </div>

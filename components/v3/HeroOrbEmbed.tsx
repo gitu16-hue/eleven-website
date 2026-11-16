@@ -43,21 +43,21 @@ const ORB_HERO_STATES: {
     label: "Listening",
     tag: "16kHz PCM STREAM",
     desc: "Real-time speech perception without latency lag or cloud leak",
-    color: "#00F0FF",
+    color: "#38FFBD",
   },
   {
     id: "THINKING",
     label: "Planning",
     tag: "DAG REASONING",
     desc: "Background multi-step DAG action proposal decomposition",
-    color: "#8B5CF6",
+    color: "#00B38C",
   },
   {
     id: "VERIFYING",
     label: "Verifying",
     tag: "RING-0 AUDIT",
     desc: "Deterministic policy checking before any action executes",
-    color: "#00FF9D",
+    color: "#10BC83",
   },
 ];
 
@@ -127,7 +127,7 @@ export function HeroOrbEmbed() {
         <span className="absolute bottom-2 right-2.5 font-mono text-[9px] text-el-fg-faint opacity-50">+</span>
 
         {/* Top telemetry tag */}
-        <div className="absolute top-2.5 left-1/2 -translate-x-1/2 rounded-full border border-el-border bg-el-bg-raised/80 px-2.5 py-0.5 backdrop-blur-sm shadow-xs">
+        <div className="absolute top-3 left-3 rounded-full border border-el-border bg-el-bg-raised/85 px-2.5 py-0.5 backdrop-blur-sm shadow-xs">
           <div className="flex items-center gap-1.5">
             <span
               className="h-1.5 w-1.5 rounded-full animate-pulse"

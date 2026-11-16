@@ -35,8 +35,8 @@ export function AnimeCircuitStream() {
       >
         <defs>
           <linearGradient id={`grad1_${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#00F0FF" stopOpacity="0.08" />
-            <stop offset="25%" stopColor="#00F0FF" stopOpacity="0.65" />
+            <stop offset="0%" stopColor="#38ffbd" stopOpacity="0.08" />
+            <stop offset="25%" stopColor="#38ffbd" stopOpacity="0.65" />
             <stop offset="60%" stopColor="#8B5CF6" stopOpacity="0.75" />
             <stop offset="90%" stopColor="#00FF9D" stopOpacity="0.8" />
             <stop offset="100%" stopColor="#00FF9D" stopOpacity="0.08" />
@@ -44,8 +44,8 @@ export function AnimeCircuitStream() {
 
           <linearGradient id={`grad2_${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.12" />
-            <stop offset="45%" stopColor="#00F0FF" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#00F0FF" stopOpacity="0.08" />
+            <stop offset="45%" stopColor="#38ffbd" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#38ffbd" stopOpacity="0.08" />
           </linearGradient>
         </defs>
 
@@ -78,7 +78,7 @@ export function AnimeCircuitStream() {
             {/* Beam 1 Halo + Core: Electric Cyan */}
             <motion.path
               d={path1}
-              stroke="#00F0FF"
+              stroke="#38ffbd"
               strokeWidth="5"
               strokeOpacity="0.22"
               strokeLinecap="round"
@@ -89,7 +89,7 @@ export function AnimeCircuitStream() {
             />
             <motion.path
               d={path1}
-              stroke="#00F0FF"
+              stroke="#38ffbd"
               strokeWidth="2"
               strokeLinecap="round"
               strokeDasharray="48 280"
@@ -148,13 +148,13 @@ export function AnimeCircuitStream() {
 
         {/* ── SENSOR JUNCTION NODES ── */}
         {[
-          { cx: 290, cy: 20, color: "#00F0FF" },
+          { cx: 290, cy: 20, color: "#38ffbd" },
           { cx: 560, cy: 55, color: "#8B5CF6" },
           { cx: 890, cy: 35, color: "#00FF9D" },
-          { cx: 360, cy: 40, color: "#00F0FF" },
+          { cx: 360, cy: 40, color: "#38ffbd" },
           { cx: 680, cy: 15, color: "#00FF9D" },
           { cx: 980, cy: 45, color: "#8B5CF6" },
-          { cx: 240, cy: 50, color: "#00F0FF" },
+          { cx: 240, cy: 50, color: "#38ffbd" },
           { cx: 500, cy: 25, color: "#8B5CF6" },
           { cx: 800, cy: 60, color: "#00FF9D" },
         ].map((node, i) => (
@@ -166,11 +166,11 @@ export function AnimeCircuitStream() {
 
         {/* ── TELEMETRY BEACONS ── */}
         <g transform="translate(290, 11)">
-          <circle cx="-28" cy="-2.5" r="2" fill="#00F0FF" />
+          <circle cx="-28" cy="-2.5" r="2" fill="#38ffbd" />
           <text
             x="0"
             y="0"
-            fill="#00F0FF"
+            fill="#38ffbd"
             fontSize="8.5"
             fontFamily="var(--font-mono), monospace"
             letterSpacing="0.08em"
