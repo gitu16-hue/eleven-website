@@ -49,32 +49,32 @@ interface StateConfig {
 
 export const ORB_STATE_CONFIGS: Record<OrbRuntimeState, StateConfig> = {
   IDLE: {
-    pri: 0x00d8ff,
-    sec: 0x003377,
+    pri: 0x10bc83,
+    sec: 0x062118,
     amp: 0.09,
     freq: 1.75,
     speed: 0.35,
     scale: 1.0,
     basePulse: 0.0,
-    bloom: 0.52,
+    bloom: 0.56,
     badgeText: "IDLE // READY",
-    hex: "#00D8FF",
+    hex: "#10BC83",
   },
   LISTENING: {
-    pri: 0x00ffcc,
-    sec: 0x0066aa,
+    pri: 0x38ffbd,
+    sec: 0x0c3d2d,
     amp: 0.18,
     freq: 2.3,
     speed: 0.75,
     scale: 0.93,
     basePulse: -0.12,
-    bloom: 0.66,
+    bloom: 0.68,
     badgeText: "LISTENING // 16kHz VAD",
-    hex: "#00FFCC",
+    hex: "#38FFBD",
   },
   THINKING: {
-    pri: 0xa855f7,
-    sec: 0x0088cc,
+    pri: 0x00b38c,
+    sec: 0x0c3d2d,
     amp: 0.24,
     freq: 2.9,
     speed: 1.15,
@@ -82,11 +82,11 @@ export const ORB_STATE_CONFIGS: Record<OrbRuntimeState, StateConfig> = {
     basePulse: -0.06,
     bloom: 0.65,
     badgeText: "THINKING // J.A.R.V.I.S. S2",
-    hex: "#A855F7",
+    hex: "#00B38C",
   },
   SPEAKING: {
-    pri: 0xff9900,
-    sec: 0x993300,
+    pri: 0xe29d58,
+    sec: 0x6b3410,
     amp: 0.26,
     freq: 2.2,
     speed: 0.85,
@@ -94,23 +94,23 @@ export const ORB_STATE_CONFIGS: Record<OrbRuntimeState, StateConfig> = {
     basePulse: 0.05,
     bloom: 0.72,
     badgeText: "SPEAKING // F.R.I.D.A.Y. S1",
-    hex: "#FF9900",
+    hex: "#E29D58",
   },
   EXECUTING: {
-    pri: 0x10b981,
-    sec: 0x005577,
+    pri: 0x10bc83,
+    sec: 0x00422c,
     amp: 0.16,
     freq: 2.4,
     speed: 0.95,
     scale: 1.03,
     basePulse: 0.02,
-    bloom: 0.6,
+    bloom: 0.64,
     badgeText: "EXECUTING // SANDBOX DAG",
-    hex: "#10B981",
+    hex: "#10BC83",
   },
   VERIFYING: {
-    pri: 0xd8f0ff,
-    sec: 0x0284c7,
+    pri: 0xa5f3d5,
+    sec: 0x10bc83,
     amp: 0.05,
     freq: 3.4,
     speed: 0.5,
@@ -118,7 +118,7 @@ export const ORB_STATE_CONFIGS: Record<OrbRuntimeState, StateConfig> = {
     basePulse: -0.08,
     bloom: 0.62,
     badgeText: "VERIFYING // SWARM GATE",
-    hex: "#D8F0FF",
+    hex: "#A5F3D5",
   },
   AUTHORITY_REQUIRED: {
     pri: 0xff3333,
@@ -136,15 +136,15 @@ export const ORB_STATE_CONFIGS: Record<OrbRuntimeState, StateConfig> = {
 
 const SATELLITE_COLORS: Record<WorkerSatelliteSpec["lifecycleState"], number> = {
   QUEUED: 0x64748b,
-  RUNNING: 0x10b981,
-  COMPLETED: 0x00d8ff,
+  RUNNING: 0x10bc83,
+  COMPLETED: 0x38ffbd,
   FAILED: 0xef4444,
 };
 
 const EVIDENCE_COLORS: Record<WorkerSatelliteSpec["evidenceStatus"], number> = {
   PENDING: 0x94a3b8,
-  ACCEPTED: 0x10b981,
-  UNRESOLVED: 0xf59e0b,
+  ACCEPTED: 0x10bc83,
+  UNRESOLVED: 0xe29d58,
   REJECTED: 0xef4444,
 };
 
@@ -692,7 +692,7 @@ export function ElevenHolographicOrb3D({
         const arcLen = ((Math.PI * 2) / segments) * arcFraction;
         const geo = new THREE.TorusGeometry(radius, tube, 8, 64, arcLen);
         const mat = new THREE.MeshBasicMaterial({
-          color: 0x00f0ff,
+          color: 0x10bc83,
           transparent: true,
           opacity,
           blending: THREE.AdditiveBlending,
@@ -714,6 +714,49 @@ export function ElevenHolographicOrb3D({
     const ring2 = createGyroRing(2.08, 0.004, 4, 0.45, -0.68, 0.48, 0.14);
     const ring3 = createGyroRing(2.42, 0.0045, 2, 0.6, 1.08, -0.28, 0.15);
     const ring4 = createGyroRing(2.76, 0.003, 6, 0.3, -0.18, 0.88, 0.1);
+
+    // 5b. GenesisFX Water Mirror Reflection Plane beneath the 3D Core
+    const waterGeo = new THREE.PlaneGeometry(14, 10, 48, 48);
+    const waterMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: uniforms.uTime,
+        uColor: uniforms.uColorPrimary,
+      },
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      vertexShader: `
+        uniform float uTime;
+        varying vec2 vUv;
+        varying float vWave;
+        void main() {
+          vUv = uv;
+          vec3 p = position;
+          float w = sin(p.x * 2.2 + uTime * 1.4) * cos(p.y * 2.6 - uTime * 1.1) * 0.08;
+          p.z += w;
+          vWave = w;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 uColor;
+        varying vec2 vUv;
+        varying float vWave;
+        void main() {
+          vec2 centered = vUv - vec2(0.5, 0.5);
+          float dist = length(centered * vec2(1.0, 1.45));
+          float radial = smoothstep(0.48, 0.0, dist);
+          float ripple = 0.5 + 0.5 * sin(dist * 42.0 - vWave * 28.0);
+          float alpha = radial * radial * (0.14 + 0.16 * ripple);
+          gl_FragColor = vec4(uColor * (0.75 + 0.45 * ripple), alpha);
+        }
+      `,
+    });
+    const waterMesh = new THREE.Mesh(waterGeo, waterMat);
+    waterMesh.rotation.x = -Math.PI / 2;
+    waterMesh.position.set(0, -2.35, 0);
+    scene.add(waterMesh);
+    disposables.push(waterGeo, waterMat);
 
     // 6. Phase 4D.3 Orbiting Worker Satellites Group
     const satelliteGroup = new THREE.Group();
@@ -807,7 +850,7 @@ export function ElevenHolographicOrb3D({
 
     let lastTime = performance.now();
     let elapsed = 0;
-    let curScale = 1.0;
+    let curScale = reducedMotion ? 1.0 : 0.82;
     let curPulse = 0.0;
     let smoothBass = 0;
     let smoothMid = 0;
@@ -1027,9 +1070,9 @@ export function ElevenHolographicOrb3D({
     <div className="relative flex h-[430px] w-full flex-col items-center justify-center sm:h-[520px]">
       {/* Loading indicator per 3d-web-experience HIGH validation check */}
       {!loaded && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded border border-el-border bg-el-bg/85 backdrop-blur-md">
-          <span className="h-6 w-6 rounded-full border-2 border-el-border-strong border-t-el-accent animate-spin" />
-          <span className="font-mono text-xs tracking-[0.14em] text-el-accent">
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-2xl border border-[#10bc83]/25 bg-[#05070d]/90 backdrop-blur-md">
+          <span className="h-6 w-6 rounded-full border-2 border-[#062118] border-t-[#10bc83] animate-spin" />
+          <span className="font-mono text-xs tracking-[0.14em] text-[#38ffbd]">
             COMPILING GLSL SIMPLEX &amp; VOLUMETRIC SHADERS...
           </span>
         </div>
@@ -1037,7 +1080,7 @@ export function ElevenHolographicOrb3D({
 
       {/* WebGL Fallback per 3d-web-experience MEDIUM validation check */}
       {!webglOk ? (
-        <div className="flex h-full w-full flex-col items-center justify-center rounded border border-el-border bg-el-bg-raised p-8 text-center">
+        <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl border border-white/[0.08] bg-[#05070d] p-8 text-center">
           <div
             className="h-36 w-36 rounded-full border-2 animate-pulse"
             style={{
@@ -1045,10 +1088,10 @@ export function ElevenHolographicOrb3D({
               boxShadow: `0 0 40px ${cfg.hex}33`,
             }}
           />
-          <p className="mt-6 font-mono text-xs tracking-[0.14em] text-el-fg">
+          <p className="mt-6 font-mono text-xs tracking-[0.14em] text-[#e8ecf5]">
             {cfg.badgeText}
           </p>
-          <p className="mt-1 font-mono text-[11px] text-el-fg-muted">
+          <p className="mt-1 font-mono text-[11px] text-[#a0a0a0]">
             WebGL hardware acceleration unavailable — static telemetry active
           </p>
         </div>
@@ -1063,13 +1106,13 @@ export function ElevenHolographicOrb3D({
         />
       )}
 
-      {/* Top-Right Authoritative State Pill */}
+      {/* Top-Right Authoritative GenesisFX State Pill */}
       <div
-        className="pointer-events-none absolute top-3 right-3 flex items-center gap-2 rounded border bg-[#080a0f]/85 px-3 py-1.5 font-mono text-[10.5px] tracking-[0.12em] backdrop-blur-md transition-colors duration-300"
+        className="pointer-events-none absolute top-3.5 right-3.5 flex items-center gap-2 rounded-full border bg-[#062118]/75 px-3.5 py-1.5 font-mono text-[10.5px] tracking-[0.12em] backdrop-blur-md transition-colors duration-300"
         style={{
           color: cfg.hex,
-          borderColor: `${cfg.hex}66`,
-          boxShadow: `0 0 16px ${cfg.hex}24`,
+          borderColor: `${cfg.hex}55`,
+          boxShadow: `0 0 18px ${cfg.hex}24, inset 0 1px 0 rgba(255,255,255,0.08)`,
         }}
       >
         <span
@@ -1080,9 +1123,9 @@ export function ElevenHolographicOrb3D({
       </div>
 
       {/* Bottom Telemetry Caption */}
-      <div className="pointer-events-none absolute bottom-2 left-3 right-3 flex items-center justify-between font-mono text-[9.5px] tracking-[0.1em] text-el-fg-faint">
-        <span>GLSL SIMPLEX · 54K VOLUMETRIC GPU PARTICLES · 4 GYROS</span>
-        <span className="hidden sm:inline">DRAG TO ORBIT 360°</span>
+      <div className="pointer-events-none absolute bottom-2.5 left-4 right-4 flex items-center justify-between font-mono text-[9.5px] tracking-[0.1em] text-[#a0a0a0]">
+        <span>GLSL SIMPLEX · 54K VOLUMETRIC GPU PARTICLES · WATER REFLECTION</span>
+        <span className="hidden sm:inline text-[#10bc83]">DRAG TO ORBIT 360°</span>
       </div>
     </div>
   );

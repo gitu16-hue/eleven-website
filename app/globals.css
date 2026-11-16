@@ -214,8 +214,16 @@
   --shadow-el-lg: var(--el-shadow-lg);
 }
 
-* {
-  border-color: var(--el-border);
+@layer base {
+  * {
+    border-color: var(--el-border);
+  }
+
+  button,
+  input:where([type="button"], [type="reset"], [type="submit"]) {
+    appearance: none;
+    -webkit-appearance: none;
+  }
 }
 
 :focus-visible {
@@ -323,12 +331,22 @@ body {
    Regular (400) architectural display headings · 1.04 tight leading · Radial gradient ink
    ============================================================ */
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
-  font-weight: 400;
-  color: var(--text);
-  text-wrap: balance;
-  font-feature-settings: "ss01", "ss03", "cv11";
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    color: var(--text);
+    text-wrap: balance;
+    font-feature-settings: "ss01", "ss03", "cv11";
+  }
+
+  h1 { line-height: 1.02; letter-spacing: -0.032em; }
+  h2 { line-height: 1.04; letter-spacing: -0.028em; }
+  h3 { line-height: 1.18; letter-spacing: -0.018em; }
+  h4, h5, h6 { line-height: 1.32; letter-spacing: -0.012em; }
+
+  p, li { text-wrap: pretty; }
+  p { line-height: 1.55; }
 }
 
 .bg-el-sec-graphite,
@@ -342,14 +360,6 @@ h1, h2, h3, h4, h5, h6 {
   --el-fg: #111412;
   --el-fg-muted: #3f4b43;
 }
-
-h1 { line-height: 1.02; letter-spacing: -0.032em; }
-h2 { line-height: 1.04; letter-spacing: -0.028em; }
-h3 { line-height: 1.18; letter-spacing: -0.018em; }
-h4, h5, h6 { line-height: 1.32; letter-spacing: -0.012em; }
-
-p, li { text-wrap: pretty; }
-p { line-height: 1.55; }
 
 .font-mono, code, kbd, pre {
   font-family: var(--font-mono);
@@ -1098,7 +1108,7 @@ p { line-height: 1.55; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .el-rise, .el-float, .el-breathe, .el-orbit-border::after, .site-nav__glow, .sparkles .sparkle {
+  .el-rise, .el-float, .el-breathe, .el-orbit-border::after, .site-nav__glow, .sparkles .sparkle, .hero-dashboard, #globe-canvas.is-entering {
     animation: none !important;
   }
   .el-link-laser::after, .site-header, .site-header__brand, .site-header__actions, .site-nav, .glow-btn__ring, .glow-btn__light {
@@ -1106,3 +1116,180 @@ p { line-height: 1.55; }
   }
   .el-rise { opacity: 1; transform: none; filter: none; }
 }
+
+/* ============================================================
+   GENESIS FX BEGINNING ANIMATION STAGE (Globe, Hero Bars,
+   Hero Dashboard Rise, Stats Pin & Gateway Cards)
+   ============================================================ */
+
+.globe-stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: calc(var(--fs) * 1.5);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#globe-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes globe-canvas-in {
+  0% { opacity: 0; }
+  to { opacity: 1; }
+}
+
+#globe-canvas.is-entering {
+  animation: globe-canvas-in 0.7s ease-out;
+}
+
+.hero-bar {
+  position: relative;
+  z-index: 1;
+  width: calc(var(--fs) * 14.3125);
+  opacity: 1;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  pointer-events: none;
+}
+
+@media (orientation: portrait) {
+  .globe-stage { gap: 4vw; }
+  .hero-bar { flex: 1; }
+}
+
+.hero-bar--inner {
+  background: rgba(52, 52, 52, 0.03);
+  border-inline: 1px solid rgba(255, 255, 255, 0.025);
+}
+
+.hero-bar--outer {
+  background: linear-gradient(88deg, rgba(0, 0, 0, 0) 10.16%, rgba(52, 52, 52, 0.05) 98.19%);
+}
+
+.hero-glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: calc(var(--fs) * 90);
+  height: calc(var(--fs) * 90);
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero-glow__img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--fs) * 80);
+  height: calc(var(--fs) * 80);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 179, 140, 0.24), rgba(16, 188, 131, 0.06) 58%, transparent 100%);
+  filter: blur(45px);
+}
+
+.hero-glow__img--lg {
+  width: calc(var(--fs) * 92);
+  height: calc(var(--fs) * 92);
+  background: radial-gradient(closest-side, rgba(56, 255, 189, 0.14), rgba(0, 179, 140, 0.05) 62%, transparent 100%);
+  filter: blur(70px);
+}
+
+@keyframes hero-dashboard-rise {
+  0% { transform: translateY(115%); opacity: 0; }
+  to { transform: translateY(44%); opacity: 1; }
+}
+
+.hero-dashboard-pin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.hero-dashboard {
+  --hl-spread: calc(var(--fs) * 0.75);
+  position: relative;
+  width: min(1140px, 92vw);
+  pointer-events: auto;
+  transform: translateY(44%);
+  border-radius: calc(var(--fs) * 1.875);
+  background: #05070d;
+  animation: hero-dashboard-rise 1.1s cubic-bezier(0.33, 1, 0.68, 1) 0.25s backwards;
+}
+
+.gateway-card {
+  --card-color: rgba(29, 63, 51, 1);
+  --card-radius: 1.5rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.35rem;
+  padding: 1.35rem 1.4rem;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(28, 28, 28, 0.22);
+  backdrop-filter: blur(24.5px);
+  -webkit-backdrop-filter: blur(24.5px);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.gateway-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 255, 189, 0.42);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 28px rgba(16, 188, 131, 0.14);
+}
+
+.gateway-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(45%, -65%);
+  width: 6.8rem;
+  height: 6.8rem;
+  border-radius: 50%;
+  background: var(--card-color);
+  opacity: 0.85;
+  filter: blur(42px);
+  pointer-events: none;
+}
+
+.gateway-card--green {
+  --card-color: rgba(16, 188, 131, 0.65);
+  border-color: rgba(16, 188, 131, 0.26);
+}
+
+.gateway-card--amber {
+  --card-color: rgba(214, 158, 74, 0.72);
+  border-color: rgba(214, 158, 74, 0.32);
+  background: radial-gradient(120% 90% at 50% 130%, rgba(214, 158, 74, 0.22), rgba(214, 158, 74, 0) 60%), rgba(12, 16, 15, 0.78);
+}
+
+.gateway-card--blue {
+  --card-color: rgba(61, 96, 215, 0.75);
+  border-color: rgba(76, 110, 245, 0.35);
+  background: radial-gradient(120% 90% at 50% 130%, rgba(76, 110, 245, 0.22), rgba(76, 110, 245, 0) 60%), rgba(12, 16, 15, 0.78);
+}
+

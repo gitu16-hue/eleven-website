@@ -10,6 +10,12 @@ import type {
 import { ORB_STATE_CONFIGS } from "@/components/three/ElevenHolographicOrb3D";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
 import { WaitlistModal } from "@/components/v3/WaitlistModal";
+import { Button } from "@/components/ui/Button";
+import {
+  GenesisHeroIntro,
+  GenesisShowcaseFrame,
+  GenesisSparkles,
+} from "@/components/motion/GenesisMotionEngine";
 
 const ElevenHolographicOrb3D = dynamic(
   () =>
@@ -20,8 +26,8 @@ const ElevenHolographicOrb3D = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex h-full min-h-[420px] w-full flex-col items-center justify-center">
-        <div className="h-9 w-9 animate-spin rounded-full border-2 border-[#202633] border-t-[#5fd0cf]" />
-        <p className="mt-4 font-mono text-xs tracking-[0.18em] text-[#8b929e]">
+        <div className="h-9 w-9 animate-spin rounded-full border-2 border-[#062118] border-t-[#10bc83]" />
+        <p className="mt-4 font-mono text-xs tracking-[0.18em] text-[#38ffbd]">
           PREPARING LIVE 3D HOLOGRAPHIC ORB…
         </p>
       </div>
@@ -361,382 +367,442 @@ export function EnterHudConsole() {
   const activeFriendly = STATE_ORDER.find((s) => s.id === orbState);
 
   return (
-    <div className="mode-dark relative min-h-screen w-full overflow-x-hidden bg-[#080a0f] text-[#f2f3ee] selection:bg-[#5fd0cf]/25 selection:text-[#f2f3ee]">
+    <div className="mode-dark relative min-h-screen w-full overflow-x-hidden bg-[#05070d] text-[#e8ecf5] selection:bg-[#10bc83]/30 selection:text-[#38ffbd] el-aurora bg-grid-scifi">
+      {/* GenesisFX Top Dual Emerald HeroGlow Ellipses */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 opacity-[0.14]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #202633 1px, transparent 1px), linear-gradient(to bottom, #202633 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-        }}
+        className="pointer-events-none fixed -top-44 left-1/2 -translate-x-1/2 z-0 h-[520px] w-[960px] rounded-full bg-[radial-gradient(closest-side,rgba(0,179,140,0.22),rgba(16,188,131,0.06)_55%,transparent_100%)] blur-[90px]"
       />
 
-      {/* Top HUD Command Bar */}
-      <header className="relative z-20 border-b border-[#202633] bg-[#080a0f]/85 backdrop-blur-md">
+      {/* Top GenesisFX Floating Command Header */}
+      <header className="sticky top-0 z-30 border-b border-white/[0.07] bg-[#05070d]/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 py-3.5 lg:px-8">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2.5">
-              <span
-                className="h-2.5 w-2.5 rounded-full transition-colors duration-300"
-                style={{
-                  backgroundColor: activeConfig.hex,
-                  boxShadow: `0 0 12px ${activeConfig.hex}`,
-                }}
-              />
-              <span className="font-mono text-xs font-semibold tracking-[0.14em] text-[#f2f3ee]">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#10bc83]/45 bg-[#062118]/85 font-mono text-[11px] text-[#38ffbd] shadow-[0_0_16px_rgba(16,188,131,0.3)]">
+                G
+              </span>
+              <span className="font-mono text-xs font-normal tracking-[0.16em] text-white">
                 ELEVEN v3.1 · LIVE INTERACTIVE 3D CORE
               </span>
             </div>
-            <span className="hidden rounded-sm border border-[#202633] bg-[#0e121a] px-2.5 py-0.5 font-mono text-[11px] text-[#5fd0cf] sm:inline-block">
-              {activeFriendly?.friendlyLabel}
+            <span className="gfx-badge !py-1 !px-3 !text-[11px]">
+              <span
+                className="h-2 w-2 rounded-full animate-pulse"
+                style={{
+                  backgroundColor: activeConfig.hex,
+                  boxShadow: `0 0 10px ${activeConfig.hex}`,
+                }}
+              />
+              <span>{activeFriendly?.friendlyLabel}</span>
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 font-mono text-[11px]">
-            <span className="hidden text-[#8b929e] xl:inline">
-              SHORTCUTS: [1–7] CHANGE STATE · [S] LAUNCH 4 HELPERS · [B] INTERRUPT VOICE
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="hidden font-mono text-[11px] text-[#a0a0a0] xl:inline mr-2">
+              SHORTCUTS: <span className="text-[#38ffbd]">[1–7]</span> STATE ·{" "}
+              <span className="text-[#38ffbd]">[S]</span> 4 HELPERS ·{" "}
+              <span className="text-[#38ffbd]">[B]</span> INTERRUPT
             </span>
-            <button
-              type="button"
+            <Button
+              variant="primary"
+              arrow
               onClick={() => {
                 setWaitlistTier("general");
                 setIsWaitlistOpen(true);
               }}
-              className="cursor-pointer rounded-sm border border-[#5fd0cf]/50 bg-[#112024] px-3.5 py-1.5 text-xs text-[#5fd0cf] transition-colors hover:bg-[#162c32]"
             >
               Join Early Access
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="secondary"
               onClick={() => {
                 setWaitlistTier("technical");
                 setIsWaitlistOpen(true);
               }}
-              className="hidden sm:inline-block cursor-pointer rounded-sm border border-[#2e3747] bg-[#0e121a] px-3.5 py-1.5 text-xs text-[#f2f3ee] transition-colors hover:border-[#5fd0cf] hover:text-[#5fd0cf]"
+              className="hidden sm:inline-flex"
             >
               Request Technical Access
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => exitToInstitutionalMode("/")}
-              className="cursor-pointer rounded-sm border border-[#2e3747] bg-[#0e121a] px-3.5 py-1.5 text-xs text-[#f2f3ee] transition-colors hover:border-[#5fd0cf] hover:text-[#5fd0cf]"
             >
               ← Back to Website
-            </button>
+            </Button>
           </div>
         </div>
       </header>
 
-      {/* Main 3-Column Interactive Playground */}
-      <main className="relative z-10 mx-auto grid max-w-[1440px] grid-cols-1 gap-6 px-5 py-6 lg:grid-cols-12 lg:px-8 lg:py-8">
-        {/* Left Column: 7 Easy-to-Understand States + 2 Fun Live Demos */}
-        <section className="flex flex-col justify-between gap-5 lg:col-span-3">
-          <div className="rounded-sm border border-[#202633] bg-[#0e121a]/90 p-4 backdrop-blur-sm">
-            <div className="flex items-center justify-between border-b border-[#202633] pb-2.5">
-              <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#8b929e]">
-                1. Click Any AI State
-              </span>
-              <span className="font-mono text-[10px] text-[#5fd0cf]">LIVE 3D</span>
+      {/* Main 3-Column GenesisFX Interactive Cockpit */}
+      <GenesisHeroIntro className="relative z-10 mx-auto max-w-[1440px] px-5 py-6 lg:px-8 lg:py-8">
+        {/* Top Cockpit Intro Banner */}
+        <div className="mb-6 flex flex-col justify-between gap-4 rounded-[1.35rem] border border-white/[0.08] bg-[#062118]/25 px-6 py-4 backdrop-blur-xl sm:flex-row sm:items-center">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs font-mono text-[#38ffbd]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse" />
+              <span>COMPUTATIONAL CONTROL PLANE // GENESIS HOLOGRAPHIC STAGE</span>
             </div>
-
-            <div className="mt-3 space-y-1.5">
-              {STATE_ORDER.map((item) => {
-                const active = orbState === item.id;
-                const cfg = ORB_STATE_CONFIGS[item.id];
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => selectState(item.id)}
-                    className={`flex w-full cursor-pointer items-center justify-between rounded-sm border px-3 py-2 text-left transition-all ${
-                      active
-                        ? "border-[#5fd0cf]/70 bg-[#131b26] text-[#f2f3ee]"
-                        : "border-transparent bg-[#080a0f]/60 text-[#8b929e] hover:border-[#202633] hover:text-[#f2f3ee]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span
-                        className="h-2.5 w-2.5 shrink-0 rounded-full"
-                        style={{
-                          backgroundColor: cfg.hex,
-                          opacity: active ? 1 : 0.45,
-                        }}
-                      />
-                      <div>
-                        <p className="text-xs font-medium leading-none">
-                          {item.friendlyLabel}
-                        </p>
-                        <p className="mt-1 text-[10.5px] text-[#8b929e]">
-                          {item.friendlySub}
-                        </p>
-                      </div>
-                    </div>
-                    <kbd className="rounded border border-[#202633] px-1.5 py-0.5 font-mono text-[10px] text-[#8b929e]">
-                      {item.keyHint}
-                    </kbd>
-                  </button>
-                );
-              })}
-            </div>
+            <h1 className="text-xl sm:text-2xl font-normal heading-gradient">
+              Inspect how ELEVEN thinks, listens, and enforces constitutional boundaries in real time.
+            </h1>
           </div>
+          <div className="flex flex-wrap gap-2">
+            <span className="gfx-bubble !py-1 !px-3 !text-[11px]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              54K GPU Particles
+            </span>
+            <span className="gfx-bubble !py-1 !px-3 !text-[11px]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              5-Stage ActionGate
+            </span>
+            <span className="gfx-bubble !py-1 !px-3 !text-[11px]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83]" />
+              127.0.0.1 Loopback
+            </span>
+          </div>
+        </div>
 
-          {/* 2 Fun Live Demos */}
-          <div className="rounded-sm border border-[#202633] bg-[#0e121a]/90 p-4 backdrop-blur-sm">
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#8b929e]">
-              2. Try Live Action Demos
-            </p>
-            <div className="mt-3 space-y-2.5">
-              <button
-                type="button"
-                onClick={dispatchSwarmTournament}
-                className="w-full cursor-pointer rounded-sm border border-[#5fd0cf]/50 bg-[#112024] px-3.5 py-2.5 text-left text-xs text-[#5fd0cf] transition-colors hover:bg-[#162c32]"
-              >
-                <span className="flex items-center justify-between font-mono font-semibold">
-                  <span>▶ Launch 4 Helper Satellites</span>
-                  <span>[S]</span>
+        <main className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Left Column: 7 Cognitive States + 2 Live Demos + Private Memory */}
+          <section className="flex flex-col justify-between gap-4 lg:col-span-3">
+            <div className="gfx-card p-4 sm:p-5">
+              <span className="gfx-card__border" aria-hidden="true" />
+              <div className="relative z-10 flex items-center justify-between border-b border-white/[0.07] pb-2.5">
+                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
+                  01 · Click Any AI State
                 </span>
-                <span className="mt-1 block text-[11px] text-[#b4c0cc]">
-                  Watch 4 3D helpers orbit the Orb &amp; catch a hidden warning
+                <span className="rounded-full border border-[#10bc83]/35 bg-[#062118]/75 px-2.5 py-0.5 font-mono text-[10px] text-[#38ffbd]">
+                  LIVE 3D
                 </span>
-              </button>
+              </div>
 
-              <button
-                type="button"
-                onClick={triggerBargeIn}
-                className="w-full cursor-pointer rounded-sm border border-[#f59e0b]/45 bg-[#271e0d] px-3.5 py-2.5 text-left text-xs text-[#f59e0b] transition-opacity hover:opacity-90"
-              >
-                <span className="flex items-center justify-between font-mono font-semibold">
-                  <span>⚡ Interrupt Mid-Sentence</span>
-                  <span>[B]</span>
-                </span>
-                <span className="mt-1 block text-[11px] text-[#d6b883]">
-                  See how ELEVEN stops talking in 0.05s the moment you speak
-                </span>
-              </button>
+              <div className="relative z-10 mt-3 space-y-1.5">
+                {STATE_ORDER.map((item) => {
+                  const active = orbState === item.id;
+                  const cfg = ORB_STATE_CONFIGS[item.id];
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => selectState(item.id)}
+                      style={{
+                        background: active
+                          ? "radial-gradient(120% 90% at 50% 0%, rgba(16, 188, 131, 0.24), rgba(6, 33, 24, 0.78))"
+                          : "rgba(5, 7, 13, 0.78)",
+                        borderColor: active
+                          ? "rgba(16, 188, 131, 0.65)"
+                          : "rgba(255, 255, 255, 0.08)",
+                      }}
+                      className={`flex w-full cursor-pointer items-center justify-between rounded-xl border px-3 py-2 text-left transition-all duration-200 ${
+                        active
+                          ? "text-white shadow-[0_0_24px_rgba(16,188,131,0.16)]"
+                          : "text-[#a0a0a0] hover:text-white"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <span
+                          className="h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{
+                            backgroundColor: cfg.hex,
+                            boxShadow: active ? `0 0 10px ${cfg.hex}` : undefined,
+                            opacity: active ? 1 : 0.65,
+                          }}
+                        />
+                        <span className="block">
+                          <span className="block text-xs font-normal text-white leading-none">
+                            {item.friendlyLabel}
+                          </span>
+                          <span className="mt-1 block text-[10.5px] text-[#a0a0a0] leading-tight">
+                            {item.friendlySub}
+                          </span>
+                        </span>
+                      </span>
+                      <kbd className="rounded-full border border-white/[0.12] bg-black/50 px-2 py-0.5 font-mono text-[10px] text-[#38ffbd]">
+                        {item.keyHint}
+                      </kbd>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-              {satellites.length > 0 && (
+            {/* 2 Fun Live Demos */}
+            <div className="gfx-card p-4 sm:p-5">
+              <span className="gfx-card__border" aria-hidden="true" />
+              <div className="flex items-center justify-between border-b border-white/[0.07] pb-2.5">
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
+                  02 · Try Live Action Demos
+                </p>
+                <span className="font-mono text-[10px] text-[#10bc83]">INTERACTIVE</span>
+              </div>
+              <div className="mt-3.5 space-y-2.5">
                 <button
                   type="button"
-                  onClick={() => {
-                    setSatellites([]);
-                    setSwarmActive(false);
-                    pushLog("HELPERS", "Cleared orbiting helper satellites.", "cyan");
-                  }}
-                  className="w-full cursor-pointer rounded-sm border border-[#202633] bg-[#080a0f] px-3 py-1.5 font-mono text-[11px] text-[#8b929e] hover:text-[#f2f3ee]"
+                  onClick={dispatchSwarmTournament}
+                  className="group relative w-full cursor-pointer overflow-hidden rounded-xl border border-[#10bc83]/45 bg-[radial-gradient(120%_90%_at_50%_0%,rgba(16,188,131,0.22),rgba(6,33,24,0.85))] px-4 py-3 text-left text-xs text-[#38ffbd] transition-all hover:border-[#38ffbd] hover:shadow-[0_0_26px_rgba(16,188,131,0.24)]"
                 >
-                  Clear Orbiting Helpers ({satellites.length})
+                  <GenesisSparkles />
+                  <span className="flex items-center justify-between font-mono font-normal text-white">
+                    <span className="text-[#38ffbd]">▶ Launch 4 Helper Satellites</span>
+                    <span className="rounded-full border border-[#10bc83]/40 bg-[#05070d]/70 px-2 py-0.5 text-[10px]">
+                      [S]
+                    </span>
+                  </span>
+                  <span className="mt-1.5 block text-[11px] text-[#a0a0a0]">
+                    Watch 4 3D helpers orbit the Orb &amp; catch a hidden warning
+                  </span>
                 </button>
+
+                <button
+                  type="button"
+                  onClick={triggerBargeIn}
+                  className="w-full cursor-pointer rounded-xl border border-[#e29d58]/45 bg-[radial-gradient(120%_90%_at_50%_100%,rgba(226,157,88,0.2),rgba(20,14,6,0.88))] px-4 py-3 text-left text-xs text-[#e29d58] transition-all hover:border-[#e29d58]/80"
+                >
+                  <span className="flex items-center justify-between font-mono font-normal">
+                    <span>⚡ Interrupt Mid-Sentence</span>
+                    <span className="rounded-full border border-[#e29d58]/40 bg-[#05070d]/70 px-2 py-0.5 text-[10px]">
+                      [B]
+                    </span>
+                  </span>
+                  <span className="mt-1.5 block text-[11px] text-[#d6b883]">
+                    See how ELEVEN stops talking in 0.05s the moment you speak
+                  </span>
+                </button>
+
+                {satellites.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSatellites([]);
+                      setSwarmActive(false);
+                      pushLog("HELPERS", "Cleared orbiting helper satellites.", "cyan");
+                    }}
+                    className="w-full cursor-pointer rounded-full border border-white/[0.1] bg-[#05070d] px-3.5 py-2 font-mono text-[11px] text-[#a0a0a0] hover:border-[#10bc83]/40 hover:text-white"
+                  >
+                    Clear Orbiting Helpers ({satellites.length})
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Private Local Memory Status */}
+            <div className="gfx-card !p-5 text-[11.5px]">
+              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0] border-b border-white/[0.07] pb-2.5">
+                03 · Private Memory (On Your PC)
+              </p>
+              <div className="mt-3 space-y-2.5 text-[#a0a0a0]">
+                <div className="flex justify-between">
+                  <span>Right-Now Memory</span>
+                  <span className="font-mono text-[#10bc83]">READY (&lt;5ms)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Past Conversations</span>
+                  <span className="font-mono text-[#10bc83]">TIMELINE SAVED</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Smart File Search</span>
+                  <span className="font-mono text-[#38ffbd]">EXACT + MEANING</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Encryption Lock</span>
+                  <span className="font-mono text-white">AES-256 LOCKED</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Center Column: Interactive 3D WebGL Holographic Orb in GenesisShowcaseFrame */}
+          <section className="lg:col-span-6 flex flex-col">
+            <GenesisShowcaseFrame className="flex-1 flex flex-col">
+              <div className="relative flex min-h-[520px] flex-1 flex-col justify-between overflow-hidden rounded-[1.05rem] bg-[#05070d] lg:min-h-[660px]">
+                <div className="pointer-events-none relative z-10 flex items-start justify-between border-b border-white/[0.06] bg-[#05070d]/70 px-5 py-3.5 font-mono text-[11px] backdrop-blur-md">
+                  <div>
+                    <p className="flex items-center gap-2 text-[#38ffbd]">
+                      <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
+                      <span>DRAG TO SPIN IN 3D · CLICK TO PULSE</span>
+                    </p>
+                    <p className="mt-1 text-[10.5px] text-[#a0a0a0]">
+                      {activeFriendly?.friendlySub}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p style={{ color: activeConfig.hex }} className="font-normal">
+                      {activeFriendly?.friendlyLabel.toUpperCase()}
+                    </p>
+                    <p className="mt-1 text-[10px] text-[#a0a0a0]">
+                      {swarmActive
+                        ? "4 HELPERS WORKING…"
+                        : satellites.length > 0
+                        ? "4 HELPERS FACT-CHECKED"
+                        : "PROTECTED BY 5 SAFETY GATES"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="relative min-h-[420px] w-full flex-1">
+                  <ElevenHolographicOrb3D
+                    state={orbState}
+                    bargeInSignal={bargeInSignal}
+                    satellites={satellites}
+                  />
+                </div>
+
+                {/* Friendly Approval Card Popup when State 7 ("Waiting for Your OK") is active */}
+                <AnimatePresence mode="wait">
+                  {orbState === "AUTHORITY_REQUIRED" ? (
+                    <motion.div
+                      key="approval-drawer"
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 12 }}
+                      className="relative z-20 m-4 rounded-2xl border border-[#ef4444]/60 bg-[#140b0e]/95 p-5 text-xs shadow-2xl backdrop-blur-xl"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#ef4444]/30 pb-2.5">
+                        <span className="font-mono font-normal text-[#ef4444]">
+                          ⏸ HONEST SAFETY RECEIPT — NEEDS YOUR PERMISSION
+                        </span>
+                        <span className="rounded-full bg-[#291315] px-3 py-0.5 font-mono text-[11px] text-[#fca5a5]">
+                          Auto-cancels in {nonceTtl.toFixed(1)}s
+                        </span>
+                      </div>
+                      <p className="mt-3 text-base font-normal heading-gradient">
+                        Publish code update &ldquo;release/v3.1&rdquo; to GitHub?
+                      </p>
+                      <p className="mt-1 text-[11.5px] text-[#a0a0a0]">
+                        ELEVEN hid the AI&rsquo;s sales talk and checked the facts directly: this will upload your branch to github.com.
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-3 font-mono text-xs">
+                        <button
+                          type="button"
+                          onClick={approveColdRoomNonce}
+                          className="glow-btn !py-2 !px-4 !text-xs"
+                        >
+                          <span>✓ Approve Once (30s Pass)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={quarantineColdRoom}
+                          className="cursor-pointer rounded-full border border-white/[0.14] bg-[#05070d] px-4 py-2 text-[#e8ecf5] hover:border-[#ef4444]"
+                        >
+                          ✕ Cancel Safely
+                        </button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="status-bar"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.06] bg-[#05070d]/90 px-5 py-3 font-mono text-[10px] text-[#a0a0a0]"
+                    >
+                      <span className="text-[#10bc83]">● VOICE REPLY GOAL: &lt;0.5 SECONDS</span>
+                      <span>PASSWORDS &amp; FILES: PROTECTED</span>
+                      <span className="text-[#38ffbd]">EMERGENCY STOP: 0.05 SECONDS</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </GenesisShowcaseFrame>
+          </section>
+
+          {/* Right Column: Orbiting Helpers Status + Plain-English Activity Feed */}
+          <section className="flex flex-col justify-between gap-5 lg:col-span-3">
+            <div className="gfx-card !p-5">
+              <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
+                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
+                  Orbiting AI Helpers
+                </span>
+                <span className="rounded-full border border-[#10bc83]/35 bg-[#062118]/75 px-2.5 py-0.5 font-mono text-[10px] text-[#38ffbd]">
+                  PROOF CHECK
+                </span>
+              </div>
+
+              {satellites.length === 0 ? (
+                <div className="py-6 text-center text-xs text-[#a0a0a0]">
+                  <p className="font-normal text-sm heading-gradient">No helpers orbiting yet</p>
+                  <p className="mt-2 text-[11.5px] leading-relaxed text-[#a0a0a0]">
+                    Click <strong className="text-[#38ffbd] font-normal">&ldquo;Launch 4 Helper Satellites&rdquo;</strong> on the left to watch 4 3D spheres orbit the core and fact-check a job!
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-3.5 space-y-2.5 text-xs">
+                  {satellites.map((sat) => (
+                    <div
+                      key={sat.stepId}
+                      className="rounded-xl border border-white/[0.07] bg-[#05070d]/85 p-3"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-normal text-white">
+                          {sat.stepId}
+                        </span>
+                        <span
+                          className={`rounded-full px-2 py-0.5 font-mono text-[10px] ${
+                            sat.evidenceStatus === "ACCEPTED"
+                              ? "border border-[#10bc83]/35 bg-[#062118] text-[#38ffbd]"
+                              : sat.evidenceStatus === "UNRESOLVED"
+                              ? "border border-[#e29d58]/40 bg-[#e29d58]/15 text-[#e29d58]"
+                              : "border border-white/10 bg-white/5 text-[#a0a0a0]"
+                          }`}
+                        >
+                          {sat.evidenceStatus === "ACCEPTED"
+                            ? "✓ Verified"
+                            : sat.evidenceStatus === "UNRESOLVED"
+                            ? "⚠ Warning"
+                            : "Working…"}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-[11px] text-[#a0a0a0]">{sat.toolName}</p>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
-          </div>
 
-          {/* Private Local Memory Status */}
-          <div className="rounded-sm border border-[#202633] bg-[#0e121a]/90 p-4 text-[11.5px] backdrop-blur-sm">
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#8b929e]">
-              Private Memory (On Your PC)
-            </p>
-            <div className="mt-3 space-y-2 text-[#8b929e]">
-              <div className="flex justify-between">
-                <span>Right-Now Memory</span>
-                <span className="font-mono text-[#10b981]">READY (&lt;5ms)</span>
+            {/* Live Plain-English Activity Stream */}
+            <div className="gfx-card !p-5 flex-1">
+              <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
+                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#a0a0a0]">
+                  Live Activity Feed
+                </span>
+                <span className="flex items-center gap-1.5 font-mono text-[10px] text-[#10bc83]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#10bc83] animate-pulse" />
+                  REAL-TIME
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span>Past Conversations</span>
-                <span className="font-mono text-[#10b981]">TIMELINE SAVED</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Smart File Search</span>
-                <span className="font-mono text-[#5fd0cf]">EXACT + MEANING</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Encryption Lock</span>
-                <span className="font-mono text-[#f2f3ee]">AES-256 LOCKED</span>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Center Column: Interactive 3D WebGL Holographic Orb */}
-        <section className="relative flex min-h-[480px] flex-col justify-between overflow-hidden rounded-sm border border-[#202633] bg-[#04060a] lg:col-span-6 lg:min-h-[640px]">
-          <div className="pointer-events-none relative z-10 flex items-start justify-between p-4 font-mono text-[11px]">
-            <div>
-              <p className="text-[#5fd0cf]">DRAG TO SPIN IN 3D · CLICK TO PULSE</p>
-              <p className="mt-0.5 text-[10px] text-[#8b929e]">
-                {activeFriendly?.friendlySub}
-              </p>
-            </div>
-            <div className="text-right">
-              <p style={{ color: activeConfig.hex }}>
-                {activeFriendly?.friendlyLabel.toUpperCase()}
-              </p>
-              <p className="mt-0.5 text-[10px] text-[#8b929e]">
-                {swarmActive
-                  ? "4 HELPERS WORKING…"
-                  : satellites.length > 0
-                  ? "4 HELPERS FACT-CHECKED"
-                  : "PROTECTED BY 5 SAFETY GATES"}
-              </p>
-            </div>
-          </div>
-
-          <div className="relative min-h-[400px] w-full flex-1">
-            <ElevenHolographicOrb3D
-              state={orbState}
-              bargeInSignal={bargeInSignal}
-              satellites={satellites}
-            />
-          </div>
-
-          {/* Friendly Approval Card Popup when State 7 ("Waiting for Your OK") is active */}
-          <AnimatePresence mode="wait">
-            {orbState === "AUTHORITY_REQUIRED" ? (
-              <motion.div
-                key="approval-drawer"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 12 }}
-                className="relative z-20 m-4 rounded-sm border border-[#ef4444]/60 bg-[#140b0e]/95 p-4 text-xs shadow-2xl backdrop-blur-md"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#ef4444]/30 pb-2">
-                  <span className="font-mono font-semibold text-[#ef4444]">
-                    ⏸ HONEST SAFETY RECEIPT — NEEDS YOUR PERMISSION
-                  </span>
-                  <span className="rounded bg-[#291315] px-2 py-0.5 font-mono text-[11px] text-[#fca5a5]">
-                    Auto-cancels in {nonceTtl.toFixed(1)}s
-                  </span>
-                </div>
-                <p className="mt-2.5 text-sm font-medium text-[#f2f3ee]">
-                  Publish code update &ldquo;release/v3.1&rdquo; to GitHub?
-                </p>
-                <p className="mt-1 text-[11.5px] text-[#9aa3b2]">
-                  ELEVEN hid the AI&rsquo;s sales talk and checked the facts directly: this will upload your branch to github.com.
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2.5 font-mono text-xs">
-                  <button
-                    type="button"
-                    onClick={approveColdRoomNonce}
-                    className="cursor-pointer rounded-sm bg-[#10b981] px-4 py-1.5 font-semibold text-[#04130d] transition-opacity hover:opacity-90"
+              <div className="mt-3.5 space-y-2.5 text-xs">
+                {logs.map((entry) => (
+                  <motion.div
+                    key={entry.id}
+                    initial={{ opacity: 0, x: 8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="rounded-xl border border-white/[0.07] bg-[#05070d]/85 p-3"
                   >
-                    ✓ Approve Once (30s Pass)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={quarantineColdRoom}
-                    className="cursor-pointer rounded-sm border border-[#2e3747] bg-[#0e121a] px-3.5 py-1.5 text-[#f2f3ee] hover:border-[#ef4444]"
-                  >
-                    ✕ Cancel Safely
-                  </button>
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="status-bar"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-t border-[#202633] bg-[#080a0f]/80 px-4 py-2.5 font-mono text-[10px] text-[#8b929e]"
-              >
-                <span>VOICE REPLY GOAL: &lt;0.5 SECONDS</span>
-                <span>PASSWORDS &amp; FILES: PROTECTED</span>
-                <span>EMERGENCY STOP: 0.05 SECONDS</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </section>
-
-        {/* Right Column: Orbiting Helpers Status + Plain-English Activity Feed */}
-        <section className="flex flex-col justify-between gap-5 lg:col-span-3">
-          <div className="rounded-sm border border-[#202633] bg-[#0e121a]/90 p-4 backdrop-blur-sm">
-            <div className="flex items-center justify-between border-b border-[#202633] pb-2.5">
-              <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#8b929e]">
-                Orbiting AI Helpers
-              </span>
-              <span className="font-mono text-[10px] text-[#5fd0cf]">
-                PROOF CHECK
-              </span>
-            </div>
-
-            {satellites.length === 0 ? (
-              <div className="py-5 text-center text-xs text-[#8b929e]">
-                <p className="font-medium text-[#d5d9e2]">No helpers orbiting yet</p>
-                <p className="mt-1.5 text-[11px] leading-relaxed text-[#8b929e]">
-                  Click <strong className="text-[#5fd0cf]">&ldquo;Launch 4 Helper Satellites&rdquo;</strong> on the left to watch 4 3D spheres orbit the core and fact-check a job!
-                </p>
-              </div>
-            ) : (
-              <div className="mt-3 space-y-2 text-xs">
-                {satellites.map((sat) => (
-                  <div
-                    key={sat.stepId}
-                    className="rounded-sm border border-[#202633] bg-[#080a0f] p-2.5"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-[#f2f3ee]">
-                        {sat.stepId}
-                      </span>
+                    <div className="flex items-center justify-between font-mono text-[10px] text-[#686868]">
                       <span
-                        className={`rounded px-1.5 py-0.5 font-mono text-[10px] ${
-                          sat.evidenceStatus === "ACCEPTED"
-                            ? "bg-[#10b981]/15 text-[#10b981]"
-                            : sat.evidenceStatus === "UNRESOLVED"
-                            ? "bg-[#f59e0b]/20 text-[#f59e0b]"
-                            : "bg-[#202633] text-[#8b929e]"
-                        }`}
+                        className={
+                          entry.tone === "danger"
+                            ? "text-[#ef4444]"
+                            : entry.tone === "warn"
+                            ? "text-[#e29d58]"
+                            : entry.tone === "nominal"
+                            ? "text-[#10bc83]"
+                            : "text-[#38ffbd]"
+                        }
                       >
-                        {sat.evidenceStatus === "ACCEPTED"
-                          ? "✓ Verified"
-                          : sat.evidenceStatus === "UNRESOLVED"
-                          ? "⚠ Warning"
-                          : "Working…"}
+                        {entry.module}
                       </span>
+                      <span>{entry.ts}</span>
                     </div>
-                    <p className="mt-1 text-[11px] text-[#8b929e]">{sat.toolName}</p>
-                  </div>
+                    <p className="mt-1.5 leading-[1.5] text-[#e8ecf5]">{entry.msg}</p>
+                  </motion.div>
                 ))}
               </div>
-            )}
-          </div>
-
-          {/* Live Plain-English Activity Stream */}
-          <div className="flex-1 rounded-sm border border-[#202633] bg-[#0e121a]/90 p-4 backdrop-blur-sm">
-            <div className="flex items-center justify-between border-b border-[#202633] pb-2.5">
-              <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#8b929e]">
-                Live Activity Feed
-              </span>
-              <span className="font-mono text-[10px] text-[#10b981]">REAL-TIME</span>
             </div>
-
-            <div className="mt-3 space-y-2.5 text-xs">
-              {logs.map((entry) => (
-                <motion.div
-                  key={entry.id}
-                  initial={{ opacity: 0, x: 8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="rounded-sm border border-[#202633]/80 bg-[#080a0f]/80 p-2.5"
-                >
-                  <div className="flex items-center justify-between font-mono text-[10px] text-[#565d6c]">
-                    <span
-                      className={
-                        entry.tone === "danger"
-                          ? "text-[#ef4444]"
-                          : entry.tone === "warn"
-                          ? "text-[#f59e0b]"
-                          : entry.tone === "nominal"
-                          ? "text-[#10b981]"
-                          : "text-[#5fd0cf]"
-                      }
-                    >
-                      {entry.module}
-                    </span>
-                    <span>{entry.ts}</span>
-                  </div>
-                  <p className="mt-1 leading-[1.5] text-[#d5d9e2]">{entry.msg}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </main>
+          </section>
+        </main>
+      </GenesisHeroIntro>
       <WaitlistModal
         isOpen={isWaitlistOpen}
         onClose={() => setIsWaitlistOpen(false)}

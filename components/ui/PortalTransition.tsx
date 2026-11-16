@@ -149,38 +149,43 @@ export function PortalTransitionProvider({
             className="fixed inset-0 z-[100] flex flex-col items-center justify-center px-6 text-el-fg pointer-events-auto"
             aria-live="polite"
           >
-            <div className="hud-frame relative flex flex-col items-center gap-5 rounded-sm border border-el-border-strong/70 bg-el-bg-raised/85 px-8 py-7 backdrop-blur-xl max-w-md w-full shadow-el-lg">
-              <div className="flex items-center gap-3 text-xs text-el-fg-muted">
-                <span
-                  className="h-2 w-2 rounded-full animate-pulse motion-reduce:animate-none"
-                  style={{
-                    backgroundColor: currentPhase.accent,
-                    boxShadow: `0 0 10px ${currentPhase.accent}`,
-                  }}
-                />
-                <span>ELEVEN v3.1 · System airlock</span>
-              </div>
+            <div className="gfx-frame max-w-md w-full">
+              <div className="gfx-frame__inner flex flex-col items-center gap-5 px-8 py-7 backdrop-blur-xl">
+                <div className="gfx-badge !py-1 !px-3.5 !text-xs">
+                  <span
+                    className="h-2 w-2 rounded-full animate-pulse motion-reduce:animate-none"
+                    style={{
+                      backgroundColor: currentPhase.accent,
+                      boxShadow: `0 0 10px ${currentPhase.accent}`,
+                    }}
+                  />
+                  <span>ELEVEN v3.1 · Genesis Holographic Airlock</span>
+                </div>
 
-              <div className="w-56 h-[2px] bg-el-border overflow-hidden relative rounded-full">
-                <motion.div
-                  initial={{ x: "-100%" }}
-                  animate={{ x: "100%" }}
-                  transition={{
-                    duration: 0.65,
-                    ease: [0.16, 1, 0.3, 1],
-                    repeat: Infinity,
-                  }}
-                  className="h-full w-1/2"
-                  style={{ backgroundColor: currentPhase.accent }}
-                />
-              </div>
+                <div className="w-56 h-[3px] bg-white/[0.08] overflow-hidden relative rounded-full">
+                  <motion.div
+                    initial={{ x: "-100%" }}
+                    animate={{ x: "100%" }}
+                    transition={{
+                      duration: 0.65,
+                      ease: [0.16, 1, 0.3, 1],
+                      repeat: Infinity,
+                    }}
+                    className="h-full w-1/2 rounded-full"
+                    style={{
+                      backgroundColor: currentPhase.accent,
+                      boxShadow: `0 0 14px ${currentPhase.accent}`,
+                    }}
+                  />
+                </div>
 
-              <p
-                className="font-mono text-xs tracking-[0.12em] text-center"
-                style={{ color: currentPhase.accent }}
-              >
-                {currentPhase.status}
-              </p>
+                <p
+                  className="font-mono text-xs tracking-[0.12em] text-center"
+                  style={{ color: currentPhase.accent }}
+                >
+                  {currentPhase.status}
+                </p>
+              </div>
             </div>
           </motion.div>
         )}

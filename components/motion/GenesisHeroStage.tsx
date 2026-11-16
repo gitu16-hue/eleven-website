@@ -1,0 +1,1101 @@
+"use client";
+
+import React, { useEffect, useRef } from "react";
+import * as THREE from "three";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Button } from "@/components/ui/Button";
+import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
+import { HeroOrbEmbed } from "@/components/v3/HeroOrbEmbed";
+import { ClarityTogglePill, DualCopy } from "@/components/motion/PremiumMotion";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const STATS_METRICS = [
+  {
+    value: "0.42s",
+    label: "Median Voice Reply Latency (p50)",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-[#38ffbd]">
+        <path
+          d="M12 3v18M8 7v10M4 10v4M16 7v10M20 10v4"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    value: "4 Rooms",
+    label: "Isolated OS Process Domains (INV-01)",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-[#38ffbd]">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+      </svg>
+    ),
+  },
+  {
+    value: "5 Gates",
+    label: "Pre-Execution Safety Checkpoints (INV-04)",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-[#38ffbd]">
+        <path
+          d="M12 3l7 3v6c0 4.5-3 8.2-7 9-4-0.8-7-4.5-7-9V6l7-3z"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M9 12l2 2 4-4"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    value: "30s TTL",
+    label: "Ed25519 Hardware Approval Lease (DEC-008)",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-[#38ffbd]">
+        <circle cx="8.5" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.7" />
+        <path
+          d="M13 12h8M18 12v3M21 12v2"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    value: "127.0.0.1",
+    label: "Loopback-Only 3-Tier Memory Vault",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-[#38ffbd]">
+        <ellipse cx="12" cy="6" rx="7.5" ry="3" stroke="currentColor" strokeWidth="1.7" />
+        <path
+          d="M4.5 6v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3V6M4.5 12v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3v-6"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
+      </svg>
+    ),
+  },
+];
+
+interface GatewayCardSpec {
+  key: string;
+  tone: "green" | "amber" | "blue";
+  title: string;
+  desc: string;
+  btn: string;
+  href: string;
+  fill: boolean;
+  sparkles: boolean;
+  badge: string;
+}
+
+const LEFT_GATEWAY_CARDS: GatewayCardSpec[] = [
+  {
+    key: "voice",
+    tone: "green",
+    badge: "0.42s Loop",
+    title: "Full-Duplex Voice Studio",
+    desc: "Natural 16kHz PCM conversation with <50ms hardware barge-in interruption and zero cloud audio uploads.",
+    btn: "Explore Voice Benchmarks",
+    href: "/benchmarks/voice-latency",
+    fill: true,
+    sparkles: false,
+  },
+  {
+    key: "dag",
+    tone: "green",
+    badge: "System 2",
+    title: "Async DAG TaskCompiler",
+    desc: "Breaks complex coding and research into parallel, budget-capped execution graphs while voice stays instant.",
+    btn: "Open DAG Visualizer",
+    href: "/tools/dag-visualizer",
+    fill: false,
+    sparkles: true,
+  },
+  {
+    key: "gate",
+    tone: "amber",
+    badge: "INV-04",
+    title: "5-Stage ActionGate",
+    desc: "Every proposed file edit or terminal command passes 5 mandatory verification gates before touching your OS.",
+    btn: "Inspect ActionGate",
+    href: "/autonomy",
+    fill: false,
+    sparkles: true,
+  },
+];
+
+const RIGHT_GATEWAY_CARDS: GatewayCardSpec[] = [
+  {
+    key: "vault",
+    tone: "green",
+    badge: "127.0.0.1",
+    title: "3-Tier Local Memory Vault",
+    desc: "Qdrant semantic vectors + SQLite WAL timeline bound strictly to local loopback with 0.85 deduplication.",
+    btn: "Size Your Local Vault",
+    href: "/tools/vault-calculator",
+    fill: true,
+    sparkles: false,
+  },
+  {
+    key: "worktree",
+    tone: "blue",
+    badge: "INV-09",
+    title: "Quarantined Git Worktrees",
+    desc: "AI coding helpers build and run tests inside isolated worktree copies—your main branch stays untouched.",
+    btn: "Developer Workflow",
+    href: "/solutions/developers",
+    fill: false,
+    sparkles: true,
+  },
+  {
+    key: "cockpit",
+    tone: "green",
+    badge: "WebGL HUD",
+    title: "3D Holographic Control Plane",
+    desc: "Step inside the live 54K-particle 3D cognitive core to test orbiting helper satellites and Ed25519 receipts.",
+    btn: "Enter 3D Core (/enter)",
+    href: "/enter",
+    fill: true,
+    sparkles: true,
+  },
+];
+
+function GatewayCardItem({ card }: { card: GatewayCardSpec }) {
+  return (
+    <article className={`gateway-card gateway-card--${card.tone} w-full max-w-[420px]`}>
+      <div
+        className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl border font-mono text-[10px] ${
+          card.tone === "amber"
+            ? "border-[#e29d58]/40 bg-gradient-to-br from-[#3d2e0d] to-[#1f1606] text-[#e29d58]"
+            : card.tone === "blue"
+            ? "border-[#4c6ef5]/45 bg-gradient-to-br from-[#0d152e] to-[#28429e] text-[#9eb4ff]"
+            : "border-[#10bc83]/40 bg-gradient-to-br from-[#0d3d28] to-[#061f16] text-[#38ffbd]"
+        }`}
+      >
+        <span className="h-2 w-2 rounded-full bg-current mb-1 opacity-80" />
+        <span>{card.badge}</span>
+      </div>
+      <div className="flex flex-col items-start gap-1.5">
+        <h3 className="text-lg font-normal text-[#e8ecf5] leading-snug">
+          {card.title}
+        </h3>
+        <p className="text-xs text-[#a0a0a0] leading-relaxed">
+          {card.desc}
+        </p>
+        <div className="mt-2">
+          <Button
+            href={card.href}
+            variant={card.fill ? "secondary" : "ghost"}
+            arrow={card.fill}
+          >
+            {card.btn}
+          </Button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export function GenesisHeroStage() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const dashboardPinRef = useRef<HTMLDivElement>(null);
+  const dashboardRef = useRef<HTMLDivElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
+  const statsSectionRef = useRef<HTMLDivElement>(null);
+  const gatewaySectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const section = sectionRef.current;
+    if (!canvas || !section) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    // 1. Entrance Choreography (intro-BlFLy4tE.js + ue() in Index-CXzxOG14.js)
+    const siteHeader = document.querySelector(".site-header");
+    const glowImgs = gsap.utils.toArray<HTMLElement>(".hero-glow__img");
+    const heroIntroItems = heroContentRef.current
+      ? gsap.utils.toArray<HTMLElement>(
+          heroContentRef.current.querySelectorAll("[data-hero-item]")
+        )
+      : [];
+
+    const introTl = gsap.timeline({ delay: 0.25 });
+    if (!prefersReduced && window.scrollY <= 10) {
+      canvas.classList.add("is-entering");
+      const removeEntering = () => canvas.classList.remove("is-entering");
+      canvas.addEventListener("animationend", removeEntering, { once: true });
+
+      if (glowImgs.length) {
+        introTl.fromTo(
+          glowImgs,
+          { autoAlpha: 0, scale: 0.9 },
+          { autoAlpha: 1, scale: 1, duration: 1.0, ease: "power2.out" },
+          0
+        );
+      }
+      if (siteHeader) {
+        introTl.fromTo(
+          siteHeader,
+          { autoAlpha: 0, y: -12 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.7,
+            ease: "power2.out",
+            clearProps: "transform",
+          },
+          0
+        );
+      }
+      if (heroIntroItems.length) {
+        introTl.fromTo(
+          heroIntroItems,
+          { autoAlpha: 0, y: 24 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.08,
+            ease: "power3.out",
+            clearProps: "transform",
+          },
+          0.05
+        );
+      }
+    }
+
+    // 2. Three.js WebGL Globe + Water Mirror Reflection + Hologram Morph Scene (globe-DSO9VUks.js)
+    let renderer: THREE.WebGLRenderer | null = null;
+    let animId: number | null = null;
+    let disposed = false;
+
+    // Shared animation state driven by ScrollTrigger
+    const sceneState = {
+      morph: 0.0,
+      globeScale: 0.9,
+      globeY: -0.18,
+      waterAlpha: 0.85,
+      colorMix: 0.0,
+      canvasOpacity: 1.0,
+    };
+
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        powerPreference: "high-performance",
+        antialias: false,
+        alpha: true,
+      });
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      renderer.setPixelRatio(dpr);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+
+      const width = window.innerWidth || 1280;
+      const height = window.innerHeight || 800;
+      renderer.setSize(width, height, false);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+      camera.position.set(0, 0, 5.2);
+
+      // Camera & Globe Scale Initial Entrance (globe-DSO9VUks.js intro timeline)
+      const rootGroup = new THREE.Group();
+      scene.add(rootGroup);
+
+      if (!prefersReduced && window.scrollY <= 10) {
+        gsap.fromTo(
+          camera.position,
+          { z: 6.8, y: 0.25 },
+          { z: 5.2, y: 0, duration: 1.4, ease: "power2.out", delay: 0.25 }
+        );
+        gsap.fromTo(
+          sceneState,
+          { globeScale: 0.76 },
+          { globeScale: 0.92, duration: 1.4, ease: "power3.out", delay: 0.25 }
+        );
+      }
+
+      // Build 3D Emerald Particle Globe with Morph Target (Hologram Core)
+      const isMobile = width < 768;
+      const particleCount = isMobile ? 12000 : 32000;
+      const geo = new THREE.BufferGeometry();
+      const posArr = new Float32Array(particleCount * 3);
+      const morphArr = new Float32Array(particleCount * 3);
+      const randArr = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount; i++) {
+        // 1. Earth/Globe Spherical shell with continent/band clustering
+        const u = Math.random();
+        const v = Math.random();
+        const theta = u * Math.PI * 2;
+        const phi = Math.acos(2 * v - 1);
+        const radius = 1.38 + (Math.random() - 0.5) * 0.04;
+
+        const gx = radius * Math.sin(phi) * Math.cos(theta);
+        const gy = radius * Math.cos(phi);
+        const gz = radius * Math.sin(phi) * Math.sin(theta);
+
+        posArr[i * 3] = gx;
+        posArr[i * 3 + 1] = gy;
+        posArr[i * 3 + 2] = gz;
+
+        // 2. Morph Target: Radiant Emerald Cognitive Core / Hologram Sculpture in Phase 3
+        const ringBand = i % 5;
+        if (ringBand === 0) {
+          // Inner dense cognitive nucleus
+          const rCore = 0.55 * Math.cbrt(Math.random());
+          morphArr[i * 3] = rCore * Math.sin(phi) * Math.cos(theta);
+          morphArr[i * 3 + 1] = rCore * Math.cos(phi);
+          morphArr[i * 3 + 2] = rCore * Math.sin(phi) * Math.sin(theta);
+        } else {
+          // 4 Gyroscopic orbital rings around the core
+          const ringR = 0.72 + ringBand * 0.22;
+          const tilt = (ringBand - 2.5) * 0.42;
+          const rx = ringR * Math.cos(theta);
+          const rz = ringR * Math.sin(theta);
+          const ry = (Math.random() - 0.5) * 0.08 + rx * Math.sin(tilt);
+          morphArr[i * 3] = rx * Math.cos(tilt);
+          morphArr[i * 3 + 1] = ry;
+          morphArr[i * 3 + 2] = rz;
+        }
+
+        randArr[i * 3] = Math.random();
+        randArr[i * 3 + 1] = Math.random();
+        randArr[i * 3 + 2] = Math.random();
+      }
+
+      geo.setAttribute("position", new THREE.BufferAttribute(posArr, 3));
+      geo.setAttribute("aMorph", new THREE.BufferAttribute(morphArr, 3));
+      geo.setAttribute("aRand", new THREE.BufferAttribute(randArr, 3));
+
+      const globeUniforms = {
+        uTime: { value: 0 },
+        uMorph: { value: 0 },
+        uColorMix: { value: 0 },
+        uWaterY: { value: -1.18 },
+        uPointer: { value: new THREE.Vector3(0, 0, 10) },
+        uPointerActive: { value: 0 },
+        uPx: { value: dpr * (height / 900) },
+      };
+
+      const globeMat = new THREE.ShaderMaterial({
+        uniforms: globeUniforms,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        vertexShader: `
+          attribute vec3 aMorph;
+          attribute vec3 aRand;
+          uniform float uTime;
+          uniform float uMorph;
+          uniform float uWaterY;
+          uniform vec3 uPointer;
+          uniform float uPointerActive;
+          uniform float uPx;
+          varying float vDepthT;
+          varying float vSubmerged;
+          varying float vTwinkle;
+
+          void main() {
+            vec3 basePos = mix(position, aMorph, uMorph);
+
+            // Subtle organic wave wobble
+            float wobble = sin(uTime * 1.4 + aRand.x * 6.2831) * (0.012 + uMorph * 0.025);
+            basePos += normalize(basePos + vec3(0.0001)) * wobble;
+
+            // Pointer interactive repulsion
+            vec4 worldPos = modelMatrix * vec4(basePos, 1.0);
+            float pDist = distance(worldPos.xyz, uPointer);
+            float repulse = smoothstep(0.85, 0.0, pDist) * uPointerActive;
+            worldPos.xyz += normalize(worldPos.xyz - uPointer + vec3(0.001)) * repulse * 0.22;
+
+            vec4 mvPosition = viewMatrix * worldPos;
+            gl_Position = projectionMatrix * mvPosition;
+
+            // Depth shading (vEarthDepthT from globe-DSO9VUks.js)
+            vDepthT = smoothstep(-1.45, 1.45, worldPos.z);
+
+            // Water submersion dimming (earthSubmerged from globe-DSO9VUks.js)
+            vSubmerged = smoothstep(uWaterY, uWaterY - 0.35, worldPos.y);
+
+            vTwinkle = 0.65 + 0.35 * sin(uTime * (1.2 + aRand.y * 2.0) + aRand.z * 25.0);
+            float sizeBoost = mix(1.0, 1.45, uMorph) + repulse * 1.4;
+            gl_PointSize = (1.35 + aRand.x * 1.55) * sizeBoost * uPx * (5.2 / max(1.0, -mvPosition.z));
+          }
+        `,
+        fragmentShader: `
+          uniform float uColorMix;
+          varying float vDepthT;
+          varying float vSubmerged;
+          varying float vTwinkle;
+
+          void main() {
+            vec2 d = gl_PointCoord - 0.5;
+            float dist = length(d);
+            if (dist > 0.5) discard;
+            float mask = smoothstep(0.5, 0.0, dist);
+            float core = smoothstep(0.18, 0.0, dist);
+
+            vec3 colFar = mix(vec3(0.024, 0.13, 0.094), vec3(0.0, 0.45, 0.25), uColorMix);
+            vec3 colNear = mix(vec3(0.063, 0.737, 0.514), vec3(0.22, 1.0, 0.74), uColorMix);
+            vec3 col = mix(colFar, colNear, vDepthT) + vec3(core * 0.38);
+
+            // Dim particles below the water plane
+            float subDim = mix(1.0, 0.22, vSubmerged);
+            float alpha = mask * mask * vTwinkle * (0.28 + 0.68 * vDepthT) * subDim;
+            gl_FragColor = vec4(col * subDim, alpha);
+          }
+        `,
+      });
+
+      const globePoints = new THREE.Points(geo, globeMat);
+      rootGroup.add(globePoints);
+
+      // Background Ambient Star/Data Particles (bgParticles from globe-DSO9VUks.js)
+      const bgCount = isMobile ? 600 : 1400;
+      const bgGeo = new THREE.BufferGeometry();
+      const bgPos = new Float32Array(bgCount * 3);
+      for (let i = 0; i < bgCount; i++) {
+        bgPos[i * 3] = (Math.random() - 0.5) * 12;
+        bgPos[i * 3 + 1] = (Math.random() - 0.5) * 8;
+        bgPos[i * 3 + 2] = -1.5 - Math.random() * 4.5;
+      }
+      bgGeo.setAttribute("position", new THREE.BufferAttribute(bgPos, 3));
+      const bgMat = new THREE.PointsMaterial({
+        color: 0x10bc83,
+        size: 0.022,
+        transparent: true,
+        opacity: 0.35,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      });
+      const bgStars = new THREE.Points(bgGeo, bgMat);
+      scene.add(bgStars);
+
+      // Water Mirror Reflection Surface (MirrorShader equivalent in globe-DSO9VUks.js)
+      const waterGeo = new THREE.PlaneGeometry(16, 10, 72, 72);
+      const waterUniforms = {
+        uTime: globeUniforms.uTime,
+        uAlpha: { value: 0.85 },
+      };
+      const waterMat = new THREE.ShaderMaterial({
+        uniforms: waterUniforms,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        vertexShader: `
+          uniform float uTime;
+          varying vec2 vUv;
+          varying float vRipple;
+          void main() {
+            vUv = uv;
+            vec3 p = position;
+            float w1 = sin(p.x * 2.8 + uTime * 1.35) * cos(p.y * 3.2 - uTime * 1.05) * 0.055;
+            float w2 = sin(p.x * 5.4 - uTime * 1.9) * 0.025;
+            p.z += w1 + w2;
+            vRipple = w1 + w2;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float uAlpha;
+          varying vec2 vUv;
+          varying float vRipple;
+          void main() {
+            vec2 c = vUv - vec2(0.5, 0.52);
+            float dist = length(c * vec2(0.95, 1.55));
+            float radial = smoothstep(0.46, 0.0, dist);
+            float caustic = 0.5 + 0.5 * sin(dist * 52.0 - vRipple * 35.0);
+            vec3 waterCol = mix(vec3(0.02, 0.16, 0.11), vec3(0.063, 0.737, 0.514), caustic * 0.75);
+            float a = radial * radial * (0.12 + 0.18 * caustic) * uAlpha;
+            gl_FragColor = vec4(waterCol, a);
+          }
+        `,
+      });
+      const waterMesh = new THREE.Mesh(waterGeo, waterMat);
+      waterMesh.rotation.x = -Math.PI / 2;
+      waterMesh.position.set(0, -1.18, 0);
+      scene.add(waterMesh);
+
+      // Scroll velocity rotation boost (exact formula from globe-DSO9VUks.js: n.rotation.y += h * (_ * s + D * b))
+      let scrollDir = 1;
+      let scrollBoost = 0;
+      let lastScrollY = window.scrollY;
+      const onScroll = () => {
+        const y = window.scrollY;
+        const delta = y - lastScrollY;
+        if (delta > 0) scrollDir = 1;
+        else if (delta < 0) scrollDir = -1;
+        scrollBoost += delta;
+        lastScrollY = y;
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      // Pointer raycast & parallax
+      const raycaster = new THREE.Raycaster();
+      const pointerNdc = new THREE.Vector2();
+      const hitSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 1.45);
+      const hitPoint = new THREE.Vector3();
+
+      const onPointerMove = (e: PointerEvent) => {
+        const w = window.innerWidth || 1;
+        const h = window.innerHeight || 1;
+        pointerNdc.x = (e.clientX / w) * 2 - 1;
+        pointerNdc.y = -(e.clientY / h) * 2 + 1;
+
+        bgStars.position.x = pointerNdc.x * 0.18;
+        bgStars.position.y = pointerNdc.y * 0.12;
+
+        raycaster.setFromCamera(pointerNdc, camera);
+        if (raycaster.ray.intersectSphere(hitSphere, hitPoint)) {
+          globeUniforms.uPointer.value.copy(hitPoint);
+          globeUniforms.uPointerActive.value = 1;
+        } else {
+          globeUniforms.uPointerActive.value *= 0.85;
+        }
+      };
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+
+      const onResize = () => {
+        if (disposed || !renderer) return;
+        const w = window.innerWidth || 1280;
+        const h = window.innerHeight || 800;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        globeUniforms.uPx.value = dpr * (h / 900);
+      };
+      window.addEventListener("resize", onResize);
+
+      let lastT = performance.now();
+      const renderLoop = () => {
+        if (disposed || !renderer) return;
+        animId = requestAnimationFrame(renderLoop);
+
+        if (sceneState.canvasOpacity <= 0.01 || document.hidden) return;
+
+        const now = performance.now();
+        const dt = Math.min((now - lastT) / 1000, 0.05);
+        lastT = now;
+
+        globeUniforms.uTime.value += dt;
+        globeUniforms.uMorph.value +=
+          (sceneState.morph - globeUniforms.uMorph.value) * 0.1;
+        globeUniforms.uColorMix.value +=
+          (sceneState.colorMix - globeUniforms.uColorMix.value) * 0.1;
+        waterUniforms.uAlpha.value +=
+          (sceneState.waterAlpha - waterUniforms.uAlpha.value) * 0.1;
+
+        rootGroup.rotation.y += dt * (scrollDir * 0.16 + scrollBoost * 0.0025);
+        scrollBoost *= Math.exp(-dt * 6.0);
+
+        rootGroup.scale.setScalar(sceneState.globeScale);
+        rootGroup.position.y = sceneState.globeY;
+        canvas.style.opacity = String(sceneState.canvasOpacity);
+
+        renderer.render(scene, camera);
+      };
+      animId = requestAnimationFrame(renderLoop);
+
+      // 3. GSAP ScrollTrigger 3-Phase Beginning Choreography (scroll-Bq4C5b4-.js)
+      const mm = gsap.matchMedia();
+
+      mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+        const heroBars = gsap.utils.toArray<HTMLElement>(".hero-bar");
+        const dashboardPin = dashboardPinRef.current;
+        const heroContent = heroContentRef.current;
+        const statsSection = statsSectionRef.current;
+        const gatewaySection = gatewaySectionRef.current;
+
+        // Master scrub timeline across #hero-section
+        const masterTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.6,
+          },
+        });
+
+        // Phase 1 (0.0 -> 0.22): Dashboard slides down, Hero content & bars fade out, Globe rises to center
+        if (dashboardPin) {
+          masterTl.fromTo(
+            dashboardPin,
+            { yPercent: 0 },
+            { yPercent: 115, ease: "power1.in", duration: 0.18, immediateRender: false },
+            0
+          );
+          masterTl.to(
+            dashboardPin,
+            { autoAlpha: 0, duration: 0.06, ease: "none" },
+            0.14
+          );
+        }
+        if (heroContent) {
+          masterTl.to(
+            heroContent,
+            { autoAlpha: 0, y: -48, duration: 0.16, ease: "power1.in" },
+            0.02
+          );
+        }
+        if (heroBars.length) {
+          masterTl.to(
+            heroBars,
+            { autoAlpha: 0, duration: 0.12, ease: "none" },
+            0.1
+          );
+        }
+        masterTl.to(
+          sceneState,
+          {
+            globeY: 0.05,
+            globeScale: 1.02,
+            duration: 0.22,
+            ease: "power1.out",
+          },
+          0
+        );
+
+        // Phase 2 (0.22 -> 0.56): #stats-section reveals over rotating 3D Globe
+        if (statsSection) {
+          const statsIntroItems = statsSection.querySelectorAll(".stats-intro > *");
+          const metricRows = statsSection.querySelectorAll(".metric-row");
+
+          gsap.set(statsSection, { autoAlpha: 0 });
+          gsap.set(statsIntroItems, { opacity: 0, x: -60 });
+          gsap.set(metricRows, { opacity: 0, x: 60 });
+
+          masterTl.to(
+            statsSection,
+            { autoAlpha: 1, duration: 0.04, ease: "none" },
+            0.22
+          );
+          masterTl.to(
+            statsIntroItems,
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.12,
+              stagger: 0.02,
+              ease: "power2.out",
+            },
+            0.24
+          );
+          masterTl.to(
+            metricRows,
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.14,
+              stagger: 0.025,
+              ease: "power2.out",
+            },
+            0.26
+          );
+          // Fade out #stats-section at end of Phase 2
+          masterTl.to(
+            statsSection,
+            { autoAlpha: 0, y: -24, duration: 0.08, ease: "power2.in" },
+            0.50
+          );
+        }
+
+        // Phase 3 (0.54 -> 0.92): Globe morphs into Emerald Hologram Core + #gateway-section reveals
+        masterTl.to(
+          sceneState,
+          {
+            morph: 1.0,
+            colorMix: 1.0,
+            globeScale: 0.92,
+            waterAlpha: 0.35,
+            duration: 0.22,
+            ease: "power2.inOut",
+          },
+          0.52
+        );
+
+        if (gatewaySection) {
+          const gwHeading = gatewaySection.querySelector(".gateway-heading");
+          const leftCards = gatewaySection.querySelectorAll(".gateway-col-left .gateway-card");
+          const rightCards = gatewaySection.querySelectorAll(".gateway-col-right .gateway-card");
+
+          gsap.set(gatewaySection, { autoAlpha: 0 });
+          if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 40 });
+          gsap.set(leftCards, { opacity: 0, x: -60 });
+          gsap.set(rightCards, { opacity: 0, x: 60 });
+
+          masterTl.to(
+            gatewaySection,
+            { autoAlpha: 1, duration: 0.04, ease: "none" },
+            0.56
+          );
+          if (gwHeading) {
+            masterTl.to(
+              gwHeading,
+              { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" },
+              0.58
+            );
+          }
+          masterTl.to(
+            leftCards,
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.14,
+              stagger: 0.025,
+              ease: "power2.out",
+            },
+            0.60
+          );
+          masterTl.to(
+            rightCards,
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.14,
+              stagger: 0.025,
+              ease: "power2.out",
+            },
+            0.60
+          );
+        }
+
+        // Leaving #hero-section (0.92 -> 1.0): Fade out background #globe-canvas cleanly
+        masterTl.to(
+          sceneState,
+          {
+            canvasOpacity: 0,
+            globeY: 0.85,
+            duration: 0.08,
+            ease: "none",
+          },
+          0.92
+        );
+      });
+
+      return () => {
+        disposed = true;
+        introTl.kill();
+        mm.revert();
+        if (animId) cancelAnimationFrame(animId);
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("resize", onResize);
+        geo.dispose();
+        globeMat.dispose();
+        bgGeo.dispose();
+        bgMat.dispose();
+        waterGeo.dispose();
+        waterMat.dispose();
+        renderer?.dispose();
+      };
+    } catch {
+      return () => {
+        introTl.kill();
+      };
+    }
+  }, []);
+
+  return (
+    <>
+      {/* FIXED GENESISFX 3D GLOBE + WATER MIRROR STAGE (.globe-stage) */}
+      <div ref={stageRef} className="globe-stage" aria-hidden="true">
+        <canvas ref={canvasRef} id="globe-canvas" />
+        <span className="hero-bar hero-bar--outer" />
+        <span className="hero-bar hero-bar--inner" />
+        <span className="hero-bar hero-bar--inner" />
+        <span className="hero-bar hero-bar--outer" />
+      </div>
+
+      {/* 3-PHASE GENESISFX BEGINNING HERO SECTION (#hero-section) */}
+      <section
+        ref={sectionRef}
+        id="hero-section"
+        aria-labelledby="hero-heading"
+        className="relative isolate w-full lg:h-[340vh]"
+      >
+        {/* Sticky Viewport Container on Desktop, Natural Stack on Mobile */}
+        <div className="relative w-full lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden">
+          {/* Top Radial Emerald HeroGlow Ellipses (HeroGlow-BLVG_dxt.js) */}
+          <div className="hero-glow" aria-hidden="true">
+            <div className="hero-glow__img" />
+            <div className="hero-glow__img hero-glow__img--lg" />
+          </div>
+
+          {/* ============================================================
+              PHASE 1: CENTERED HERO CONTENT + RISING HERO DASHBOARD
+              ============================================================ */}
+          <div
+            ref={heroContentRef}
+            className="hero-content relative z-10 mx-auto flex max-w-[1160px] flex-col items-center px-5 pt-6 pb-4 text-center lg:pt-7"
+          >
+            {/* Terminology Mode Toggle */}
+            <div
+              data-hero-item
+              className="mb-3 flex flex-wrap items-center justify-center gap-3"
+            >
+              <span className="font-mono text-xs text-[#a0a0a0]">
+                Reading mode:
+              </span>
+              <ClarityTogglePill />
+            </div>
+
+            {/* GenesisFX Hero Badge */}
+            <div data-hero-item className="gfx-badge mb-3">
+              <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
+              <DualCopy
+                as="span"
+                plain="Private AI for Your Computer · 100% On-Device"
+                technical="Synexis AGI-OS · 4 OS Processes · 12 Constitutional Invariants"
+              />
+            </div>
+
+            {/* GenesisFX Display H1 (font-weight: 400 + .heading-gradient) */}
+            <h1
+              id="hero-heading"
+              data-hero-item
+              className="max-w-[19ch] text-[clamp(2.25rem,4.2vw,3.95rem)] font-normal leading-[1.03] tracking-[-0.03em] heading-gradient"
+            >
+              Private AI that thinks, speaks, and works—only with your permission.
+            </h1>
+
+            {/* GenesisFX Hero Subtitle */}
+            <div data-hero-item className="mt-2.5">
+              <DualCopy
+                className="text-base sm:text-lg font-medium text-[#e8ecf5]"
+                plain="Built like a vault. Effortless like a conversation."
+                technical="Sub-500ms Full-Duplex Voice · System 2 DAG Compiler · 5-Stage ActionGate (INV-04)"
+              />
+            </div>
+
+            {/* GenesisFX Hero Description */}
+            <div data-hero-item className="mt-2">
+              <DualCopy
+                className="max-w-[40rem] text-sm sm:text-[15px] leading-[1.5] text-[#a0a0a0]"
+                plain="Speak naturally, automate complex work across your files and apps, and review every important action before it happens. Everything stays 100% private on your own computer."
+                technical="Runs across four isolated OS process rooms with loopback-only Qdrant + SQLite WAL memory (127.0.0.1) and 30-second Ed25519 hardware-signed approval leases."
+              />
+            </div>
+
+            {/* GenesisFX Status Bubbles */}
+            <div
+              data-hero-item
+              className="mt-4 flex flex-wrap items-center justify-center gap-2.5"
+            >
+              {[
+                { label: "Replies in 0.42s", spec: "<500ms voice loop" },
+                { label: "Asks before acting", spec: "5-Stage ActionGate" },
+                { label: "100% on your device", spec: "Zero cloud uploads" },
+              ].map((pill) => (
+                <div key={pill.label} className="gfx-bubble !h-9 !px-3.5">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83]" />
+                  <span className="text-xs font-normal text-white">
+                    {pill.label}
+                  </span>
+                  <span className="font-mono text-[11px] text-[#10bc83]">
+                    · {pill.spec}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* GenesisFX Hero CTA Row */}
+            <div
+              data-hero-item
+              className="mt-4 flex flex-wrap items-center justify-center gap-3.5"
+            >
+              <WaitlistActionButton
+                tier="general"
+                variant="primary"
+                arrow
+              >
+                Get Early Access
+              </WaitlistActionButton>
+              <Button href="#how-it-works" variant="secondary" arrow>
+                See How It Works
+              </Button>
+              <Button href="/enter" variant="ghost">
+                Open 3D Core (/enter)
+              </Button>
+            </div>
+          </div>
+
+          {/* Rising Hero Dashboard Showcase Pin (.hero-dashboard-pin + @keyframes hero-dashboard-rise) */}
+          <div ref={dashboardPinRef} className="hero-dashboard-pin hidden lg:flex">
+            <div ref={dashboardRef} className="hero-dashboard gfx-frame">
+              <div className="gfx-frame__inner p-4 sm:p-5">
+                <div className="flex items-center justify-between border-b border-white/[0.07] pb-3 mb-3 font-mono text-xs text-[#a0a0a0]">
+                  <span className="flex items-center gap-2 text-white">
+                    <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
+                    ELEVEN SOVEREIGN CONTROL PLANE · LIVE 3D CORE PREVIEW
+                  </span>
+                  <span className="text-[#38ffbd]">
+                    SCROLL DOWN TO UNVEIL 3D HOLOGRAM STAGE ↓
+                  </span>
+                </div>
+                <div className="grid grid-cols-12 gap-4 items-center">
+                  <div className="col-span-7">
+                    <HeroOrbEmbed />
+                  </div>
+                  <div className="col-span-5 space-y-3 text-left">
+                    <div className="rounded-xl border border-white/[0.07] bg-[#080c14] p-3.5">
+                      <div className="font-mono text-[10px] text-[#10bc83]">
+                        SYSTEM 1 + SYSTEM 2 COGNITION
+                      </div>
+                      <div className="mt-1 text-sm font-normal heading-gradient">
+                        Instant 0.42s Voice + Deep DAG Planning
+                      </div>
+                      <p className="mt-1 text-xs text-[#a0a0a0]">
+                        While you talk naturally, background helper agents compile and verify tasks in quarantined git worktrees.
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-white/[0.07] bg-[#080c14] p-3.5">
+                      <div className="font-mono text-[10px] text-[#38ffbd]">
+                        5-STAGE ACTIONGATE (INV-04)
+                      </div>
+                      <div className="mt-1 text-sm font-normal heading-gradient">
+                        Ed25519 Signed Human Consent
+                      </div>
+                      <p className="mt-1 text-xs text-[#a0a0a0]">
+                        Every high-impact action pauses for your 30-second cryptographic approval with instant one-click rollback.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile / Tablet Inline 3D Orb Showcase */}
+          <div className="mx-auto max-w-xl px-5 pb-12 lg:hidden">
+            <div className="gfx-frame">
+              <div className="gfx-frame__inner p-2">
+                <HeroOrbEmbed />
+              </div>
+            </div>
+          </div>
+
+          {/* ============================================================
+              PHASE 2: #stats-section PINNED REVEAL OVER 3D GLOBE
+              ============================================================ */}
+          <div
+            ref={statsSectionRef}
+            id="stats-section"
+            className="relative z-20 mx-auto max-w-[1280px] px-5 py-12 lg:pointer-events-none lg:absolute lg:inset-0 lg:flex lg:items-center lg:justify-center"
+          >
+            <div className="pointer-events-auto grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
+              {/* Left: .stats-intro */}
+              <div className="stats-intro space-y-4 lg:col-span-5">
+                <span className="gfx-badge">
+                  <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
+                  <span>Verified Local Telemetry · Zero Cloud Egress</span>
+                </span>
+                <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.06] heading-gradient">
+                  Engineered for instant voice and zero-trust execution.
+                </h2>
+                <p className="text-sm sm:text-base text-[#a0a0a0] leading-relaxed">
+                  Every millisecond of voice latency, every quarantined git worktree, and every Ed25519 approval receipt is enforced directly on your own hardware.
+                </p>
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <WaitlistActionButton
+                    tier="technical"
+                    variant="primary"
+                    arrow
+                  >
+                    Request Technical Access
+                  </WaitlistActionButton>
+                  <Button href="/architecture" variant="ghost">
+                    Read Architecture Specs
+                  </Button>
+                </div>
+              </div>
+
+              {/* Center Spacer so 3D Globe shines through on Desktop */}
+              <div className="hidden lg:block lg:col-span-2" />
+
+              {/* Right: 5 GenesisFX Metric Rows (.metrics) */}
+              <ul className="metrics divide-y divide-white/[0.08] rounded-2xl border border-white/[0.08] bg-[#05070d]/70 p-4 backdrop-blur-xl lg:col-span-5">
+                {STATS_METRICS.map((m) => (
+                  <li
+                    key={m.label}
+                    className="metric-row flex items-center justify-between gap-4 py-3.5 px-2 first:pt-1.5 last:pb-1.5"
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#10bc83]/30 bg-[#062118]/70">
+                        {m.icon}
+                      </span>
+                      <span className="text-2xl sm:text-3xl font-normal heading-gradient">
+                        {m.value}
+                      </span>
+                    </div>
+                    <span className="text-right text-xs sm:text-sm font-normal text-[#10bc83]">
+                      {m.label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* ============================================================
+              PHASE 3: #gateway-section 6-CARD SPLIT GRID AROUND 3D HOLOGRAM
+              ============================================================ */}
+          <div
+            ref={gatewaySectionRef}
+            id="gateway-section"
+            className="relative z-20 mx-auto max-w-[1360px] px-5 py-12 lg:pointer-events-none lg:absolute lg:inset-0 lg:flex lg:flex-col lg:justify-center"
+          >
+            <h2 className="gateway-heading mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.06] heading-gradient">
+              One sovereign operating system. Six core capabilities.
+            </h2>
+
+            <div className="pointer-events-auto grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
+              {/* Left 3 Gateway Cards */}
+              <div className="gateway-col-left flex flex-col items-center lg:items-start gap-4 lg:col-span-5">
+                {LEFT_GATEWAY_CARDS.map((card) => (
+                  <GatewayCardItem key={card.key} card={card} />
+                ))}
+              </div>
+
+              {/* Center Hologram Stage Window on Desktop */}
+              <div className="hidden lg:flex lg:col-span-2 flex-col items-center justify-center text-center pointer-events-none">
+                <div className="rounded-full border border-[#10bc83]/35 bg-[#062118]/60 px-3 py-1 font-mono text-[10px] text-[#38ffbd] backdrop-blur-md">
+                  3D CORE ACTIVE
+                </div>
+              </div>
+
+              {/* Right 3 Gateway Cards */}
+              <div className="gateway-col-right flex flex-col items-center lg:items-end gap-4 lg:col-span-5">
+                {RIGHT_GATEWAY_CARDS.map((card) => (
+                  <GatewayCardItem key={card.key} card={card} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

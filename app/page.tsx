@@ -4,13 +4,11 @@ import { Footer } from "@/components/navigation/Footer";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import dynamic from "next/dynamic";
-import { HeroOrbEmbed } from "@/components/v3/HeroOrbEmbed";
 import { IntelligenceInMotion } from "@/components/v3/IntelligenceInMotion";
 import { Gyro3DEmbed } from "@/components/v3/Gyro3DEmbed";
 import { PortalActionButton } from "@/components/v3/PortalActionButton";
 import { WaitlistActionButton } from "@/components/v3/WaitlistActionButton";
 import {
-  AnimatedMetric,
   CipherText,
   ClarityTogglePill,
   DualCopy,
@@ -19,10 +17,10 @@ import {
   WordReveal,
 } from "@/components/motion/PremiumMotion";
 import {
-  GenesisHeroIntro,
   GenesisSectionIntro,
   GenesisShowcaseFrame,
 } from "@/components/motion/GenesisMotionEngine";
+import { GenesisHeroStage } from "@/components/motion/GenesisHeroStage";
 import { HeroAiPromptBox } from "@/components/v3/HeroAiPromptBox";
 
 const ArchitectureVisualization = dynamic(
@@ -167,112 +165,20 @@ export default function HomePage() {
           }}
         />
 
-        {/* ── 01. HERO + GENESISFX EMERALD HALO + 3D COGNITIVE ORB SHOWCASE ── */}
-        <section
-          id="hero-section"
-          className="relative overflow-hidden pt-10 pb-16 lg:pt-14 lg:pb-24"
-        >
-          {/* Centered Top Emerald Atmosphere */}
-          <div
-            aria-hidden="true"
-            className="el-aurora pointer-events-none absolute inset-x-0 -top-24 h-[680px] motion-safe:el-breathe"
-          />
-          <div
-            aria-hidden="true"
-            className="bg-grid-scifi pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(65%_55%_at_50%_20%,black,transparent)]"
-          />
-
-          <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-10">
-            <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
-              {/* Left 7 Columns: GenesisHeroIntro Stagger */}
-              <GenesisHeroIntro className="lg:col-span-7 flex flex-col items-start">
-                <div>
-                  <span className="gfx-badge">
-                    <span className="h-2 w-2 rounded-full bg-[#10bc83] motion-safe:animate-pulse" />
-                    <CipherText text="ELEVEN v3.1 · Personal AI Operating System" />
-                  </span>
-                </div>
-
-                <WordReveal
-                  as="h1"
-                  text="Brilliant AI."
-                  mutedText="Always under your control."
-                  className="mt-6 el-h1"
-                />
-
-                <DualCopy
-                  className="mt-5 max-w-[580px] el-body"
-                  plain="Most AI tools ask you to hand over your files, passwords, and privacy—and just hope nothing goes wrong. ELEVEN puts a protective smart layer on your own computer: talk naturally, get deep work done, and approve important actions before they happen."
-                  technical="ELEVEN is the local-first control plane between people, untrusted frontier models, sovereign memory, and real-world actions. Models emit candidate ActionProposals; deterministic host policy verifies; humans retain final authority."
-                />
-
-                <div className="mt-7 flex flex-wrap items-center gap-3.5">
-                  <WaitlistActionButton variant="primary" arrow tier="general">
-                    Join Early Access
-                  </WaitlistActionButton>
-                  <WaitlistActionButton variant="secondary" tier="technical">
-                    Request Technical Access
-                  </WaitlistActionButton>
-                  <PortalActionButton variant="ghost">
-                    Try the Live 3D Orb
-                  </PortalActionButton>
-                </div>
-
-                {/* AI-Native Interactive Prompt Console */}
-                <div className="mt-7 w-full">
-                  <HeroAiPromptBox />
-                </div>
-              </GenesisHeroIntro>
-
-              {/* Right 5 Columns: GenesisShowcaseFrame wrapping 3D Cognitive Orb */}
-              <div className="lg:col-span-5">
-                <GenesisShowcaseFrame innerClassName="p-4 sm:p-5">
-                  <HeroOrbEmbed />
-                </GenesisShowcaseFrame>
-              </div>
-            </div>
-
-            {/* ── #stats-section: Hairline Metrics Bar ── */}
-            <div id="stats-section" className="mt-14 lg:mt-20 pt-8 border-t border-white/[0.07]">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <AnimatedMetric
-                  prefix="<"
-                  value={0.5}
-                  decimals={1}
-                  suffix="s"
-                  label="Voice Reply Goal"
-                  sublabel="Talk & interrupt naturally"
-                />
-                <AnimatedMetric
-                  value={5}
-                  label="Safety Checkpoints"
-                  sublabel="Every action inspected first"
-                />
-                <AnimatedMetric
-                  value={100}
-                  suffix="%"
-                  label="Private Local Memory"
-                  sublabel="Stored on your own PC"
-                />
-                <AnimatedMetric
-                  prefix="<"
-                  value={0.05}
-                  decimals={2}
-                  suffix="s"
-                  label="Emergency Stop"
-                  sublabel="One button halts everything"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* ── 01. GENESISFX 3-PHASE BEGINNING ANIMATION STAGE (.globe-stage + #hero-section + #stats-section + #gateway-section) ── */}
+        <GenesisHeroStage />
 
         <SignalBeamDivider />
 
-        {/* ── 02. #gateway-section + INTELLIGENCE IN MOTION ── */}
+        {/* ── 02. INTELLIGENCE IN MOTION ── */}
         <Section id="intelligence-in-motion" className="relative">
-          {/* Anchor compatibility for /#solutions */}
+          {/* Anchor compatibility for /#solutions and /#how-it-works */}
           <div id="solutions" className="absolute -top-24 left-0 pointer-events-none" aria-hidden="true" />
+          <div id="how-it-works" className="absolute -top-24 left-0 pointer-events-none" aria-hidden="true" />
+
+          <div className="mb-10">
+            <HeroAiPromptBox />
+          </div>
 
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <GenesisSectionIntro className="max-w-[700px]">
@@ -303,7 +209,7 @@ export default function HomePage() {
           </div>
 
           {/* GenesisFX Chamfered Glass Gateway Cards */}
-          <div id="gateway-section" className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div id="gateway-pillars" className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {GATEWAY_PILLARS.map((pillar) => (
               <article key={pillar.code} className="gfx-card p-6 flex flex-col justify-between">
                 <span className="gfx-card__border" aria-hidden="true" />
