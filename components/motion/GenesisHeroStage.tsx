@@ -275,13 +275,6 @@ function MobileGatewayCarousel({
   onManualInteract: () => void;
 }) {
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
-  const strandARef = useRef<SVGPathElement | null>(null);
-  const strandBRef = useRef<SVGPathElement | null>(null);
-  const strandAGlowRef = useRef<SVGPathElement | null>(null);
-  const strandBGlowRef = useRef<SVGPathElement | null>(null);
-  const rungRefs = useRef<(SVGLineElement | null)[]>([]);
-  const nodeARefs = useRef<(SVGCircleElement | null)[]>([]);
-  const nodeBRefs = useRef<(SVGCircleElement | null)[]>([]);
 
   const smoothIdxRef = useRef<number>(0);
   const velocityRef = useRef<number>(0);
@@ -390,78 +383,6 @@ function MobileGatewayCarousel({
         el.style.pointerEvents = isInteractive ? "auto" : "none";
         el.setAttribute("aria-hidden", isFront ? "false" : "true");
         el.classList.toggle("gateway-spiral-card--active", isFront);
-      }
-
-      // 2. Sync vertical DNA Double-Helix SVG backbone (exact smooth cubic Bezier sine curves)
-      if (strandARef.current && strandBRef.current) {
-        const cx = 160;
-        const amp = isTablet ? 94 : 78;
-        const topY = 8;
-        const heightY = 404;
-        const omega = Math.PI * 3.15;
-        const segs = 24;
-        const du = 1 / segs;
-        const dyStep = (heightY * du) / 3;
-        const slopeScale = (amp * omega * du) / 3;
-        const phaseShift = sIdx * pitchAngle - t * 0.48;
-
-        const x0Offset = Math.sin(-0.5 * omega + phaseShift) * amp;
-        let dA = `M${(cx + x0Offset).toFixed(1)},${topY.toFixed(1)}`;
-        let dB = `M${(cx - x0Offset).toFixed(1)},${topY.toFixed(1)}`;
-
-        for (let p = 0; p < segs; p++) {
-          const u0 = p * du;
-          const u1 = (p + 1) * du;
-          const y0 = topY + u0 * heightY;
-          const y1 = topY + u1 * heightY;
-          const ang0 = (u0 - 0.5) * omega + phaseShift;
-          const ang1 = (u1 - 0.5) * omega + phaseShift;
-
-          const off0 = Math.sin(ang0) * amp;
-          const off1 = Math.sin(ang1) * amp;
-          const dOff0 = Math.cos(ang0) * slopeScale;
-          const dOff1 = Math.cos(ang1) * slopeScale;
-
-          dA += ` C${(cx + off0 + dOff0).toFixed(1)},${(y0 + dyStep).toFixed(1)} ${(cx + off1 - dOff1).toFixed(1)},${(y1 - dyStep).toFixed(1)} ${(cx + off1).toFixed(1)},${y1.toFixed(1)}`;
-          dB += ` C${(cx - off0 - dOff0).toFixed(1)},${(y0 + dyStep).toFixed(1)} ${(cx - off1 + dOff1).toFixed(1)},${(y1 - dyStep).toFixed(1)} ${(cx - off1).toFixed(1)},${y1.toFixed(1)}`;
-        }
-
-        strandARef.current.setAttribute("d", dA);
-        strandBRef.current.setAttribute("d", dB);
-        strandAGlowRef.current?.setAttribute("d", dA);
-        strandBGlowRef.current?.setAttribute("d", dB);
-
-        const rungCount = rungRefs.current.length;
-        for (let r = 0; r < rungCount; r++) {
-          const line = rungRefs.current[r];
-          const nA = nodeARefs.current[r];
-          const nB = nodeBRefs.current[r];
-          const u = (r + 0.5) / rungCount;
-          const py = topY + u * heightY;
-          const ang = (u - 0.5) * omega + phaseShift;
-          const ax = cx + Math.sin(ang) * amp;
-          const bx = cx - Math.sin(ang) * amp;
-          const depth = Math.abs(Math.cos(ang));
-          const op = (0.14 + 0.48 * depth).toFixed(2);
-
-          if (line) {
-            line.setAttribute("x1", ax.toFixed(1));
-            line.setAttribute("y1", py.toFixed(1));
-            line.setAttribute("x2", bx.toFixed(1));
-            line.setAttribute("y2", py.toFixed(1));
-            line.setAttribute("stroke-opacity", op);
-          }
-          if (nA) {
-            nA.setAttribute("cx", ax.toFixed(1));
-            nA.setAttribute("cy", py.toFixed(1));
-            nA.setAttribute("fill-opacity", (0.38 + 0.58 * depth).toFixed(2));
-          }
-          if (nB) {
-            nB.setAttribute("cx", bx.toFixed(1));
-            nB.setAttribute("cy", py.toFixed(1));
-            nB.setAttribute("fill-opacity", (0.38 + 0.58 * (1 - depth)).toFixed(2));
-          }
-        }
       }
     };
 
@@ -592,116 +513,9 @@ function MobileGatewayCarousel({
     >
       {/* Vertical 3D DNA Double-Helix Stage */}
       <div className="gateway-spiral-stage mx-auto flex-1 min-h-[372px] sm:min-h-[440px] w-full max-w-[440px]">
-        {/* Flat backdrop layer keeps watermark and DNA strands strictly behind 3D cards */}
+        {/* Flat backdrop layer keeps watermark strictly behind 3D cards */}
         <div className="gateway-spiral-backdrop" aria-hidden="true">
           <div className="gateway-spiral-watermark">ELEVEN</div>
-
-          {/* Live Vertical DNA Double-Helix Strand & Base-Pair Rungs */}
-          <svg
-            viewBox="0 0 320 420"
-            preserveAspectRatio="xMidYMid meet"
-            className="h-full w-full opacity-90"
-          >
-            <defs>
-              <linearGradient id="dnaStrandA" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#10bc83" stopOpacity="0" />
-                <stop offset="20%" stopColor="#38ffbd" stopOpacity="0.88" />
-                <stop offset="50%" stopColor="#8effdc" stopOpacity="1" />
-                <stop offset="80%" stopColor="#10bc83" stopOpacity="0.88" />
-                <stop offset="100%" stopColor="#10bc83" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient id="dnaStrandB" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#00b38c" stopOpacity="0" />
-                <stop offset="22%" stopColor="#10bc83" stopOpacity="0.7" />
-                <stop offset="50%" stopColor="#6cf5c8" stopOpacity="0.9" />
-                <stop offset="78%" stopColor="#00b38c" stopOpacity="0.7" />
-                <stop offset="100%" stopColor="#00b38c" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            <line
-              x1="160"
-              y1="14"
-              x2="160"
-              y2="406"
-              stroke="#10bc83"
-              strokeOpacity="0.16"
-              strokeWidth="1"
-              strokeDasharray="3 6"
-            />
-
-            {Array.from({ length: 11 }).map((_, idx) => (
-              <g key={idx}>
-                <line
-                  ref={(el) => {
-                    rungRefs.current[idx] = el;
-                  }}
-                  x1="100"
-                  y1={28 + idx * 36}
-                  x2="220"
-                  y2={28 + idx * 36}
-                  stroke="#38ffbd"
-                  strokeWidth="1"
-                  strokeOpacity="0.25"
-                />
-                <circle
-                  ref={(el) => {
-                    nodeARefs.current[idx] = el;
-                  }}
-                  cx="100"
-                  cy={28 + idx * 36}
-                  r="2.6"
-                  fill="#38ffbd"
-                  fillOpacity="0.72"
-                />
-                <circle
-                  ref={(el) => {
-                    nodeBRefs.current[idx] = el;
-                  }}
-                  cx="220"
-                  cy={28 + idx * 36}
-                  r="2.1"
-                  fill="#10bc83"
-                  fillOpacity="0.58"
-                />
-              </g>
-            ))}
-
-            <path
-              ref={strandAGlowRef}
-              d="M160,8 L160,412"
-              fill="none"
-              stroke="#38ffbd"
-              strokeOpacity="0.16"
-              strokeWidth="6.5"
-              strokeLinecap="round"
-            />
-            <path
-              ref={strandBGlowRef}
-              d="M160,8 L160,412"
-              fill="none"
-              stroke="#10bc83"
-              strokeOpacity="0.11"
-              strokeWidth="5.5"
-              strokeLinecap="round"
-            />
-            <path
-              ref={strandARef}
-              d="M160,8 L160,412"
-              fill="none"
-              stroke="url(#dnaStrandA)"
-              strokeWidth="1.95"
-              strokeLinecap="round"
-            />
-            <path
-              ref={strandBRef}
-              d="M160,8 L160,412"
-              fill="none"
-              stroke="url(#dnaStrandB)"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-            />
-          </svg>
         </div>
 
         {/* Dedicated 3D Perspective Card Plane */}
@@ -1569,11 +1383,11 @@ export function GenesisHeroStage() {
           {
             opacity: 1,
             x: 0,
-            duration: 0.08,
-            stagger: 0.015,
+            duration: 0.065,
+            stagger: 0.011,
             ease: "power2.out",
           },
-          0.23
+          0.22
         );
         mobileMasterTl.to(
           statsSection,
@@ -1877,11 +1691,11 @@ export function GenesisHeroStage() {
               <div className="hidden lg:block lg:col-span-2" />
 
               {/* Right: 5 GenesisFX Metric Rows (.metrics) */}
-              <ul className="metrics overflow-hidden divide-y divide-white/[0.08] rounded-2xl border border-white/[0.08] bg-[#05070d]/80 px-3.5 py-2.5 sm:p-4 backdrop-blur-xl lg:col-span-5">
+              <ul className="metrics overflow-hidden divide-y divide-white/[0.08] rounded-2xl border border-white/[0.08] bg-[#05070d]/80 px-4 py-3 sm:p-4 backdrop-blur-xl lg:col-span-5">
                 {STATS_METRICS.map((m) => (
                   <li
                     key={m.label}
-                    className="metric-row flex items-center justify-between gap-2.5 sm:gap-3 py-2 px-0.5 sm:py-3.5 sm:px-2 first:pt-1 last:pb-1"
+                    className="metric-row flex items-center justify-between gap-3 py-2.5 px-1 sm:py-3.5 sm:px-2 first:pt-1.5 last:pb-1.5"
                   >
                     <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
                       <span className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl border border-[#10bc83]/30 bg-[#062118]/70">
@@ -1891,7 +1705,7 @@ export function GenesisHeroStage() {
                         {m.value}
                       </span>
                     </div>
-                    <span className="min-w-0 text-right text-[10.5px] sm:text-sm leading-snug font-normal text-[#10bc83]">
+                    <span className="min-w-0 max-w-[10.5rem] sm:max-w-none text-right text-[10.5px] sm:text-sm leading-snug font-normal text-[#10bc83]">
                       {m.label}
                     </span>
                   </li>

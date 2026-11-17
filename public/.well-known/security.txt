@@ -7,4 +7,3 @@ Canonical: https://eleven-website-self.vercel.app/.well-known/security.txt
 Policy: https://eleven-website-self.vercel.app/security
 Acknowledgments: https://eleven-website-self.vercel.app/security#hall-of-fame
 Hiring: https://gishh.com/careers
-Encryption: https://eleven-website-self.vercel.app/pgp-key.txt
