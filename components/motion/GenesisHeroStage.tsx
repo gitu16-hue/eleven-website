@@ -734,6 +734,7 @@ export function GenesisHeroStage() {
         uMorph: { value: 0 },
         uColorMix: { value: 0 },
         uWaterY: { value: -1.18 },
+        uIsReflection: { value: 0 },
         uPointer: { value: new THREE.Vector3(0, 0, 10) },
         uPointerActive: { value: 0 },
         uPx: { value: dpr * (height / 900) },
@@ -750,12 +751,14 @@ export function GenesisHeroStage() {
           uniform float uTime;
           uniform float uMorph;
           uniform float uWaterY;
+          uniform float uIsReflection;
           uniform vec3 uPointer;
           uniform float uPointerActive;
           uniform float uPx;
           varying float vDepthT;
           varying float vSubmerged;
           varying float vTwinkle;
+          varying float vWorldY;
 
           void main() {
             vec3 basePos = mix(position, aMorph, uMorph);
@@ -770,6 +773,7 @@ export function GenesisHeroStage() {
             float repulse = smoothstep(0.85, 0.0, pDist) * uPointerActive;
             worldPos.xyz += normalize(worldPos.xyz - uPointer + vec3(0.001)) * repulse * 0.22;
 
+            vWorldY = worldPos.y;
             vec4 mvPosition = viewMatrix * worldPos;
             gl_Position = projectionMatrix * mvPosition;
 
@@ -777,34 +781,41 @@ export function GenesisHeroStage() {
             vDepthT = smoothstep(-1.45, 1.45, worldPos.z);
 
             // Water submersion dimming (earthSubmerged from globe-DSO9VUks.js)
-            vSubmerged = smoothstep(uWaterY, uWaterY - 0.35, worldPos.y);
+            vSubmerged = smoothstep(uWaterY + 0.08, uWaterY - 0.35, worldPos.y);
 
             vTwinkle = 0.65 + 0.35 * sin(uTime * (1.2 + aRand.y * 2.0) + aRand.z * 25.0);
             float sizeBoost = mix(1.0, 1.45, uMorph) + repulse * 1.4;
-            gl_PointSize = (1.35 + aRand.x * 1.55) * sizeBoost * uPx * (5.2 / max(1.0, -mvPosition.z));
+            float reflSizeBoost = mix(1.0, 1.9, uIsReflection);
+            gl_PointSize = (1.75 + aRand.x * 1.95) * sizeBoost * reflSizeBoost * uPx * (5.2 / max(1.0, -mvPosition.z));
           }
         `,
         fragmentShader: `
           uniform float uColorMix;
+          uniform float uWaterY;
+          uniform float uIsReflection;
           varying float vDepthT;
           varying float vSubmerged;
           varying float vTwinkle;
+          varying float vWorldY;
 
           void main() {
+            if (uIsReflection > 0.5 && vWorldY < uWaterY - 0.02) discard;
+
             vec2 d = gl_PointCoord - 0.5;
             float dist = length(d);
             if (dist > 0.5) discard;
             float mask = smoothstep(0.5, 0.0, dist);
-            float core = smoothstep(0.18, 0.0, dist);
+            float core = smoothstep(0.22, 0.0, dist);
 
-            vec3 colFar = mix(vec3(0.024, 0.13, 0.094), vec3(0.0, 0.45, 0.25), uColorMix);
-            vec3 colNear = mix(vec3(0.063, 0.737, 0.514), vec3(0.22, 1.0, 0.74), uColorMix);
-            vec3 col = mix(colFar, colNear, vDepthT) + vec3(core * 0.38);
+            vec3 colFar = mix(vec3(0.02, 0.22, 0.14), vec3(0.0, 0.52, 0.30), uColorMix);
+            vec3 colNear = mix(vec3(0.08, 0.90, 0.62), vec3(0.28, 1.0, 0.78), uColorMix);
+            vec3 col = mix(colFar, colNear, vDepthT) + vec3(core * 0.5);
 
             // Dim particles below the water plane
-            float subDim = mix(1.0, 0.22, vSubmerged);
-            float alpha = mask * mask * vTwinkle * (0.28 + 0.68 * vDepthT) * subDim;
-            gl_FragColor = vec4(col * subDim, alpha);
+            float subDim = mix(1.0, 0.08, vSubmerged);
+            float reflAlphaBoost = mix(1.0, 1.55, uIsReflection);
+            float alpha = mask * mask * vTwinkle * (0.36 + 0.64 * vDepthT) * subDim * reflAlphaBoost;
+            gl_FragColor = vec4(col * subDim * reflAlphaBoost, clamp(alpha, 0.0, 1.0));
           }
         `,
       });
@@ -833,11 +844,30 @@ export function GenesisHeroStage() {
       const bgStars = new THREE.Points(bgGeo, bgMat);
       scene.add(bgStars);
 
-      // Water Mirror Reflection Surface (MirrorShader equivalent in globe-DSO9VUks.js)
-      const waterGeo = new THREE.PlaneGeometry(16, 10, 72, 72);
+      // Water Mirror Reflection Surface (Planar RenderTarget + Organic Liquid Normal Distortion)
+      const waterY = -0.96;
+      globeUniforms.uWaterY.value = waterY;
+      const rtWidth = Math.min(1024, Math.max(512, Math.floor(width * 0.5)));
+      const rtHeight = Math.min(1024, Math.max(512, Math.floor(height * 0.5)));
+      const reflectionRT = new THREE.WebGLRenderTarget(rtWidth, rtHeight, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+        type: THREE.UnsignedByteType,
+        depthBuffer: false,
+        stencilBuffer: false,
+      });
+      const reflectionCamera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+      const textureMatrix = new THREE.Matrix4();
+
+      const waterGeo = new THREE.PlaneGeometry(24, 14, 1, 1);
       const waterUniforms = {
+        tReflection: { value: reflectionRT.texture },
+        uTextureMatrix: { value: textureMatrix },
         uTime: globeUniforms.uTime,
-        uAlpha: { value: 0.85 },
+        uAlpha: { value: 0.92 },
+        uColorMix: globeUniforms.uColorMix,
+        uCameraPos: { value: camera.position },
       };
       const waterMat = new THREE.ShaderMaterial({
         uniforms: waterUniforms,
@@ -845,37 +875,114 @@ export function GenesisHeroStage() {
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         vertexShader: `
-          uniform float uTime;
+          uniform mat4 uTextureMatrix;
           varying vec2 vUv;
-          varying float vRipple;
+          varying vec3 vWorldPos;
+          varying vec4 vProjCoord;
+
           void main() {
             vUv = uv;
-            vec3 p = position;
-            float w1 = sin(p.x * 2.8 + uTime * 1.35) * cos(p.y * 3.2 - uTime * 1.05) * 0.055;
-            float w2 = sin(p.x * 5.4 - uTime * 1.9) * 0.025;
-            p.z += w1 + w2;
-            vRipple = w1 + w2;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+            vec4 worldPos = modelMatrix * vec4(position, 1.0);
+            vWorldPos = worldPos.xyz;
+            vProjCoord = uTextureMatrix * worldPos;
+            gl_Position = projectionMatrix * viewMatrix * worldPos;
           }
         `,
         fragmentShader: `
+          uniform sampler2D tReflection;
+          uniform float uTime;
           uniform float uAlpha;
+          uniform float uColorMix;
+          uniform vec3 uCameraPos;
           varying vec2 vUv;
-          varying float vRipple;
+          varying vec3 vWorldPos;
+          varying vec4 vProjCoord;
+
+          float hash21(vec2 p) {
+            p = fract(p * vec2(123.34, 456.21));
+            p += dot(p, p + 45.32);
+            return fract(p.x * p.y);
+          }
+
+          float noise2D(vec2 p) {
+            vec2 i = floor(p);
+            vec2 f = fract(p);
+            vec2 u = f * f * (3.0 - 2.0 * f);
+            float a = hash21(i);
+            float b = hash21(i + vec2(1.0, 0.0));
+            float c = hash21(i + vec2(0.0, 1.0));
+            float d = hash21(i + vec2(1.0, 1.0));
+            return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+          }
+
+          float waterHeight(vec2 p, float t) {
+            vec2 q = p + vec2(sin(p.y * 1.1 + t * 0.35), cos(p.x * 0.9 - t * 0.28)) * 0.22;
+            float h = 0.0;
+            h += noise2D(q * vec2(1.1, 2.0) + vec2(t * 0.18, -t * 0.24)) * 0.54;
+            h += noise2D(q * vec2(2.4, 4.2) + vec2(-t * 0.30, t * 0.20)) * 0.28;
+            h += noise2D(q * vec2(5.0, 8.5) + vec2(t * 0.40, t * 0.34)) * 0.13;
+            h += noise2D(q * vec2(9.5, 16.0) - vec2(t * 0.52, -t * 0.44)) * 0.05;
+            return h;
+          }
+
           void main() {
-            vec2 c = vUv - vec2(0.5, 0.52);
-            float dist = length(c * vec2(0.95, 1.55));
-            float radial = smoothstep(0.46, 0.0, dist);
-            float caustic = 0.5 + 0.5 * sin(dist * 52.0 - vRipple * 35.0);
-            vec3 waterCol = mix(vec3(0.02, 0.16, 0.11), vec3(0.063, 0.737, 0.514), caustic * 0.75);
-            float a = radial * radial * (0.12 + 0.18 * caustic) * uAlpha;
-            gl_FragColor = vec4(waterCol, a);
+            vec2 p = vWorldPos.xz;
+            float eps = 0.06;
+            float hC = waterHeight(p, uTime);
+            float hL = waterHeight(p - vec2(eps, 0.0), uTime);
+            float hR = waterHeight(p + vec2(eps, 0.0), uTime);
+            float hD = waterHeight(p - vec2(0.0, eps), uTime);
+            float hU = waterHeight(p + vec2(0.0, eps), uTime);
+
+            vec3 N = normalize(vec3(hL - hR, 2.0 * eps * 1.05, hD - hU));
+            vec3 V = normalize(uCameraPos - vWorldPos);
+            float fresnel = pow(1.0 - max(dot(V, N), 0.0), 2.3);
+
+            // Projective reflection UV with organic liquid wave normal distortion
+            vec2 baseUv = vProjCoord.xy / max(0.0001, vProjCoord.w);
+            vec2 distort = N.xz * vec2(0.11, 0.19);
+            vec2 reflUv = baseUv + distort;
+
+            // 9-tap liquid dispersion sampling for luminous water reflection
+            vec2 px = vec2(0.011, 0.017);
+            vec3 refl = vec3(0.0);
+            refl += texture2D(tReflection, clamp(reflUv, 0.001, 0.999)).rgb * 0.24;
+            refl += texture2D(tReflection, clamp(reflUv + vec2(px.x, 0.0), 0.001, 0.999)).rgb * 0.125;
+            refl += texture2D(tReflection, clamp(reflUv - vec2(px.x, 0.0), 0.001, 0.999)).rgb * 0.125;
+            refl += texture2D(tReflection, clamp(reflUv + vec2(0.0, px.y), 0.001, 0.999)).rgb * 0.125;
+            refl += texture2D(tReflection, clamp(reflUv - vec2(0.0, px.y), 0.001, 0.999)).rgb * 0.125;
+            refl += texture2D(tReflection, clamp(reflUv + vec2(px.x, px.y), 0.001, 0.999)).rgb * 0.065;
+            refl += texture2D(tReflection, clamp(reflUv + vec2(-px.x, px.y), 0.001, 0.999)).rgb * 0.065;
+            refl += texture2D(tReflection, clamp(reflUv + vec2(px.x, -px.y), 0.001, 0.999)).rgb * 0.065;
+            refl += texture2D(tReflection, clamp(reflUv + vec2(-px.x, -px.y), 0.001, 0.999)).rgb * 0.065;
+
+            // Contrast-boosted wave-crest caustics on the reflected light
+            float waveHighlight = smoothstep(0.36, 0.82, hC);
+            vec3 reflCol = refl * (1.72 + 1.15 * fresnel) * (0.62 + 0.78 * waveHighlight);
+
+            // Horizon & radial vignette so water fades smoothly into obsidian void
+            float distFromCenter = length(p * vec2(0.14, 0.20));
+            float radialFade = smoothstep(1.18, 0.06, distFromCenter);
+            float frontFade = smoothstep(6.5, 0.6, abs(vWorldPos.z));
+            float edgeMask = radialFade * frontFade;
+
+            // Moody dark-emerald water surface ripples across the lower plane
+            vec3 darkWater = mix(
+              vec3(0.002, 0.018, 0.012),
+              vec3(0.018, 0.135, 0.088),
+              waveHighlight * (0.4 + 0.6 * fresnel)
+            );
+            darkWater = mix(darkWater, darkWater * 1.25, uColorMix * 0.5);
+
+            vec3 finalCol = (darkWater * 0.75 + reflCol) * edgeMask * uAlpha;
+            float outAlpha = clamp(length(finalCol) * 1.5, 0.0, 1.0) * edgeMask * uAlpha;
+            gl_FragColor = vec4(finalCol, outAlpha);
           }
         `,
       });
       const waterMesh = new THREE.Mesh(waterGeo, waterMat);
       waterMesh.rotation.x = -Math.PI / 2;
-      waterMesh.position.set(0, -1.18, 0);
+      waterMesh.position.set(0, waterY, 0);
       scene.add(waterMesh);
 
       // Scroll velocity rotation boost (exact formula from globe-DSO9VUks.js: n.rotation.y += h * (_ * s + D * b))
@@ -925,6 +1032,10 @@ export function GenesisHeroStage() {
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
         globeUniforms.uPx.value = dpr * (h / 900);
+        reflectionRT.setSize(
+          Math.min(1024, Math.max(512, Math.floor(w * 0.5))),
+          Math.min(1024, Math.max(512, Math.floor(h * 0.5)))
+        );
       };
       window.addEventListener("resize", onResize);
 
@@ -957,6 +1068,41 @@ export function GenesisHeroStage() {
         rootGroup.scale.setScalar(sceneState.globeScale);
         rootGroup.position.y = sceneState.globeY;
 
+        // 1. Planar reflection pass into offscreen render target
+        reflectionCamera.position.set(
+          camera.position.x,
+          2 * waterY - camera.position.y,
+          camera.position.z
+        );
+        reflectionCamera.up.set(0, 1, 0);
+        reflectionCamera.aspect = camera.aspect;
+        reflectionCamera.fov = camera.fov;
+        reflectionCamera.near = camera.near;
+        reflectionCamera.far = camera.far;
+        reflectionCamera.updateProjectionMatrix();
+        reflectionCamera.lookAt(0, 2 * waterY, 0);
+        reflectionCamera.updateMatrixWorld();
+
+        textureMatrix.set(
+          0.5, 0.0, 0.0, 0.5,
+          0.0, 0.5, 0.0, 0.5,
+          0.0, 0.0, 0.5, 0.5,
+          0.0, 0.0, 0.0, 1.0
+        );
+        textureMatrix.multiply(reflectionCamera.projectionMatrix);
+        textureMatrix.multiply(reflectionCamera.matrixWorldInverse);
+
+        waterMesh.visible = false;
+        globeUniforms.uIsReflection.value = 1.0;
+        renderer.setRenderTarget(reflectionRT);
+        renderer.setClearColor(0x000000, 0);
+        renderer.clear();
+        renderer.render(scene, reflectionCamera);
+
+        // 2. Main viewport pass
+        renderer.setRenderTarget(null);
+        globeUniforms.uIsReflection.value = 0.0;
+        waterMesh.visible = true;
         renderer.render(scene, camera);
       };
       animId = requestAnimationFrame(renderLoop);
@@ -1335,6 +1481,7 @@ export function GenesisHeroStage() {
         bgMat.dispose();
         waterGeo.dispose();
         waterMat.dispose();
+        reflectionRT.dispose();
         renderer?.dispose();
       };
     } catch {
