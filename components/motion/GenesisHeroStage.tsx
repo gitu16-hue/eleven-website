@@ -266,130 +266,256 @@ function MobileGatewayCarousel({
   activeStep,
   onActiveStepChange,
   isPhaseActive,
+  onManualInteract,
 }: {
   targetIdxRef: React.MutableRefObject<number>;
   activeStep: number;
   onActiveStepChange: React.Dispatch<React.SetStateAction<number>>;
   isPhaseActive: boolean;
+  onManualInteract: () => void;
 }) {
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
+  const strandARef = useRef<SVGPathElement | null>(null);
+  const strandBRef = useRef<SVGPathElement | null>(null);
+  const strandAGlowRef = useRef<SVGPathElement | null>(null);
+  const strandBGlowRef = useRef<SVGPathElement | null>(null);
+  const rungRefs = useRef<(SVGLineElement | null)[]>([]);
+  const nodeARefs = useRef<(SVGCircleElement | null)[]>([]);
+  const nodeBRefs = useRef<(SVGCircleElement | null)[]>([]);
+
   const smoothIdxRef = useRef<number>(0);
+  const velocityRef = useRef<number>(0);
   const pointerTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const pointerSmoothRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const touchStartRef = useRef<{ x: number; idx: number } | null>(null);
-  const lastStepRef = useRef<number>(0);
+  const touchStartRef = useRef<{ x: number; y: number; idx: number } | null>(null);
+  const activeStepRef = useRef<number>(activeStep);
+  const elapsedRef = useRef<number>(0);
   const total = ALL_GATEWAY_CARDS.length;
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) {
-      cardRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const isCurrent = i === activeStep;
-        el.style.transform = "translate3d(0px, 0px, 0px) scale(1)";
-        el.style.opacity = isCurrent ? "1" : "0";
-        el.style.zIndex = isCurrent ? "50" : "10";
-        el.style.pointerEvents = isCurrent ? "auto" : "none";
-        el.classList.toggle("gateway-spiral-card--active", isCurrent);
-      });
-      return;
-    }
+    activeStepRef.current = activeStep;
+  }, [activeStep]);
+
+  useEffect(() => {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    cardRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const isCurrent = i === activeStep;
+      el.style.transform = "translate3d(0px, 0px, 0px) scale(1)";
+      el.style.opacity = isCurrent ? "1" : "0";
+      el.style.zIndex = isCurrent ? "50" : "10";
+      el.style.pointerEvents = isCurrent ? "auto" : "none";
+      el.classList.toggle("gateway-spiral-card--active", isCurrent);
+    });
+  }, [activeStep]);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const applyHelixPose = (t: number) => {
       const vw = window.innerWidth || 390;
       const isTablet = vw >= 640;
-      const radiusX = isTablet ? 245 : 156;
-      const stepY = isTablet ? 112 : 84;
-      const radiusZ = isTablet ? 250 : 200;
-      const zOffset = isTablet ? 190 : 150;
 
-      const rounded = Math.min(
-        total - 1,
-        Math.max(0, Math.round(smoothIdxRef.current))
-      );
-      if (rounded !== lastStepRef.current) {
-        lastStepRef.current = rounded;
+      // Vertical DNA Double-Helix geometry: prominent vertical spacing + fluid S-curve weave
+      const radiusX = isTablet ? 86 : 52;
+      const stepY = isTablet ? 172 : 152;
+      const radiusZ = isTablet ? 225 : 196;
+      const zOffset = isTablet ? 165 : 144;
+      const pitchAngle = 1.06;
+
+      const sIdx = smoothIdxRef.current;
+      const vel = velocityRef.current;
+
+      const rounded = Math.min(total - 1, Math.max(0, Math.round(sIdx)));
+      if (rounded !== activeStepRef.current) {
+        activeStepRef.current = rounded;
         onActiveStepChange(rounded);
       }
 
+      // 1. Update 3D vertical DNA cards
       for (let i = 0; i < total; i++) {
         const el = cardRefs.current[i];
         if (!el) continue;
 
-        const offset = i - smoothIdxRef.current;
+        const offset = i - sIdx;
         const absOff = Math.abs(offset);
-        const theta = offset * 0.94; // rad step along 3D cylinder
+        const theta = offset * pitchAngle;
 
-        // Cylindrical Helix coordinates
+        // Vertical helix coordinates (Y is primary climbing axis, X weaves smoothly left <-> right)
         const x = Math.sin(theta) * radiusX;
         const y = offset * stepY;
         const z = Math.cos(theta) * radiusZ - zOffset;
 
-        // Idle sine-wave orbital float ("breathes in 3D even when stopped")
-        const breathY = Math.sin(t * 1.1 + i * 1.15) * 4.0;
-        const breathRx = Math.cos(t * 0.85 + i * 0.95) * 1.3;
-        const breathRy = Math.sin(t * 0.72 + i * 1.25) * 1.6;
-        const breathRz = Math.sin(t * 0.64 + i * 0.8) * 0.8;
+        // Organic harmonic suspension float (continuous phase, zero frame resets)
+        const breathY = Math.sin(t * 1.15 + i * 1.1) * 3.2;
+        const breathRx = Math.cos(t * 0.9 + i * 0.95) * 1.1;
+        const breathRy = Math.sin(t * 0.78 + i * 1.25) * 1.4;
+        const breathRz = Math.sin(t * 0.65 + i * 0.85) * 0.8;
 
-        // 3-Axis orientation + interactive pointer parallax tilt
+        // Velocity-coupled banking so the helix leans fluidly into motion
+        const velBank = Math.max(-7, Math.min(7, vel * 3.0));
+
+        // 3-Axis helical orientation using smooth bounded trigonometry
         const rotY =
-          -theta * (180 / Math.PI) * 0.42 +
-          pointerSmoothRef.current.x * 7 +
+          -Math.sin(theta) * 22 +
+          pointerSmoothRef.current.x * 5.5 +
           breathRy;
-        const rotX = offset * -5.0 - pointerSmoothRef.current.y * 6 + breathRx;
-        const rotZ = offset * 4.0 + breathRz;
+        const rotX =
+          Math.max(-18, Math.min(18, offset * -8.5)) -
+          pointerSmoothRef.current.y * 4.5 +
+          velBank +
+          breathRx;
+        const rotZ = Math.sin(theta) * 3.8 + breathRz;
 
-        const scale = Math.max(0.68, 1 - absOff * 0.15);
-        // Stronger depth fade keeps front card legible over recessed cards
-        const opacity =
-          absOff > 1.85
-            ? 0
-            : absOff < 0.38
-            ? 1
-            : Math.max(0, 0.56 * (1 - Math.pow((absOff - 0.38) / 1.47, 1.25)));
-        const zIndex = Math.round(100 - absOff * 24);
+        const scale = Math.max(0.62, 1.0 - absOff * 0.19);
+
+        // Keep front card opaque up to swap midpoint, gently dim distant neighbors for clarity
+        let opacity = 0;
+        if (absOff <= 2.35) {
+          if (absOff <= 0.48) {
+            opacity = 1;
+          } else {
+            const norm = (absOff - 0.48) / 1.87;
+            opacity = Math.max(0, Math.pow(1 - norm, 1.55) * 0.78);
+          }
+        }
+
+        const zIndex = Math.round(100 - absOff * 28);
         const isFront = absOff < 0.45;
+        const isInteractive = absOff < 1.55;
 
         el.style.transform = `translate3d(${x.toFixed(1)}px, ${(y + breathY).toFixed(1)}px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) rotateZ(${rotZ.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
         el.style.opacity = opacity.toFixed(3);
         el.style.zIndex = String(zIndex);
-        el.style.pointerEvents = isFront ? "auto" : "none";
+        el.style.pointerEvents = isInteractive ? "auto" : "none";
         el.setAttribute("aria-hidden", isFront ? "false" : "true");
         el.classList.toggle("gateway-spiral-card--active", isFront);
       }
+
+      // 2. Sync vertical DNA Double-Helix SVG backbone (exact smooth cubic Bezier sine curves)
+      if (strandARef.current && strandBRef.current) {
+        const cx = 160;
+        const amp = isTablet ? 94 : 78;
+        const topY = 8;
+        const heightY = 404;
+        const omega = Math.PI * 3.15;
+        const segs = 24;
+        const du = 1 / segs;
+        const dyStep = (heightY * du) / 3;
+        const slopeScale = (amp * omega * du) / 3;
+        const phaseShift = sIdx * pitchAngle - t * 0.48;
+
+        const x0Offset = Math.sin(-0.5 * omega + phaseShift) * amp;
+        let dA = `M${(cx + x0Offset).toFixed(1)},${topY.toFixed(1)}`;
+        let dB = `M${(cx - x0Offset).toFixed(1)},${topY.toFixed(1)}`;
+
+        for (let p = 0; p < segs; p++) {
+          const u0 = p * du;
+          const u1 = (p + 1) * du;
+          const y0 = topY + u0 * heightY;
+          const y1 = topY + u1 * heightY;
+          const ang0 = (u0 - 0.5) * omega + phaseShift;
+          const ang1 = (u1 - 0.5) * omega + phaseShift;
+
+          const off0 = Math.sin(ang0) * amp;
+          const off1 = Math.sin(ang1) * amp;
+          const dOff0 = Math.cos(ang0) * slopeScale;
+          const dOff1 = Math.cos(ang1) * slopeScale;
+
+          dA += ` C${(cx + off0 + dOff0).toFixed(1)},${(y0 + dyStep).toFixed(1)} ${(cx + off1 - dOff1).toFixed(1)},${(y1 - dyStep).toFixed(1)} ${(cx + off1).toFixed(1)},${y1.toFixed(1)}`;
+          dB += ` C${(cx - off0 - dOff0).toFixed(1)},${(y0 + dyStep).toFixed(1)} ${(cx - off1 + dOff1).toFixed(1)},${(y1 - dyStep).toFixed(1)} ${(cx - off1).toFixed(1)},${y1.toFixed(1)}`;
+        }
+
+        strandARef.current.setAttribute("d", dA);
+        strandBRef.current.setAttribute("d", dB);
+        strandAGlowRef.current?.setAttribute("d", dA);
+        strandBGlowRef.current?.setAttribute("d", dB);
+
+        const rungCount = rungRefs.current.length;
+        for (let r = 0; r < rungCount; r++) {
+          const line = rungRefs.current[r];
+          const nA = nodeARefs.current[r];
+          const nB = nodeBRefs.current[r];
+          const u = (r + 0.5) / rungCount;
+          const py = topY + u * heightY;
+          const ang = (u - 0.5) * omega + phaseShift;
+          const ax = cx + Math.sin(ang) * amp;
+          const bx = cx - Math.sin(ang) * amp;
+          const depth = Math.abs(Math.cos(ang));
+          const op = (0.14 + 0.48 * depth).toFixed(2);
+
+          if (line) {
+            line.setAttribute("x1", ax.toFixed(1));
+            line.setAttribute("y1", py.toFixed(1));
+            line.setAttribute("x2", bx.toFixed(1));
+            line.setAttribute("y2", py.toFixed(1));
+            line.setAttribute("stroke-opacity", op);
+          }
+          if (nA) {
+            nA.setAttribute("cx", ax.toFixed(1));
+            nA.setAttribute("cy", py.toFixed(1));
+            nA.setAttribute("fill-opacity", (0.38 + 0.58 * depth).toFixed(2));
+          }
+          if (nB) {
+            nB.setAttribute("cx", bx.toFixed(1));
+            nB.setAttribute("cy", py.toFixed(1));
+            nB.setAttribute("fill-opacity", (0.38 + 0.58 * (1 - depth)).toFixed(2));
+          }
+        }
+      }
     };
 
-    // Apply initial pose immediately and pause loop when Phase 3 is offscreen/inactive
-    smoothIdxRef.current = targetIdxRef.current;
-    applyHelixPose(0);
-    if (!isPhaseActive) return;
+    if (!isPhaseActive) {
+      smoothIdxRef.current = targetIdxRef.current;
+      applyHelixPose(elapsedRef.current);
+      return;
+    }
+
+    // Snap initial pose only if Phase 3 was jumped into far from current spring state
+    if (Math.abs(targetIdxRef.current - smoothIdxRef.current) > 1.25) {
+      smoothIdxRef.current = targetIdxRef.current;
+    }
+    applyHelixPose(elapsedRef.current);
 
     let rafId = 0;
-    const startTime = performance.now();
+    let lastNow = performance.now();
 
     const tick = (now: number) => {
       rafId = requestAnimationFrame(tick);
-      if (document.hidden) return;
-      const t = (now - startTime) / 1000;
+      if (document.hidden) {
+        lastNow = now;
+        return;
+      }
 
-      // Continuous rAF Lerp (damping 0.09) + cursor/touch tilt lerp
-      smoothIdxRef.current += (targetIdxRef.current - smoothIdxRef.current) * 0.09;
+      // Clamped delta-time keeps motion identical across 60Hz, 90Hz, and 120Hz mobile screens
+      const dt = Math.min((now - lastNow) / 1000, 0.05);
+      lastNow = now;
+      elapsedRef.current += dt;
+
+      // Critically damped spring-lerp toward target index
+      const prevSmooth = smoothIdxRef.current;
+      const alpha = 1 - Math.exp(-8.5 * dt);
+      const nextSmooth = prevSmooth + (targetIdxRef.current - prevSmooth) * alpha;
+      velocityRef.current = (nextSmooth - prevSmooth) / Math.max(0.001, dt);
+      smoothIdxRef.current = nextSmooth;
+
+      const pAlpha = 1 - Math.exp(-9.0 * dt);
       pointerSmoothRef.current.x +=
-        (pointerTargetRef.current.x - pointerSmoothRef.current.x) * 0.09;
+        (pointerTargetRef.current.x - pointerSmoothRef.current.x) * pAlpha;
       pointerSmoothRef.current.y +=
-        (pointerTargetRef.current.y - pointerSmoothRef.current.y) * 0.09;
+        (pointerTargetRef.current.y - pointerSmoothRef.current.y) * pAlpha;
 
-      applyHelixPose(t);
+      applyHelixPose(elapsedRef.current);
     };
 
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, [activeStep, isPhaseActive, onActiveStepChange, targetIdxRef, total]);
+  }, [isPhaseActive, onActiveStepChange, targetIdxRef, total]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const t = e.touches[0];
     if (!t) return;
-    touchStartRef.current = { x: t.clientX, idx: targetIdxRef.current };
+    touchStartRef.current = { x: t.clientX, y: t.clientY, idx: targetIdxRef.current };
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -397,15 +523,20 @@ function MobileGatewayCarousel({
     const t = e.touches[0];
     if (!t) return;
     const dx = touchStartRef.current.x - t.clientX;
-    const next = Math.min(
-      total - 1,
-      Math.max(0, touchStartRef.current.idx + dx / 135)
-    );
-    targetIdxRef.current = next;
-    pointerTargetRef.current = {
-      x: Math.max(-1, Math.min(1, -dx / 170)),
-      y: 0,
-    };
+    const dy = touchStartRef.current.y - t.clientY;
+    // Respond smoothly to horizontal drags inside touch-pan-y container without locking vertical page scroll
+    if (Math.abs(dx) > Math.abs(dy) * 0.85) {
+      onManualInteract();
+      const next = Math.min(
+        total - 1,
+        Math.max(0, touchStartRef.current.idx + dx / 115)
+      );
+      targetIdxRef.current = next;
+      pointerTargetRef.current = {
+        x: Math.max(-1, Math.min(1, -dx / 150)),
+        y: Math.max(-1, Math.min(1, -dy / 160)),
+      };
+    }
   };
 
   const handleTouchEnd = () => {
@@ -436,6 +567,7 @@ function MobileGatewayCarousel({
   };
 
   const stepTo = (nextIdx: number) => {
+    onManualInteract();
     const wrapped = ((nextIdx % total) + total) % total;
     targetIdxRef.current = wrapped;
     onActiveStepChange(wrapped);
@@ -458,84 +590,200 @@ function MobileGatewayCarousel({
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
-      {/* 3D Cylindrical Spiral / Helix Stage (perspective: 1400px, preserve-3d) */}
-      <div className="gateway-spiral-stage mx-auto flex-1 min-h-[320px] w-full max-w-[440px]">
-        <div className="gateway-spiral-watermark" aria-hidden="true">
-          ELEVEN
+      {/* Vertical 3D DNA Double-Helix Stage */}
+      <div className="gateway-spiral-stage mx-auto flex-1 min-h-[372px] sm:min-h-[440px] w-full max-w-[440px]">
+        {/* Flat backdrop layer keeps watermark and DNA strands strictly behind 3D cards */}
+        <div className="gateway-spiral-backdrop" aria-hidden="true">
+          <div className="gateway-spiral-watermark">ELEVEN</div>
+
+          {/* Live Vertical DNA Double-Helix Strand & Base-Pair Rungs */}
+          <svg
+            viewBox="0 0 320 420"
+            preserveAspectRatio="xMidYMid meet"
+            className="h-full w-full opacity-90"
+          >
+            <defs>
+              <linearGradient id="dnaStrandA" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#10bc83" stopOpacity="0" />
+                <stop offset="20%" stopColor="#38ffbd" stopOpacity="0.88" />
+                <stop offset="50%" stopColor="#8effdc" stopOpacity="1" />
+                <stop offset="80%" stopColor="#10bc83" stopOpacity="0.88" />
+                <stop offset="100%" stopColor="#10bc83" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient id="dnaStrandB" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#00b38c" stopOpacity="0" />
+                <stop offset="22%" stopColor="#10bc83" stopOpacity="0.7" />
+                <stop offset="50%" stopColor="#6cf5c8" stopOpacity="0.9" />
+                <stop offset="78%" stopColor="#00b38c" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#00b38c" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+
+            <line
+              x1="160"
+              y1="14"
+              x2="160"
+              y2="406"
+              stroke="#10bc83"
+              strokeOpacity="0.16"
+              strokeWidth="1"
+              strokeDasharray="3 6"
+            />
+
+            {Array.from({ length: 11 }).map((_, idx) => (
+              <g key={idx}>
+                <line
+                  ref={(el) => {
+                    rungRefs.current[idx] = el;
+                  }}
+                  x1="100"
+                  y1={28 + idx * 36}
+                  x2="220"
+                  y2={28 + idx * 36}
+                  stroke="#38ffbd"
+                  strokeWidth="1"
+                  strokeOpacity="0.25"
+                />
+                <circle
+                  ref={(el) => {
+                    nodeARefs.current[idx] = el;
+                  }}
+                  cx="100"
+                  cy={28 + idx * 36}
+                  r="2.6"
+                  fill="#38ffbd"
+                  fillOpacity="0.72"
+                />
+                <circle
+                  ref={(el) => {
+                    nodeBRefs.current[idx] = el;
+                  }}
+                  cx="220"
+                  cy={28 + idx * 36}
+                  r="2.1"
+                  fill="#10bc83"
+                  fillOpacity="0.58"
+                />
+              </g>
+            ))}
+
+            <path
+              ref={strandAGlowRef}
+              d="M160,8 L160,412"
+              fill="none"
+              stroke="#38ffbd"
+              strokeOpacity="0.16"
+              strokeWidth="6.5"
+              strokeLinecap="round"
+            />
+            <path
+              ref={strandBGlowRef}
+              d="M160,8 L160,412"
+              fill="none"
+              stroke="#10bc83"
+              strokeOpacity="0.11"
+              strokeWidth="5.5"
+              strokeLinecap="round"
+            />
+            <path
+              ref={strandARef}
+              d="M160,8 L160,412"
+              fill="none"
+              stroke="url(#dnaStrandA)"
+              strokeWidth="1.95"
+              strokeLinecap="round"
+            />
+            <path
+              ref={strandBRef}
+              d="M160,8 L160,412"
+              fill="none"
+              stroke="url(#dnaStrandB)"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+          </svg>
         </div>
 
-        {ALL_GATEWAY_CARDS.map((card, i) => {
-          const accentClass =
-            card.tone === "amber"
-              ? "text-[#e29d58]"
-              : card.tone === "blue"
-              ? "text-[#9eb4ff]"
-              : "text-[#38ffbd]";
+        {/* Dedicated 3D Perspective Card Plane */}
+        <div className="gateway-spiral-3d">
+          {ALL_GATEWAY_CARDS.map((card, i) => {
+            const isFront = i === activeStep;
+            const accentClass =
+              card.tone === "amber"
+                ? "text-[#e29d58]"
+                : card.tone === "blue"
+                ? "text-[#9eb4ff]"
+                : "text-[#38ffbd]";
 
-          return (
-            <article
-              key={card.key}
-              ref={(el) => {
-                cardRefs.current[i] = el;
-              }}
-              onClick={() => {
-                if (Math.round(targetIdxRef.current) !== i) {
-                  stepTo(i);
-                }
-              }}
-              className={`gateway-spiral-card gateway-spiral-card--${card.tone} flex cursor-pointer flex-col justify-between p-4 active:scale-[0.985] transition-shadow duration-300`}
-            >
-              {/* Top Tag + Top-Right Square Icon Chip */}
-              <div className="flex items-start justify-between gap-2">
-                <span
-                  className={`font-mono text-[10px] uppercase tracking-[0.14em] ${accentClass}`}
-                >
-                  0{i + 1} / {card.badge}
-                </span>
-                <span
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] ${accentClass}`}
-                >
-                  {MOBILE_DECK_ICONS[card.key]}
-                </span>
-              </div>
-
-              {/* Card Body: Title + Description + Direct Arrow CTA */}
-              <div className="mt-2.5 flex flex-col gap-1.5">
+            return (
+              <article
+                key={card.key}
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
+                onClick={() => {
+                  if (!isFront) {
+                    stepTo(i);
+                  }
+                }}
+                className={`gateway-spiral-card gateway-spiral-card--${card.tone} flex cursor-pointer flex-col justify-between p-3.5 sm:p-4 active:scale-[0.985]`}
+              >
+                {/* Top Tag + Top-Right Square Icon Chip */}
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-[1.02rem] sm:text-[1.08rem] font-normal uppercase tracking-[0.01em] text-white leading-tight">
-                    {card.title}
-                  </h3>
                   <span
-                    className={`shrink-0 text-sm leading-none pt-0.5 ${accentClass}`}
-                    aria-hidden="true"
+                    className={`font-mono text-[10px] uppercase tracking-[0.14em] ${accentClass}`}
                   >
-                    ↗
+                    0{i + 1} / {card.badge}
+                  </span>
+                  <span
+                    className={`flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] ${accentClass}`}
+                  >
+                    {MOBILE_DECK_ICONS[card.key]}
                   </span>
                 </div>
-                <p className="text-[11px] sm:text-[11.5px] text-[#a0b0ac] leading-[1.42] line-clamp-3">
-                  {card.desc}
-                </p>
-                <div
-                  className="mt-1.5 pt-2 border-t border-white/[0.08]"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Button
-                    href={card.href}
-                    variant={card.fill ? "secondary" : "ghost"}
-                    arrow={card.fill}
-                    className="w-full"
+
+                {/* Card Body: Title + Description + Direct Arrow CTA */}
+                <div className="mt-2 flex flex-col gap-1.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-[0.98rem] sm:text-[1.08rem] font-normal uppercase tracking-[0.01em] text-white leading-tight">
+                      {card.title}
+                    </h3>
+                    <span
+                      className={`shrink-0 text-sm leading-none pt-0.5 ${accentClass}`}
+                      aria-hidden="true"
+                    >
+                      ↗
+                    </span>
+                  </div>
+                  <p className="text-[11px] sm:text-[11.5px] text-[#a0b0ac] leading-[1.38] line-clamp-3">
+                    {card.desc}
+                  </p>
+                  <div
+                    className={`mt-1 pt-2 border-t border-white/[0.08] ${
+                      isFront ? "pointer-events-auto" : "pointer-events-none"
+                    }`}
+                    onClick={(e) => {
+                      if (isFront) e.stopPropagation();
+                    }}
                   >
-                    {card.btn}
-                  </Button>
+                    <Button
+                      href={card.href}
+                      variant={card.fill ? "secondary" : "ghost"}
+                      arrow={card.fill}
+                      className="w-full max-sm:!min-h-[2.2rem] max-sm:!text-[12.5px]"
+                    >
+                      {card.btn}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </article>
-          );
-        })}
+              </article>
+            );
+          })}
+        </div>
       </div>
 
       {/* Interactive Step Dots + Emerald Progress Bar + Accessible Prev/Next Controls */}
-      <div className="mx-auto mt-1 flex w-full max-w-[360px] flex-col gap-2 px-1">
+      <div className="relative z-[120] mx-auto mt-1 flex w-full max-w-[360px] flex-col gap-2 px-1">
         <div
           className="flex items-center justify-center gap-1.5"
           role="tablist"
@@ -570,7 +818,7 @@ function MobileGatewayCarousel({
             type="button"
             aria-label="Previous capability"
             onClick={() => stepTo(Math.round(targetIdxRef.current) - 1)}
-            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/85 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/90 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
           >
             ←
           </button>
@@ -591,7 +839,7 @@ function MobileGatewayCarousel({
             type="button"
             aria-label="Next capability"
             onClick={() => stepTo(Math.round(targetIdxRef.current) + 1)}
-            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/85 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/90 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
           >
             →
           </button>
@@ -603,8 +851,12 @@ function MobileGatewayCarousel({
 
 export function GenesisHeroStage() {
   const spiralTargetRef = useRef<number>(0);
+  const manualInteractAtRef = useRef<number>(0);
   const [mobileDeckStep, setMobileDeckStep] = React.useState(0);
   const [mobilePhase3Active, setMobilePhase3Active] = React.useState(false);
+  const handleManualInteract = React.useCallback(() => {
+    manualInteractAtRef.current = performance.now();
+  }, []);
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -700,13 +952,13 @@ export function GenesisHeroStage() {
         antialias: false,
         alpha: true,
       });
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = window.innerWidth || 1280;
+      const height = window.innerHeight || 800;
+      const isMobile = width < 768;
+      const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
       renderer.setPixelRatio(dpr);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.1;
-
-      const width = window.innerWidth || 1280;
-      const height = window.innerHeight || 800;
       renderer.setSize(width, height, false);
 
       const scene = new THREE.Scene();
@@ -731,7 +983,6 @@ export function GenesisHeroStage() {
       }
 
       // Build 3D Emerald Particle Globe with Morph Target (Hologram Core)
-      const isMobile = width < 768;
       const particleCount = isMobile ? 12000 : 32000;
       const geo = new THREE.BufferGeometry();
       const posArr = new Float32Array(particleCount * 3);
@@ -1220,19 +1471,23 @@ export function GenesisHeroStage() {
           trigger: section,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.55,
+          scrub: 0.45,
           onUpdate: (self) => {
-            const nextPhase3Open = self.progress >= 0.51 && self.progress <= 0.99;
+            const nextPhase3Open = self.progress >= 0.50 && self.progress <= 0.99;
             if (nextPhase3Open !== phase3Open) {
               phase3Open = nextPhase3Open;
               setMobilePhase3Active(nextPhase3Open);
+            }
+            const manualRecent = performance.now() - manualInteractAtRef.current < 900;
+            if (manualRecent && Math.abs(self.progress - lastScrollProg) < 0.015) {
+              return;
             }
             if (self.progress >= 0.56) {
               if (Math.abs(self.progress - lastScrollProg) > 0.0005) {
                 lastScrollProg = self.progress;
                 const frac = Math.min(
                   1,
-                  Math.max(0, (self.progress - 0.58) / 0.32)
+                  Math.max(0, (self.progress - 0.57) / 0.33)
                 );
                 spiralTargetRef.current = frac * (ALL_GATEWAY_CARDS.length - 1);
               }
@@ -1651,25 +1906,26 @@ export function GenesisHeroStage() {
           <div
             ref={gatewaySectionRef}
             id="gateway-section"
-            className="pointer-events-none absolute inset-0 z-20 mx-auto flex max-w-[1360px] flex-col justify-between px-4 sm:px-5 pt-[4.35rem] pb-5 lg:justify-center lg:py-12"
+            className="pointer-events-none absolute inset-0 z-20 mx-auto flex max-w-[1360px] flex-col justify-between px-4 sm:px-5 pt-[4.75rem] pb-4 lg:justify-center lg:py-12"
           >
-            <h2 className="gateway-heading mb-2 sm:mb-4 lg:mb-8 text-center text-[1.35rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
+            <h2 className="gateway-heading mb-1 sm:mb-4 lg:mb-8 text-center text-[1.28rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
               One sovereign operating system. Six core capabilities.
             </h2>
 
-            {/* Mobile/Tablet Core Indicator Above the 3D Cylindrical Spiral */}
-            <div className="mt-1.5 mb-2 flex justify-center lg:hidden pointer-events-none">
-              <div className="gateway-mobile-core-tag rounded-full border border-[#10bc83]/35 bg-[#062118]/65 px-3 py-1 font-mono text-[10px] tracking-[0.1em] text-[#38ffbd] backdrop-blur-md">
+            {/* Mobile/Tablet Core Indicator Above the Vertical 3D DNA Helix */}
+            <div className="mt-0.5 mb-1 flex justify-center lg:hidden pointer-events-none">
+              <div className="gateway-mobile-core-tag rounded-full border border-[#10bc83]/35 bg-[#062118]/65 px-3 py-0.5 font-mono text-[10px] tracking-[0.1em] text-[#38ffbd] backdrop-blur-md">
                 3D CORE ACTIVE
               </div>
             </div>
 
-            {/* Mobile Scroll-Driven 3D Cylindrical Spiral / Helix Carousel */}
+            {/* Mobile Scroll-Driven Vertical 3D DNA Double-Helix Carousel */}
             <MobileGatewayCarousel
               targetIdxRef={spiralTargetRef}
               activeStep={mobileDeckStep}
               onActiveStepChange={setMobileDeckStep}
               isPhaseActive={mobilePhase3Active}
+              onManualInteract={handleManualInteract}
             />
 
             {/* Desktop Split 3-Column Grid Around Morphed 3D Hologram */}
