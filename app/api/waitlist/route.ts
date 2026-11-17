@@ -92,16 +92,70 @@ export async function GET() {
       status: isConfigured ? "ready" : "pending_backend",
       endpoint: "/api/waitlist",
       persistenceConfigured: isConfigured,
-      provider: "supabase_postgres",
-      table: "waitlist_registrations",
     },
     { headers: NO_STORE_HEADERS }
   );
 }
 
+function isSameOriginPost(request: Request): boolean {
+  const fetchSite = request.headers.get("sec-fetch-site");
+  if (fetchSite && fetchSite.toLowerCase() === "cross-site") {
+    return false;
+  }
+
+  const origin = request.headers.get("origin");
+  if (!origin) {
+    return true;
+  }
+
+  const expectedHost =
+    request.headers.get("x-forwarded-host")?.split(",")[0]?.trim() ||
+    request.headers.get("host")?.trim();
+
+  if (!expectedHost) {
+    return true;
+  }
+
+  try {
+    const parsedOrigin = new URL(origin);
+    if (parsedOrigin.protocol !== "https:" && parsedOrigin.protocol !== "http:") {
+      return false;
+    }
+    return parsedOrigin.host.toLowerCase() === expectedHost.toLowerCase();
+  } catch {
+    return false;
+  }
+}
+
+function stripControlAndBidiChars(input: string, preserveNewlines: boolean): string {
+  const withoutBidi = input.replace(/[\u202A-\u202E\u2066-\u2069]/g, "");
+  if (preserveNewlines) {
+    return withoutBidi.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, "");
+  }
+  return withoutBidi
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, " ")
+    .replace(/\s+/g, " ");
+}
+
 export async function POST(request: Request) {
   try {
-    // 0. Guard against oversized request payloads before parsing JSON
+    // 0a. CSRF & media-type defenses
+    if (!isSameOriginPost(request)) {
+      return NextResponse.json(
+        { success: false, error: "Cross-origin requests are not allowed." },
+        { status: 403, headers: NO_STORE_HEADERS }
+      );
+    }
+
+    const contentType = request.headers.get("content-type") || "";
+    if (!contentType.toLowerCase().includes("application/json")) {
+      return NextResponse.json(
+        { success: false, error: "Unsupported media type. Expected application/json." },
+        { status: 415, headers: NO_STORE_HEADERS }
+      );
+    }
+
+    // 0b. Guard against oversized request payloads before parsing JSON
     const contentLengthHeader = request.headers.get("content-length");
     if (contentLengthHeader) {
       const parsedLength = Number(contentLengthHeader);
@@ -113,10 +167,20 @@ export async function POST(request: Request) {
       }
     }
 
-    // 1. Client IP identification & privacy-preserving hash
-    const forwardedFor = request.headers.get("x-forwarded-for");
+    // 1. Client IP identification (prefer edge/proxy-verified headers) & privacy-preserving hash
+    const vercelForwarded = request.headers.get("x-vercel-forwarded-for");
+    const cfConnectingIp = request.headers.get("cf-connecting-ip");
     const realIp = request.headers.get("x-real-ip");
-    const rawClientIp = (forwardedFor ? forwardedFor.split(",")[0] : realIp || "127.0.0.1").trim();
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const rawClientIp = (
+      (vercelForwarded ? vercelForwarded.split(",")[0] : null) ||
+      cfConnectingIp ||
+      realIp ||
+      (forwardedFor ? forwardedFor.split(",")[0] : null) ||
+      "127.0.0.1"
+    )
+      .trim()
+      .slice(0, 64);
     const clientIpHash = hashClientIp(rawClientIp);
 
     // 2. Enforce IP rate limiting
@@ -147,8 +211,15 @@ export async function POST(request: Request) {
         );
       }
       const parsed = JSON.parse(rawText);
-      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-        throw new Error("Expected JSON object");
+      if (
+        !parsed ||
+        typeof parsed !== "object" ||
+        Array.isArray(parsed) ||
+        Object.prototype.hasOwnProperty.call(parsed, "__proto__") ||
+        Object.prototype.hasOwnProperty.call(parsed, "constructor") ||
+        Object.prototype.hasOwnProperty.call(parsed, "prototype")
+      ) {
+        throw new Error("Expected safe JSON object");
       }
       body = parsed as Record<string, unknown>;
     } catch {
@@ -211,15 +282,21 @@ export async function POST(request: Request) {
     }
     const validTier: "general" | "technical" = tier;
 
-    // 8. Sanitize optional name and intendedUse (strip HTML tags & control chars, cap length)
+    // 8. Sanitize optional name and intendedUse (strip HTML tags, control/bidi chars, cap length)
     const cleanName =
       typeof name === "string"
-        ? name.trim().slice(0, 100).replace(/<[^>]*>/g, "").replace(/[<>]/g, "").trim()
+        ? stripControlAndBidiChars(
+            name.trim().slice(0, 100).replace(/<[^>]*>/g, "").replace(/[<>]/g, ""),
+            false
+          ).trim() || null
         : null;
 
     const cleanIntendedUse =
       typeof intendedUse === "string"
-        ? intendedUse.trim().slice(0, 300).replace(/<[^>]*>/g, "").replace(/[<>]/g, "").trim()
+        ? stripControlAndBidiChars(
+            intendedUse.trim().slice(0, 300).replace(/<[^>]*>/g, "").replace(/[<>]/g, ""),
+            true
+          ).trim() || null
         : null;
 
     // 9. Inspect Supabase credentials

@@ -496,3 +496,130 @@ test("Frontend response contracts match WaitlistModal UI expectations", async ()
   assert.strictEqual(typeof jsonError.error, "string");
   assert.ok(jsonError.error.length > 0);
 });
+
+test("POST /api/waitlist rejects cross-origin and non-JSON requests", async () => {
+  const crossSiteReq = new Request("http://localhost:3000/api/waitlist", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Sec-Fetch-Site": "cross-site",
+      Origin: "https://evil.example",
+      Host: "localhost:3000",
+    },
+    body: JSON.stringify({ email: "user@eleven.io", consent: true, tier: "general" }),
+  });
+  const crossSiteRes = await POST(crossSiteReq);
+  assert.strictEqual(crossSiteRes.status, 403);
+
+  const wrongMimeReq = new Request("http://localhost:3000/api/waitlist", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: "email=user@eleven.io&consent=true",
+  });
+  const wrongMimeRes = await POST(wrongMimeReq);
+  assert.strictEqual(wrongMimeRes.status, 415);
+});
+
+test("POST /api/waitlist rejects oversized payloads and prototype-pollution JSON keys", async () => {
+  const bigReq = new Request("http://localhost:3000/api/waitlist", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: "user@eleven.io",
+      intendedUse: "x".repeat(5000),
+      consent: true,
+      tier: "general",
+    }),
+  });
+  const bigRes = await POST(bigReq);
+  assert.strictEqual(bigRes.status, 413);
+
+  const protoReq = new Request("http://localhost:3000/api/waitlist", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: '{"email":"user@eleven.io","consent":true,"__proto__":{"isAdmin":true}}',
+  });
+  const protoRes = await POST(protoReq);
+  assert.strictEqual(protoRes.status, 400);
+});
+
+test("POST /api/waitlist strips control/bidi characters and prioritizes trusted proxy IP over spoofed x-forwarded-for", async () => {
+  let insertedRecord = null;
+  setSupabaseClientFactoryForTesting(() => ({
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: async () => ({ data: null, error: null }),
+        }),
+      }),
+      insert: (record) => {
+        insertedRecord = record;
+        return {
+          select: () => ({
+            single: async () => ({
+              data: { id: "sec-test-id", tier: record.tier, created_at: new Date().toISOString() },
+              error: null,
+            }),
+          }),
+        };
+      },
+    }),
+  }));
+
+  const dirtyReq = new Request("http://localhost:3000/api/waitlist", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-real-ip": "198.51.100.77",
+      "x-forwarded-for": "203.0.113.1",
+    },
+    body: JSON.stringify({
+      email: "sec@eleven.io",
+      name: "Alice\u0000\u0007\u202EBob\r\nTeam",
+      intendedUse: "Line1\u0000\u001B[31m\nLine2",
+      consent: true,
+      tier: "technical",
+    }),
+  });
+
+  const dirtyRes = await POST(dirtyReq);
+  assert.strictEqual(dirtyRes.status, 200);
+  assert.strictEqual(insertedRecord.name, "Alice Bob Team");
+  assert.strictEqual(insertedRecord.intended_use, "Line1[31m\nLine2");
+
+  // Rate limit must track x-real-ip (198.51.100.77) even if caller mutates x-forwarded-for
+  for (let i = 2; i <= 5; i++) {
+    const req = new Request("http://localhost:3000/api/waitlist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-real-ip": "198.51.100.77",
+        "x-forwarded-for": `203.0.113.${i}`,
+      },
+      body: JSON.stringify({
+        email: `sec${i}@eleven.io`,
+        consent: true,
+        tier: "technical",
+      }),
+    });
+    const res = await POST(req);
+    assert.strictEqual(res.status, 200);
+  }
+
+  const blockedReq = new Request("http://localhost:3000/api/waitlist", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-real-ip": "198.51.100.77",
+      "x-forwarded-for": "203.0.113.99",
+    },
+    body: JSON.stringify({
+      email: "sec6@eleven.io",
+      consent: true,
+      tier: "technical",
+    }),
+  });
+  const blockedRes = await POST(blockedReq);
+  assert.strictEqual(blockedRes.status, 429);
+});
+

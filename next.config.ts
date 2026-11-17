@@ -52,6 +52,14 @@ const nextConfig: NextConfig = {
             value: "same-origin",
           },
           {
+            key: "Cross-Origin-Resource-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "X-Permitted-Cross-Domain-Policies",
+            value: "none",
+          },
+          {
             key: "X-DNS-Prefetch-Control",
             value: "on",
           },
