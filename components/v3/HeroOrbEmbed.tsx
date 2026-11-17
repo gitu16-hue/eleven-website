@@ -14,9 +14,9 @@ const ElevenHolographicOrb3D = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-full min-h-[280px] sm:min-h-[460px] w-full flex-col items-center justify-center rounded-sm border border-el-border bg-el-bg-raised/70 p-6 sm:p-8 backdrop-blur-xs">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-el-border-strong border-t-el-accent" />
-        <span className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-el-fg-faint">
+      <div className="flex h-full min-h-[200px] sm:min-h-[460px] w-full flex-col items-center justify-center rounded-sm border border-el-border bg-el-bg-raised/70 p-4 sm:p-8 backdrop-blur-xs">
+        <div className="h-7 w-7 sm:h-8 sm:w-8 animate-spin rounded-full border-2 border-el-border-strong border-t-el-accent" />
+        <span className="mt-2.5 sm:mt-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-el-fg-faint">
           INITIALIZING COGNITIVE CORE…
         </span>
       </div>
@@ -108,7 +108,7 @@ export function HeroOrbEmbed() {
   return (
     <div ref={rootRef} className="relative flex flex-col items-center">
       {/* 3D Orb Canvas Container */}
-      <div className="relative aspect-square w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[420px] overflow-hidden rounded-sm border border-el-border-strong/60 bg-radial-[at_50%_50%] from-el-bg-raised to-el-bg shadow-el-lg">
+      <div className="relative w-full max-w-[260px] h-[200px] sm:h-auto sm:aspect-square sm:max-w-[380px] lg:max-w-[420px] overflow-hidden rounded-sm border border-el-border-strong/60 bg-radial-[at_50%_50%] from-el-bg-raised to-el-bg shadow-el-lg">
         {/* Subtle grid backdrop */}
         <div
           aria-hidden="true"
@@ -117,7 +117,7 @@ export function HeroOrbEmbed() {
 
         {/* 3D Visualizer */}
         <div className="relative h-full w-full">
-          <ElevenHolographicOrb3D state={activeState} />
+          <ElevenHolographicOrb3D state={activeState} mobileCompact />
         </div>
 
         {/* Corner registration markers */}
@@ -127,14 +127,14 @@ export function HeroOrbEmbed() {
         <span className="absolute bottom-2 right-2.5 font-mono text-[9px] text-el-fg-faint opacity-50">+</span>
 
         {/* Top telemetry tag */}
-        <div className="absolute top-3 left-3 rounded-full border border-el-border bg-el-bg-raised/85 px-2.5 py-0.5 backdrop-blur-sm shadow-xs">
+        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 rounded-full border border-el-border bg-el-bg-raised/85 px-2 sm:px-2.5 py-0.5 backdrop-blur-sm shadow-xs">
           <div className="flex items-center gap-1.5">
             <span
               className="h-1.5 w-1.5 rounded-full animate-pulse"
               style={{ backgroundColor: activeMeta.color }}
             />
-            <span className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-el-fg-muted">
-              <span className="sm:hidden">SIMULATOR</span>
+            <span className="font-mono text-[8.5px] sm:text-[9.5px] uppercase tracking-[0.1em] sm:tracking-[0.12em] text-el-fg-muted">
+              <span className="sm:hidden">{activeMeta.tag}</span>
               <span className="hidden sm:inline">SIMULATOR · {activeMeta.tag}</span>
             </span>
           </div>
@@ -155,11 +155,11 @@ export function HeroOrbEmbed() {
       </div>
 
       {/* Interactive Mode Controls + Auto Cycle Toggle */}
-      <div className="mt-2.5 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 rounded-sm border border-el-border bg-el-bg-raised p-1 font-mono text-[10.5px] shadow-el-sm">
+      <div className="mt-2 sm:mt-2.5 flex flex-wrap items-center justify-center gap-0.5 sm:gap-1.5 rounded-sm border border-el-border bg-el-bg-raised p-0.5 sm:p-1 font-mono text-[10px] sm:text-[10.5px] shadow-el-sm">
         <button
           type="button"
           onClick={handleToggleAuto}
-          className={`cursor-pointer rounded-xs px-2 sm:px-2.5 py-1.5 min-h-[34px] text-[9.5px] font-semibold transition-all ${
+          className={`cursor-pointer rounded-xs px-1.5 sm:px-2.5 py-1 sm:py-1.5 min-h-[30px] sm:min-h-[34px] text-[9px] sm:text-[9.5px] font-semibold transition-all active:scale-95 ${
             isAutoCycle
               ? "bg-el-accent/20 text-el-accent border border-el-accent/40"
               : "text-el-fg-faint hover:text-el-fg"
@@ -169,7 +169,7 @@ export function HeroOrbEmbed() {
           {isAutoCycle ? "⏸ AUTO" : "▶ PLAY"}
         </button>
 
-        <span className="text-el-border-strong text-[9.5px]">|</span>
+        <span className="text-el-border-strong text-[9px] sm:text-[9.5px]">|</span>
 
         {ORB_HERO_STATES.map((s) => {
           const isActive = activeState === s.id;
@@ -178,7 +178,7 @@ export function HeroOrbEmbed() {
               key={s.id}
               type="button"
               onClick={() => handleStateClick(s.id)}
-              className={`relative cursor-pointer rounded-xs px-2 sm:px-2.5 py-1.5 min-h-[34px] text-[9.5px] sm:text-[10px] transition-all ${
+              className={`relative cursor-pointer rounded-xs px-1.5 sm:px-2.5 py-1 sm:py-1.5 min-h-[30px] sm:min-h-[34px] text-[9px] sm:text-[10px] transition-all active:scale-95 ${
                 isActive
                   ? "bg-el-accent text-[#04060A] shadow-xs font-semibold"
                   : "text-el-fg-muted hover:text-el-fg hover:bg-el-bg"
@@ -199,7 +199,7 @@ export function HeroOrbEmbed() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -3 }}
           transition={{ duration: 0.2 }}
-          className="mt-1 px-2 text-center font-mono text-[10.5px] text-el-fg-faint"
+          className="mt-1 px-2 text-center font-mono text-[10px] sm:text-[10.5px] text-el-fg-faint line-clamp-1 sm:line-clamp-none"
         >
           {activeMeta.desc}
         </motion.p>

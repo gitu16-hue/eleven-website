@@ -135,50 +135,48 @@ export function ArchitectureVisualization() {
   return (
     <div className="mt-0 lg:mt-10 w-full">
       {/* Tab Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-4 border-b border-el-border pb-3 sm:pb-4">
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-1.5 sm:gap-2 font-mono text-[11px] sm:text-el-xs max-w-full py-0.5 sm:py-1">
-          <button
-            type="button"
-            onClick={() => setActiveTab("processes")}
-            className={`cursor-pointer shrink-0 rounded-xs px-2.5 sm:px-3.5 py-1.5 transition-colors ${
-              activeTab === "processes"
-                ? "bg-el-fg text-el-bg font-semibold shadow-el-sm"
-                : "border border-el-border bg-el-bg-raised text-el-fg-muted hover:text-el-fg"
-            }`}
-          >
-            01 · Four Process Rooms
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("memory")}
-            className={`cursor-pointer shrink-0 rounded-xs px-2.5 sm:px-3.5 py-1.5 transition-colors ${
-              activeTab === "memory"
-                ? "bg-el-fg text-el-bg font-semibold shadow-el-sm"
-                : "border border-el-border bg-el-bg-raised text-el-fg-muted hover:text-el-fg"
-            }`}
-          >
-            02 · Sovereign Memory Vault
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("policy")}
-            className={`cursor-pointer shrink-0 rounded-xs px-2.5 sm:px-3.5 py-1.5 transition-colors ${
-              activeTab === "policy"
-                ? "bg-el-fg text-el-bg font-semibold shadow-el-sm"
-                : "border border-el-border bg-el-bg-raised text-el-fg-muted hover:text-el-fg"
-            }`}
-          >
-            03 · Five Policy Guards
-          </button>
+      <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-between gap-2.5 sm:gap-4 border-b border-el-border pb-3 sm:pb-4">
+        <div className="grid grid-cols-3 sm:flex sm:flex-nowrap items-stretch sm:items-center gap-1 sm:gap-2 font-mono text-[10.5px] sm:text-el-xs w-full sm:w-auto py-0.5 sm:py-1">
+          {(
+            [
+              { id: "processes" as const, short: "01 · Rooms", full: "01 · Four Process Rooms" },
+              { id: "memory" as const, short: "02 · Memory", full: "02 · Sovereign Memory Vault" },
+              { id: "policy" as const, short: "03 · Guards", full: "03 · Five Policy Guards" },
+            ]
+          ).map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`relative cursor-pointer shrink-0 min-h-[40px] sm:min-h-0 rounded-xs px-1.5 sm:px-3.5 py-1.5 text-center transition-colors active:scale-[0.98] ${
+                  isActive
+                    ? "text-el-bg font-semibold"
+                    : "border border-el-border bg-el-bg-raised text-el-fg-muted hover:text-el-fg"
+                }`}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="archActiveTabPill"
+                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                    className="pointer-events-none absolute inset-0 rounded-xs bg-el-fg shadow-el-sm"
+                  />
+                )}
+                <span className="relative z-10 sm:hidden">{tab.short}</span>
+                <span className="relative z-10 hidden sm:inline">{tab.full}</span>
+              </button>
+            );
+          })}
         </div>
 
-        <span className="font-mono text-[10.5px] uppercase tracking-wider text-el-fg-faint">
+        <span className="font-mono text-[10px] sm:text-[10.5px] uppercase tracking-wider text-el-fg-faint">
           DEC-001 TO DEC-008 SPECIFICATIONS
         </span>
       </div>
 
       {/* Tab Panels */}
-      <div className="mt-6">
+      <div className="mt-5 sm:mt-6">
         <AnimatePresence mode="wait">
           {/* Tab 1: Four Process Rooms */}
           {activeTab === "processes" && (
@@ -188,11 +186,11 @@ export function ArchitectureVisualization() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+              className="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-4"
             >
               {FOUR_ROOMS.map((room) => (
                 <Tilt3DCard key={room.proc} className="hud-frame">
-                  <div className="flex h-full flex-col justify-between p-6">
+                  <div className="flex h-full flex-col justify-between p-4 sm:p-6">
                     <div>
                       <div className="flex items-center justify-between font-mono text-[10px] text-el-fg-faint">
                         <span>{room.code}</span>
@@ -232,11 +230,11 @@ export function ArchitectureVisualization() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4"
             >
               {FOUR_DRAWERS.map((drawer) => (
                 <Tilt3DCard key={drawer.code} className="hud-frame">
-                  <div className="flex h-full flex-col justify-between p-6">
+                  <div className="flex h-full flex-col justify-between p-4 sm:p-6">
                     <div>
                       <div className="flex items-center justify-between font-mono text-[10px]">
                         <span className="text-el-accent font-semibold">{drawer.code}</span>
@@ -276,11 +274,11 @@ export function ArchitectureVisualization() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3"
             >
               {FIVE_GUARDS.map((guard) => (
                 <Tilt3DCard key={guard.guard}>
-                  <div className="flex h-full flex-col justify-between p-6">
+                  <div className="flex h-full flex-col justify-between p-4 sm:p-6">
                     <div>
                       <span className="font-mono text-[10.5px] font-semibold text-el-accent">
                         {guard.guard}

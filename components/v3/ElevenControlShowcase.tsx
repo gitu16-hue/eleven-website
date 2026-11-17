@@ -431,17 +431,18 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
       {/* ------------------------------------------------------------- */}
       {/* Top Cyber Console & OS Header Bar                             */}
       {/* ------------------------------------------------------------- */}
-      <header className="relative z-10 border-b border-emerald-500/15 bg-[#0b141a]/85 px-4 sm:px-6 py-3.5 backdrop-blur-xl">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <header className="relative z-10 border-b border-emerald-500/15 bg-[#0b141a]/85 px-3.5 sm:px-6 py-3 sm:py-3.5 backdrop-blur-xl">
+        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
           {/* Left Greeting & Live Status Pills */}
-          <div className="flex flex-wrap items-center gap-2.5 sm:gap-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="relative flex h-2 w-2">
+              <span className="relative flex h-2 w-2 shrink-0">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
               </span>
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400">
-                ELEVEN v3 // CONTROL PLANE
+              <span className="font-mono text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400 truncate">
+                <span className="sm:hidden">ELEVEN v3 // CONTROL</span>
+                <span className="hidden sm:inline">ELEVEN v3 // CONTROL PLANE</span>
               </span>
             </div>
 
@@ -457,14 +458,14 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
           </div>
 
           {/* Right: Auto-Play Showcase Toggle + Progress Meter */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => {
                 setIsAutoPlay((prev) => !prev);
                 setCycleNonce((n) => n + 1);
               }}
-              className={`cursor-pointer flex min-h-[32px] items-center gap-1.5 rounded-xs border px-2.5 py-1 font-mono text-[10px] font-medium transition-all ${
+              className={`cursor-pointer flex min-h-[32px] items-center gap-1.5 rounded-xs border px-2 sm:px-2.5 py-1 font-mono text-[9.5px] sm:text-[10px] font-medium transition-all active:scale-95 ${
                 isAutoPlay
                   ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.2)]"
                   : "border-slate-700 bg-slate-900/80 text-slate-400 hover:text-slate-200"
@@ -510,13 +511,13 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
       {/* ------------------------------------------------------------- */}
       {/* 2. Primary Navigation Tabs: Overview · Pipeline · Governance  */}
       {/* ------------------------------------------------------------- */}
-      <nav className="relative z-10 border-b border-emerald-500/10 bg-[#070e13]/70 px-3.5 sm:px-6 py-2.5">
+      <nav className="relative z-10 border-b border-emerald-500/10 bg-[#070e13]/70 px-3 sm:px-6 py-2 sm:py-2.5">
         <div className="flex items-center justify-between gap-3 max-w-full">
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-1.5 font-mono text-[11px] sm:text-xs">
+          <div className="grid grid-cols-3 sm:flex sm:flex-nowrap items-center gap-1 sm:gap-1.5 font-mono text-[10.5px] sm:text-xs w-full sm:w-auto">
             {[
-              { id: "overview", label: "[01] Overview", icon: Activity },
-              { id: "pipeline", label: "[02] Hive Pipeline", icon: Layers },
-              { id: "detail", label: "[03] L5 Governance", icon: ShieldCheck },
+              { id: "overview", shortLabel: "Overview", label: "[01] Overview", icon: Activity },
+              { id: "pipeline", shortLabel: "Pipeline", label: "[02] Hive Pipeline", icon: Layers },
+              { id: "detail", shortLabel: "L5 Gate", label: "[03] L5 Governance", icon: ShieldCheck },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeView === tab.id;
@@ -526,14 +527,15 @@ export function ElevenControlShowcase({ className = "" }: { className?: string }
                   key={tab.id}
                   type="button"
                   onClick={() => handleSelectView(tab.id as ShowcaseView)}
-                  className={`relative flex items-center shrink-0 gap-1.5 rounded-xs px-2.5 sm:px-3 py-1.5 font-medium transition-all cursor-pointer ${
+                  className={`relative flex items-center justify-center sm:justify-start shrink-0 gap-1 sm:gap-1.5 min-h-[38px] sm:min-h-0 rounded-xs px-1.5 sm:px-3 py-1.5 font-medium transition-all cursor-pointer active:scale-[0.98] ${
                     isActive
                       ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-xs"
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border border-transparent"
                   }`}
                 >
-                  <Icon className="h-3.5 w-3.5" />
-                  <span>{tab.label}</span>
+                  <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
+                  <span className="sm:hidden truncate">{tab.shortLabel}</span>
+                  <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               );
             })}

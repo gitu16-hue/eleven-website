@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 
 const emptySubscribe = () => () => {};
 
@@ -31,6 +32,7 @@ function WaitlistForm({
   const [intendedUse, setIntendedUse] = useState("");
   const [consent, setConsent] = useState(false);
   const [hpCompany, setHpCompany] = useState(""); // Honeypot field
+  const reduced = useMountedReducedMotion();
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -95,12 +97,17 @@ function WaitlistForm({
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.96, y: 12 }}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.98, y: 28 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.96, y: 12 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative z-10 w-full max-w-lg max-h-[90dvh] overflow-y-auto overscroll-contain rounded-md border border-white/10 bg-el-sec-graphite p-6 sm:p-8 text-el-sec-porcelain shadow-lg"
+      exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.98, y: 24 }}
+      transition={{ duration: reduced ? 0 : 0.24, ease: [0.22, 1, 0.36, 1] }}
+      className="relative z-10 w-full max-w-lg max-h-[90dvh] overflow-y-auto overscroll-contain rounded-t-2xl sm:rounded-md border border-b-0 sm:border-b border-white/15 sm:border-white/10 bg-el-sec-graphite px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:p-8 text-el-sec-porcelain shadow-2xl sm:shadow-lg"
     >
+      {/* Mobile Bottom Sheet Handle */}
+      <div
+        aria-hidden="true"
+        className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/20 sm:hidden"
+      />
       {/* Header */}
       <div className="flex items-start justify-between border-b border-white/10 pb-4">
         <div>
@@ -189,7 +196,7 @@ function WaitlistForm({
             <button
               type="button"
               onClick={onClose}
-              className="w-full cursor-pointer rounded-sm border border-white/10 bg-el-sec-graphite-raised py-2.5 text-xs font-medium text-el-sec-porcelain transition-colors hover:bg-el-sec-graphite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
+              className="w-full min-h-[44px] sm:min-h-0 cursor-pointer rounded-sm border border-white/10 bg-el-sec-graphite-raised py-2.5 text-xs font-medium text-el-sec-porcelain transition-all hover:bg-el-sec-graphite active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-el-sec-lime"
             >
               Done
             </button>
@@ -425,7 +432,7 @@ export function WaitlistModal({
           role="dialog"
           aria-modal="true"
           aria-labelledby="waitlist-title"
-          className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-[80] flex items-end justify-center p-0 sm:items-center sm:p-6"
         >
           {/* Separate backdrop so clicks outside close without intercepting dialog controls */}
           <motion.div

@@ -79,7 +79,7 @@ export function ClarityTogglePill({
       <div
         role="group"
         aria-label="Explanation detail level"
-        className={`inline-flex items-center rounded-full border border-el-border-strong bg-el-bg-raised p-1 shadow-el-sm ${className}`}
+        className={`inline-flex shrink-0 items-center rounded-full border border-el-border-strong bg-el-bg-raised p-1 shadow-el-sm ${className}`}
       >
         {(
           [
@@ -93,7 +93,7 @@ export function ClarityTogglePill({
               key={opt.id}
               type="button"
               onClick={() => setMode(opt.id)}
-              className={`relative cursor-pointer rounded-full px-3 py-1 text-el-xs font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-el-accent ${
+              className={`relative cursor-pointer whitespace-nowrap rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-el-xs font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-el-accent ${
                 active ? "text-el-bg" : "text-el-fg-muted hover:text-el-fg"
               }`}
             >
@@ -451,6 +451,7 @@ export function Tilt3DCard({
   maxTilt?: number;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(cardRef, { once: true, amount: 0.35 });
   const rectRef = useRef<DOMRect | null>(null);
   const reduced = useMountedReducedMotion();
 
@@ -528,6 +529,7 @@ export function Tilt3DCard({
     <div style={{ perspective: "1100px" }} className="h-full">
       <motion.div
         ref={cardRef}
+        data-mobile-visible={inView ? "true" : "false"}
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -536,7 +538,7 @@ export function Tilt3DCard({
           rotateY,
           transformStyle: "preserve-3d",
         }}
-        className={`group relative h-full overflow-hidden rounded-sm border border-el-border bg-el-bg-raised transition-[border-color,box-shadow] duration-300 hover:border-el-border-strong/90 hover:shadow-el-md ${className}`}
+        className={`group relative h-full overflow-hidden rounded-sm border border-el-border bg-el-bg-raised transition-[border-color,box-shadow,transform] duration-300 hover:border-el-border-strong/90 hover:shadow-el-md max-lg:active:scale-[0.988] ${className}`}
       >
         {/* Cursor-tracked surface holographic spotlight (0 React re-renders, opacity 0 at rest) */}
         <motion.div
@@ -558,10 +560,10 @@ export function Tilt3DCard({
           }}
         />
 
-        {/* Top Accent Laser Hairline on Hover */}
+        {/* Top Accent Laser Hairline on Hover (and scroll-reveal on mobile/tablet) */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 right-0 left-0 h-[1.5px] origin-left scale-x-0 bg-gradient-to-r from-[#00b38c] via-[#38ffbd] to-[#10bc83] opacity-0 transition-[transform,opacity] duration-300 ease-out group-hover:scale-x-100 group-hover:opacity-100"
+          className="tilt-card-laser pointer-events-none absolute top-0 right-0 left-0 h-[1.5px] origin-left scale-x-0 bg-gradient-to-r from-[#00b38c] via-[#38ffbd] to-[#10bc83] opacity-0 transition-[transform,opacity] duration-300 ease-out group-hover:scale-x-100 group-hover:opacity-100"
         />
 
         <div className="relative z-10 h-full">{children}</div>

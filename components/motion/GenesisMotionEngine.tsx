@@ -536,7 +536,49 @@ export function GenesisSplitReveal({
       };
     });
 
-    mm.add("(max-width: 1023px)", () => {
+    mm.add("(max-width: 639px)", () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: el,
+          start: "top 92%",
+          end: "bottom top",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      tl.fromTo(
+        leftEl,
+        { x: 0, y: 28, opacity: 0 },
+        {
+          x: 0,
+          y: 0,
+          opacity: 1,
+          duration: 0.68,
+          ease: "power3.out",
+        },
+        0
+      ).fromTo(
+        rightEl,
+        { x: 0, y: 34, opacity: 0 },
+        {
+          x: 0,
+          y: 0,
+          opacity: 1,
+          duration: 0.72,
+          ease: "power3.out",
+        },
+        0.08
+      );
+
+      stopSync = ensureVisibleInViewport(el, tl);
+      return () => {
+        stopSync();
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      };
+    });
+
+    mm.add("(min-width: 640px) and (max-width: 1023px)", () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: el,

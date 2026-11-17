@@ -114,7 +114,7 @@ export function NeuralTraceSimulator() {
   };
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden rounded-sm border border-el-border-strong bg-el-bg-raised p-6 shadow-el-lg sm:p-8 lg:p-10">
+    <div ref={containerRef} className="relative overflow-hidden rounded-sm border border-el-border-strong bg-el-bg-raised p-4 shadow-el-lg sm:p-8 lg:p-10">
       {/* Sci-Fi Ambient Glow Reticles */}
       <div
         aria-hidden="true"
@@ -126,11 +126,11 @@ export function NeuralTraceSimulator() {
       />
 
       {/* Header Bar */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-el-border/80 pb-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-el-border/80 pb-4 sm:pb-5">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-el-border bg-el-bg px-3 py-1 text-[10px] font-mono uppercase tracking-[0.12em] text-el-accent">
-            <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-ping" />
-            <span>INTERACTIVE SIMULATION · ILLUSTRATIVE DUAL-MIND TRACE</span>
+          <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-el-border bg-el-bg px-2.5 py-1 sm:px-3 text-[9.5px] sm:text-[10px] font-mono uppercase tracking-[0.08em] sm:tracking-[0.12em] text-el-accent">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-el-accent animate-ping" />
+            <span className="leading-snug">INTERACTIVE SIMULATION · ILLUSTRATIVE DUAL-MIND TRACE</span>
           </div>
           <h3 className="mt-2 text-el-xl sm:text-el-2xl font-semibold tracking-tight text-el-fg">
             See how a task would flow through ELEVEN
@@ -145,7 +145,7 @@ export function NeuralTraceSimulator() {
           <button
             type="button"
             onClick={() => setIsSimulating((prev) => !prev)}
-            className={`cursor-pointer rounded-xs border px-3 py-1 font-mono text-[10.5px] uppercase tracking-wider transition-all ${
+            className={`cursor-pointer min-h-[38px] sm:min-h-0 rounded-xs border px-3 py-1 font-mono text-[10.5px] uppercase tracking-wider transition-all active:scale-95 ${
               isSimulating
                 ? "border-el-accent/40 bg-el-accent/15 text-el-accent font-semibold"
                 : "border-el-border bg-el-bg text-el-fg-muted hover:text-el-fg"
@@ -156,7 +156,7 @@ export function NeuralTraceSimulator() {
           <button
             type="button"
             onClick={() => setActiveStep(0)}
-            className="cursor-pointer rounded-xs border border-el-border bg-el-bg px-2.5 py-1 font-mono text-[10.5px] uppercase text-el-fg-muted hover:text-el-fg"
+            className="cursor-pointer min-h-[38px] sm:min-h-0 rounded-xs border border-el-border bg-el-bg px-2.5 py-1 font-mono text-[10.5px] uppercase text-el-fg-muted hover:text-el-fg active:scale-95 transition-all"
             title="Reset simulation step"
           >
             ↺ RESET
@@ -165,7 +165,7 @@ export function NeuralTraceSimulator() {
       </div>
 
       {/* Scenario Selector Pills */}
-      <div className="mt-6 flex flex-wrap gap-2">
+      <div className="mt-5 sm:mt-6 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
         {SCENARIOS.map((sc) => {
           const isSelected = sc.id === selectedScenario.id;
           return (
@@ -173,27 +173,32 @@ export function NeuralTraceSimulator() {
               key={sc.id}
               type="button"
               onClick={() => handleScenarioChange(sc)}
-              className={`group relative cursor-pointer rounded-sm border px-3.5 py-2 text-left font-mono transition-all ${
+              className={`group relative cursor-pointer rounded-sm border px-3.5 py-2.5 sm:py-2 text-left font-mono transition-all active:scale-[0.985] ${
                 isSelected
                   ? "border-el-accent bg-el-bg shadow-[0_0_16px_rgba(0,240,255,0.14)]"
                   : "border-el-border bg-el-bg/50 hover:border-el-border-strong hover:bg-el-bg"
               }`}
             >
-              <div className="flex items-center gap-2">
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    isSelected ? "bg-el-accent animate-pulse" : "bg-el-fg-faint"
-                  }`}
-                />
-                <span
-                  className={`text-[11px] font-semibold ${
-                    isSelected ? "text-el-accent" : "text-el-fg-muted group-hover:text-el-fg"
-                  }`}
-                >
-                  {sc.name}
+              <div className="flex items-center justify-between sm:justify-start gap-2">
+                <span className="flex items-center gap-2">
+                  <span
+                    className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                      isSelected ? "bg-el-accent animate-pulse" : "bg-el-fg-faint"
+                    }`}
+                  />
+                  <span
+                    className={`text-[11px] font-semibold ${
+                      isSelected ? "text-el-accent" : "text-el-fg-muted group-hover:text-el-fg"
+                    }`}
+                  >
+                    {sc.name}
+                  </span>
+                </span>
+                <span className="sm:hidden text-[9.5px] text-el-fg-faint tracking-wider uppercase">
+                  {sc.badge}
                 </span>
               </div>
-              <span className="mt-1 block text-[9.5px] text-el-fg-faint tracking-wider uppercase">
+              <span className="hidden sm:block mt-1 text-[9.5px] text-el-fg-faint tracking-wider uppercase">
                 {sc.badge}
               </span>
             </button>
@@ -202,14 +207,14 @@ export function NeuralTraceSimulator() {
       </div>
 
       {/* Main Execution Grid */}
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <div className="mt-5 sm:mt-6 grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12">
         {/* Left 6 Columns: Interactive Prompt & Dual-Mind Perception */}
-        <div className="flex flex-col gap-4 lg:col-span-6">
+        <div className="flex flex-col gap-3.5 sm:gap-4 lg:col-span-6">
           {/* User Prompt Box */}
-          <div className="rounded-sm border border-el-border/80 bg-el-bg p-4 font-mono">
-            <div className="flex items-center justify-between text-[10px] text-el-fg-faint uppercase tracking-wider">
+          <div className="rounded-sm border border-el-border/80 bg-el-bg p-3.5 sm:p-4 font-mono">
+            <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[10px] text-el-fg-faint uppercase tracking-wider">
               <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-el-signal-lime" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-el-signal-lime" />
                 Sovereign Voice Input // 16kHz PCM
               </span>
               <span>DESIGN TARGET: &lt;50ms</span>
@@ -220,10 +225,10 @@ export function NeuralTraceSimulator() {
           </div>
 
           {/* System 1 Fast Reflex Stream */}
-          <div className="rounded-sm border border-el-cyan/30 bg-el-bg/70 p-4 font-mono relative overflow-hidden">
-            <div className="flex items-center justify-between text-[10px] text-el-cyan uppercase tracking-wider font-semibold">
+          <div className="rounded-sm border border-el-cyan/30 bg-el-bg/70 p-3.5 sm:p-4 font-mono relative overflow-hidden">
+            <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[10px] text-el-cyan uppercase tracking-wider font-semibold">
               <span className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
+                <span className="relative flex h-2 w-2 shrink-0">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-el-cyan opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-el-cyan" />
                 </span>
@@ -242,10 +247,14 @@ export function NeuralTraceSimulator() {
                 <motion.span
                   key={i}
                   className="w-1 rounded-xs bg-el-cyan"
-                  animate={{ height: ["20%", `${h * 100}%`, "20%"] }}
+                  animate={
+                    reduced
+                      ? { height: `${Math.round(h * 70)}%` }
+                      : { height: ["20%", `${h * 100}%`, "20%"] }
+                  }
                   transition={{
                     duration: 0.6 + (i % 4) * 0.15,
-                    repeat: Infinity,
+                    repeat: reduced ? 0 : Infinity,
                     ease: "easeInOut",
                     delay: i * 0.05,
                   }}
@@ -256,8 +265,8 @@ export function NeuralTraceSimulator() {
           </div>
 
           {/* Policy Invariant Safety Rings */}
-          <div className="rounded-sm border border-el-border/80 bg-el-bg p-4 font-mono">
-            <div className="flex items-center justify-between text-[10px] text-el-fg-faint uppercase tracking-wider mb-2.5">
+          <div className="rounded-sm border border-el-border/80 bg-el-bg p-3.5 sm:p-4 font-mono">
+            <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[10px] text-el-fg-faint uppercase tracking-wider mb-2.5">
               <span>5-Checkpoint PolicyGate Evaluation</span>
               <span className="text-el-signal-lime">FAIL-CLOSED // SAFE</span>
             </div>
@@ -266,14 +275,14 @@ export function NeuralTraceSimulator() {
               {selectedScenario.policyChecks.map((check, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between text-[10.5px] rounded-xs bg-el-bg-raised/60 px-2 py-1 border border-el-border/50"
+                  className="flex items-center justify-between gap-2 text-[10.5px] rounded-xs bg-el-bg-raised/60 px-2 py-1.5 sm:py-1 border border-el-border/50"
                 >
-                  <span className="text-el-fg-muted font-medium">
+                  <span className="text-el-fg-muted font-medium min-w-0 leading-snug">
                     <span className="text-el-fg-faint mr-1.5">{check.ring}:</span>
                     {check.name}
                   </span>
                   <span
-                    className={`font-semibold text-[9.5px] px-1.5 py-0.5 rounded-xs ${
+                    className={`shrink-0 font-semibold text-[9.5px] px-1.5 py-0.5 rounded-xs ${
                       check.status === "VERIFIED"
                         ? "bg-el-accent/15 text-el-accent border border-el-accent/30"
                         : "bg-el-signal-lime/15 text-el-signal-lime border border-el-signal-lime/30"
@@ -289,11 +298,11 @@ export function NeuralTraceSimulator() {
 
         {/* Right 6 Columns: System 2 Background DAG Decomposition */}
         <div className="flex flex-col gap-4 lg:col-span-6">
-          <div className="rounded-sm border border-el-violet/30 bg-el-bg/80 p-4 font-mono h-full flex flex-col justify-between">
+          <div className="rounded-sm border border-el-violet/30 bg-el-bg/80 p-3.5 sm:p-4 font-mono h-full flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between text-[10px] text-el-violet uppercase tracking-wider font-semibold border-b border-el-border/60 pb-2.5">
+              <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[10px] text-el-violet uppercase tracking-wider font-semibold border-b border-el-border/60 pb-2.5">
                 <span className="flex items-center gap-2">
-                  <span className="relative flex h-2 w-2">
+                  <span className="relative flex h-2 w-2 shrink-0">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-el-violet opacity-75" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-el-violet" />
                   </span>
@@ -319,7 +328,7 @@ export function NeuralTraceSimulator() {
                           : "border-el-border/60 bg-el-bg/30 opacity-50"
                       }`}
                     >
-                      <div className="flex items-center justify-between text-[10px]">
+                      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-[10px]">
                         <span className="font-semibold text-el-fg">
                           {node.id} · {node.room.toUpperCase()}
                         </span>
@@ -330,7 +339,7 @@ export function NeuralTraceSimulator() {
                         {node.label}
                       </p>
 
-                      <div className="mt-2 flex items-center justify-between text-[9.5px]">
+                      <div className="mt-2 flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-[9.5px]">
                         <span
                           className={`uppercase tracking-wider ${
                             isCurrentNode
@@ -368,7 +377,7 @@ export function NeuralTraceSimulator() {
 
             {/* Cryptographic Stamped Receipt Footer */}
             <div className="mt-4 border-t border-el-border/60 pt-3">
-              <div className="flex items-center justify-between text-[10px] text-el-fg-faint">
+              <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[10px] text-el-fg-faint">
                 <span>AUDIT RECEIPT NONCE:</span>
                 <span className="text-el-accent font-mono font-semibold">
                   {selectedScenario.receiptHash}

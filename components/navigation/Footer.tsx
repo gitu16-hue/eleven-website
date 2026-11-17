@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Container } from "@/components/ui/Section";
@@ -11,6 +12,7 @@ import { usePortalTransition } from "@/components/ui/PortalTransition";
 import {
   DualCopy,
   useClarityMode,
+  useMountedReducedMotion,
 } from "@/components/motion/PremiumMotion";
 import { Button } from "@/components/ui/Button";
 
@@ -73,6 +75,8 @@ export function Footer() {
   const { mode } = useClarityMode();
   const pathname = usePathname();
   const isPlain = mode === "plain";
+  const reducedMotion = useMountedReducedMotion();
+  const [openMobileCol, setOpenMobileCol] = useState<string | null>("Core Platform");
 
   const footerRef = useRef<HTMLElement>(null);
   const topRowRef = useRef<HTMLDivElement>(null);
@@ -84,12 +88,12 @@ export function Footer() {
     if (!footerEl) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isDesktopCols = window.matchMedia("(min-width: 640px)").matches;
+    const navColsParent = topRowRef.current?.children[isDesktopCols ? 1 : 2] as HTMLElement | undefined;
     const cols = topRowRef.current
       ? [
           topRowRef.current.children[0] as HTMLElement,
-          ...(topRowRef.current.children[1]
-            ? Array.from(topRowRef.current.children[1].children) as HTMLElement[]
-            : []),
+          ...(navColsParent ? (Array.from(navColsParent.children) as HTMLElement[]) : []),
         ].filter(Boolean)
       : [];
     const cards = cardsRef.current
@@ -230,11 +234,11 @@ export function Footer() {
         }}
       />
 
-      <Container className="relative z-10 pt-14 pb-8 sm:pt-20 sm:pb-10 lg:pt-24">
+      <Container className="relative z-10 pt-12 pb-8 sm:pt-20 sm:pb-10 lg:pt-24">
         {/* Top Row: Brand Left + Columns Right */}
         <div
           ref={topRowRef}
-          className="flex flex-col justify-between gap-10 sm:gap-14 lg:flex-row lg:gap-12"
+          className="flex flex-col justify-between gap-8 sm:gap-14 lg:flex-row lg:gap-12"
         >
           {/* Brand Column */}
           <div className="max-w-[380px]">
@@ -259,25 +263,26 @@ export function Footer() {
             </div>
 
             <DualCopy
-              className="mt-5 text-[15px] leading-[1.5] text-[#a0a0a0]"
+              className="mt-4 sm:mt-5 text-[14.5px] sm:text-[15px] leading-[1.5] text-[#a0a0a0]"
               plain="Talk naturally, get deep work done in the background, keep your memories private on your own computer, and approve important actions before they happen."
               technical="Frontier intelligence. Human-owned authority. A local-first control plane separating untrusted model reasoning from deterministic real-world execution."
             />
 
-            <div className="mt-6 sm:mt-7">
+            <div className="mt-5 sm:mt-7">
               <Button
                 type="button"
                 variant="primary"
                 arrow
                 onClick={enterComputationalMode}
+                className="w-full sm:w-auto"
               >
                 Enter ELEVEN 3D Core
               </Button>
             </div>
           </div>
 
-          {/* 4-Column GenesisFX Footer Nav (#10bc83 emerald headings) */}
-          <div className="grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-8 sm:grid-cols-4 lg:gap-10">
+          {/* Desktop/Tablet 4-Column GenesisFX Footer Nav (#10bc83 emerald headings) */}
+          <div className="hidden sm:grid sm:grid-cols-4 sm:gap-8 lg:gap-10">
             {columns.map((col) => (
               <div key={col.heading}>
                 <p className="mb-3 sm:mb-4 text-[13.5px] font-normal text-[#10bc83]">
@@ -314,12 +319,93 @@ export function Footer() {
               </div>
             ))}
           </div>
+
+          {/* Mobile Accordion Navigation (< 640px) — Keeps footer compact and scannable */}
+          <div className="sm:hidden border-t border-b border-white/[0.08] divide-y divide-white/[0.08]">
+            {columns.map((col) => {
+              const isOpen = openMobileCol === col.heading;
+              const panelId = `footer-acc-${col.heading.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+              return (
+                <div key={col.heading}>
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    onClick={() =>
+                      setOpenMobileCol((prev) => (prev === col.heading ? null : col.heading))
+                    }
+                    className="flex min-h-[48px] w-full items-center justify-between gap-3 py-3 text-left active:opacity-80 cursor-pointer"
+                  >
+                    <span className="text-[13.5px] font-medium text-[#10bc83]">
+                      {col.heading}
+                    </span>
+                    <span className="flex items-center gap-2.5">
+                      <span className="font-mono text-[10px] text-[#686868]">
+                        {String(col.links.length).padStart(2, "0")}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={`inline-flex h-5 w-5 items-center justify-center rounded-full border border-white/10 text-xs text-[#a0a0a0] transition-transform duration-200 ${
+                          isOpen ? "rotate-45 border-[#10bc83]/45 text-[#10bc83]" : ""
+                        }`}
+                      >
+                        +
+                      </span>
+                    </span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.ul
+                        id={panelId}
+                        initial={reducedMotion ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={reducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                        transition={{
+                          duration: reducedMotion ? 0 : 0.24,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        className="overflow-hidden pb-3.5 space-y-1.5"
+                      >
+                        {col.links.map((l) => {
+                          const isExternal = l.href.startsWith("https://");
+                          return (
+                            <li key={l.label}>
+                              {isExternal ? (
+                                <a
+                                  href={l.href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex min-h-[36px] items-center text-[13.5px] font-normal text-[#9a9a9a] active:text-[#e8ecf5] focus-visible:outline-2 focus-visible:outline-[#00b38c] rounded-xs"
+                                >
+                                  {l.label}
+                                </a>
+                              ) : (
+                                <Link
+                                  href={l.href}
+                                  scroll={true}
+                                  onClick={(e) => handleFooterLinkClick(l.href, e)}
+                                  className="flex min-h-[36px] items-center text-[13.5px] font-normal text-[#9a9a9a] active:text-[#e8ecf5] focus-visible:outline-2 focus-visible:outline-[#00b38c] rounded-xs"
+                                >
+                                  {l.label}
+                                </Link>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </motion.ul>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* GenesisFX Platform Cards Row */}
         <div
           ref={cardsRef}
-          className="mt-10 sm:mt-14 grid grid-cols-1 gap-3 sm:gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-8 sm:mt-14 grid grid-cols-1 gap-2.5 sm:gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
         >
           {platformSpecs.map((spec) => (
             <div key={spec.kicker} className="platform-card">

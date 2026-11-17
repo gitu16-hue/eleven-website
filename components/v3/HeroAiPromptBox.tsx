@@ -105,7 +105,7 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
   return (
     <div className={`w-full ${className}`}>
       {/* Outer Tactical HUD & Spatial Panel Enclosure */}
-      <div className="ai-native-prompt-container rounded-md p-3.5 sm:p-4 font-sans">
+      <div className="ai-native-prompt-container rounded-md p-3 sm:p-4 font-sans">
         {/* Top Header Tag */}
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-el-fg-faint border-b border-el-border pb-2">
           <div className="flex items-center gap-2 min-w-0">
@@ -134,7 +134,10 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
         </div>
 
         {/* Input Form */}
-        <form onSubmit={handleExecute} className="mt-2.5 flex items-center gap-2.5">
+        <form
+          onSubmit={handleExecute}
+          className="mt-2.5 flex items-center gap-2 sm:gap-2.5 rounded-sm border border-el-border/60 bg-el-bg/45 px-2.5 py-1.5 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0"
+        >
           <span className="shrink-0 text-el-accent text-sm font-semibold select-none">❯</span>
           <input
             type="text"
@@ -144,19 +147,19 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
               setFeedback(null);
             }}
             placeholder="Give an instruction to your personal AI OS..."
-            className="min-w-0 flex-1 pr-1 bg-transparent font-sans text-base sm:text-el-sm text-el-fg placeholder:text-el-fg-faint focus:outline-none"
+            className="min-w-0 flex-1 pr-1.5 sm:pr-1 bg-transparent font-sans text-base sm:text-el-sm text-el-fg placeholder:text-el-fg-faint focus:outline-none"
           />
           <button
             type="submit"
-            className="cursor-pointer shrink-0 rounded-xs bg-el-accent px-3 py-1.5 sm:px-2.5 sm:py-1 font-sans text-xs font-semibold text-el-sec-graphite-deep hover:bg-el-signal-lime transition-colors active:scale-95 shadow-xs"
+            className="cursor-pointer shrink-0 min-h-[36px] sm:min-h-0 rounded-xs bg-el-accent px-3 py-1.5 sm:px-2.5 sm:py-1 font-sans text-xs font-semibold text-el-sec-graphite-deep hover:bg-el-signal-lime transition-colors active:scale-95 shadow-xs"
           >
             {isProcessing ? "Simulating…" : "Simulate"}
           </button>
         </form>
 
         {/* Preset Action Chips with Spring-Gliding Pill */}
-        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-          <span className="text-xs text-el-fg-faint mr-1 font-sans">
+        <div className="mt-2.5 grid grid-cols-2 gap-1.5 sm:flex sm:flex-wrap sm:items-center sm:gap-1.5">
+          <span className="col-span-2 font-mono text-[10px] uppercase tracking-wider text-el-fg-faint sm:col-span-1 sm:mr-1 sm:font-sans sm:text-xs sm:normal-case sm:tracking-normal">
             Presets:
           </span>
           {PRESETS.map((p) => {
@@ -166,7 +169,7 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
                 key={p.id}
                 type="button"
                 onClick={() => handleSelectPreset(p)}
-                className={`relative cursor-pointer rounded-xs px-2.5 py-1 text-xs transition-colors font-sans ${
+                className={`relative min-h-[36px] sm:min-h-0 cursor-pointer rounded-xs px-2.5 py-1 text-xs transition-colors active:scale-[0.98] font-sans ${
                   isSelected
                     ? "text-el-accent font-medium"
                     : "border border-el-border bg-el-bg/50 text-el-fg-muted hover:border-el-border-strong hover:text-el-fg"
@@ -179,7 +182,7 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
                     className="pointer-events-none absolute inset-0 rounded-xs border border-el-accent/55 bg-el-accent/20 shadow-xs"
                   />
                 )}
-                <span className="relative z-10">{p.label}</span>
+                <span className="relative z-10 block truncate">{p.label}</span>
               </button>
             );
           })}
@@ -199,9 +202,9 @@ export function HeroAiPromptBox({ className = "max-w-full" }: { className?: stri
               {isProcessing && !reduced && (
                 <motion.div
                   aria-hidden="true"
-                  className="pointer-events-none absolute top-0 left-0 h-[1.5px] w-28 bg-gradient-to-r from-transparent via-el-accent to-transparent"
+                  className="pointer-events-none absolute top-0 left-0 h-[1.5px] w-1/2 bg-gradient-to-r from-transparent via-el-accent to-transparent"
                   initial={{ x: "-100%" }}
-                  animate={{ x: "520px" }}
+                  animate={{ x: "200%" }}
                   transition={{
                     duration: 0.9,
                     repeat: Infinity,

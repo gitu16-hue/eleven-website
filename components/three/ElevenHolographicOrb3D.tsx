@@ -286,11 +286,13 @@ export function ElevenHolographicOrb3D({
   bargeInSignal = 0,
   satellites = [],
   fullHeight = false,
+  mobileCompact = false,
 }: {
   state: OrbRuntimeState;
   bargeInSignal?: number;
   satellites?: WorkerSatelliteSpec[];
   fullHeight?: boolean;
+  mobileCompact?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [webglOk] = useState(() => checkWebGL());
@@ -1211,6 +1213,8 @@ export function ElevenHolographicOrb3D({
       className={`relative flex w-full flex-col items-center justify-center ${
         fullHeight
           ? "h-full min-h-[430px] sm:min-h-[540px]"
+          : mobileCompact
+          ? "h-[200px] sm:h-[520px]"
           : "h-[430px] sm:h-[520px]"
       }`}
     >
@@ -1254,7 +1258,9 @@ export function ElevenHolographicOrb3D({
 
       {/* Top-Right Authoritative GenesisFX State Pill */}
       <div
-        className="pointer-events-none absolute top-3.5 right-3.5 flex items-center gap-2 rounded-full border bg-[#062118]/75 px-3.5 py-1.5 font-mono text-[10.5px] tracking-[0.12em] backdrop-blur-md transition-colors duration-300"
+        className={`pointer-events-none absolute top-3.5 right-3.5 items-center gap-2 rounded-full border bg-[#062118]/75 px-3.5 py-1.5 font-mono text-[10.5px] tracking-[0.12em] backdrop-blur-md transition-colors duration-300 ${
+          mobileCompact ? "hidden sm:flex" : "flex"
+        }`}
         style={{
           color: cfg.hex,
           borderColor: `${cfg.hex}55`,
@@ -1269,7 +1275,11 @@ export function ElevenHolographicOrb3D({
       </div>
 
       {/* Bottom Telemetry Caption */}
-      <div className="pointer-events-none absolute bottom-2.5 left-4 right-4 flex items-center justify-between font-mono text-[9.5px] tracking-[0.1em] text-[#a0a0a0]">
+      <div
+        className={`pointer-events-none absolute bottom-2.5 left-4 right-4 items-center justify-between font-mono text-[9.5px] tracking-[0.1em] text-[#a0a0a0] ${
+          mobileCompact ? "hidden sm:flex" : "flex"
+        }`}
+      >
         <span>GLSL SIMPLEX · 54K VOLUMETRIC GPU PARTICLES · WATER REFLECTION</span>
         <span className="hidden sm:inline text-[#10bc83]">DRAG TO ORBIT 360°</span>
       </div>

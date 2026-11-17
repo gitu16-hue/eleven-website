@@ -111,12 +111,12 @@ export function IntelligenceInMotion() {
   return (
     <div
       ref={containerRef}
-      className="relative mt-12 w-full"
+      className="relative mt-8 sm:mt-12 w-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* 4-Step Navigation Tabs */}
-      <div className="relative grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+      <div className="relative grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-4">
         {STEPS.map((step, idx) => {
           const isCurrent = idx === activeIndex;
           return (
@@ -127,7 +127,7 @@ export function IntelligenceInMotion() {
                 setActiveIndex(idx);
                 setCycleNonce((n) => n + 1);
               }}
-              className={`group relative flex flex-col items-start justify-between rounded-sm border p-4 text-left transition-all cursor-pointer ${
+              className={`group relative flex flex-col items-start justify-between rounded-sm border p-3.5 sm:p-4 text-left transition-all active:scale-[0.985] cursor-pointer ${
                 isCurrent
                   ? "border-el-accent bg-el-bg-raised shadow-el-sm"
                   : "border-el-border bg-el-bg hover:border-el-border-strong hover:bg-el-bg-raised/60"
@@ -157,7 +157,7 @@ export function IntelligenceInMotion() {
                 />
               </div>
 
-              <div className="mt-4">
+              <div className="mt-3 sm:mt-4">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint">
                   {step.tag}
                 </p>
@@ -174,6 +174,44 @@ export function IntelligenceInMotion() {
         })}
       </div>
 
+      {/* Mobile-only 4-Step Animated Progress Rail */}
+      <div className="my-4 grid grid-cols-4 gap-1.5 sm:hidden" aria-hidden="true">
+        {STEPS.map((s, idx) => {
+          const isCurrent = idx === activeIndex;
+          const isPassed = idx < activeIndex;
+          return (
+            <div
+              key={s.id}
+              className="relative h-[3px] overflow-hidden rounded-full bg-el-border"
+            >
+              {isCurrent && isPlaying && inView && !prefersReducedMotion ? (
+                <div
+                  key={`${activeIndex}-${cycleNonce}-mob`}
+                  onAnimationEnd={(e) => {
+                    if (e.currentTarget.offsetParent !== null) handleNext();
+                  }}
+                  className="h-full w-full origin-left bg-gradient-to-r from-el-cyan to-el-violet"
+                  style={{
+                    animation: "el-progress-fill 5500ms linear forwards",
+                    willChange: "transform",
+                  }}
+                />
+              ) : (
+                <div
+                  className={`h-full w-full origin-left transition-transform duration-300 ease-out ${
+                    isCurrent
+                      ? "scale-x-100 bg-el-accent"
+                      : isPassed
+                      ? "scale-x-100 bg-el-accent/45"
+                      : "scale-x-0 bg-el-accent"
+                  }`}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
       {/* Visual Connecting Signal Rail with Compositor-Driven Fill Progress (0 JS timers) */}
       <div className="my-6 hidden sm:block relative h-[2px] w-full bg-el-border overflow-hidden">
         <div
@@ -183,7 +221,9 @@ export function IntelligenceInMotion() {
           {isPlaying && inView ? (
             <div
               key={`${activeIndex}-${cycleNonce}`}
-              onAnimationEnd={handleNext}
+              onAnimationEnd={(e) => {
+                if (e.currentTarget.offsetParent !== null) handleNext();
+              }}
               className="h-full w-full origin-left bg-gradient-to-r from-el-cyan to-el-violet"
               style={{
                 animation: "el-progress-fill 5500ms linear forwards",
@@ -198,7 +238,7 @@ export function IntelligenceInMotion() {
       </div>
 
       {/* Presentation Toolbar */}
-      <div className="mt-4 mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
+      <div className="mt-2 sm:mt-4 mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
         <div className="flex items-center gap-3">
           <span className="font-mono text-[11px] text-el-accent uppercase tracking-wider">
             {`PHASE 0${activeIndex + 1} // 04`}
@@ -213,7 +253,7 @@ export function IntelligenceInMotion() {
           <button
             type="button"
             onClick={handleTogglePlay}
-            className="flex min-h-[36px] items-center gap-1.5 rounded-xs border border-el-border bg-el-bg-raised px-2.5 py-1 font-mono text-[10.5px] uppercase text-el-fg-muted hover:border-el-accent hover:text-el-fg cursor-pointer transition-colors"
+            className="flex min-h-[40px] sm:min-h-[36px] items-center gap-1.5 rounded-xs border border-el-border bg-el-bg-raised px-2.5 py-1 font-mono text-[10.5px] uppercase text-el-fg-muted hover:border-el-accent hover:text-el-fg active:scale-95 cursor-pointer transition-all"
             title={isPlaying ? "Pause auto-sequence" : "Play auto-sequence"}
           >
             <span
@@ -227,7 +267,7 @@ export function IntelligenceInMotion() {
             type="button"
             onClick={handlePrev}
             aria-label="Previous phase"
-            className="min-h-[36px] min-w-[36px] rounded-xs border border-el-border bg-el-bg-raised px-2 py-1 font-mono text-[11px] text-el-fg-muted hover:text-el-fg hover:border-el-border-strong cursor-pointer transition-colors"
+            className="min-h-[40px] min-w-[40px] sm:min-h-[36px] sm:min-w-[36px] rounded-xs border border-el-border bg-el-bg-raised px-2 py-1 font-mono text-[11px] text-el-fg-muted hover:text-el-fg hover:border-el-border-strong active:scale-95 cursor-pointer transition-all"
           >
             ←
           </button>
@@ -235,7 +275,7 @@ export function IntelligenceInMotion() {
             type="button"
             onClick={handleNext}
             aria-label="Next phase"
-            className="min-h-[36px] min-w-[36px] rounded-xs border border-el-border bg-el-bg-raised px-2 py-1 font-mono text-[11px] text-el-fg-muted hover:text-el-fg hover:border-el-border-strong cursor-pointer transition-colors"
+            className="min-h-[40px] min-w-[40px] sm:min-h-[36px] sm:min-w-[36px] rounded-xs border border-el-border bg-el-bg-raised px-2 py-1 font-mono text-[11px] text-el-fg-muted hover:text-el-fg hover:border-el-border-strong active:scale-95 cursor-pointer transition-all"
           >
             →
           </button>
@@ -243,7 +283,7 @@ export function IntelligenceInMotion() {
       </div>
 
       {/* Active Phase Deep Dive Card */}
-      <div className="mt-3 rounded-sm border border-el-border-strong bg-el-bg-raised p-6 shadow-el-md sm:p-8 lg:p-10 overflow-hidden">
+      <div className="mt-3 rounded-sm border border-el-border-strong bg-el-bg-raised p-4 shadow-el-md sm:p-8 lg:p-10 overflow-hidden">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={activeStep.id}
@@ -259,7 +299,7 @@ export function IntelligenceInMotion() {
                 : { opacity: 0, x: -18, scale: 0.99 }
             }
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center"
+            className="grid grid-cols-1 gap-5 sm:gap-8 lg:grid-cols-12 lg:items-center"
           >
             {/* Left 8 Cols: Content & Dual Copy */}
             <div className="lg:col-span-8">
@@ -281,7 +321,7 @@ export function IntelligenceInMotion() {
                 technical={activeStep.techDesc}
               />
 
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-2 sm:gap-3">
                 <span className="rounded-xs border border-el-border bg-el-bg px-2.5 py-1 font-mono text-[10.5px] text-el-fg-faint">
                   LOCAL BOUNDARY · NEVER TRANSMITTED
                 </span>
@@ -293,7 +333,7 @@ export function IntelligenceInMotion() {
 
             {/* Right 4 Cols: Performance & Architecture Stat Card */}
             <div className="lg:col-span-4 lg:border-l lg:border-el-border lg:pl-8">
-              <div className="rounded-sm border border-el-border bg-el-bg p-5 font-mono">
+              <div className="rounded-sm border border-el-border bg-el-bg p-4 sm:p-5 font-mono">
                 <div className="flex items-center justify-between">
                   <p className="text-[10px] uppercase tracking-[0.12em] text-el-fg-faint">
                     {activeStep.metricLabel}

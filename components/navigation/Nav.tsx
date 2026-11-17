@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
 import { Button } from "@/components/ui/Button";
 import { usePortalTransition } from "@/components/ui/PortalTransition";
-import { ClarityTogglePill } from "@/components/motion/PremiumMotion";
+import { ClarityTogglePill, useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 import { AiCommandPalette } from "@/components/navigation/AiCommandPalette";
 
 const desktopLinks = [
@@ -170,12 +170,29 @@ export function Nav() {
     [pathname]
   );
 
+  const reducedMotion = useMountedReducedMotion();
+
   return (
     <header
       className={`site-header sticky top-0 z-50 transition-[padding,transform,background-color] duration-300 ${
         condensed && !open ? "is-condensed" : ""
       } ${scrolled && !open ? "is-scrolled" : ""}`}
     >
+      {/* Full-screen backdrop scrim behind open mobile drawer */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            aria-hidden="true"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reducedMotion ? 0 : 0.22 }}
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 -z-10 bg-[#020408]/75 backdrop-blur-md lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       <div className="mx-auto flex max-w-[1380px] items-center justify-between gap-4 lg:grid lg:grid-cols-[1fr_max-content_1fr]">
         {/* Brand Left */}
         <div className="site-header__brand flex items-center gap-3 justify-self-start">
@@ -258,23 +275,23 @@ export function Nav() {
         {/* Mobile Hamburger */}
         <button
           onClick={() => setOpen((o) => !o)}
-          className="flex flex-col items-center justify-center gap-1.5 p-2.5 min-w-[44px] min-h-[44px] lg:hidden cursor-pointer rounded-full border border-white/15 bg-[#121212]/60 backdrop-blur-xl focus-visible:outline-2 focus-visible:outline-[#00b38c]"
+          className="flex flex-col items-center justify-center gap-1.5 p-2.5 min-w-[44px] min-h-[44px] lg:hidden cursor-pointer rounded-full border border-white/15 bg-[#121212]/70 backdrop-blur-xl active:scale-95 transition-transform focus-visible:outline-2 focus-visible:outline-[#00b38c]"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
           <motion.span
             animate={{ rotate: open ? 45 : 0, y: open ? 6 : 0 }}
-            transition={{ duration: 0.18 }}
+            transition={{ duration: reducedMotion ? 0 : 0.18 }}
             className="h-[1.5px] w-5 rounded-full bg-[#e8ecf5]"
           />
           <motion.span
             animate={{ opacity: open ? 0 : 1 }}
-            transition={{ duration: 0.12 }}
+            transition={{ duration: reducedMotion ? 0 : 0.12 }}
             className="h-[1.5px] w-5 rounded-full bg-[#e8ecf5]"
           />
           <motion.span
             animate={{ rotate: open ? -45 : 0, y: open ? -6 : 0 }}
-            transition={{ duration: 0.18 }}
+            transition={{ duration: reducedMotion ? 0 : 0.18 }}
             className="h-[1.5px] w-5 rounded-full bg-[#e8ecf5]"
           />
         </button>
@@ -284,41 +301,71 @@ export function Nav() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.28, ease: [0.33, 1, 0.68, 1] }}
-            className="mt-3 mx-auto max-w-[1380px] overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#05070d]/92 backdrop-blur-2xl lg:hidden max-h-[calc(100dvh-5.5rem)] overflow-y-auto pb-safe shadow-2xl"
+            initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -14, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.985 }}
+            transition={{
+              duration: reducedMotion ? 0 : 0.28,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="mt-3 mx-auto max-w-[1380px] overflow-hidden rounded-[1.35rem] border border-white/12 bg-[#05070d]/95 backdrop-blur-2xl lg:hidden max-h-[calc(100dvh-5.5rem)] overflow-y-auto pb-safe shadow-[0_24px_60px_rgba(0,0,0,0.85)]"
           >
-            <div className="px-5 pt-5 pb-3 border-b border-white/[0.07]">
-              <p className="mb-2 text-xs text-[#686868]">Explanation depth</p>
+            <div className="px-5 pt-4 pb-3 border-b border-white/[0.07] flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-mono uppercase tracking-[0.1em] text-[#7c8c86]">
+                  Explanation depth
+                </p>
+              </div>
               <ClarityTogglePill />
             </div>
 
-            <ul className="flex flex-col px-4 py-3 gap-1">
-              {mobileLinks.map((link) => {
+            <ul className="flex flex-col px-3.5 py-2.5 gap-1">
+              {mobileLinks.map((link, idx) => {
                 const isActive = pathname === link.href;
                 return (
-                  <li key={link.href}>
+                  <motion.li
+                    key={link.href}
+                    initial={reducedMotion ? false : { opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      delay: reducedMotion ? 0 : 0.04 + idx * 0.03,
+                      duration: reducedMotion ? 0 : 0.24,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
                     <Link
                       href={link.href}
                       scroll={true}
                       onClick={(e) => handleNavClick(link.href, e)}
-                      className={`flex min-h-[46px] items-center justify-between rounded-full px-5 text-[15px] font-normal transition-colors ${
+                      className={`flex min-h-[46px] items-center justify-between rounded-full px-4 text-[15px] font-normal transition-all active:scale-[0.985] ${
                         isActive
-                          ? "border border-[#064b34] bg-[#021b13] text-white"
+                          ? "border border-[#10bc83]/45 bg-[#021b13]/90 text-white shadow-[0_0_18px_rgba(16,188,131,0.16)]"
                           : "text-[#c4c4c4] hover:text-white hover:bg-white/[0.04]"
                       }`}
                     >
-                      <span>{link.label}</span>
-                      <span className="text-[#10bc83] text-xs">→</span>
+                      <span className="flex items-center gap-3">
+                        <span
+                          className={`font-mono text-[10px] tabular-nums ${
+                            isActive ? "text-[#38ffbd]" : "text-[#586862]"
+                          }`}
+                        >
+                          0{idx + 1}
+                        </span>
+                        <span>{link.label}</span>
+                      </span>
+                      <span className="flex items-center gap-2">
+                        {isActive && (
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#38ffbd] shadow-[0_0_8px_#38ffbd]" />
+                        )}
+                        <span className="text-[#10bc83] text-xs">→</span>
+                      </span>
                     </Link>
-                  </li>
+                  </motion.li>
                 );
               })}
             </ul>
 
-            <div className="px-5 pb-5 pt-2 flex flex-col gap-2.5 border-t border-white/[0.07]">
+            <div className="px-4 pb-4 pt-3 flex flex-col gap-2 border-t border-white/[0.07]">
               <Button
                 type="button"
                 variant="primary"
@@ -341,7 +388,7 @@ export function Nav() {
                   setOpen(false);
                   window.dispatchEvent(new CustomEvent("eleven:open-command-palette"));
                 }}
-                className="w-full min-h-[44px] cursor-pointer flex items-center justify-between rounded-full border border-white/15 bg-white/[0.03] px-5 text-xs text-[#e8ecf5] transition-colors hover:border-[#00b38c]"
+                className="w-full min-h-[44px] cursor-pointer flex items-center justify-between rounded-full border border-white/15 bg-white/[0.03] px-5 text-xs text-[#e8ecf5] transition-all active:scale-[0.985] hover:border-[#00b38c]"
               >
                 <span>AI Command Palette</span>
                 <span className="rounded-full bg-[#021b13] px-2 py-0.5 text-[10px] text-[#10bc83] font-mono">

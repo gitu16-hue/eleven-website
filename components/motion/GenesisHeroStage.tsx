@@ -265,10 +265,12 @@ function MobileGatewayCarousel({
   targetIdxRef,
   activeStep,
   onActiveStepChange,
+  isPhaseActive,
 }: {
   targetIdxRef: React.MutableRefObject<number>;
   activeStep: number;
   onActiveStepChange: React.Dispatch<React.SetStateAction<number>>;
+  isPhaseActive: boolean;
 }) {
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const smoothIdxRef = useRef<number>(0);
@@ -293,26 +295,13 @@ function MobileGatewayCarousel({
       return;
     }
 
-    let rafId = 0;
-    const startTime = performance.now();
-
-    const tick = (now: number) => {
-      rafId = requestAnimationFrame(tick);
-      const t = (now - startTime) / 1000;
-
-      // Continuous rAF Lerp (damping 0.075) + cursor/touch tilt lerp
-      smoothIdxRef.current += (targetIdxRef.current - smoothIdxRef.current) * 0.075;
-      pointerSmoothRef.current.x +=
-        (pointerTargetRef.current.x - pointerSmoothRef.current.x) * 0.08;
-      pointerSmoothRef.current.y +=
-        (pointerTargetRef.current.y - pointerSmoothRef.current.y) * 0.08;
-
+    const applyHelixPose = (t: number) => {
       const vw = window.innerWidth || 390;
       const isTablet = vw >= 640;
-      const radiusX = isTablet ? 250 : 148;
-      const stepY = isTablet ? 115 : 86;
-      const radiusZ = isTablet ? 260 : 210;
-      const zOffset = isTablet ? 200 : 155;
+      const radiusX = isTablet ? 245 : 156;
+      const stepY = isTablet ? 112 : 84;
+      const radiusZ = isTablet ? 250 : 200;
+      const zOffset = isTablet ? 190 : 150;
 
       const rounded = Math.min(
         total - 1,
@@ -329,7 +318,7 @@ function MobileGatewayCarousel({
 
         const offset = i - smoothIdxRef.current;
         const absOff = Math.abs(offset);
-        const theta = offset * 0.92; // rad step along 3D cylinder
+        const theta = offset * 0.94; // rad step along 3D cylinder
 
         // Cylindrical Helix coordinates
         const x = Math.sin(theta) * radiusX;
@@ -337,26 +326,27 @@ function MobileGatewayCarousel({
         const z = Math.cos(theta) * radiusZ - zOffset;
 
         // Idle sine-wave orbital float ("breathes in 3D even when stopped")
-        const breathY = Math.sin(t * 1.1 + i * 1.15) * 4.5;
-        const breathRx = Math.cos(t * 0.85 + i * 0.95) * 1.4;
-        const breathRy = Math.sin(t * 0.72 + i * 1.25) * 1.8;
-        const breathRz = Math.sin(t * 0.64 + i * 0.8) * 0.9;
+        const breathY = Math.sin(t * 1.1 + i * 1.15) * 4.0;
+        const breathRx = Math.cos(t * 0.85 + i * 0.95) * 1.3;
+        const breathRy = Math.sin(t * 0.72 + i * 1.25) * 1.6;
+        const breathRz = Math.sin(t * 0.64 + i * 0.8) * 0.8;
 
         // 3-Axis orientation + interactive pointer parallax tilt
         const rotY =
-          -theta * (180 / Math.PI) * 0.44 +
+          -theta * (180 / Math.PI) * 0.42 +
           pointerSmoothRef.current.x * 7 +
           breathRy;
-        const rotX = offset * -5.2 - pointerSmoothRef.current.y * 6 + breathRx;
-        const rotZ = offset * 4.2 + breathRz;
+        const rotX = offset * -5.0 - pointerSmoothRef.current.y * 6 + breathRx;
+        const rotZ = offset * 4.0 + breathRz;
 
-        const scale = Math.max(0.68, 1 - absOff * 0.14);
+        const scale = Math.max(0.68, 1 - absOff * 0.15);
+        // Stronger depth fade keeps front card legible over recessed cards
         const opacity =
-          absOff > 2.15
+          absOff > 1.85
             ? 0
-            : absOff < 0.35
+            : absOff < 0.38
             ? 1
-            : Math.max(0, 0.72 * (1 - Math.pow((absOff - 0.35) / 1.8, 1.15)));
+            : Math.max(0, 0.56 * (1 - Math.pow((absOff - 0.38) / 1.47, 1.25)));
         const zIndex = Math.round(100 - absOff * 24);
         const isFront = absOff < 0.45;
 
@@ -369,9 +359,32 @@ function MobileGatewayCarousel({
       }
     };
 
+    // Apply initial pose immediately and pause loop when Phase 3 is offscreen/inactive
+    smoothIdxRef.current = targetIdxRef.current;
+    applyHelixPose(0);
+    if (!isPhaseActive) return;
+
+    let rafId = 0;
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      rafId = requestAnimationFrame(tick);
+      if (document.hidden) return;
+      const t = (now - startTime) / 1000;
+
+      // Continuous rAF Lerp (damping 0.09) + cursor/touch tilt lerp
+      smoothIdxRef.current += (targetIdxRef.current - smoothIdxRef.current) * 0.09;
+      pointerSmoothRef.current.x +=
+        (pointerTargetRef.current.x - pointerSmoothRef.current.x) * 0.09;
+      pointerSmoothRef.current.y +=
+        (pointerTargetRef.current.y - pointerSmoothRef.current.y) * 0.09;
+
+      applyHelixPose(t);
+    };
+
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, [activeStep, onActiveStepChange, targetIdxRef, total]);
+  }, [activeStep, isPhaseActive, onActiveStepChange, targetIdxRef, total]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const t = e.touches[0];
@@ -386,11 +399,11 @@ function MobileGatewayCarousel({
     const dx = touchStartRef.current.x - t.clientX;
     const next = Math.min(
       total - 1,
-      Math.max(0, touchStartRef.current.idx + dx / 145)
+      Math.max(0, touchStartRef.current.idx + dx / 135)
     );
     targetIdxRef.current = next;
     pointerTargetRef.current = {
-      x: Math.max(-1, Math.min(1, -dx / 180)),
+      x: Math.max(-1, Math.min(1, -dx / 170)),
       y: 0,
     };
   };
@@ -398,10 +411,12 @@ function MobileGatewayCarousel({
   const handleTouchEnd = () => {
     if (!touchStartRef.current) return;
     touchStartRef.current = null;
-    targetIdxRef.current = Math.min(
+    const snapped = Math.min(
       total - 1,
       Math.max(0, Math.round(targetIdxRef.current))
     );
+    targetIdxRef.current = snapped;
+    onActiveStepChange(snapped);
     pointerTargetRef.current = { x: 0, y: 0 };
   };
 
@@ -426,11 +441,17 @@ function MobileGatewayCarousel({
     onActiveStepChange(wrapped);
   };
 
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(0.999, (e.clientX - rect.left) / Math.max(1, rect.width)));
+    stepTo(Math.floor(ratio * total));
+  };
+
   const progressPct = ((activeStep + 1) / total) * 100;
 
   return (
     <div
-      className="gateway-carousel pointer-events-auto flex w-full flex-1 flex-col justify-between lg:hidden"
+      className="gateway-carousel pointer-events-auto touch-pan-y flex w-full flex-1 flex-col justify-between lg:hidden"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -438,7 +459,7 @@ function MobileGatewayCarousel({
       onPointerLeave={handlePointerLeave}
     >
       {/* 3D Cylindrical Spiral / Helix Stage (perspective: 1400px, preserve-3d) */}
-      <div className="gateway-spiral-stage mx-auto flex-1 min-h-[340px] w-full max-w-[440px]">
+      <div className="gateway-spiral-stage mx-auto flex-1 min-h-[320px] w-full max-w-[440px]">
         <div className="gateway-spiral-watermark" aria-hidden="true">
           ELEVEN
         </div>
@@ -462,7 +483,7 @@ function MobileGatewayCarousel({
                   stepTo(i);
                 }
               }}
-              className={`gateway-spiral-card gateway-spiral-card--${card.tone} flex cursor-pointer flex-col justify-between p-4`}
+              className={`gateway-spiral-card gateway-spiral-card--${card.tone} flex cursor-pointer flex-col justify-between p-4 active:scale-[0.985] transition-shadow duration-300`}
             >
               {/* Top Tag + Top-Right Square Icon Chip */}
               <div className="flex items-start justify-between gap-2">
@@ -513,37 +534,68 @@ function MobileGatewayCarousel({
         })}
       </div>
 
-      {/* Emerald Progress Bar + Accessible Prev/Next Controls */}
-      <div className="mx-auto mt-1 flex w-full max-w-[360px] items-center gap-2.5 px-1">
-        <button
-          type="button"
-          aria-label="Previous capability"
-          onClick={() => stepTo(Math.round(targetIdxRef.current) - 1)}
-          className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/85 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
-        >
-          ←
-        </button>
+      {/* Interactive Step Dots + Emerald Progress Bar + Accessible Prev/Next Controls */}
+      <div className="mx-auto mt-1 flex w-full max-w-[360px] flex-col gap-2 px-1">
         <div
-          className="carousel-progress flex-1 cursor-pointer"
+          className="flex items-center justify-center gap-1.5"
           role="tablist"
           aria-label="Capabilities slides"
         >
-          <div
-            className="carousel-progress__bar"
-            style={{ width: `${progressPct}%` }}
-          />
+          {ALL_GATEWAY_CARDS.map((card, idx) => {
+            const isActive = idx === activeStep;
+            return (
+              <button
+                key={card.key}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-label={`Jump to ${card.title}`}
+                onClick={() => stepTo(idx)}
+                className="flex h-6 items-center justify-center px-1 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#38ffbd] rounded-full"
+              >
+                <span
+                  className={`block h-1.5 rounded-full transition-all duration-300 ${
+                    isActive
+                      ? "w-5 bg-[#38ffbd] shadow-[0_0_10px_rgba(56,255,189,0.65)]"
+                      : "w-1.5 bg-white/25 hover:bg-white/45"
+                  }`}
+                />
+              </button>
+            );
+          })}
         </div>
-        <span className="shrink-0 font-mono text-[10px] tracking-[0.08em] text-[#8ab8a8] tabular-nums">
-          0{activeStep + 1}/0{total}
-        </span>
-        <button
-          type="button"
-          aria-label="Next capability"
-          onClick={() => stepTo(Math.round(targetIdxRef.current) + 1)}
-          className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/85 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
-        >
-          →
-        </button>
+
+        <div className="flex w-full items-center gap-2.5">
+          <button
+            type="button"
+            aria-label="Previous capability"
+            onClick={() => stepTo(Math.round(targetIdxRef.current) - 1)}
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/85 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
+          >
+            ←
+          </button>
+          <div
+            onClick={handleProgressClick}
+            className="carousel-progress flex-1 cursor-pointer"
+            title="Tap to jump between capabilities"
+          >
+            <div
+              className="carousel-progress__bar"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+          <span className="shrink-0 font-mono text-[10px] tracking-[0.08em] text-[#8ab8a8] tabular-nums">
+            0{activeStep + 1}/0{total}
+          </span>
+          <button
+            type="button"
+            aria-label="Next capability"
+            onClick={() => stepTo(Math.round(targetIdxRef.current) + 1)}
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-[#05070d]/85 text-sm text-[#cff2e6] transition-colors hover:border-[#10bc83]/60 active:scale-95"
+          >
+            →
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -552,6 +604,7 @@ function MobileGatewayCarousel({
 export function GenesisHeroStage() {
   const spiralTargetRef = useRef<number>(0);
   const [mobileDeckStep, setMobileDeckStep] = React.useState(0);
+  const [mobilePhase3Active, setMobilePhase3Active] = React.useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -628,6 +681,7 @@ export function GenesisHeroStage() {
     let renderer: THREE.WebGLRenderer | null = null;
     let animId: number | null = null;
     let disposed = false;
+    let cleanupWebGL: () => void = () => {};
 
     // Shared animation state driven by ScrollTrigger
     const sceneState = {
@@ -960,371 +1014,8 @@ export function GenesisHeroStage() {
         renderer.render(scene, camera);
       };
       animId = requestAnimationFrame(renderLoop);
-
-      // 3. GSAP ScrollTrigger 3-Phase Beginning Choreography (scroll-Bq4C5b4-.js)
-      const mm = gsap.matchMedia();
-
-      mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-        const heroBars = gsap.utils.toArray<HTMLElement>(".hero-bar");
-        const dashboardPin = dashboardPinRef.current;
-        const heroContent = heroContentRef.current;
-        const statsSection = statsSectionRef.current;
-        const gatewaySection = gatewaySectionRef.current;
-
-        // Master scrub timeline across #hero-section
-        const masterTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 0.6,
-          },
-        });
-
-        // Phase 1 (0.0 -> 0.22): Dashboard slides down, Hero content & bars fade out, Globe rises to center
-        if (dashboardPin) {
-          masterTl.fromTo(
-            dashboardPin,
-            { y: 0, autoAlpha: 1 },
-            { y: 180, autoAlpha: 0, ease: "power1.in", duration: 0.16, immediateRender: false },
-            0
-          );
-        }
-        if (heroContent) {
-          masterTl.to(
-            heroContent,
-            { autoAlpha: 0, y: -48, duration: 0.16, ease: "power1.in" },
-            0.02
-          );
-        }
-        if (heroBars.length) {
-          masterTl.to(
-            heroBars,
-            { autoAlpha: 0, duration: 0.12, ease: "none" },
-            0.1
-          );
-        }
-        masterTl.to(
-          sceneState,
-          {
-            globeY: 0.05,
-            globeScale: 1.02,
-            duration: 0.22,
-            ease: "power1.out",
-          },
-          0
-        );
-
-        // Phase 2 (0.22 -> 0.56): #stats-section reveals over rotating 3D Globe
-        if (statsSection) {
-          const statsIntroItems = statsSection.querySelectorAll(".stats-intro > *");
-          const metricRows = statsSection.querySelectorAll(".metric-row");
-
-          gsap.set(statsSection, { autoAlpha: 0 });
-          gsap.set(statsIntroItems, { opacity: 0, x: -60 });
-          gsap.set(metricRows, { opacity: 0, x: 60 });
-
-          masterTl.to(
-            statsSection,
-            { autoAlpha: 1, duration: 0.04, ease: "none" },
-            0.22
-          );
-          masterTl.to(
-            statsIntroItems,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.12,
-              stagger: 0.02,
-              ease: "power2.out",
-            },
-            0.24
-          );
-          masterTl.to(
-            metricRows,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.14,
-              stagger: 0.025,
-              ease: "power2.out",
-            },
-            0.26
-          );
-          // Fade out #stats-section at end of Phase 2
-          masterTl.to(
-            statsSection,
-            { autoAlpha: 0, y: -24, duration: 0.08, ease: "power2.in" },
-            0.50
-          );
-        }
-
-        // Phase 3 (0.54 -> 0.92): Globe morphs into Emerald Hologram Core + #gateway-section reveals
-        masterTl.to(
-          sceneState,
-          {
-            morph: 1.0,
-            colorMix: 1.0,
-            globeScale: 0.92,
-            waterAlpha: 0.35,
-            duration: 0.22,
-            ease: "power2.inOut",
-          },
-          0.52
-        );
-
-        if (gatewaySection) {
-          const gwHeading = gatewaySection.querySelector(".gateway-heading");
-          const leftCards = gatewaySection.querySelectorAll(".gateway-col-left .gateway-card");
-          const rightCards = gatewaySection.querySelectorAll(".gateway-col-right .gateway-card");
-
-          gsap.set(gatewaySection, { autoAlpha: 0 });
-          if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 40 });
-          gsap.set(leftCards, { opacity: 0, x: -60 });
-          gsap.set(rightCards, { opacity: 0, x: 60 });
-
-          masterTl.to(
-            gatewaySection,
-            { autoAlpha: 1, duration: 0.04, ease: "none" },
-            0.56
-          );
-          if (gwHeading) {
-            masterTl.to(
-              gwHeading,
-              { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" },
-              0.58
-            );
-          }
-          masterTl.to(
-            leftCards,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.14,
-              stagger: 0.025,
-              ease: "power2.out",
-            },
-            0.60
-          );
-          masterTl.to(
-            rightCards,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.14,
-              stagger: 0.025,
-              ease: "power2.out",
-            },
-            0.60
-          );
-        }
-
-        // Leaving #hero-section (0.92 -> 1.0): Fade out background #globe-canvas cleanly
-        masterTl.to(
-          sceneState,
-          {
-            canvasOpacity: 0,
-            globeY: 0.85,
-            duration: 0.08,
-            ease: "none",
-          },
-          0.92
-        );
-      });
-
-      // Mobile & Tablet 3-Phase Choreography (<1024px): identical scrubbed 3-phase arc as desktop
-      // (Rising dashboard exit -> Pinned #stats-section left/right reveal over rotating 3D Globe ->
-      //  Morph into Emerald Hologram Core in #gateway-section with mobile swipe carousel -> Clean exit).
-      mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
-        const heroBars = gsap.utils.toArray<HTMLElement>(".hero-bar");
-        const dashboardPin = dashboardPinRef.current;
-        const heroContent = heroContentRef.current;
-        const statsSection = statsSectionRef.current;
-        const gatewaySection = gatewaySectionRef.current;
-        let lastScrollProg = -1;
-
-        const mobileMasterTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 0.55,
-            onUpdate: (self) => {
-              if (self.progress >= 0.56) {
-                if (Math.abs(self.progress - lastScrollProg) > 0.0005) {
-                  lastScrollProg = self.progress;
-                  const frac = Math.min(
-                    1,
-                    Math.max(0, (self.progress - 0.58) / 0.32)
-                  );
-                  spiralTargetRef.current = frac * (ALL_GATEWAY_CARDS.length - 1);
-                }
-              } else if (lastScrollProg >= 0.56 || lastScrollProg < 0) {
-                lastScrollProg = self.progress;
-                spiralTargetRef.current = 0;
-              }
-            },
-          },
-        });
-
-        // Phase 1 (0.0 -> 0.22): Rising dashboard slides down, hero copy & bars fade out, Globe rises to center
-        if (dashboardPin) {
-          mobileMasterTl.fromTo(
-            dashboardPin,
-            { y: 0, autoAlpha: 1 },
-            {
-              y: 160,
-              autoAlpha: 0,
-              ease: "power1.in",
-              duration: 0.16,
-              immediateRender: false,
-            },
-            0
-          );
-        }
-        if (heroContent) {
-          mobileMasterTl.to(
-            heroContent,
-            { autoAlpha: 0, y: -42, duration: 0.16, ease: "power1.in" },
-            0.02
-          );
-        }
-        if (heroBars.length) {
-          mobileMasterTl.to(
-            heroBars,
-            { autoAlpha: 0, duration: 0.12, ease: "none" },
-            0.1
-          );
-        }
-        mobileMasterTl.to(
-          sceneState,
-          {
-            globeY: 0.04,
-            globeScale: 0.94,
-            duration: 0.22,
-            ease: "power1.out",
-          },
-          0
-        );
-
-        // Phase 2 (0.21 -> 0.56): #stats-section reveals cleanly over rotating 3D Globe
-        if (statsSection) {
-          const statsIntroItems = statsSection.querySelectorAll(".stats-intro > *");
-          const metricRows = statsSection.querySelectorAll(".metric-row");
-
-          gsap.set(statsSection, { autoAlpha: 0 });
-          gsap.set(statsIntroItems, { opacity: 0, x: -36 });
-          gsap.set(metricRows, { opacity: 0, x: 36 });
-
-          mobileMasterTl.to(
-            statsSection,
-            { autoAlpha: 1, duration: 0.03, ease: "none" },
-            0.21
-          );
-          mobileMasterTl.to(
-            statsIntroItems,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.09,
-              stagger: 0.015,
-              ease: "power2.out",
-            },
-            0.22
-          );
-          mobileMasterTl.to(
-            metricRows,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.08,
-              stagger: 0.015,
-              ease: "power2.out",
-            },
-            0.23
-          );
-          mobileMasterTl.to(
-            statsSection,
-            { autoAlpha: 0, y: -24, duration: 0.08, ease: "power2.in" },
-            0.50
-          );
-        }
-
-        // Phase 3 (0.52 -> 0.92): 3D Globe morphs to Emerald Hologram Core + #gateway-section 3D Cylindrical Spiral
-        mobileMasterTl.to(
-          sceneState,
-          {
-            morph: 1.0,
-            colorMix: 1.0,
-            globeScale: 0.8,
-            globeY: 0.06,
-            waterAlpha: 0.35,
-            duration: 0.18,
-            ease: "power2.inOut",
-          },
-          0.52
-        );
-
-        if (gatewaySection) {
-          const gwHeading = gatewaySection.querySelector(".gateway-heading");
-          const gwCenterTag = gatewaySection.querySelector(".gateway-mobile-core-tag");
-          const gwCarousel = gatewaySection.querySelector(".gateway-carousel");
-
-          gsap.set(gatewaySection, { autoAlpha: 0 });
-          if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 28 });
-          if (gwCenterTag) gsap.set(gwCenterTag, { opacity: 0, scale: 0.92 });
-          if (gwCarousel) gsap.set(gwCarousel, { opacity: 0 });
-
-          mobileMasterTl.to(
-            gatewaySection,
-            { autoAlpha: 1, duration: 0.03, ease: "none" },
-            0.55
-          );
-          if (gwHeading) {
-            mobileMasterTl.to(
-              gwHeading,
-              { opacity: 1, y: 0, duration: 0.07, ease: "power2.out" },
-              0.56
-            );
-          }
-          if (gwCenterTag) {
-            mobileMasterTl.to(
-              gwCenterTag,
-              { opacity: 1, scale: 1, duration: 0.06, ease: "power2.out" },
-              0.57
-            );
-          }
-          if (gwCarousel) {
-            mobileMasterTl.to(
-              gwCarousel,
-              { opacity: 1, duration: 0.07, ease: "power2.out" },
-              0.57
-            );
-          }
-        }
-
-        // Leaving #hero-section (0.92 -> 1.0): Fade out background #globe-canvas cleanly
-        mobileMasterTl.to(
-          sceneState,
-          {
-            canvasOpacity: 0,
-            globeY: 0.75,
-            duration: 0.08,
-            ease: "none",
-          },
-          0.92
-        );
-
-        return () => {
-          mobileMasterTl.scrollTrigger?.kill();
-          mobileMasterTl.kill();
-        };
-      });
-
-      return () => {
+      cleanupWebGL = () => {
         disposed = true;
-        introTl.kill();
-        mm.revert();
         if (animId) cancelAnimationFrame(animId);
         window.removeEventListener("scroll", onScroll);
         window.removeEventListener("pointermove", onPointerMove);
@@ -1338,10 +1029,381 @@ export function GenesisHeroStage() {
         renderer?.dispose();
       };
     } catch {
-      return () => {
-        introTl.kill();
-      };
+      // Proceed cleanly with GSAP 3-phase choreography even on environments without WebGL
     }
+
+    // 3. GSAP ScrollTrigger 3-Phase Beginning Choreography (scroll-Bq4C5b4-.js)
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+      const heroBars = gsap.utils.toArray<HTMLElement>(".hero-bar");
+      const dashboardPin = dashboardPinRef.current;
+      const heroContent = heroContentRef.current;
+      const statsSection = statsSectionRef.current;
+      const gatewaySection = gatewaySectionRef.current;
+
+      // Master scrub timeline across #hero-section
+      const masterTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.6,
+        },
+      });
+
+      // Phase 1 (0.0 -> 0.22): Dashboard slides down, Hero content & bars fade out, Globe rises to center
+      if (dashboardPin) {
+        masterTl.fromTo(
+          dashboardPin,
+          { y: 0, autoAlpha: 1 },
+          { y: 180, autoAlpha: 0, ease: "power1.in", duration: 0.16, immediateRender: false },
+          0
+        );
+      }
+      if (heroContent) {
+        masterTl.to(
+          heroContent,
+          { autoAlpha: 0, y: -48, duration: 0.16, ease: "power1.in" },
+          0.02
+        );
+      }
+      if (heroBars.length) {
+        masterTl.to(
+          heroBars,
+          { autoAlpha: 0, duration: 0.12, ease: "none" },
+          0.1
+        );
+      }
+      masterTl.to(
+        sceneState,
+        {
+          globeY: 0.05,
+          globeScale: 1.02,
+          duration: 0.22,
+          ease: "power1.out",
+        },
+        0
+      );
+
+      // Phase 2 (0.22 -> 0.56): #stats-section reveals over rotating 3D Globe
+      if (statsSection) {
+        const statsIntroItems = statsSection.querySelectorAll(".stats-intro > *");
+        const metricRows = statsSection.querySelectorAll(".metric-row");
+
+        gsap.set(statsSection, { autoAlpha: 0 });
+        gsap.set(statsIntroItems, { opacity: 0, x: -60 });
+        gsap.set(metricRows, { opacity: 0, x: 60 });
+
+        masterTl.to(
+          statsSection,
+          { autoAlpha: 1, duration: 0.04, ease: "none" },
+          0.22
+        );
+        masterTl.to(
+          statsIntroItems,
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.12,
+            stagger: 0.02,
+            ease: "power2.out",
+          },
+          0.24
+        );
+        masterTl.to(
+          metricRows,
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.14,
+            stagger: 0.025,
+            ease: "power2.out",
+          },
+          0.26
+        );
+        // Fade out #stats-section at end of Phase 2
+        masterTl.to(
+          statsSection,
+          { autoAlpha: 0, y: -24, duration: 0.08, ease: "power2.in" },
+          0.50
+        );
+      }
+
+      // Phase 3 (0.54 -> 0.92): Globe morphs into Emerald Hologram Core + #gateway-section reveals
+      masterTl.to(
+        sceneState,
+        {
+          morph: 1.0,
+          colorMix: 1.0,
+          globeScale: 0.92,
+          waterAlpha: 0.35,
+          duration: 0.22,
+          ease: "power2.inOut",
+        },
+        0.52
+      );
+
+      if (gatewaySection) {
+        const gwHeading = gatewaySection.querySelector(".gateway-heading");
+        const leftCards = gatewaySection.querySelectorAll(".gateway-col-left .gateway-card");
+        const rightCards = gatewaySection.querySelectorAll(".gateway-col-right .gateway-card");
+
+        gsap.set(gatewaySection, { autoAlpha: 0 });
+        if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 40 });
+        gsap.set(leftCards, { opacity: 0, x: -60 });
+        gsap.set(rightCards, { opacity: 0, x: 60 });
+
+        masterTl.to(
+          gatewaySection,
+          { autoAlpha: 1, duration: 0.04, ease: "none" },
+          0.56
+        );
+        if (gwHeading) {
+          masterTl.to(
+            gwHeading,
+            { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" },
+            0.58
+          );
+        }
+        masterTl.to(
+          leftCards,
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.14,
+            stagger: 0.025,
+            ease: "power2.out",
+          },
+          0.60
+        );
+        masterTl.to(
+          rightCards,
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.14,
+            stagger: 0.025,
+            ease: "power2.out",
+          },
+          0.60
+        );
+      }
+
+      // Leaving #hero-section (0.92 -> 1.0): Fade out background #globe-canvas cleanly
+      masterTl.to(
+        sceneState,
+        {
+          canvasOpacity: 0,
+          globeY: 0.85,
+          duration: 0.08,
+          ease: "none",
+        },
+        0.92
+      );
+    });
+
+    // Mobile & Tablet 3-Phase Choreography (<1024px): identical scrubbed 3-phase arc as desktop
+    // (Rising dashboard exit -> Pinned #stats-section left/right reveal over rotating 3D Globe ->
+    //  Morph into Emerald Hologram Core in #gateway-section with mobile swipe carousel -> Clean exit).
+    mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
+      const heroBars = gsap.utils.toArray<HTMLElement>(".hero-bar");
+      const dashboardPin = dashboardPinRef.current;
+      const heroContent = heroContentRef.current;
+      const statsSection = statsSectionRef.current;
+      const gatewaySection = gatewaySectionRef.current;
+      let lastScrollProg = -1;
+      let phase3Open = false;
+
+      const mobileMasterTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.55,
+          onUpdate: (self) => {
+            const nextPhase3Open = self.progress >= 0.51 && self.progress <= 0.99;
+            if (nextPhase3Open !== phase3Open) {
+              phase3Open = nextPhase3Open;
+              setMobilePhase3Active(nextPhase3Open);
+            }
+            if (self.progress >= 0.56) {
+              if (Math.abs(self.progress - lastScrollProg) > 0.0005) {
+                lastScrollProg = self.progress;
+                const frac = Math.min(
+                  1,
+                  Math.max(0, (self.progress - 0.58) / 0.32)
+                );
+                spiralTargetRef.current = frac * (ALL_GATEWAY_CARDS.length - 1);
+              }
+            } else if (lastScrollProg >= 0.56 || lastScrollProg < 0) {
+              lastScrollProg = self.progress;
+              spiralTargetRef.current = 0;
+            }
+          },
+        },
+      });
+
+      // Phase 1 (0.0 -> 0.22): Rising dashboard slides down, hero copy & bars fade out, Globe rises to center
+      if (dashboardPin) {
+        mobileMasterTl.fromTo(
+          dashboardPin,
+          { y: 0, autoAlpha: 1 },
+          {
+            y: 160,
+            autoAlpha: 0,
+            ease: "power1.in",
+            duration: 0.16,
+            immediateRender: false,
+          },
+          0
+        );
+      }
+      if (heroContent) {
+        mobileMasterTl.to(
+          heroContent,
+          { autoAlpha: 0, y: -42, duration: 0.16, ease: "power1.in" },
+          0.02
+        );
+      }
+      if (heroBars.length) {
+        mobileMasterTl.to(
+          heroBars,
+          { autoAlpha: 0, duration: 0.12, ease: "none" },
+          0.1
+        );
+      }
+      mobileMasterTl.to(
+        sceneState,
+        {
+          globeY: 0.04,
+          globeScale: 0.94,
+          duration: 0.22,
+          ease: "power1.out",
+        },
+        0
+      );
+
+      // Phase 2 (0.21 -> 0.56): #stats-section reveals cleanly over rotating 3D Globe
+      if (statsSection) {
+        const statsIntroItems = statsSection.querySelectorAll(".stats-intro > *");
+        const metricRows = statsSection.querySelectorAll(".metric-row");
+
+        gsap.set(statsSection, { autoAlpha: 0 });
+        gsap.set(statsIntroItems, { opacity: 0, x: -32 });
+        gsap.set(metricRows, { opacity: 0, x: 32 });
+
+        mobileMasterTl.to(
+          statsSection,
+          { autoAlpha: 1, duration: 0.03, ease: "none" },
+          0.21
+        );
+        mobileMasterTl.to(
+          statsIntroItems,
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.09,
+            stagger: 0.015,
+            ease: "power2.out",
+          },
+          0.22
+        );
+        mobileMasterTl.to(
+          metricRows,
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.08,
+            stagger: 0.015,
+            ease: "power2.out",
+          },
+          0.23
+        );
+        mobileMasterTl.to(
+          statsSection,
+          { autoAlpha: 0, y: -24, duration: 0.08, ease: "power2.in" },
+          0.50
+        );
+      }
+
+      // Phase 3 (0.52 -> 0.92): 3D Globe morphs to Emerald Hologram Core + #gateway-section 3D Cylindrical Spiral
+      mobileMasterTl.to(
+        sceneState,
+        {
+          morph: 1.0,
+          colorMix: 1.0,
+          globeScale: 0.8,
+          globeY: 0.06,
+          waterAlpha: 0.35,
+          duration: 0.18,
+          ease: "power2.inOut",
+        },
+        0.52
+      );
+
+      if (gatewaySection) {
+        const gwHeading = gatewaySection.querySelector(".gateway-heading");
+        const gwCenterTag = gatewaySection.querySelector(".gateway-mobile-core-tag");
+        const gwCarousel = gatewaySection.querySelector(".gateway-carousel");
+
+        gsap.set(gatewaySection, { autoAlpha: 0 });
+        if (gwHeading) gsap.set(gwHeading, { opacity: 0, y: 24 });
+        if (gwCenterTag) gsap.set(gwCenterTag, { opacity: 0, scale: 0.92 });
+        if (gwCarousel) gsap.set(gwCarousel, { opacity: 0 });
+
+        mobileMasterTl.to(
+          gatewaySection,
+          { autoAlpha: 1, duration: 0.03, ease: "none" },
+          0.55
+        );
+        if (gwHeading) {
+          mobileMasterTl.to(
+            gwHeading,
+            { opacity: 1, y: 0, duration: 0.07, ease: "power2.out" },
+            0.56
+          );
+        }
+        if (gwCenterTag) {
+          mobileMasterTl.to(
+            gwCenterTag,
+            { opacity: 1, scale: 1, duration: 0.06, ease: "power2.out" },
+            0.57
+          );
+        }
+        if (gwCarousel) {
+          mobileMasterTl.to(
+            gwCarousel,
+            { opacity: 1, duration: 0.07, ease: "power2.out" },
+            0.57
+          );
+        }
+      }
+
+      // Leaving #hero-section (0.92 -> 1.0): Fade out background #globe-canvas cleanly
+      mobileMasterTl.to(
+        sceneState,
+        {
+          canvasOpacity: 0,
+          globeY: 0.75,
+          duration: 0.08,
+          ease: "none",
+        },
+        0.92
+      );
+
+      return () => {
+        setMobilePhase3Active(false);
+        mobileMasterTl.scrollTrigger?.kill();
+        mobileMasterTl.kill();
+      };
+    });
+
+    return () => {
+      introTl.kill();
+      mm.revert();
+      cleanupWebGL();
+    };
   }, []);
 
   return (
@@ -1375,10 +1437,10 @@ export function GenesisHeroStage() {
               ============================================================ */}
           <div
             ref={heroContentRef}
-            className="hero-content relative z-10 mx-auto flex max-w-[1060px] shrink-0 flex-col items-center px-4 sm:px-5 pt-1 sm:pt-3 pb-1.5 sm:pb-2 text-center lg:pt-6"
+            className="hero-content relative z-10 mx-auto flex max-w-[1060px] shrink-0 flex-col items-center px-3.5 sm:px-5 pt-0.5 sm:pt-3 pb-1 sm:pb-2 text-center lg:pt-6"
           >
             {/* GenesisFX Hero Badge */}
-            <div data-hero-item className="gfx-badge mb-2 sm:mb-3">
+            <div data-hero-item className="gfx-badge mb-1.5 sm:mb-3">
               <span className="h-2 w-2 shrink-0 rounded-full bg-[#10bc83] animate-pulse" />
               <DualCopy
                 as="span"
@@ -1391,24 +1453,24 @@ export function GenesisHeroStage() {
             <h1
               id="hero-heading"
               data-hero-item
-              className="max-w-[20ch] text-[clamp(1.68rem,4.1vw,3.9rem)] sm:text-[clamp(2rem,4.1vw,3.9rem)] font-normal leading-[1.04] tracking-[-0.03em] heading-gradient"
+              className="max-w-[20ch] text-[1.48rem] sm:text-[clamp(2rem,4.1vw,3.9rem)] font-normal leading-[1.06] sm:leading-[1.04] tracking-[-0.03em] heading-gradient"
             >
               Private AI that thinks, speaks, and works—only with your permission.
             </h1>
 
             {/* GenesisFX Hero Subtitle */}
-            <div data-hero-item className="mt-2 sm:mt-3">
+            <div data-hero-item className="mt-1 sm:mt-3">
               <DualCopy
-                className="text-sm sm:text-lg font-medium text-[#e8ecf5]"
+                className="text-[13px] sm:text-lg font-medium text-[#e8ecf5]"
                 plain="Built like a vault. Effortless like a conversation."
                 technical="Sub-500ms Full-Duplex Voice · System 2 DAG Compiler · 5-Stage ActionGate (INV-04)"
               />
             </div>
 
             {/* GenesisFX Hero Description */}
-            <div data-hero-item className="mt-1.5 sm:mt-2">
+            <div data-hero-item className="mt-1 sm:mt-2">
               <DualCopy
-                className="max-w-[38rem] text-[13px] sm:text-[15px] leading-[1.45] sm:leading-[1.55] text-[#a0a0a0]"
+                className="max-w-[38rem] text-[12px] sm:text-[15px] leading-[1.38] sm:leading-[1.55] text-[#a0a0a0]"
                 plain="Speak naturally, automate complex work across your files and apps, and review every important action before it happens. Everything stays 100% private on your own computer."
                 technical="Runs across four isolated OS process rooms with loopback-only Qdrant + SQLite WAL memory (127.0.0.1) and 30-second Ed25519 hardware-signed approval leases."
               />
@@ -1417,34 +1479,44 @@ export function GenesisHeroStage() {
             {/* GenesisFX Hero CTA Row */}
             <div
               data-hero-item
-              className="mt-3.5 sm:mt-5 flex w-full max-w-[340px] flex-col sm:w-auto sm:max-w-none sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-2 sm:gap-3.5"
+              className="mt-2.5 sm:mt-5 grid w-full max-w-[348px] grid-cols-2 sm:flex sm:w-auto sm:max-w-none sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-1.5 sm:gap-3.5"
             >
               <WaitlistActionButton
                 tier="general"
                 variant="primary"
                 arrow
-                className="w-full sm:w-auto"
+                className="col-span-2 w-full sm:w-auto"
               >
                 Get Early Access
               </WaitlistActionButton>
-              <Button href="#how-it-works" variant="secondary" arrow className="w-full sm:w-auto">
+              <Button
+                href="#how-it-works"
+                variant="secondary"
+                arrow
+                className="w-full sm:w-auto max-sm:!min-h-[2.3rem] max-sm:!px-2.5 max-sm:!text-[12.5px]"
+              >
                 See How It Works
               </Button>
-              <Button href="/enter" variant="ghost" className="w-full sm:w-auto">
-                Open 3D Core (/enter)
+              <Button
+                href="/enter"
+                variant="ghost"
+                className="w-full sm:w-auto max-sm:!min-h-[2.3rem] max-sm:!px-2.5 max-sm:!text-[12.5px]"
+              >
+                <span className="sm:hidden">Open 3D Core</span>
+                <span className="hidden sm:inline">Open 3D Core (/enter)</span>
               </Button>
             </div>
           </div>
 
           {/* Rising Hero Dashboard Showcase Pin (Single unified card on both Mobile & Desktop) */}
-          <div ref={dashboardPinRef} className="hero-dashboard-pin mt-3 sm:mt-5 lg:mt-7 flex">
+          <div ref={dashboardPinRef} className="hero-dashboard-pin mt-2 sm:mt-5 lg:mt-7 flex flex-col items-center">
             <div ref={dashboardRef} className="hero-dashboard gfx-frame">
               <div className="gfx-frame__highlight" aria-hidden="true">
                 <div className="gfx-frame__highlight-glow" />
               </div>
               <span className="gfx-frame__top-beam" aria-hidden="true" />
-              <div className="relative z-[1] overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/95 p-3 sm:p-4 lg:p-5">
-                <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3 border-b border-white/[0.07] pb-2.5 sm:pb-3 mb-2.5 sm:mb-3.5 font-mono text-[10px] sm:text-xs text-[#a0a0a0]">
+              <div className="relative z-[1] overflow-hidden rounded-[1.45rem] border border-white/10 bg-[#05070d]/95 p-2.5 sm:p-4 lg:p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3 border-b border-white/[0.07] pb-2 sm:pb-3 mb-2 sm:mb-3.5 font-mono text-[10px] sm:text-xs text-[#a0a0a0]">
                   <span className="flex items-center gap-2 text-white">
                     <span className="h-2 w-2 rounded-full bg-[#10bc83] animate-pulse" />
                     <span className="lg:hidden">LIVE 3D CORE PREVIEW</span>
@@ -1500,6 +1572,11 @@ export function GenesisHeroStage() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div className="mt-2 flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.14em] text-[#38ffbd]/80 lg:hidden">
+              <span className="h-1 w-1 rounded-full bg-[#38ffbd] motion-safe:animate-ping" />
+              <span>Scroll to explore 3D stage ↓</span>
             </div>
           </div>
 
@@ -1574,14 +1651,14 @@ export function GenesisHeroStage() {
           <div
             ref={gatewaySectionRef}
             id="gateway-section"
-            className="pointer-events-none absolute inset-0 z-20 mx-auto flex max-w-[1360px] flex-col justify-between px-4 sm:px-5 pt-[4.25rem] pb-4 lg:justify-center lg:py-12"
+            className="pointer-events-none absolute inset-0 z-20 mx-auto flex max-w-[1360px] flex-col justify-between px-4 sm:px-5 pt-[4.35rem] pb-5 lg:justify-center lg:py-12"
           >
-            <h2 className="gateway-heading mb-1.5 sm:mb-4 lg:mb-8 text-center text-[1.4rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
+            <h2 className="gateway-heading mb-2 sm:mb-4 lg:mb-8 text-center text-[1.35rem] sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.08] heading-gradient">
               One sovereign operating system. Six core capabilities.
             </h2>
 
             {/* Mobile/Tablet Core Indicator Above the 3D Cylindrical Spiral */}
-            <div className="mt-1 mb-1 flex justify-center lg:hidden pointer-events-none">
+            <div className="mt-1.5 mb-2 flex justify-center lg:hidden pointer-events-none">
               <div className="gateway-mobile-core-tag rounded-full border border-[#10bc83]/35 bg-[#062118]/65 px-3 py-1 font-mono text-[10px] tracking-[0.1em] text-[#38ffbd] backdrop-blur-md">
                 3D CORE ACTIVE
               </div>
@@ -1592,6 +1669,7 @@ export function GenesisHeroStage() {
               targetIdxRef={spiralTargetRef}
               activeStep={mobileDeckStep}
               onActiveStepChange={setMobileDeckStep}
+              isPhaseActive={mobilePhase3Active}
             />
 
             {/* Desktop Split 3-Column Grid Around Morphed 3D Hologram */}

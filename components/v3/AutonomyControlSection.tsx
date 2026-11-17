@@ -1,12 +1,49 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useInView } from "framer-motion";
-import { DualCopy, Tilt3DCard } from "@/components/motion/PremiumMotion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { DualCopy, Tilt3DCard, useMountedReducedMotion } from "@/components/motion/PremiumMotion";
 import {
   GenesisShowcaseFrame,
   GenesisStaggerGrid,
 } from "@/components/motion/GenesisMotionEngine";
+
+const COMPARISON_ROWS = [
+  {
+    criterion: "Who holds the keys?",
+    eleven: "AI suggests · Your PC guards",
+    speakers: "Preset commands only",
+    chatbots: "Manual copy-paste",
+    agents: "AI gets raw access (risky!)",
+  },
+  {
+    criterion: "Before deleting or sending",
+    eleven: "Shows an honest 30s safety receipt",
+    speakers: "Easy to mishear \u201cYes\u201d",
+    chatbots: "AI explains itself",
+    agents: "Acts without asking",
+  },
+  {
+    criterion: "Talking while working",
+    eleven: "Instant voice + background planner",
+    speakers: "Fast, but can\u2019t do deep work",
+    chatbots: "Slow typing back & forth",
+    agents: "Freezes while running tools",
+  },
+  {
+    criterion: "Where memories live",
+    eleven: "Encrypted on your own computer",
+    speakers: "Big-tech cloud servers",
+    chatbots: "Locked in one vendor\u2019s app",
+    agents: "Messy text logs",
+  },
+] as const;
+
+const COMPETITORS = [
+  { id: "agents" as const, label: "Auto-Agents", fullLabel: "Reckless Auto-Agents" },
+  { id: "chatbots" as const, label: "Chat Sites", fullLabel: "Chat Websites" },
+  { id: "speakers" as const, label: "Speakers", fullLabel: "Smart Speakers" },
+];
 
 const TIERS = [
   {
@@ -66,18 +103,18 @@ function ReceiptSimulatorCard() {
   return (
     <div
       ref={simRef}
-      className="p-6 sm:p-8 lg:p-10"
+      className="p-4 sm:p-8 lg:p-10"
     >
-      <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center border-b border-el-border pb-6">
+      <div className="flex flex-col justify-between gap-4 sm:gap-6 lg:flex-row lg:items-center border-b border-el-border pb-5 sm:pb-6">
         <div>
           <div className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-el-accent">
             <span className="h-1.5 w-1.5 rounded-full bg-el-accent animate-pulse" />
             LIVE SIMULATION · COLD-ROOM APPROVAL RECEIPT
           </div>
-          <h3 className="mt-2 text-el-2xl font-medium tracking-tight text-el-fg">
+          <h3 className="mt-2 text-el-xl sm:text-el-2xl font-medium tracking-tight text-el-fg">
             Try Approving an Action Proposal
           </h3>
-          <p className="mt-1.5 max-w-[560px] text-el-sm text-el-fg-muted">
+          <p className="mt-1.5 max-w-[560px] text-el-xs sm:text-el-sm text-el-fg-muted">
             Watch how ELEVEN pauses when high-impact actions are proposed. You see exactly what is about to happen, have 30 seconds to confirm, and can halt in under 0.05 seconds.
           </p>
         </div>
@@ -103,7 +140,7 @@ function ReceiptSimulatorCard() {
       </div>
 
       {/* Receipt Box */}
-      <div className="mt-6 rounded-sm border border-el-border bg-el-bg p-5 font-mono text-el-xs">
+      <div className="mt-5 sm:mt-6 rounded-sm border border-el-border bg-el-bg p-4 sm:p-5 font-mono text-el-xs">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-el-border pb-3 text-el-fg-faint">
           <span>ACTION PROPOSAL RECEIPT #8841-B</span>
           <span>TOKEN: 0x9f4a...e12d</span>
@@ -125,20 +162,20 @@ function ReceiptSimulatorCard() {
         </div>
 
         {/* Interactive Action Triggers */}
-        <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-el-border pt-4">
+        <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 border-t border-el-border pt-4">
           {simState === "pending" ? (
             <>
               <button
                 type="button"
                 onClick={() => setSimState("approved")}
-                className="min-h-[40px] cursor-pointer rounded-sm bg-el-fg px-4 py-2 font-mono text-el-xs font-semibold uppercase text-el-bg transition-opacity hover:opacity-90"
+                className="min-h-[44px] sm:min-h-[40px] cursor-pointer rounded-sm bg-el-fg px-4 py-2 font-mono text-el-xs font-semibold uppercase text-el-bg transition-all active:scale-[0.98] hover:opacity-90"
               >
                 Approve Action Receipt
               </button>
               <button
                 type="button"
                 onClick={() => setSimState("rejected")}
-                className="min-h-[40px] cursor-pointer rounded-sm border border-rose-500/40 bg-rose-500/10 px-4 py-2 font-mono text-el-xs font-semibold uppercase text-rose-400 transition-colors hover:bg-rose-500/20"
+                className="min-h-[44px] sm:min-h-[40px] cursor-pointer rounded-sm border border-rose-500/40 bg-rose-500/10 px-4 py-2 font-mono text-el-xs font-semibold uppercase text-rose-400 transition-all active:scale-[0.98] hover:bg-rose-500/20"
               >
                 Emergency Stop (&lt;0.05s)
               </button>
@@ -150,7 +187,7 @@ function ReceiptSimulatorCard() {
                 setNonceTtl(30.0);
                 setSimState("pending");
               }}
-              className="min-h-[40px] cursor-pointer rounded-sm border border-el-border-strong bg-el-bg-raised px-4 py-2 font-mono text-el-xs uppercase text-el-fg hover:bg-el-bg"
+              className="min-h-[44px] sm:min-h-[40px] cursor-pointer rounded-sm border border-el-border-strong bg-el-bg-raised px-4 py-2 font-mono text-el-xs uppercase text-el-fg active:scale-[0.98] hover:bg-el-bg"
             >
               Reset Simulation
             </button>
@@ -168,18 +205,105 @@ function ReceiptSimulatorCard() {
   );
 }
 
+function MobileComparisonDeck() {
+  const [selected, setSelected] = useState<"agents" | "chatbots" | "speakers">("agents");
+  const reduced = useMountedReducedMotion();
+  const activeCompetitor =
+    COMPETITORS.find((c) => c.id === selected) ?? COMPETITORS[0];
+
+  return (
+    <div className="p-4">
+      <div className="flex items-center justify-between gap-2 border-b border-el-border pb-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-el-accent">
+          ELEVEN v3 VS ALTERNATIVES
+        </span>
+        <span className="font-mono text-[10px] text-el-fg-faint">
+          Tap to compare
+        </span>
+      </div>
+
+      {/* Competitor Segmented Pill Switcher */}
+      <div className="mt-3 grid grid-cols-3 gap-1 rounded-sm border border-el-border bg-el-bg p-1 font-mono text-[10.5px]">
+        {COMPETITORS.map((comp) => {
+          const isActive = selected === comp.id;
+          return (
+            <button
+              key={comp.id}
+              type="button"
+              onClick={() => setSelected(comp.id)}
+              className={`relative min-h-[38px] cursor-pointer rounded-xs px-1.5 py-1.5 text-center transition-colors active:scale-[0.98] ${
+                isActive ? "text-el-bg font-semibold" : "text-el-fg-muted hover:text-el-fg"
+              }`}
+            >
+              {isActive && (
+                <motion.span
+                  layoutId="mobileComparePill"
+                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                  className="absolute inset-0 rounded-xs bg-el-fg shadow-xs"
+                />
+              )}
+              <span className="relative z-10">{comp.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Animated Row Cards */}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={selected}
+          initial={reduced ? { opacity: 0 } : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduced ? { opacity: 0 } : { opacity: 0, y: -6 }}
+          transition={{ duration: reduced ? 0 : 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-3.5 space-y-2.5"
+        >
+          {COMPARISON_ROWS.map((row) => (
+            <div
+              key={row.criterion}
+              className="rounded-sm border border-el-border bg-el-bg/80 p-3"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-el-fg-faint">
+                {row.criterion}
+              </p>
+              <div className="mt-2 grid grid-cols-1 gap-1.5 text-el-xs">
+                <div className="flex items-start justify-between gap-2 rounded-xs border border-el-accent/35 bg-[#041a13]/70 px-2.5 py-2">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-el-accent shrink-0 pt-0.5">
+                    ELEVEN v3
+                  </span>
+                  <span className="text-right font-medium text-el-fg">
+                    {row.eleven}
+                  </span>
+                </div>
+                <div className="flex items-start justify-between gap-2 rounded-xs border border-white/[0.06] bg-white/[0.02] px-2.5 py-1.5">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-el-fg-faint shrink-0 pt-0.5">
+                    {activeCompetitor.fullLabel}
+                  </span>
+                  <span className="text-right text-el-fg-muted">
+                    {row[selected]}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function AutonomyControlSection() {
   return (
-    <div className="mt-12 space-y-12">
+    <div className="mt-8 sm:mt-12 space-y-8 sm:space-y-12">
       {/* 4 Autonomy Tiers Grid */}
       <GenesisStaggerGrid
         from="center"
         stagger={0.1}
-        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+        className="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-4"
       >
         {TIERS.map((t) => (
           <Tilt3DCard key={t.tier}>
-            <div className="flex h-full flex-col justify-between p-5 sm:p-6">
+            <div className="flex h-full flex-col justify-between p-4 sm:p-6">
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-1.5 font-mono text-[10px] text-el-fg-faint">
                   <span>{t.tier}</span>
@@ -187,16 +311,16 @@ export function AutonomyControlSection() {
                     {t.badge}
                   </span>
                 </div>
-                <h4 className="mt-3.5 text-el-base font-medium text-el-fg">
+                <h4 className="mt-3 sm:mt-3.5 text-el-base font-medium text-el-fg">
                   {t.label}
                 </h4>
                 <DualCopy
-                  className="mt-2.5 text-el-xs leading-[1.65] text-el-fg-muted"
+                  className="mt-2 sm:mt-2.5 text-el-xs leading-[1.65] text-el-fg-muted"
                   plain={t.plain}
                   technical={t.tech}
                 />
               </div>
-              <div className="mt-6 border-t border-el-border pt-3 font-mono text-[10px] text-el-fg-faint">
+              <div className="mt-4 sm:mt-6 border-t border-el-border pt-3 font-mono text-[10px] text-el-fg-faint">
                 DEC-008 HUMAN CONTROL
               </div>
             </div>
@@ -209,8 +333,13 @@ export function AutonomyControlSection() {
         <ReceiptSimulatorCard />
       </GenesisShowcaseFrame>
 
-      {/* Simple Comparison Table */}
-      <GenesisShowcaseFrame innerClassName="overflow-x-auto">
+      {/* Mobile Comparison Switcher (< 768px — zero horizontal table scroll) */}
+      <GenesisShowcaseFrame className="md:hidden">
+        <MobileComparisonDeck />
+      </GenesisShowcaseFrame>
+
+      {/* Simple Comparison Table (Desktop & Tablet >= 768px — untouched) */}
+      <GenesisShowcaseFrame className="hidden md:block" innerClassName="overflow-x-auto">
         <table className="w-full min-w-[720px] border-collapse text-left text-el-xs">
           <thead>
             <tr className="border-b border-el-border bg-el-bg font-mono text-[11px] uppercase tracking-[0.07em] text-el-fg-faint">
