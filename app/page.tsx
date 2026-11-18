@@ -58,7 +58,7 @@ const NeuralTraceSimulator = dynamic(
     ),
   {
     loading: () => (
-      <div className="h-[360px] w-full animate-pulse rounded-2xl border border-white/[0.08] bg-[#0c1311]/40" />
+      <div className="h-[360px] w-full animate-pulse motion-reduce:animate-none rounded-2xl border border-white/[0.08] bg-[#0c1311]/40" />
     ),
   }
 );
@@ -70,7 +70,7 @@ const ElevenControlShowcase = dynamic(
     ),
   {
     loading: () => (
-      <div className="h-[620px] w-full animate-pulse rounded-2xl border border-[#00b38c]/20 bg-[#0c1311]/40" />
+      <div className="h-[620px] w-full animate-pulse motion-reduce:animate-none rounded-2xl border border-[#00b38c]/20 bg-[#0c1311]/40" />
     ),
   }
 );

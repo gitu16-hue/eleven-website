@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 
 type FrameworkFilter = "all" | "gdpr" | "hipaa" | "fedramp" | "soc2" | "sec";
 
@@ -121,7 +120,7 @@ export function EnterpriseComplianceMatrix() {
             key={tab.id}
             type="button"
             onClick={() => setSelectedFilter(tab.id as FrameworkFilter)}
-            className={`rounded-xs px-3 py-1 font-mono text-xs transition-all ${
+            className={`cursor-pointer rounded-xs min-h-[34px] sm:min-h-0 px-3 py-1.5 sm:py-1 font-mono text-xs transition-all ${
               selectedFilter === tab.id
                 ? "border border-el-cyan/50 bg-el-cyan/15 text-el-cyan shadow-sm"
                 : "border border-el-border bg-el-bg-raised/40 text-el-fg-muted hover:border-el-border-strong hover:text-el-fg"

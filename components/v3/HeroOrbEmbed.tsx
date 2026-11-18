@@ -159,7 +159,7 @@ export function HeroOrbEmbed() {
         <button
           type="button"
           onClick={handleToggleAuto}
-          className={`cursor-pointer rounded-xs px-1.5 sm:px-2.5 py-1 sm:py-1.5 min-h-[30px] sm:min-h-[34px] text-[9px] sm:text-[9.5px] font-semibold transition-all active:scale-95 ${
+          className={`cursor-pointer rounded-xs px-1.5 sm:px-2.5 py-1 sm:py-1.5 min-h-[34px] text-[9px] sm:text-[9.5px] font-semibold transition-all active:scale-95 ${
             isAutoCycle
               ? "bg-el-accent/20 text-el-accent border border-el-accent/40"
               : "text-el-fg-faint hover:text-el-fg"
@@ -178,7 +178,7 @@ export function HeroOrbEmbed() {
               key={s.id}
               type="button"
               onClick={() => handleStateClick(s.id)}
-              className={`relative cursor-pointer rounded-xs px-1.5 sm:px-2.5 py-1 sm:py-1.5 min-h-[30px] sm:min-h-[34px] text-[9px] sm:text-[10px] transition-all active:scale-95 ${
+              className={`relative cursor-pointer rounded-xs px-1.5 sm:px-2.5 py-1 sm:py-1.5 min-h-[34px] text-[9px] sm:text-[10px] transition-all active:scale-95 ${
                 isActive
                   ? "bg-el-accent text-[#04060A] shadow-xs font-semibold"
                   : "text-el-fg-muted hover:text-el-fg hover:bg-el-bg"

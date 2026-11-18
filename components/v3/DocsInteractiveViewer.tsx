@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Tilt3DCard } from "@/components/motion/PremiumMotion";
 
 interface SpecModule {
   id: string;
@@ -218,7 +217,7 @@ export function DocsInteractiveViewer() {
                 <button
                   type="button"
                   onClick={() => handleCopy(activeModule.codeSnippet)}
-                  className="cursor-pointer rounded-xs px-2 py-0.5 text-[10px] text-el-fg-faint transition-colors hover:bg-el-bg hover:text-el-fg"
+                  className="cursor-pointer rounded-xs min-h-[34px] sm:min-h-0 px-2 py-0.5 text-[10px] text-el-fg-faint transition-colors hover:bg-el-bg hover:text-el-fg"
                 >
                   {copied ? "COPIED ✓" : "COPY CODE"}
                 </button>

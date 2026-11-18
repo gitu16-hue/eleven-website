@@ -1,14 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export function CognitiveOrb() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [interactiveState, setInteractiveState] = useState({
-    activity: "COGNITIVE SYNCHRONIZATION",
-    frequency: "84.2 GHz",
-    status: "RESONATING",
-  });
 
   useEffect(() => {
     const canvas = canvasRef.current;

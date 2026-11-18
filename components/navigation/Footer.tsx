@@ -249,6 +249,7 @@ export function Footer() {
                   alt="GISHH Labs"
                   width={40}
                   height={40}
+                  loading="eager"
                   className="h-full w-full object-contain"
                 />
               </div>

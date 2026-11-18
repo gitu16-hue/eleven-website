@@ -92,6 +92,7 @@ export function ClarityTogglePill({
             <button
               key={opt.id}
               type="button"
+              aria-pressed={active}
               onClick={() => setMode(opt.id)}
               className={`relative cursor-pointer whitespace-nowrap rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-el-xs font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-el-accent ${
                 active ? "text-el-bg" : "text-el-fg-muted hover:text-el-fg"

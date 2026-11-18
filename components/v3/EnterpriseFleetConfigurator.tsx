@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useId } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 type IndustryPreset = "defense" | "fintech" | "healthcare" | "tech";
 type OsMix = "mac" | "windows" | "hybrid";

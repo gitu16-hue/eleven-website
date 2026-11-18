@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface HardwarePreset {
   id: string;
@@ -283,7 +282,7 @@ export function HardwareCompatibilityMatrix() {
                   key={f.id}
                   type="button"
                   onClick={() => setFamilyFilter(f.id)}
-                  className={`rounded-xs py-1.5 font-mono text-[11px] transition-all ${
+                  className={`cursor-pointer rounded-xs min-h-[34px] sm:min-h-0 py-1.5 font-mono text-[11px] transition-all ${
                     familyFilter === f.id
                       ? "border border-el-cyan bg-el-cyan/15 text-el-cyan font-semibold"
                       : "border border-el-border bg-el-bg-raised/40 text-el-fg-muted hover:border-el-border-strong hover:text-el-fg"

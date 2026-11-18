@@ -7,19 +7,14 @@ import {
   TrendingUp,
   Shield,
   Clock,
-  Sparkles,
   Layers,
   BarChart3,
   GitBranch,
   ArrowUpRight,
   Sliders,
   DollarSign,
-  FileCheck2,
-  AlertTriangle,
-  UserCheck,
-  CheckCircle,
 } from "lucide-react";
-import { VoyageStepper, VoyageStage, DEFAULT_STAGES } from "./VoyageStepper";
+import { VoyageStepper, DEFAULT_STAGES } from "./VoyageStepper";
 
 type DashboardView = "overview" | "pipeline" | "detail";
 

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
-import { CheckCircle2, Clock, ShieldCheck, ArrowRight, Sparkles } from "lucide-react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
 
 export interface VoyageStage {
   id: string;
@@ -360,7 +360,6 @@ export function VoyageStepper({
             {stationPoints.map((pt, idx) => {
               const isPast = idx < activeIndex;
               const isCurrent = idx === activeIndex;
-              const isFuture = idx > activeIndex;
 
               return (
                 <g
